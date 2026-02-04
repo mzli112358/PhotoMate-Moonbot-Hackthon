@@ -45,7 +45,7 @@ ICON_GEAR="⚙"
 # Configuration / 配置
 # ============================================================================
 DEFAULT_PATH="/opt/galbot"  # Default installation path / 默认安装路径
-TOTAL_STEPS=7               # Total number of installation steps / 安装步骤总数
+TOTAL_STEPS=8               # Total number of installation steps / 安装步骤总数
 CURRENT_STEP=0              # Current step counter / 当前步骤计数器
 
 # ============================================================================
@@ -156,6 +156,9 @@ fi
 
 # Define SDK directory / 定义 SDK 目录
 SDK_DIR="$INSTALL_PATH/galbot_sdk"
+
+# Define DOCS directory / 定义 SDK 目录
+DOCS_DIR="./docs"
 
 echo ""
 print_info "Installation path / 安装路径: ${WHITE}$SDK_DIR${NC}" ""
@@ -270,6 +273,19 @@ execute_step 7 \
     "Updating examples configuration" \
     "更新示例配置" \
     step7_update_examples
+
+# ============================================================================
+# STEP 8: Extract Description / 步骤 5：解压工具链
+# ============================================================================
+step8_extract_description() {
+    print_info "Extracting description (this may take a while) / 正在解压文档（可能需要较长时间）" ""
+    sudo tar xf galbot_one_golf_description.tar.gz -C "$DOCS_DIR"
+}
+
+execute_step 8 \
+    "Extracting description archive" \
+    "解压 description 文件" \
+    step8_extract_description
 
 # ============================================================================
 # Installation Complete / 安装完成

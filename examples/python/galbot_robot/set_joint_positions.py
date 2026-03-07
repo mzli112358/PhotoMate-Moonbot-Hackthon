@@ -11,7 +11,7 @@ time.sleep(2)
 
 # 设置头部两个关节角度为0.2，0.2，阻塞等待动作执行到位，最大超时时间为10s
 joint_pos = [0.2, 0.2]
-# 设置头部关节组，如为空将默认填写全身关节
+# 设置头部关节组，如为空将默认填写全身关节["leg", "head", "left_arm", "right_arm"]
 joint_groups = ["head"]
 # 是否阻塞等待关节运行到位
 is_blocking = True

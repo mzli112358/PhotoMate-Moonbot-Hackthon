@@ -18,8 +18,7 @@ void print_rgb_data(
   }
 
   std::cout << "Camera image timestamp: "
-            << rgb_data->header.stamp.sec << "." << std::setw(9)
-            << std::setfill('0') << rgb_data->header.stamp.nanosec
+            << rgb_data->header.timestamp_ns
             << std::endl;
   std::cout << "format is " << rgb_data->format << std::endl;
   std::cout << "frame_id is " << rgb_data->header.frame_id << std::endl;
@@ -43,8 +42,7 @@ void print_depth_data(
   }
 
   std::cout << "Camera image timestamp: "
-            << depth_data_ptr->header.stamp.sec << "." << std::setw(9)
-            << std::setfill('0') << depth_data_ptr->header.stamp.nanosec
+            << depth_data_ptr->header.timestamp_ns
             << std::endl;
   std::cout << "format is " << depth_data_ptr->format << std::endl;
   std::cout << "frame_id is " << depth_data_ptr->header.frame_id << std::endl;

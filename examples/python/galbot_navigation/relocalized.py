@@ -16,6 +16,7 @@ while not nav.is_localized():
 
 print("当前位姿:", nav.get_current_pose())
 
+nav.stop_navigation()
 # 主动发出SIGINT退出信号
 robot.request_shutdown()
 # 等待进入shutdown状态

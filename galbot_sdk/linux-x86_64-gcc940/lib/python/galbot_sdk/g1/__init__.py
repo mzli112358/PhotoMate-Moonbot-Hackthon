@@ -19,15 +19,18 @@ _so_filename = f"galbot_g1.cpython-{_python_version}-{_arch}.so"
 
 _current_dir = Path(__file__).parent
 _so_path = _current_dir / _so_filename
+# 匹配失败
 if not _so_path.exists():
-    matches = list(_current_dir.glob("galbot_g1.cpython-*.so"))
-    if matches:
-        _so_path = matches[0]
-    else:
-        raise ImportError(
-            f"Cannot find galbot_g1 shared library for Python {_python_version} "
-            f"and arch {_arch}. Searched in: {_current_dir}"
-        )
+    raise ImportError(
+        "[galbot][ERROR] galbot_g1 shared library not found.\n"
+        f"  Expected file : {_so_filename}\n"
+        f"  Python        : {_python_version}\n"
+        f"  Architecture  : {_arch}\n"
+        f"  Search path   : {_current_dir}\n"
+        "This usually means:\n"
+        "  - Python version mismatch\n"
+        "  - Architecture mismatch\n"
+    )
 
 # 加载动态库
 spec = importlib.util.spec_from_file_location("g1", _so_path)

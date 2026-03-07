@@ -17,6 +17,7 @@
 #include <memory>
 #include <unordered_map>
 #include <unordered_set>
+#include <utility>
 
 #include "type.hpp"
 
@@ -24,19 +25,21 @@
  * @namespace galbot
  * @brief Root namespace for Galbot robotics software
  */
- namespace galbot {
+namespace galbot {
 
-  /**
-   * @namespace galbot::sdk
-   * @brief Galbot Software Development Kit namespace
-   */
-  namespace sdk {
+/**
+ * @namespace galbot::sdk
+ * @brief Galbot Software Development Kit namespace
+ */
+namespace sdk {
 
-  /**
-   * @namespace galbot::sdk::g1
-   * @brief Namespace for Galbot G1 humanoid robot
-   */
-  namespace g1 {
+/**
+ * @namespace galbot::sdk::g1
+ * @brief Namespace for Galbot G1 humanoid robot
+ */
+namespace g1 {
+
+class Parameter;
 
 /**
  * @class GalbotRobot
@@ -65,10 +68,7 @@ class GalbotRobot {
    *
    * @return Reference to the singleton instance
    */
-  static GalbotRobot& get_instance() {
-    static GalbotRobot instance;
-    return instance;
-  }
+  static GalbotRobot& get_instance();
 
   /**
    * @brief Initialize the robot control system
@@ -97,11 +97,13 @@ class GalbotRobot {
    *                     joints (legs, head, left_arm, right_arm).
    * @param joint_names Specific joint names to control. This parameter takes precedence
    *                    over joint_groups. When provided, joint_groups is ignored.
+   * @param time_from_start_s Time in seconds from the start of the motion to execute the command.
    * @return ControlStatus indicating success or failure of command transmission
    */
   ControlStatus set_joint_commands(const std::vector<JointCommand>& joint_commands,
                                    const std::vector<std::string>& joint_groups = {},
-                                   const std::vector<std::string>& joint_names = {});
+                                   const std::vector<std::string>& joint_names = {},
+                                   const double time_from_start_s = 10);
   /**
    * @brief Set low-level joint commands for specified joint groups
    *
@@ -114,11 +116,13 @@ class GalbotRobot {
    *                     defaults to all body joints (legs, head, left_arm, right_arm).
    * @param joint_names Specific joint names to control. This parameter takes precedence
    *                    over joint_groups. When provided, joint_groups is ignored.
+   * @param time_from_start_s Time in seconds from the start of the motion to execute the command.
    * @return ControlStatus indicating success or failure of command transmission
    */
   ControlStatus set_joint_commands(const std::vector<JointCommand>& joint_commands,
                                    const std::vector<JointGroup>& joint_groups = {},
-                                   const std::vector<std::string>& joint_names = {});
+                                   const std::vector<std::string>& joint_names = {},
+                                   const double time_from_start_s = 10);
   /**
    * @brief Set target joint positions for specified joint groups
    *
@@ -140,6 +144,9 @@ class GalbotRobot {
    * @param timeout_s Maximum blocking wait time in seconds. Returns immediately upon timeout
    *                  regardless of execution completion. Default: 15 seconds.
    * @return ControlStatus indicating success or failure of the motion command
+   *
+   * @note For real-time control scenarios (e.g., teleoperation, VLA inference),
+   *       use set_joint_commands() instead.
    */
   ControlStatus set_joint_positions(const std::vector<double>& joint_positions,
                                     const std::vector<JointGroup>& joint_groups = {},
@@ -166,6 +173,9 @@ class GalbotRobot {
    * @param timeout_s Maximum blocking wait time in seconds. Returns immediately upon timeout
    *                  regardless of execution completion. Default: 15 seconds.
    * @return ControlStatus indicating success or failure of the motion command
+   *
+   * @note For real-time control scenarios (e.g., teleoperation, VLA inference),
+   *       use set_joint_commands() instead.
    */
   ControlStatus set_joint_positions(const std::vector<double>& joint_positions,
                                     const std::vector<std::string>& joint_groups = {},
@@ -205,6 +215,23 @@ class GalbotRobot {
    */
   ControlStatus execute_joint_trajectory(const Trajectory& trajectory, bool is_blocking = true);
   /**
+   * @brief Set joint commands in batch mode (non-blocking)
+   *
+   * Sets multiple joint command trajectory points in real-time control mode,
+   * supporting one-time submission of trajectory control commands for multiple
+   * time points. Provides a non-blocking high-frequency trajectory execution
+   * interface. Similar to set_joint_commands but supports batch trajectory control,
+   * suitable for scenarios such as VLA inference batch output.
+   *
+   * @param trajectory Trajectory data structure containing waypoints with joint commands.
+   *                   Each TrajectoryPoint contains time_from_start and a list of JointCommand.
+   *                   JointCommand includes position (rad), velocity (rad/s), acceleration (rad/s²),
+   *                   effort (N·m), Kp (position gain), and Kd (velocity gain).
+   * @return ControlStatus indicating success or failure of command submission.
+   *         Returns immediately without waiting for execution completion (non-blocking).
+   */
+  ControlStatus set_joint_commands_batch(const Trajectory& trajectory);
+  /**
    * @brief Control suction cup activation state
    *
    * Activates or deactivates the specified suction cup end-effector.
@@ -233,6 +260,22 @@ class GalbotRobot {
    */
   ControlStatus set_gripper_command(JointGroup end_effector, double width_m, double velocity_mps = 0.03,
                                     double effort = 30, bool is_blocking = true);
+
+  ControlStatus get_dexterous_hand_state(const JointGroup end_effector, JointStateMessage& joint_state);
+
+  /**
+   * @brief Control dexhand opening width and force
+   *
+   * Commands the dexhand to move to a specified opening width with controlled
+   * velocity and maximum gripping force.
+   *
+   * @param end_effector JointGroup enumeration specifying which dexhand to control
+   * @param dexhand_command Vector of dexhand commands containing control parameters for each joint
+   * @param is_blocking If true, blocks until dexhand reaches target position or times out.
+   * @return ControlStatus indicating success or failure of dexhand command
+   */
+  ControlStatus set_dexhand_command(JointGroup end_effector, const std::vector<JointCommand>& dexhand_command,
+                                    bool is_blocking = true);
   /**
    * @brief Get current gripper state
    *
@@ -360,10 +403,113 @@ class GalbotRobot {
    *                         - wx: roll rate (rotation about x-axis)
    *                         - wy: pitch rate (rotation about y-axis)
    *                         - wz: yaw rate (rotation about z-axis, positive counter-clockwise)
+   * @param duration_s Duration in seconds to maintain the velocity command before auto-stop.
+   *                   If <= 0, the command behaves as legacy mode (no automatic stop).
    * @return ControlStatus indicating success or failure of command transmission
    */
   ControlStatus set_base_velocity(const std::array<double, 3>& linear_velocity,
-                                  const std::array<double, 3>& angular_velocity);
+                                  const std::array<double, 3>& angular_velocity, double duration_s = 0.0);
+  /**
+   * @brief Set mobile base pose command
+   *
+   * Commands the robot's mobile base to move to a specified pose in its reference frame.
+   * This uses the chassis pose controller (CHASSIS_POSE_CTRL).
+   *
+   * @param base_pose Target base pose [x, y, z, qx, qy, qz, qw]
+   * @param is_blocking If true, waits for controller response; if false, returns immediately after request
+   * @param timeout_s Timeout for blocking request (seconds)
+   * @return ControlStatus indicating success or failure of command transmission
+   */
+  ControlStatus set_base_pose(const Pose& base_pose, bool is_blocking = true, double timeout_s = 15.0);
+  /**
+   * @brief Set mobile base pose (x, y, yaw) with selectable frames
+   *
+   * @param x Target x position (meters)
+   * @param y Target y position (meters)
+   * @param yaw Target yaw (radians)
+   * @param frame_id Frame id of target. Options: "base_link" / "odom" / "map" (Note: reserved for future versions;
+   * currently non-functional. Use empty string.)
+   * @param reference_frame_id Reference frame id. Options: "odom" / "map"
+   * @param is_blocking If true, waits for controller response; if false, returns immediately after request
+   * @param timeout_s Timeout for blocking request (seconds)
+   * @return ControlStatus indicating success or failure of command transmission
+   */
+  ControlStatus set_base_pose(double x, double y, double yaw, const std::string& frame_id = "",
+                              const std::string& reference_frame_id = "odom", bool is_blocking = true,
+                              double timeout_s = 15.0);
+  /**
+   * @brief Set mobile base pose (x, y, yaw) with explicit interpolation time
+   *
+   * @param x Target x position (meters)
+   * @param y Target y position (meters)
+   * @param yaw Target yaw (radians)
+   * @param frame_id Frame id of target. Options: "base_link" / "odom" / "map" (Note: reserved for future versions;
+   * currently non-functional. Use empty string.)
+   * @param reference_frame_id Reference frame id. Options: "odom" / "map"
+   * @param time_from_start_s Chassis pose interpolation time (seconds)
+   * @param is_blocking If true, waits for controller response; if false, returns immediately after request
+   * @param timeout_s Request timeout (seconds)
+   * @return ControlStatus indicating success or failure of command transmission
+   */
+  ControlStatus set_base_pose(double x, double y, double yaw, const std::string& frame_id,
+                              const std::string& reference_frame_id, double time_from_start_s, bool is_blocking = true,
+                              double timeout_s = 15.0);
+  /**
+   * @brief Execute a whole-body target with base velocity
+   *
+   * Sends joint position commands for the full body (legs, head, left_arm, right_arm) and
+   * a chassis twist command using existing joint/base interfaces. Commands are dispatched
+   * in sequence (no multithreading) but start in close succession.
+   *
+   * @param joint_positions Whole-body joint positions: leg(5) + head(2) + left_arm(7) + right_arm(7)
+   * @param linear_velocity Base linear velocity [vx, vy, vz] in base frame (m/s)
+   * @param angular_velocity Base angular velocity [wx, wy, wz] in base frame (rad/s)
+   * @param is_blocking If true, waits for joint execution to complete or timeout
+   * @param speed_rad_s Max joint speed for the joint target (rad/s)
+   * @param timeout_s Timeout for blocking wait (seconds)
+   * @return ControlStatus indicating success or failure of the command
+   */
+  ControlStatus execute_whole_body_target(const std::vector<double>& joint_positions,
+                                          const std::array<double, 3>& linear_velocity,
+                                          const std::array<double, 3>& angular_velocity, bool is_blocking = true,
+                                          double speed_rad_s = 0.2, double timeout_s = 15.0);
+  /**
+   * @brief Execute a whole-body target with base pose
+   *
+   * Sends joint position commands for the full body (legs, head, left_arm, right_arm) and
+   * a chassis pose command using existing joint/base interfaces. Commands are dispatched
+   * in sequence (no multithreading) but start in close succession.
+   *
+   * @param joint_positions Whole-body joint positions: leg(5) + head(2) + left_arm(7) + right_arm(7)
+   * @param base_pose Target base pose [x, y, z, qx, qy, qz, qw]
+   * @param is_blocking If true, waits for joint execution to complete or timeout
+   * @param speed_rad_s Max joint speed for the joint target (rad/s)
+   * @param timeout_s Timeout for blocking wait (seconds)
+   * @return ControlStatus indicating success or failure of the command
+   */
+  ControlStatus execute_whole_body_target(const std::vector<double>& joint_positions, const Pose& base_pose,
+                                          bool is_blocking = true, double speed_rad_s = 0.2, double timeout_s = 15.0);
+  /**
+   * @brief Execute a whole-body target with base pose (x, y, yaw) and selectable frames
+   *
+   * @param joint_positions Whole-body joint positions: leg(5) + head(2) + left_arm(7) + right_arm(7)
+   * @param x Target x position (meters)
+   * @param y Target y position (meters)
+   * @param yaw Target yaw (radians)
+   * @param frame_id Frame id of target. Options: "base_link" / "odom" / "map" (Note: reserved for future versions;
+   * currently non-functional. Use empty string.)
+   * @param reference_frame_id Reference frame id. Options: "odom" / "map"
+   * @param is_blocking If true, waits for joint execution to complete or timeout
+   * @param speed_rad_s Max joint speed for the joint target (rad/s)
+   * @param time_from_start_s Chassis pose interpolation duration (seconds)
+   * @param timeout_s Timeout for blocking wait (seconds)
+   * @return ControlStatus indicating success or failure of the command
+   */
+  ControlStatus execute_whole_body_target(const std::vector<double>& joint_positions, double x, double y, double yaw,
+                                          const std::string& frame_id = "",
+                                          const std::string& reference_frame_id = "odom", bool is_blocking = true,
+                                          double speed_rad_s = 0.2, double time_from_start_s = 10.0,
+                                          double timeout_s = 15.0);
   /**
    * @brief Emergency stop mobile base movement
    *
@@ -374,6 +520,38 @@ class GalbotRobot {
    */
   ControlStatus stop_base();
   /**
+   * @brief One-key zero: move whole-body joints to zero and base to zero pose
+   *
+   * This calls GalbotMotion::move_whole_body_joint_zero for joint zeroing, and
+   * commands the base pose to zero. If params is nullptr, default_param is used.
+   *
+   * @param base_zero_pose Target base zero pose [x, y, z, qx, qy, qz, qw]
+   * @param is_blocking Whether to block on joint zeroing
+   * @param leg_head_speed_rad_s Max joint speed for leg/head direct control (rad/s)
+   * @param leg_head_timeout_s Timeout for leg/head direct control (seconds)
+   * @param params Motion planning parameters (nullptr uses default_param)
+   * @return Pair of (MotionStatus for joints, ControlStatus for base)
+   */
+  std::pair<MotionStatus, ControlStatus> zero_whole_body_and_base(const Pose& base_zero_pose, bool is_blocking = true,
+                                                                  double leg_head_speed_rad_s = 0.2,
+                                                                  double leg_head_timeout_s = 15.0,
+                                                                  std::shared_ptr<Parameter> params = nullptr);
+  /**
+   * @brief One-key zero: move whole-body joints to zero and base (x,y,yaw) to zero with selectable frames
+   *
+   * @param frame_id Frame id of target. Options: "base_link" / "odom" / "map" (Note: reserved for future versions;
+   * currently non-functional. Use empty string.)
+   * @param reference_frame_id Reference frame id. Options: "odom" / "map"
+   * @param is_blocking Whether to block on joint zeroing
+   * @param leg_head_speed_rad_s Max joint speed for leg/head direct control (rad/s)
+   * @param leg_head_timeout_s Timeout for leg/head direct control (seconds)
+   * @param params Motion planning parameters (nullptr uses default_param)
+   * @return Pair of (MotionStatus for joints, ControlStatus for base)
+   */
+  std::pair<MotionStatus, ControlStatus> zero_whole_body_and_base(
+      const std::string& frame_id = "", const std::string& reference_frame_id = "odom", bool is_blocking = true,
+      double leg_head_speed_rad_s = 0.2, double leg_head_timeout_s = 15.0, std::shared_ptr<Parameter> params = nullptr);
+  /**
    * @brief Stop all currently executing joint trajectories
    *
    * Immediately halts execution of all active joint trajectories across all joint groups.
@@ -382,6 +560,131 @@ class GalbotRobot {
    * @return ControlStatus indicating success or failure of command transmission
    */
   ControlStatus stop_trajectory_execution();
+
+  /**
+   * @brief Reload a controller
+   *
+   * Reinitializes the controller. Equivalent to a full restart cycle: stop -> reset -> start.
+   * Useful for error recovery or applying configuration changes.
+   *
+   * @param group_name Name of the joint group to reload. Supported groups: chassis,
+   * legs, head, left_arm, right_arm, gripper, or "all" to reload all controllers (default).
+   * @return ControlStatus indicating success or failure of the reload operation
+   */
+  ControlStatus reload_controller(const std::string& group_name = "all");
+  /**
+   * @brief Reload a controller
+   *
+   * Reinitializes the controller. Equivalent to a full restart cycle: stop -> reset -> start.
+   * Useful for error recovery or applying configuration changes.
+   *
+   * @param joint_group JointGroup enumeration of the joint group to reload.
+   * @return ControlStatus indicating success or failure of the reload operation
+   */
+  ControlStatus reload_controller(const JointGroup joint_group);
+
+  /**
+   * @brief Switch active controller strategy
+   *
+   * Transitions hardware control to a new strategy.
+   * Operation sequence: stop(old) -> release(old) -> acquire(new) -> start(new).
+   *
+   * @param controller_name Name of the controller to switch to.
+   * @return ControlStatus indicating success or failure of the switch operation.
+   */
+  ControlStatus switch_controller(ControllerName controller_name);
+
+  /**
+   * @brief Get active controller name for specified joint group
+   *
+   * @param group_name Name of the joint group to query.
+   * @return ControllerName Name of the active controller.
+   */
+  ControllerName get_active_controller(const std::string& group_name);
+  /**
+   * @brief Get active controller name for specified joint group
+   *
+   * @param joint_group JointGroup enumeration of the joint group to query.
+   * @return ControllerName Name of the active controller.
+   */
+  ControllerName get_active_controller(const JointGroup joint_group);
+
+  /**
+   * @brief Acquire hardware authority
+   *
+   * Designates the controller to take ownership of the hardware.
+   * Opposite of release_controller. Controller must still be started to begin execution.
+   *
+   * @param controller_name Name of the controller to acquire.
+   * @return ControlStatus indicating success or failure of the acquire operation.
+   */
+  ControlStatus acquire_controller(ControllerName controller_name);
+
+  /**
+   * @brief Release hardware authority
+   *
+   * Yields control of the hardware, freeing the joints.
+   * Opposite of acquire_controller. Implicitly stops execution if running.
+   *
+   * @param group_name Name of the joint group to release. Supported groups: chassis,
+   * legs, head, left_arm, right_arm, gripper, or "all" to release all controllers (default).
+   * @return ControlStatus indicating success or failure of the release operation
+   */
+  ControlStatus release_controller(const std::string& group_name = "all");
+  /**
+   * @brief Release hardware authority
+   *
+   * Yields control of the hardware, freeing the joints.
+   * Opposite of acquire_controller. Implicitly stops execution if running.
+   *
+   * @param joint_group JointGroup enumeration of the joint group to release.
+   * @return ControlStatus indicating success or failure of the release operation
+   */
+  ControlStatus release_controller(const JointGroup joint_group);
+
+  /**
+   * @brief Start controller execution
+   *
+   * Activates the controller to begin sending commands.
+   * Opposite of stop_controller. Requires prior hardware authority (acquire).
+   *
+   * @param group_name Name of the joint group to start. Supported groups: chassis,
+   * legs, head, left_arm, right_arm, gripper, or "all" to start all controllers (default).
+   * @return ControlStatus indicating success or failure of the start operation
+   */
+  ControlStatus start_controller(const std::string& group_name = "all");
+  /**
+   * @brief Start controller execution
+   *
+   * Activates the controller to begin sending commands.
+   * Opposite of stop_controller. Requires prior hardware authority (acquire).
+   *
+   * @param joint_group JointGroup enumeration of the joint group to start.
+   * @return ControlStatus indicating success or failure of the start operation
+   */
+  ControlStatus start_controller(const JointGroup joint_group);
+
+  /**
+   * @brief Stop controller execution
+   *
+   * Halts command execution but retains hardware authority.
+   * Opposite of start_controller.
+   *
+   * @param group_name Name of the joint group to stop. Supported groups: chassis,
+   * legs, head, left_arm, right_arm, gripper, or "all" to stop all controllers (default).
+   * @return ControlStatus indicating success or failure of the stop operation
+   */
+  ControlStatus stop_controller(const std::string& group_name = "all");
+  /**
+   * @brief Stop controller execution
+   *
+   * Halts command execution but retains hardware authority.
+   * Opposite of start_controller.
+   *
+   * @param joint_group JointGroup enumeration of the joint group to stop.
+   * @return ControlStatus indicating success or failure of the stop operation
+   */
+  ControlStatus stop_controller(const JointGroup joint_group);
 
   /**
    * @brief Get IMU (Inertial Measurement Unit) sensor data
@@ -414,6 +717,23 @@ class GalbotRobot {
    *         Returns nullptr if odometry is unavailable.
    */
   std::shared_ptr<OdomData> get_odom();
+  /**
+   * @brief Get device information
+   *
+   * Retrieves basic device information including device model, serial number,
+   * firmware version, hardware version, and manufacturer. This information
+   * is used for device management, version control, system diagnostics, and
+   * device identification.
+   *
+   * @return Shared pointer to DeviceInfo structure containing:
+   *         - model: Device model name or identifier
+   *         - serial_number: Unique serial number for device identification
+   *         - firmware_version: System firmware version string
+   *         - hardware_version: Hardware version or revision number
+   *         - manufacturer: Manufacturer name or company identifier
+   *         Returns nullptr if device information retrieval fails.
+   */
+  std::shared_ptr<DeviceInfo> get_device_information();
 
   /**
    * @brief Get latest RGB image from specified camera
@@ -474,14 +794,36 @@ class GalbotRobot {
   std::shared_ptr<UltrasonicData> get_ultrasonic_data(const UltrasonicType ultrasonic_type);
 
   /**
+   * @brief Get camera intrinsic parameters
+   *
+   * Retrieves the intrinsic parameters of the specified camera, including
+   * focal lengths, principal points, and distortion coefficients, etc.
+   *
+   * @param camera SensorType enumeration specifying which camera to query
+   * @return Shared pointer to CameraInfo containing:
+   *         - focal_length_x, focal_length_y: Focal lengths in pixels
+   *         - principal_point_x, principal_point_y: Principal point coordinates in pixels
+   *         - distortion_coeffs: Vector of distortion coefficients (e.g., k1, k2, p1, p2, k3)
+   *         - more camera-specific parameters as needed
+   *         Returns nullptr if camera is not enabled or data retrieval fails.
+   *
+   * @note The camera sensor must be enabled during initialization via enable_sensor_set
+   */
+  std::shared_ptr<CameraInfo> get_camera_intrinsic(const SensorType camera);
+
+  /**
    * @brief Query coordinate frame transformation (TF)
    *
    * Queries the transformation between two coordinate frames in the robot's TF tree.
    * This is used for converting poses and positions between different reference frames
    * (e.g., from camera frame to base frame, from end-effector to world frame).
    *
-   * @param target_frame Name of the target coordinate frame (frame to transform into)
-   * @param source_frame Name of the source coordinate frame (frame to transform from)
+   * @param target_frame Name of the target coordinate frame (frame to transform into).
+   *                     Examples: map, base_link, imu_base_link. The actual list is determined by
+   *                     get_frame_names().
+   * @param source_frame Name of the source coordinate frame (frame to transform from).
+   *                     Examples: map, base_link, imu_base_link. The actual list is determined by
+   *                     get_frame_names().
    * @param timestamp_ns Desired transform timestamp in nanoseconds. Pass 0 to get
    *                     the most recent available transformation.
    * @param timeout_ms Maximum time to wait for the transform in milliseconds.
@@ -498,6 +840,32 @@ class GalbotRobot {
                                                         const std::string& source_frame, int64_t timestamp_ns = 0,
                                                         int64_t timeout_ms = 100);
   /**
+   * @brief Get all frame names
+   *
+   * @return std::vector<std::string> All frame names
+   */
+  std::vector<std::string> get_frame_names();
+  /**
+   * @brief Get sensor extrinsic parameters
+   *
+   * Retrieves the extrinsic parameters of the specified sensor, including
+   * rotation and translation vectors relative to the robot's base frame.
+   *
+   * @param sensor SensorType enumeration specifying which sensor to query
+   * @param reference_frame Name of the reference coordinate frame (frame to transform from)
+   *                        Default is "base_link".
+   * @return Pair containing:
+   *         - Vector of 7 doubles representing the transform [x, y, z, qx, qy, qz, qw]
+   *           where (x, y, z) is translation in meters and (qx, qy, qz, qw) is
+   *           orientation quaternion
+   *         - Timestamp in nanoseconds when the transform was valid
+   *         Returns empty vector and timestamp 0 if retrieval fails.
+   *
+   * @note The sensor must be enabled during initialization via enable_sensor_set
+   */
+  std::pair<std::vector<double>, int64_t> get_sensor_extrinsic(const SensorType sensor_id,
+                                                               const std::string& reference_frame = "base_link");
+  /**
    * @brief Get force/torque sensor data
    *
    * Retrieves the latest measurements from the specified force/torque sensor.
@@ -512,8 +880,57 @@ class GalbotRobot {
    *         Returns nullptr if sensor is not enabled or data retrieval fails.
    *
    * @note The force sensor must be enabled during initialization via enable_sensor_set
+   * @note The returned values are raw readings and include the self-weight of the end-effectors.
    */
   std::shared_ptr<ForceData> get_force_sensor_data(const GalbotOneFoxtrotSensor sensor_type);
+
+  /**
+   * @brief Start microphone streaming audio input
+   *
+   * @param callback Audio data callback function with signature: void(const std::shared_ptr<AudioData>)
+   * @param chunk_size Audio data chunk size in bytes, default value 2560. Dynamic configuration not supported yet
+   * @param use_raw_audio Whether to use raw audio, default false. Dynamic configuration not supported yet.
+   *                      true means output raw audio directly, false means output processed audio
+   * @return std::string Stream ID used to identify this audio input stream
+   */
+  std::string start_microphone_stream_input(std::function<void(const std::shared_ptr<AudioData>)> callback,
+                                            int chunk_size = 2560, bool use_raw_audio = false);
+  /**
+   * @brief Stop the specified microphone streaming audio input
+   *
+   * @param stream_id Audio input stream ID to stop. If empty string, stops all active streams
+   */
+  void stop_microphone_stream_input(const std::string& stream_id = "");
+
+  /**
+   * @brief Write PCM format audio data chunk to audio output stream for real-time playback
+   *
+   * @param audio_chunk Audio data chunk in PCM format (16000 Hz, 16-bit little-endian), single channel
+   * @param stream_id Audio stream ID to distinguish different audio sources. Empty string means use default stream
+   * @return bool Returns operation result. True means audio data has been successfully written and playback task
+   * issued, False means write failed
+   */
+  bool write_audio_stream_output(const std::string& audio_chunk, const std::string& stream_id = "");
+  /**
+   * @brief Stop the specified audio output stream or all active audio output streams playback
+   *
+   * @param stream_id Audio output stream ID to stop. Empty string means stop all active audio output streams
+   */
+  void stop_audio_stream_output(const std::string& stream_id = "");
+  /**
+   * @brief Get current system global volume value
+   *
+   * @return float Returns current volume value, range 0.0 to 100.0
+   */
+  float get_volume();
+  /**
+   * @brief Set system global volume value
+   *
+   * @param volume Target volume value, range 0.0 to 100.0
+   * @return bool Returns the volume setting result. True indicates the volume was set successfully, False indicates the
+   * volume setting failed.
+   */
+  bool set_volume(float volume);
 
   /**
    * @brief Check if the robot control system is running
@@ -568,6 +985,20 @@ class GalbotRobot {
    * @note Callbacks should complete quickly to avoid delaying shutdown
    */
   void register_exit_callback(std::function<void()> exit_function);
+
+  /**
+   * @brief Get BMS (Battery Management System) information
+   *
+   * @return Shared pointer to BmsInfo containing battery information
+   */
+  std::shared_ptr<BmsInfo> get_bms_information();
+
+  /**
+   * @brief Get log information
+   *
+   * @return Shared pointer to LogInfo containing log information
+   */
+  std::shared_ptr<LogInfo> get_log_information(uint64 timewindow_s, LogLevel log_level);
 
  private:
   // Default constructor (private for singleton pattern)

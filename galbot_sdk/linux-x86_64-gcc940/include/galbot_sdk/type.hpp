@@ -25,19 +25,19 @@
  * @namespace galbot
  * @brief Root namespace for Galbot robotics software
  */
- namespace galbot {
+namespace galbot {
 
-  /**
-   * @namespace galbot::sdk
-   * @brief Galbot Software Development Kit namespace
-   */
-  namespace sdk {
+/**
+ * @namespace galbot::sdk
+ * @brief Galbot Software Development Kit namespace
+ */
+namespace sdk {
 
-  /**
-   * @namespace galbot::sdk::g1
-   * @brief Namespace for Galbot G1 humanoid robot
-   */
-  namespace g1 {
+/**
+ * @namespace galbot::sdk::g1
+ * @brief Namespace for Galbot G1 humanoid robot
+ */
+namespace g1 {
 
 /**
  * @brief Navigation task execution status enumeration
@@ -46,13 +46,27 @@
  * moving to a goal position or following a path.
  */
 enum class NavigationStatus {
-  SUCCESS,          /**< Execution succeeded, navigation task completed as expected */
-  FAIL,             /**< Execution failed due to unspecified error */
-  TIMEOUT,          /**< Execution timeout, task did not complete within allowed time */
-  INVALID_INPUT,    /**< Input parameters do not meet requirements or are out of valid range */
-  MODE_ERR,         /**< Current mode does not support this operation */
-  COMM_ERR,         /**< Communication error occurred during execution */
-  WAIT_INITIALIZED  /**< Waiting for system initialization, navigation system not ready */
+  SUCCESS,         /**< Execution succeeded, navigation task completed as expected */
+  FAIL,            /**< Execution failed due to unspecified error */
+  TIMEOUT,         /**< Execution timeout, task did not complete within allowed time */
+  INVALID_INPUT,   /**< Input parameters do not meet requirements or are out of valid range */
+  MODE_ERR,        /**< Current mode does not support this operation */
+  COMM_ERR,        /**< Communication error occurred during execution */
+  WAIT_INITIALIZED /**< Waiting for system initialization, navigation system not ready */
+};
+
+/**
+ * @brief Navigation task current state enumeration
+ *
+ * Represents the current state of an active or completed navigation task,
+ * as reported by the navigation system. Used for polling during non-blocking
+ * navigation to detect RUNNING, SUCCESS, or FAILED and exit error logic in time.
+ */
+enum class NavigationTaskStatus {
+  UNKNOWN = 0, /**< Task state unknown or not yet reported */
+  RUNNING = 1, /**< Navigation task is in progress */
+  SUCCESS = 2, /**< Navigation task completed successfully */
+  FAILED = 3   /**< Navigation task failed */
 };
 
 /**
@@ -62,17 +76,17 @@ enum class NavigationStatus {
  * joint control, end-effector control, and other motion control operations.
  */
 enum class ControlStatus {
-  SUCCESS,            /**< Execution succeeded, command completed with valid result */
-  TIMEOUT,            /**< Execution timeout, task not completed within specified time limit */
-  FAULT,              /**< Fault occurred, system detected anomaly and aborted execution */
-  INVALID_INPUT,      /**< Input parameters invalid or not meeting interface requirements */
-  INIT_FAILED,        /**< Initialization failed, internal communication or dependent component creation failed */
-  IN_PROGRESS,        /**< Command is executing but has not reached target state */
-  STOPPED_UNREACHED,  /**< Stopped during execution without reaching target position or state */
-  DATA_FETCH_FAILED,  /**< Data retrieval failed during operation, unable to read required state */
-  PUBLISH_FAIL,       /**< Control or state data publication failed, command may not be transmitted */
-  COMM_DISCONNECTED,  /**< Communication connection lost, cannot continue execution */
-  STATUS_NUM          /**< Total number of status enumerations (for boundary checking or array sizing) */
+  SUCCESS,           /**< Execution succeeded, command completed with valid result */
+  TIMEOUT,           /**< Execution timeout, task not completed within specified time limit */
+  FAULT,             /**< Fault occurred, system detected anomaly and aborted execution */
+  INVALID_INPUT,     /**< Input parameters invalid or not meeting interface requirements */
+  INIT_FAILED,       /**< Initialization failed, internal communication or dependent component creation failed */
+  IN_PROGRESS,       /**< Command is executing but has not reached target state */
+  STOPPED_UNREACHED, /**< Stopped during execution without reaching target position or state */
+  DATA_FETCH_FAILED, /**< Data retrieval failed during operation, unable to read required state */
+  PUBLISH_FAIL,      /**< Control or state data publication failed, command may not be transmitted */
+  COMM_DISCONNECTED, /**< Communication connection lost, cannot continue execution */
+  STATUS_NUM         /**< Total number of status enumerations (for boundary checking or array sizing) */
 };
 
 /**
@@ -82,17 +96,17 @@ enum class ControlStatus {
  * applicable to cameras, lidar, IMU, force sensors, and other sensor types.
  */
 enum class SensorStatus {
-  SUCCESS,            /**< Execution succeeded, sensor data valid and operation completed */
-  TIMEOUT,            /**< Execution timeout, data acquisition or operation not completed within specified time limit */
-  FAULT,              /**< Fault occurred, sensor detected anomaly and cannot continue normal operation */
-  INVALID_INPUT,      /**< Input parameters invalid or not meeting interface requirements */
-  INIT_FAILED,        /**< Initialization failed, internal communication or dependent component creation failed */
-  IN_PROGRESS,        /**< Operation in progress but not yet completed */
-  STOPPED_UNREACHED,  /**< Stopped during execution without completing expected operation */
-  DATA_FETCH_FAILED,  /**< Data acquisition or reading failed, sensor may be disconnected or malfunctioning */
-  PUBLISH_FAIL,       /**< Data transmission or reporting failed, unable to publish sensor data */
-  COMM_DISCONNECTED,  /**< Sensor communication connection lost, no data available */
-  STATUS_NUM          /**< Total number of status enumerations (for boundary checking or array sizing) */
+  SUCCESS,           /**< Execution succeeded, sensor data valid and operation completed */
+  TIMEOUT,           /**< Execution timeout, data acquisition or operation not completed within specified time limit */
+  FAULT,             /**< Fault occurred, sensor detected anomaly and cannot continue normal operation */
+  INVALID_INPUT,     /**< Input parameters invalid or not meeting interface requirements */
+  INIT_FAILED,       /**< Initialization failed, internal communication or dependent component creation failed */
+  IN_PROGRESS,       /**< Operation in progress but not yet completed */
+  STOPPED_UNREACHED, /**< Stopped during execution without completing expected operation */
+  DATA_FETCH_FAILED, /**< Data acquisition or reading failed, sensor may be disconnected or malfunctioning */
+  PUBLISH_FAIL,      /**< Data transmission or reporting failed, unable to publish sensor data */
+  COMM_DISCONNECTED, /**< Sensor communication connection lost, no data available */
+  STATUS_NUM         /**< Total number of status enumerations (for boundary checking or array sizing) */
 };
 
 /**
@@ -102,18 +116,48 @@ enum class SensorStatus {
  * trajectory following, pose reaching, and other motion planning operations.
  */
 enum class MotionStatus {
-  SUCCESS,              /**< Execution succeeded, motion reached expected target position/pose */
-  TIMEOUT,              /**< Execution timeout, motion not completed within specified time limit */
-  FAULT,                /**< Fault occurred, motion cannot continue due to hardware or safety issue */
-  INVALID_INPUT,        /**< Input parameters invalid or not meeting interface requirements */
-  INIT_FAILED,          /**< Internal initialization failed, communication component or resource creation failed */
-  IN_PROGRESS,          /**< Motion in progress but has not reached target yet */
-  STOPPED_UNREACHED,    /**< Stopped during motion without reaching target position/pose */
-  DATA_FETCH_FAILED,    /**< Data retrieval failed, e.g., sensor or state reading failure */
-  PUBLISH_FAIL,         /**< Data transmission or command delivery failed, motion command may not be executed */
-  COMM_DISCONNECTED,    /**< Communication disconnected or control node unavailable */
-  STATUS_NUM,           /**< Total number of status enumerations (for boundary checking or array sizing) */
-  UNSUPPORTED_FUNCRION  /**< Function not yet supported, called interface or operation not implemented (note: typo in enum name preserved for API compatibility) */
+  SUCCESS,             /**< Execution succeeded, motion reached expected target position/pose */
+  TIMEOUT,             /**< Execution timeout, motion not completed within specified time limit */
+  FAULT,               /**< Fault occurred, motion cannot continue due to hardware or safety issue */
+  INVALID_INPUT,       /**< Input parameters invalid or not meeting interface requirements */
+  INIT_FAILED,         /**< Internal initialization failed, communication component or resource creation failed */
+  IN_PROGRESS,         /**< Motion in progress but has not reached target yet */
+  STOPPED_UNREACHED,   /**< Stopped during motion without reaching target position/pose */
+  DATA_FETCH_FAILED,   /**< Data retrieval failed, e.g., sensor or state reading failure */
+  PUBLISH_FAIL,        /**< Data transmission or command delivery failed, motion command may not be executed */
+  COMM_DISCONNECTED,   /**< Communication disconnected or control node unavailable */
+  STATUS_NUM,          /**< Total number of status enumerations (for boundary checking or array sizing) */
+  UNSUPPORTED_FUNCRION /**< Function not yet supported, called interface or operation not implemented (note: typo in
+                          enum name preserved for API compatibility) */
+};
+
+/**
+ * @brief Log level enumeration
+ *
+ * Represents the severity level of log messages.
+ */
+enum class LogLevel {
+  TRACE = 0, /**< Trace level, detailed information for debugging */
+  DEBUG,     /**< Debug level, diagnostic information for developers */
+  INFO,      /**< Info level, general operational messages */
+  WARN,      /**< Warn level, potentially harmful situations */
+  ERROR,     /**< Error level, error events that might still allow the application to continue running */
+  CRITICAL   /**< Critical level, severe error events that lead to application termination */
+};
+
+/**
+ * @brief Logger configuration structure
+ *
+ * Defines the configuration parameters for the logging system, including
+ * file settings, log levels, and output options.
+ */
+struct LoggerConfig {
+  std::string path = "";      /**< Directory path for log files. Default: ~/galbot_sdk_log/user_log */
+  std::string file_name = ""; /**< Log file name. Default: <process_name>_<current_time>_<pid>_<thread_id>.log */
+  uint64_t file_max_size = 10 * 1024 * 1024; /**< Maximum size of a single log file (bytes) */
+  uint64_t file_max_num = 5;                 /**< Number of log files to retain in rotation */
+  LogLevel level = LogLevel::INFO;           /**< Minimum log level to record */
+  bool console_output = false;               /**< Flag to enable or disable console output */
 };
 
 /**
@@ -123,13 +167,13 @@ enum class MotionStatus {
  * pre-planned trajectory consisting of multiple waypoints.
  */
 enum class TrajectoryControlStatus {
-  INVALID_INPUT,      /**< Input parameters do not meet requirements, trajectory cannot be executed */
-  RUNNING,            /**< Trajectory is currently executing, not yet completed */
-  COMPLETED,          /**< Trajectory execution completed successfully, reached final target point */
-  STOPPED_UNREACHED,  /**< Stopped during trajectory execution without reaching endpoint */
-  ERROR,              /**< Error occurred, trajectory execution cannot continue */
-  DATA_FETCH_FAILED,  /**< Execution data retrieval failed, e.g., joint state or sensor feedback unavailable */
-  STATUS_NUM          /**< Total number of status enumerations (for boundary checking or array sizing) */
+  INVALID_INPUT,     /**< Input parameters do not meet requirements, trajectory cannot be executed */
+  RUNNING,           /**< Trajectory is currently executing, not yet completed */
+  COMPLETED,         /**< Trajectory execution completed successfully, reached final target point */
+  STOPPED_UNREACHED, /**< Stopped during trajectory execution without reaching endpoint */
+  ERROR,             /**< Error occurred, trajectory execution cannot continue */
+  DATA_FETCH_FAILED, /**< Execution data retrieval failed, e.g., joint state or sensor feedback unavailable */
+  STATUS_NUM         /**< Total number of status enumerations (for boundary checking or array sizing) */
 };
 
 /**
@@ -139,16 +183,18 @@ enum class TrajectoryControlStatus {
  * Each group typically represents a kinematic chain or end-effector subsystem.
  */
 enum class JointGroup {
-  HEAD,               /**< Head joint group, typically for pan-tilt or vision orientation */
-  LEFT_ARM,           /**< Left arm joint group, multi-DOF manipulator chain */
-  RIGHT_ARM,          /**< Right arm joint group, multi-DOF manipulator chain */
-  LEG,                /**< Leg joint group, for humanoid or legged robots */
-  CHASSIS,            /**< Chassis joint group, mobile base or lower platform */
-  LEFT_GRIPPER,       /**< Left gripper joint group, typically 1-2 DOF parallel jaw gripper */
-  RIGHT_GRIPPER,      /**< Right gripper joint group, typically 1-2 DOF parallel jaw gripper */
-  LEFT_SUCTION_CUP,   /**< Left suction cup joint group, vacuum-based end-effector */
-  RIGHT_SUCTION_CUP,  /**< Right suction cup joint group, vacuum-based end-effector */
-  JOINT_GROUP_NUM     /**< Total number of joint group enumerations (for boundary checking or array sizing) */
+  HEAD,              /**< Head joint group, typically for pan-tilt or vision orientation */
+  LEFT_ARM,          /**< Left arm joint group, multi-DOF manipulator chain */
+  RIGHT_ARM,         /**< Right arm joint group, multi-DOF manipulator chain */
+  LEG,               /**< Leg joint group, for humanoid or legged robots */
+  CHASSIS,           /**< Chassis joint group, mobile base or lower platform */
+  LEFT_GRIPPER,      /**< Left gripper joint group, typically 1-2 DOF parallel jaw gripper */
+  RIGHT_GRIPPER,     /**< Right gripper joint group, typically 1-2 DOF parallel jaw gripper */
+  LEFT_SUCTION_CUP,  /**< Left suction cup joint group, vacuum-based end-effector */
+  RIGHT_SUCTION_CUP, /**< Right suction cup joint group, vacuum-based end-effector */
+  LEFT_DEXHAND,      /**< Left dexhand joint group, dexterous hand end-effector */
+  RIGHT_DEXHAND,     /**< Right dexhand joint group, dexterous hand end-effector */
+  JOINT_GROUP_NUM    /**< Total number of joint group enumerations (for boundary checking or array sizing) */
 };
 
 /**
@@ -158,16 +204,16 @@ enum class JointGroup {
  * localization, and manipulation tasks.
  */
 enum class SensorType {
-  HEAD_LEFT_CAMERA,        /**< Head left camera, typically RGB camera for stereo vision */
-  HEAD_RIGHT_CAMERA,       /**< Head right camera, typically RGB camera for stereo vision */
-  LEFT_ARM_CAMERA,         /**< Left arm camera, mounted on left manipulator for visual servoing */
-  RIGHT_ARM_CAMERA,        /**< Right arm camera, mounted on right manipulator for visual servoing */
-  LEFT_ARM_DEPTH_CAMERA,   /**< Left arm depth camera, provides RGB-D data for left arm workspace */
-  RIGHT_ARM_DEPTH_CAMERA,  /**< Right arm depth camera, provides RGB-D data for right arm workspace */
-  BASE_LIDAR,              /**< Base lidar, laser scanner for 2D/3D environment mapping and obstacle detection */
-  TORSO_IMU,               /**< Torso IMU (Inertial Measurement Unit), measures acceleration and angular velocity */
-  BASE_ULTRASONIC,         /**< Base ultrasonic sensor array, for proximity detection and collision avoidance */
-  SENSOR_NUM               /**< Total number of sensor enumerations (for boundary checking or array sizing) */
+  HEAD_LEFT_CAMERA,       /**< Head left camera, typically RGB camera for stereo vision */
+  HEAD_RIGHT_CAMERA,      /**< Head right camera, typically RGB camera for stereo vision */
+  LEFT_ARM_CAMERA,        /**< Left arm camera, mounted on left manipulator for visual servoing */
+  RIGHT_ARM_CAMERA,       /**< Right arm camera, mounted on right manipulator for visual servoing */
+  LEFT_ARM_DEPTH_CAMERA,  /**< Left arm depth camera, provides RGB-D data for left arm workspace */
+  RIGHT_ARM_DEPTH_CAMERA, /**< Right arm depth camera, provides RGB-D data for right arm workspace */
+  BASE_LIDAR,             /**< Base lidar, laser scanner for 2D/3D environment mapping and obstacle detection */
+  TORSO_IMU,              /**< Torso IMU (Inertial Measurement Unit), measures acceleration and angular velocity */
+  BASE_ULTRASONIC,        /**< Base ultrasonic sensor array, for proximity detection and collision avoidance */
+  SENSOR_NUM              /**< Total number of sensor enumerations (for boundary checking or array sizing) */
 };
 
 /**
@@ -195,9 +241,33 @@ enum class UltrasonicType {
  * force-controlled manipulation and contact detection.
  */
 enum class GalbotOneFoxtrotSensor {
-  LEFT_WRIST_FORCE,   /**< Left wrist force/torque sensor, typically 6-axis (3 forces + 3 torques) */
-  RIGHT_WRIST_FORCE,  /**< Right wrist force/torque sensor, typically 6-axis (3 forces + 3 torques) */
-  FORCE_NUM,          /**< Total number of force sensor enumerations (for boundary checking or array sizing) */
+  LEFT_WRIST_FORCE,  /**< Left wrist force/torque sensor, typically 6-axis (3 forces + 3 torques) */
+  RIGHT_WRIST_FORCE, /**< Right wrist force/torque sensor, typically 6-axis (3 forces + 3 torques) */
+  FORCE_NUM,         /**< Total number of force sensor enumerations (for boundary checking or array sizing) */
+};
+
+/**
+ * @brief Controller name enumeration
+ *
+ * Identifies the available controllers for different robot parts.
+ * Used for switching active controllers.
+ */
+enum class ControllerName {
+  CHASSIS_POSE_CTRL,         /**< Chassis pose controller */
+  CHASSIS_TWIST_CTRL,        /**< Chassis twist controller */
+  LEG_PVT_BYPASS_CTRL,       /**< Leg PVT bypass controller */
+  LEG_PVT_CTRL,              /**< Leg PVT controller */
+  HEAD_PVT_BYPASS_CTRL,      /**< Head PVT bypass controller */
+  HEAD_PVT_CTRL,             /**< Head PVT controller */
+  LEFT_ARM_PVT_BYPASS_CTRL,  /**< Left arm PVT bypass controller */
+  LEFT_ARM_PVT_CTRL,         /**< Left arm PVT controller */
+  RIGHT_ARM_PVT_BYPASS_CTRL, /**< Right arm PVT bypass controller */
+  RIGHT_ARM_PVT_CTRL,        /**< Right arm PVT controller */
+  LEFT_GRIPPER_CTRL,         /**< Left gripper controller */
+  RIGHT_GRIPPER_CTRL,        /**< Right gripper controller */
+  LEFT_DEXHAND_CTRL,         /**< Left dexhand controller */
+  RIGHT_DEXHAND_CTRL,        /**< Right dexhand controller */
+  CONTROLLER_NAME_NUM        /**< Total number of controller names */
 };
 
 /**
@@ -231,12 +301,12 @@ struct UltrasonicData {
  * kinematics calculations and motion planning.
  */
 enum class ChainType {
-  HEAD,       /**< Head kinematic chain, from base/torso to head end-effector */
-  LEFT_ARM,   /**< Left arm kinematic chain, from base/torso to left end-effector */
-  RIGHT_ARM,  /**< Right arm kinematic chain, from base/torso to right end-effector */
-  LEG,        /**< Leg kinematic chain, for legged locomotion */
-  TORSO,      /**< Torso kinematic chain, connects base to upper body */
-  CHAIN_NUM   /**< Total number of kinematic chains (for boundary checking or array sizing) */
+  HEAD,      /**< Head kinematic chain, from base/torso to head end-effector */
+  LEFT_ARM,  /**< Left arm kinematic chain, from base/torso to left end-effector */
+  RIGHT_ARM, /**< Right arm kinematic chain, from base/torso to right end-effector */
+  LEG,       /**< Leg kinematic chain, for legged locomotion */
+  TORSO,     /**< Torso kinematic chain, connects base to upper body */
+  CHAIN_NUM  /**< Total number of kinematic chains (for boundary checking or array sizing) */
 };
 
 /**
@@ -267,9 +337,9 @@ struct TrajectoryPoint {
  * Represents a complete robot trajectory consisting of multiple waypoints over time.
  */
 struct Trajectory {
-  std::vector<TrajectoryPoint> points;     /**< Ordered list of trajectory waypoints */
-  std::vector<std::string> joint_groups;   /**< Names of joint groups involved in this trajectory */
-  std::vector<std::string> joint_names;    /**< Names of individual joints controlled by this trajectory */
+  std::vector<TrajectoryPoint> points;   /**< Ordered list of trajectory waypoints */
+  std::vector<std::string> joint_groups; /**< Names of joint groups involved in this trajectory */
+  std::vector<std::string> joint_names;  /**< Names of individual joints controlled by this trajectory */
 };
 
 /**
@@ -279,7 +349,8 @@ struct Trajectory {
  * human-readable description for debugging and diagnostics.
  */
 struct Error {
-  std::string commpent;    /**< Fault module or component name (note: field name contains typo but preserved for API compatibility) */
+  std::string commpent;    /**< Fault module or component name (note: field name contains typo but preserved for API
+                              compatibility) */
   uint64_t error_code;     /**< Numerical error code for programmatic error handling */
   std::string description; /**< Human-readable error description */
 
@@ -347,7 +418,8 @@ struct Pose {
 
   /**
    * @brief Initialize Pose using separate position and quaternion containers
-   * @tparam T Container type supporting subscript access and size() method (e.g., std::vector<double>, std::array<double>)
+   * @tparam T Container type supporting subscript access and size() method (e.g., std::vector<double>,
+   * std::array<double>)
    * @param pos 3D position vector [x, y, z] in meters, must have size 3
    * @param quat Quaternion vector [x, y, z, w], must have size 4
    * @throws std::runtime_error if pos size != 3 or quat size != 4
@@ -409,7 +481,8 @@ enum class ActuateType {
  */
 enum class SeedType {
   RANDOM_SEED,             /**< Random seed, generates random initial joint configurations */
-  RANDOM_PROGRESSIVE_SEED, /**< Random progressive seed, tries multiple random seeds iteratively (recommended for robustness) */
+  RANDOM_PROGRESSIVE_SEED, /**< Random progressive seed, tries multiple random seeds iteratively (recommended for
+                              robustness) */
   USER_DEFINED_SEED,       /**< User-defined seed, uses explicitly provided initial joint configuration */
   SEED_TYPE_NUM            /**< Total number of seed types (for boundary checking or array sizing) */
 };
@@ -424,7 +497,6 @@ enum ReferenceFrame {
   FRAME_WORLD, /**< World/global coordinate frame, fixed reference frame */
   FRAME_BASE   /**< Robot base coordinate frame, attached to mobile base */
 };
-
 
 /**
  * @brief Motion planning configuration structure
@@ -722,9 +794,9 @@ struct ImuData {
  * Used for robot localization and navigation.
  */
 struct OdomData {
-  int64_t timestamp;                  /**< Odometry timestamp (seconds since epoch) */
-  std::array<double, 3> position;     /**< Position [x, y, z] (meters) */
-  std::array<double, 4> orientation;  /**< Orientation as quaternion [qx, qy, qz, qw] */
+  int64_t timestamp_ns;              /**< Odometry timestamp (nanoseconds since epoch) */
+  std::array<double, 3> position;    /**< Position [x, y, z] (meters) */
+  std::array<double, 4> orientation; /**< Orientation as quaternion [qx, qy, qz, qw] */
 
   /**
    * @note Velocity fields temporarily unavailable in this version:
@@ -740,12 +812,13 @@ struct OdomData {
  * motion status, and grasping force.
  */
 struct GripperState {
-  int64_t timestamp_ns;                 /**< State timestamp (nanoseconds since epoch) */
-  double width;                         /**< Gripper opening width (meters), distance between fingers */
-  double velocity;                      /**< Gripper closing/opening velocity (meters/second), positive = opening */
-  double effort;                        /**< Gripper grasping force (Newtons), force applied by fingers */
-  bool is_moving = false;               /**< Motion flag: true if gripper is currently moving, false if stationary */
-  std::vector<double> joint_positions;  /**< Gripper joint positions (radians), typically 1-2 joints for finger actuators */
+  int64_t timestamp_ns;   /**< State timestamp (nanoseconds since epoch) */
+  double width;           /**< Gripper opening width (meters), distance between fingers */
+  double velocity;        /**< Gripper closing/opening velocity (meters/second), positive = opening */
+  double effort;          /**< Gripper grasping force (Newtons), force applied by fingers */
+  bool is_moving = false; /**< Motion flag: true if gripper is currently moving, false if stationary */
+  std::vector<double>
+      joint_positions; /**< Gripper joint positions (radians), typically 1-2 joints for finger actuators */
 };
 
 /**
@@ -755,10 +828,10 @@ struct GripperState {
  * tracking the suction process from idle to success or failure.
  */
 enum class SUCTION_ACTION_STATE {
-  suction_action_idle,     /**< Idle state, vacuum not activated */
-  suction_action_sucking,  /**< Suction in progress, attempting to grasp object */
-  suction_action_success,  /**< Suction successful, pressure decreased indicating secure grasp */
-  suction_action_failed,   /**< Suction failed, pressure did not decrease (no object or seal failure) */
+  suction_action_idle,    /**< Idle state, vacuum not activated */
+  suction_action_sucking, /**< Suction in progress, attempting to grasp object */
+  suction_action_success, /**< Suction successful, pressure decreased indicating secure grasp */
+  suction_action_failed,  /**< Suction failed, pressure did not decrease (no object or seal failure) */
 };
 
 /**
@@ -768,12 +841,11 @@ enum class SUCTION_ACTION_STATE {
  * activation status, pressure reading, and action state.
  */
 struct SuctionCupState {
-  int64_t timestamp_ns;                  /**< State timestamp (nanoseconds since epoch) */
-  bool activation;                       /**< Activation flag: true if vacuum is on, false if off */
-  double pressure;                       /**< Current vacuum pressure (Pascals), typically negative for suction */
-  SUCTION_ACTION_STATE action_state;     /**< Current suction action state */
+  int64_t timestamp_ns;              /**< State timestamp (nanoseconds since epoch) */
+  bool activation;                   /**< Activation flag: true if vacuum is on, false if off */
+  double pressure;                   /**< Current vacuum pressure (Pascals), typically negative for suction */
+  SUCTION_ACTION_STATE action_state; /**< Current suction action state */
 };
-
 
 /**
  * @brief Timestamp structure
@@ -802,15 +874,15 @@ struct Timestamp {
  * @brief Message header structure
  *
  * Standard message header containing timestamp and coordinate frame information.
- * Compatible with ROS 2 std_msgs/Header format, used in sensor messages and transforms.
+ * Timestamp is stored as nanoseconds since epoch (unified with other sensor types).
  */
 struct Header {
   /**
-   * @brief Timestamp of data acquisition
+   * @brief Timestamp of data acquisition (nanoseconds since epoch)
    *
    * Records when the data was captured or generated.
    */
-  Timestamp stamp;
+  int64_t timestamp_ns;
 
   /**
    * @brief Frame ID
@@ -922,7 +994,6 @@ struct DepthData {
   std::shared_ptr<cv::Mat> convert_to_cv2_mat();
 };
 
-
 /**
  * @brief Point cloud field descriptor
  *
@@ -937,15 +1008,15 @@ struct PointField {
    * and interpretation method for each field value.
    */
   enum DataType : uint8_t {
-    UNKNOWN = 0,   /**< Unknown or unspecified type */
-    INT8 = 1,      /**< 8-bit signed integer (1 byte) */
-    UINT8 = 2,     /**< 8-bit unsigned integer (1 byte) */
-    INT16 = 3,     /**< 16-bit signed integer (2 bytes) */
-    UINT16 = 4,    /**< 16-bit unsigned integer (2 bytes) */
-    INT32 = 5,     /**< 32-bit signed integer (4 bytes) */
-    UINT32 = 6,    /**< 32-bit unsigned integer (4 bytes) */
-    FLOAT32 = 7,   /**< 32-bit IEEE 754 floating point (4 bytes) */
-    FLOAT64 = 8    /**< 64-bit IEEE 754 floating point (8 bytes) */
+    UNKNOWN = 0, /**< Unknown or unspecified type */
+    INT8 = 1,    /**< 8-bit signed integer (1 byte) */
+    UINT8 = 2,   /**< 8-bit unsigned integer (1 byte) */
+    INT16 = 3,   /**< 16-bit signed integer (2 bytes) */
+    UINT16 = 4,  /**< 16-bit unsigned integer (2 bytes) */
+    INT32 = 5,   /**< 32-bit signed integer (4 bytes) */
+    UINT32 = 6,  /**< 32-bit unsigned integer (4 bytes) */
+    FLOAT32 = 7, /**< 32-bit IEEE 754 floating point (4 bytes) */
+    FLOAT64 = 8  /**< 64-bit IEEE 754 floating point (8 bytes) */
   };
 
   /**
@@ -1242,6 +1313,70 @@ struct CameraInfo {
    * Size and interpretation depend on implementation.
    */
   std::vector<double> T;
+};
+
+/**
+ * @brief Audio data structure
+ *
+ * Audio data structure used to encapsulate audio data.
+ */
+struct AudioData {
+  /**
+   * @brief Message header
+   */
+  Header header;
+
+  /**
+   * @brief Audio type
+   *
+   * Audio data type identifier, possible values include:
+   * - "waken_up": Wake-up event, format is json, data is json string
+   * - "denoise_chunk": Denoised audio data, format is pcm, data is pcm data
+   * - "vad_begin": Voice Activity Detection start marker (data is empty)
+   * - "vad_chunk": Audio data during voice activity detection, format is pcm, data is pcm data
+   * - "vad_end": Voice Activity Detection end marker (data is empty)
+   */
+  std::string type;
+
+  /**
+   * @brief Audio format
+   *
+   * Audio data format description, for example:
+   * - "pcm": Sample rate 16000Hz, bit depth 16bit, mono
+   * - "json": UTF-8 encoded json text
+   */
+  std::string format;
+
+  /**
+   * @brief Data packet
+   *
+   * Binary data packet, the specific format is specified by the [format](@ref AudioData::format) field.
+   * For pcm format, the data size for each 80ms is 2560 bytes.
+   * For json format, the data size may be the length of json text or empty.
+   */
+  std::vector<uint8_t> data;
+};
+/**
+ * @brief Bms information
+ *
+ */
+struct BmsInfo {
+  float voltage = 0.0f;       /**< Voltage (V) */
+  float current = 0.0f;       /**< Current (A) */
+  float battery_level = 0.0f; /**< Battery level (0-100%) */
+  float temperature = 0.0f;   /**< Temperature (℃) */
+  bool charging_status;       /**< Charging status：False: not charging, True: charging */
+  bool health_status;         /**< Health status：False: good, True: bad */
+  float capacity = 0.0f;      /**< Remaining capacity (Ah) */
+};
+
+/**
+ * @brief Log information
+ *
+ */
+struct LogInfo {
+  std::string level;   /**"error" "warning" */
+  std::string message; /**message */
 };
 
 }  // namespace g1

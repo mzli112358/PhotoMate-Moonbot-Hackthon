@@ -23,6 +23,11 @@ int main() {
         return -1;
     }
 
+    auto res = robot.switch_controller(ControllerName::CHASSIS_POSE_CTRL);
+    if (res != ControlStatus::SUCCESS) {
+        std::cerr << "切换控制器失败！" << std::endl;
+        return -1;
+    }
     Pose init_pose(std::vector<double>{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0});
     Pose goal_pose(std::vector<double>{0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0});
 

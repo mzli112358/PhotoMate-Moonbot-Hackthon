@@ -1,0 +1,531 @@
+{
+  "packages": [
+    {
+      "name": "aphropm_proto",
+      "version": "0.1.10",
+      "pattern": "libaphropm_proto.so*|libaphropm_proto-*.so*|libaphropm_proto[0-9]*.so*",
+      "platforms": {
+        "linux-aarch64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/aphropm_proto-0.1.10-linux-aarch64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/aphropm_proto-0.1.10-linux-aarch64-gcc940.tar.gz",
+          "sha256": "319a20f80bcc32d2e11c1b83c657c0b07e4bc5948574fc002c1816a59957fd61"
+        },
+        "linux-x86_64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/aphropm_proto-0.1.10-linux-x86_64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/aphropm_proto-0.1.10-linux-x86_64-gcc940.tar.gz",
+          "sha256": "130a6c5d4d7cee357011a6644680d9128c4b4c868edd8ba69645706a0619e831"
+        }
+      }
+    },
+    {
+      "name": "boost_thread",
+      "version": "1.71.0",
+      "pattern": "libboost_thread.so*|libboost_thread-*.so*|libboost_thread[0-9]*.so*",
+      "platforms": {
+        "linux-aarch64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/boost_thread-1.71.0-linux-aarch64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/boost_thread-1.71.0-linux-aarch64-gcc940.tar.gz",
+          "sha256": "73471c964fd22c2af6de89a7da89c3b2d700a8f19c7029062bb30561ad79a743"
+        },
+        "linux-x86_64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/boost_thread-1.71.0-linux-x86_64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/boost_thread-1.71.0-linux-x86_64-gcc940.tar.gz",
+          "sha256": "18095b05349f770447021ff6f29d9c2105b438cd7d83218dae15eb2c0633c9d2"
+        }
+      }
+    },
+    {
+      "name": "core_proto",
+      "version": "0.2.0",
+      "pattern": "libcore_proto.so*|libcore_proto-*.so*|libcore_proto[0-9]*.so*",
+      "platforms": {
+        "linux-aarch64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/core_proto-0.2.0-linux-aarch64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/core_proto-0.2.0-linux-aarch64-gcc940.tar.gz",
+          "sha256": "26b52ac3941ae83b65ab86f0688e4bd2478e0935796f8ebfcc60595a9b150a23"
+        },
+        "linux-x86_64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/core_proto-0.2.0-linux-x86_64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/core_proto-0.2.0-linux-x86_64-gcc940.tar.gz",
+          "sha256": "8da6e6803ad143259a9631cc3d28fcfbefd1c8ce3849b8827879920b489e3f3c"
+        }
+      }
+    },
+    {
+      "name": "crypto",
+      "version": "3.0.0",
+      "pattern": "libcrypto.so*|libcrypto-*.so*|libcrypto[0-9]*.so*",
+      "platforms": {
+        "linux-aarch64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/crypto-3.0.0-linux-aarch64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/crypto-3.0.0-linux-aarch64-gcc940.tar.gz",
+          "sha256": "0345aa0a0db67cf65c0ede00839444eeecaaf224fa54ddbcd340ec938886f608"
+        },
+        "linux-x86_64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/crypto-3.0.0-linux-x86_64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/crypto-3.0.0-linux-x86_64-gcc940.tar.gz",
+          "sha256": "28e93f7fdbd988a6918c1a451f0a3fb90ea8248a969c6e60566960f521b4ac86"
+        }
+      }
+    },
+    {
+      "name": "embosa",
+      "version": "9.0.9",
+      "pattern": "libembosa.so*|libembosa-*.so*|libembosa[0-9]*.so*",
+      "platforms": {
+        "linux-aarch64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/embosa-9.0.9-linux-aarch64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/embosa-9.0.9-linux-aarch64-gcc940.tar.gz",
+          "sha256": "6dd1665ecc2d36cd6071e5ce55491cbd75e5dff1b6cbdb6208e7ac3ecf1844be"
+        },
+        "linux-x86_64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/embosa-9.0.9-linux-x86_64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/embosa-9.0.9-linux-x86_64-gcc940.tar.gz",
+          "sha256": "65710da6ef3809e8022558fadd6665dc9092e652cb31e97b8ab20f35cdc9e24c"
+        }
+      }
+    },
+    {
+      "name": "embosa_basic_interface",
+      "version": "2.0.0",
+      "pattern": "libembosa_basic_interface.so*|libembosa_basic_interface-*.so*|libembosa_basic_interface[0-9]*.so*",
+      "platforms": {
+        "linux-aarch64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/embosa_basic_interface-2.0.0-linux-aarch64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/embosa_basic_interface-2.0.0-linux-aarch64-gcc940.tar.gz",
+          "sha256": "9e83213a1b9839d96d97c9c92ba3e051af51bb23eb6c947649d88a21fb46c0d1"
+        },
+        "linux-x86_64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/embosa_basic_interface-2.0.0-linux-x86_64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/embosa_basic_interface-2.0.0-linux-x86_64-gcc940.tar.gz",
+          "sha256": "e6a5dbb4fe958c1bc2b8469e2f31c0d51eb63491c15c7d4aaaebf783f4f2038f"
+        }
+      }
+    },
+    {
+      "name": "fastcdr",
+      "version": "2.2.2",
+      "pattern": "libfastcdr.so*|libfastcdr-*.so*|libfastcdr[0-9]*.so*",
+      "platforms": {
+        "linux-aarch64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/fastcdr-2.2.2-linux-aarch64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/fastcdr-2.2.2-linux-aarch64-gcc940.tar.gz",
+          "sha256": "2365e838f3139040cdf385e7461684f2b7f56a9a76b09dcaaec4ec452b57c9d0"
+        },
+        "linux-x86_64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/fastcdr-2.2.2-linux-x86_64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/fastcdr-2.2.2-linux-x86_64-gcc940.tar.gz",
+          "sha256": "ab5b43babc4b5ab0f32f6a9b40e98d1104d68f4e706afbddbb666b9872ede03e"
+        }
+      }
+    },
+    {
+      "name": "fastrtps",
+      "version": "2.14.2",
+      "pattern": "libfastrtps.so*|libfastrtps-*.so*|libfastrtps[0-9]*.so*",
+      "platforms": {
+        "linux-aarch64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/fastrtps-2.14.2-linux-aarch64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/fastrtps-2.14.2-linux-aarch64-gcc940.tar.gz",
+          "sha256": "4a9ab5be7dd5c1c95fc925eff08fb2986df37ccfddca7035b2046bf980169f54"
+        },
+        "linux-x86_64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/fastrtps-2.14.2-linux-x86_64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/fastrtps-2.14.2-linux-x86_64-gcc940.tar.gz",
+          "sha256": "32115ee468c08bad87e8d004b3e83e636edfccb2f7534fc5d53eefe7f194d4a4"
+        }
+      }
+    },
+    {
+      "name": "foonathan_memory",
+      "version": "0.7.3",
+      "pattern": "libfoonathan_memory-*.so*",
+      "platforms": {
+        "linux-aarch64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/foonathan_memory-0.7.3-linux-aarch64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/foonathan_memory-0.7.3-linux-aarch64-gcc940.tar.gz",
+          "sha256": "64562e51c19b49f8ac99c79c7f1ff991757d1d359ca9a05149831eec422ac209"
+        },
+        "linux-x86_64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/foonathan_memory-0.7.3-linux-x86_64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/foonathan_memory-0.7.3-linux-x86_64-gcc940.tar.gz",
+          "sha256": "e513805de281a65f28f63666d5cdf185a236c8b65744fe29d659f031bb7512aa"
+        }
+      }
+    },
+    {
+      "name": "jpeg",
+      "version": "62.4.0",
+      "pattern": "libjpeg.so*",
+      "platforms": {
+        "linux-aarch64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/jpeg-62.4.0-linux-aarch64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/jpeg-62.4.0-linux-aarch64-gcc940.tar.gz",
+          "sha256": "41ee2f11363671ef91983b261371479775d072fcb690068f14bdac2ed9bc3bc9"
+        },
+        "linux-x86_64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/jpeg-62.4.0-linux-x86_64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/jpeg-62.4.0-linux-x86_64-gcc940.tar.gz",
+          "sha256": "cea467cc43c89558e5d2d7dd1cc5efcb8ec8b30125920318428499acc410b2bf"
+        }
+      }
+    },
+    {
+      "name": "navigation_proto",
+      "version": "0.2.0",
+      "pattern": "libnavigation_proto.so*|libnavigation_proto-*.so*|libnavigation_proto[0-9]*.so*",
+      "platforms": {
+        "linux-aarch64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/navigation_proto-0.2.0-linux-aarch64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/navigation_proto-0.2.0-linux-aarch64-gcc940.tar.gz",
+          "sha256": "f34dad3053b104558f3e7587503dc5aefb9025e0baf4a3ae966dc55b8835aeef"
+        },
+        "linux-x86_64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/navigation_proto-0.2.0-linux-x86_64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/navigation_proto-0.2.0-linux-x86_64-gcc940.tar.gz",
+          "sha256": "25e9f8d6eaf0ffb805d6e484dc3f83b8be62d2c0bb404ba7d4a0fe76ad007618"
+        }
+      }
+    },
+    {
+      "name": "opencv",
+      "version": "4.9.0",
+      "pattern": "libopencv_*.so*",
+      "platforms": {
+        "linux-aarch64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/opencv-4.9.0-linux-aarch64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/opencv-4.9.0-linux-aarch64-gcc940.tar.gz",
+          "sha256": "4f7ea24f00c00293683dc3ce2ef3d2db396d2760442b4f446432e5a61e97baef"
+        },
+        "linux-x86_64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/opencv-4.9.0-linux-x86_64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/opencv-4.9.0-linux-x86_64-gcc940.tar.gz",
+          "sha256": "56f287476945e11a56f8bf254e41d6de49d9b4a411adeb6943e36ab97d0d0a89"
+        }
+      }
+    },
+    {
+      "name": "perception_proto",
+      "version": "0.2.0",
+      "pattern": "libperception_proto.so*|libperception_proto-*.so*|libperception_proto[0-9]*.so*",
+      "platforms": {
+        "linux-aarch64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/perception_proto-0.2.0-linux-aarch64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/perception_proto-0.2.0-linux-aarch64-gcc940.tar.gz",
+          "sha256": "234122b766ed0e651ab02b63ddde0055cc9983b9512a1c670d1ee050c57812fc"
+        },
+        "linux-x86_64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/perception_proto-0.2.0-linux-x86_64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/perception_proto-0.2.0-linux-x86_64-gcc940.tar.gz",
+          "sha256": "5bdb64ee330e588041fe3c706624d023d75c62f91bc830bcd9a02936a5f201da"
+        }
+      }
+    },
+    {
+      "name": "png",
+      "version": "16.43.0",
+      "pattern": "libpng.so*|libpng16.so*",
+      "platforms": {
+        "linux-aarch64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/png-16.43.0-linux-aarch64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/png-16.43.0-linux-aarch64-gcc940.tar.gz",
+          "sha256": "af96ee429787eea61bbb0b838cec2b4a5f2bd58aba3020301f43cc52d5892e39"
+        },
+        "linux-x86_64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/png-16.43.0-linux-x86_64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/png-16.43.0-linux-x86_64-gcc940.tar.gz",
+          "sha256": "a015e94d91b18a62a93805885d47c62f3505916cace64b5c77e82758fbd1660f"
+        }
+      }
+    },
+    {
+      "name": "proto_interface",
+      "version": "0.6.1",
+      "pattern": "libproto_interface.so*|libproto_interface-*.so*|libproto_interface[0-9]*.so*",
+      "platforms": {
+        "linux-aarch64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/proto_interface-0.6.1-linux-aarch64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/proto_interface-0.6.1-linux-aarch64-gcc940.tar.gz",
+          "sha256": "0c17dd96b6aa265b1291bfc5dc9081cd82530e33d482814ceea25594cad84640"
+        },
+        "linux-x86_64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/proto_interface-0.6.1-linux-x86_64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/proto_interface-0.6.1-linux-x86_64-gcc940.tar.gz",
+          "sha256": "14c6695f3bb6863cfb28a0515750623c5d8890e321d8cac3c0ccbadc49dc7019"
+        }
+      }
+    },
+    {
+      "name": "protobuf",
+      "version": "25.0.0",
+      "pattern": "libprotobuf.so*|libprotobuf-lite.so*",
+      "platforms": {
+        "linux-aarch64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/protobuf-25.0.0-linux-aarch64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/protobuf-25.0.0-linux-aarch64-gcc940.tar.gz",
+          "sha256": "7c2b563a607685e4fb6b37a59d8583d568b43e9b910c456e89f4921dc15c1b08"
+        },
+        "linux-x86_64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/protobuf-25.0.0-linux-x86_64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/protobuf-25.0.0-linux-x86_64-gcc940.tar.gz",
+          "sha256": "50c1ab6727e508ca7369cfbca9f8e7bf906c0b7d76f0983eca5ca79ae8d9560f"
+        }
+      }
+    },
+    {
+      "name": "protoc",
+      "version": "25.0.0",
+      "pattern": "libprotoc.so*|libprotoc-*.so*|libprotoc[0-9]*.so*",
+      "platforms": {
+        "linux-aarch64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/protoc-25.0.0-linux-aarch64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/protoc-25.0.0-linux-aarch64-gcc940.tar.gz",
+          "sha256": "2e2bc9662f7672c9e33ba2a1f679a4599580f5f9fe570c3ebfd630cdc87b41db"
+        },
+        "linux-x86_64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/protoc-25.0.0-linux-x86_64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/protoc-25.0.0-linux-x86_64-gcc940.tar.gz",
+          "sha256": "21df74efd221aed055ad30e36e9fe2d285905a02f915bfc50ffd81c0c734b947"
+        }
+      }
+    },
+    {
+      "name": "robot_state_publisher_embosa",
+      "version": "3.0.0",
+      "pattern": "librobot_state_publisher_embosa.so*|librobot_state_publisher_embosa-*.so*|librobot_state_publisher_embosa[0-9]*.so*",
+      "platforms": {
+        "linux-aarch64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/robot_state_publisher_embosa-3.0.0-linux-aarch64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/robot_state_publisher_embosa-3.0.0-linux-aarch64-gcc940.tar.gz",
+          "sha256": "4508e702f3f08bb3a1874e67ac4dba5a577714b3ca6495d7cf03fdaf2a2678c6"
+        },
+        "linux-x86_64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/robot_state_publisher_embosa-3.0.0-linux-x86_64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/robot_state_publisher_embosa-3.0.0-linux-x86_64-gcc940.tar.gz",
+          "sha256": "ac3a0471694d86809dc10f1822f868dfa66bb53978df60583b445e950f66aec8"
+        }
+      }
+    },
+    {
+      "name": "sensor_proto",
+      "version": "0.2.0",
+      "pattern": "libsensor_proto.so*|libsensor_proto-*.so*|libsensor_proto[0-9]*.so*",
+      "platforms": {
+        "linux-aarch64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/sensor_proto-0.2.0-linux-aarch64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/sensor_proto-0.2.0-linux-aarch64-gcc940.tar.gz",
+          "sha256": "104ba9b0c6bc3d5ef1c1c67f09ff52a6bfab9a5d5e1e95714a316e61b4567b12"
+        },
+        "linux-x86_64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/sensor_proto-0.2.0-linux-x86_64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/sensor_proto-0.2.0-linux-x86_64-gcc940.tar.gz",
+          "sha256": "aca981a9c295e3b73a1867b1a1b390fe1b597edb08989f60bd660f744097b02e"
+        }
+      }
+    },
+    {
+      "name": "singorix_proto",
+      "version": "0.4.6",
+      "pattern": "libsingorix_proto.so*|libsingorix_proto-*.so*|libsingorix_proto[0-9]*.so*",
+      "platforms": {
+        "linux-aarch64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/singorix_proto-0.4.6-linux-aarch64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/singorix_proto-0.4.6-linux-aarch64-gcc940.tar.gz",
+          "sha256": "77a17addb20f274a7187bfb24745ff3dc999c403a96833ca07b19a2fc0d49a9c"
+        },
+        "linux-x86_64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/singorix_proto-0.4.6-linux-x86_64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/singorix_proto-0.4.6-linux-x86_64-gcc940.tar.gz",
+          "sha256": "a4e9522d89d9fb244a814dbfd359a8a4263dfff37519585d96c391e1dfc174a6"
+        }
+      }
+    },
+    {
+      "name": "spatial_proto",
+      "version": "0.2.0",
+      "pattern": "libspatial_proto.so*|libspatial_proto-*.so*|libspatial_proto[0-9]*.so*",
+      "platforms": {
+        "linux-aarch64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/spatial_proto-0.2.0-linux-aarch64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/spatial_proto-0.2.0-linux-aarch64-gcc940.tar.gz",
+          "sha256": "62c529da624ed0bb46e5372071c04fe6dddb1c13c9535866aa9a40156e613a42"
+        },
+        "linux-x86_64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/spatial_proto-0.2.0-linux-x86_64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/spatial_proto-0.2.0-linux-x86_64-gcc940.tar.gz",
+          "sha256": "4d0410df8ea39b8430c807f24226cc69ff9289422f63f4620827b71b47a5fa84"
+        }
+      }
+    },
+    {
+      "name": "spdlog",
+      "version": "1.14.0",
+      "pattern": "libspdlog.so*|libspdlog-*.so*|libspdlog[0-9]*.so*",
+      "platforms": {
+        "linux-aarch64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/spdlog-1.14.0-linux-aarch64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/spdlog-1.14.0-linux-aarch64-gcc940.tar.gz",
+          "sha256": "3bece58bacc00d69981ada7a19f2fd9c3a0edf0646dd67577234f5d4fa6ed0ff"
+        },
+        "linux-x86_64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/spdlog-1.14.0-linux-x86_64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/spdlog-1.14.0-linux-x86_64-gcc940.tar.gz",
+          "sha256": "6ef94987cea9f05e32c7da0f38147c434e56bfbd4882a4ad6d029615a0746cad"
+        }
+      }
+    },
+    {
+      "name": "ssl",
+      "version": "3.0.0",
+      "pattern": "libssl.so*|libssl-*.so*|libssl[0-9]*.so*",
+      "platforms": {
+        "linux-aarch64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/ssl-3.0.0-linux-aarch64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/ssl-3.0.0-linux-aarch64-gcc940.tar.gz",
+          "sha256": "9ff6dc87cb298e7d22b1e48f9a6b6d1f1844482b6398108e7c62ecfdb513de11"
+        },
+        "linux-x86_64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/ssl-3.0.0-linux-x86_64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/ssl-3.0.0-linux-x86_64-gcc940.tar.gz",
+          "sha256": "31f20c53b5ade4ec8e5636986573c6fec5cb3341752db6cbf84426c96b70fa9c"
+        }
+      }
+    },
+    {
+      "name": "system_proto",
+      "version": "0.0.1",
+      "pattern": "libsystem_proto.so*|libsystem_proto-*.so*|libsystem_proto[0-9]*.so*",
+      "platforms": {
+        "linux-aarch64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/system_proto-0.0.1-linux-aarch64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/system_proto-0.0.1-linux-aarch64-gcc940.tar.gz",
+          "sha256": "7e9955ea61738ab7530a729d942bc9fde88933a3144aa69f36cbb3f260633317"
+        },
+        "linux-x86_64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/system_proto-0.0.1-linux-x86_64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/system_proto-0.0.1-linux-x86_64-gcc940.tar.gz",
+          "sha256": "19d72e6cc62c98e39c538f752eaf0a0909d277630a9cedf504359fdffbe0770e"
+        }
+      }
+    },
+    {
+      "name": "tf2_base",
+      "version": "2.0.0",
+      "pattern": "libtf2_base.so*|libtf2_base-*.so*|libtf2_base[0-9]*.so*",
+      "platforms": {
+        "linux-aarch64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/tf2_base-2.0.0-linux-aarch64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/tf2_base-2.0.0-linux-aarch64-gcc940.tar.gz",
+          "sha256": "048c1489906c50aa18697b5e8cd1b59dc949c4f05deff1a8762833b70f9bf88d"
+        },
+        "linux-x86_64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/tf2_base-2.0.0-linux-x86_64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/tf2_base-2.0.0-linux-x86_64-gcc940.tar.gz",
+          "sha256": "630d31f3b375c3ef148f0fa8a9033a62638d6e714295fc0474220350a1f9390e"
+        }
+      }
+    },
+    {
+      "name": "tf2_embosa",
+      "version": "2.0.0",
+      "pattern": "libtf2_embosa.so*|libtf2_embosa-*.so*|libtf2_embosa[0-9]*.so*",
+      "platforms": {
+        "linux-aarch64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/tf2_embosa-2.0.0-linux-aarch64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/tf2_embosa-2.0.0-linux-aarch64-gcc940.tar.gz",
+          "sha256": "0106ead5f282e95db017432a39a310f9cace520287a31addb25df4f4da0d4de1"
+        },
+        "linux-x86_64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/tf2_embosa-2.0.0-linux-x86_64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/tf2_embosa-2.0.0-linux-x86_64-gcc940.tar.gz",
+          "sha256": "a44df67a84e230516befd6120e57b156d32979a6bf56fcc543fb589a5503fde3"
+        }
+      }
+    },
+    {
+      "name": "tf2_proto",
+      "version": "0.2.0",
+      "pattern": "libtf2_proto.so*|libtf2_proto-*.so*|libtf2_proto[0-9]*.so*",
+      "platforms": {
+        "linux-aarch64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/tf2_proto-0.2.0-linux-aarch64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/tf2_proto-0.2.0-linux-aarch64-gcc940.tar.gz",
+          "sha256": "c11762040030fb4db0a048366691aa9c8f84aac15b28c384023081978c61eb95"
+        },
+        "linux-x86_64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/tf2_proto-0.2.0-linux-x86_64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/tf2_proto-0.2.0-linux-x86_64-gcc940.tar.gz",
+          "sha256": "bd835095b4afa74ecda8228de337137b5955881614eddbf9b9fa32ced4cd1661"
+        }
+      }
+    },
+    {
+      "name": "tinyxml2",
+      "version": "10.0.0",
+      "pattern": "libtinyxml2.so*|libtinyxml2-*.so*|libtinyxml2[0-9]*.so*",
+      "platforms": {
+        "linux-aarch64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/tinyxml2-10.0.0-linux-aarch64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/tinyxml2-10.0.0-linux-aarch64-gcc940.tar.gz",
+          "sha256": "0172b6ea10a745c5d412a11ab9bc5bc9818a14ab3a31b984d6ec951689be3667"
+        },
+        "linux-x86_64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/tinyxml2-10.0.0-linux-x86_64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/tinyxml2-10.0.0-linux-x86_64-gcc940.tar.gz",
+          "sha256": "578ec93d718828a2084306bd7c306a343be6b46006b4d57736459f2011d67927"
+        }
+      }
+    },
+    {
+      "name": "urdf_embosa",
+      "version": "1.0.0",
+      "pattern": "liburdf_embosa.so*|liburdf_embosa-*.so*|liburdf_embosa[0-9]*.so*",
+      "platforms": {
+        "linux-aarch64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/urdf_embosa-1.0.0-linux-aarch64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/urdf_embosa-1.0.0-linux-aarch64-gcc940.tar.gz",
+          "sha256": "6ef13a0865c5ed91625b174c29d63e6a657b10c754d89064c1384a553a49aa13"
+        },
+        "linux-x86_64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/urdf_embosa-1.0.0-linux-x86_64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/urdf_embosa-1.0.0-linux-x86_64-gcc940.tar.gz",
+          "sha256": "9ab0858c30ce77338a284cfc2e299ba98a41fa36989be50002b55181c5903fa9"
+        }
+      }
+    },
+    {
+      "name": "visualization_proto",
+      "version": "0.2.0",
+      "pattern": "libvisualization_proto.so*|libvisualization_proto-*.so*|libvisualization_proto[0-9]*.so*",
+      "platforms": {
+        "linux-aarch64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/visualization_proto-0.2.0-linux-aarch64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/visualization_proto-0.2.0-linux-aarch64-gcc940.tar.gz",
+          "sha256": "f37aed5c2892197501ebba5418400d0095daab35dde0547523256a068203e0dd"
+        },
+        "linux-x86_64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/visualization_proto-0.2.0-linux-x86_64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/visualization_proto-0.2.0-linux-x86_64-gcc940.tar.gz",
+          "sha256": "f35cf341e2baa0dd0d6a276e211293f8b1859340c834a1ef14d9b9acba112cc9"
+        }
+      }
+    },
+    {
+      "name": "z",
+      "version": "1.3.1",
+      "pattern": "libz.so*|libz-*.so*|libz[0-9]*.so*",
+      "platforms": {
+        "linux-aarch64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/z-1.3.1-linux-aarch64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/z-1.3.1-linux-aarch64-gcc940.tar.gz",
+          "sha256": "f7e9173aaef0f365768fc9ca953d7f24f692b03f84d2361d6f8efceff2a24563"
+        },
+        "linux-x86_64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/z-1.3.1-linux-x86_64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/z-1.3.1-linux-x86_64-gcc940.tar.gz",
+          "sha256": "f1ce20896a81811bfd3263e0e4d3b7b9dcfccfbe64f908937481eeefe67e8fe8"
+        }
+      }
+    }
+  ]
+}

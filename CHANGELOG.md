@@ -8,6 +8,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.6.0] - 2026-02-28
+
+### Added / 新增
+- Added volume and audio management interfaces, power and device information retrieval interfaces / 增加音量、音频管理接口，电源、设备信息获取接口
+- Provided user log printing interface and SDK log information retrieval interface / 提供用户日志打印接口与SDK日志信息获取接口
+- Add real-time joint trajectory function, control mode management function, one-click homing, robot link query interface, and sensor calibration parameter interface. / 增加关节实时轨迹函数、控制模式管理函数、一键回零、机器人link获取、传感器标定参数接口
+- Added scenario-level sample programs / 增加情景级示例程序
+---
+
+### Changed / 更改
+- Add a duration parameter to the chassis velocity control interface (without affecting existing usage) / 底盘速度控制接口增加持续时间参数（不影响原有调用方式）
+- Optimize the third-party library installation process. Based on this version, updates will be performed using incremental (delta) updates only. / 优化三方库安装流程，在此版本基础上更新，将只进行差量更新
+
+---
+
+## [1.5.2] - 2026-01-23
+
+### Changed / 更改
+- Build base on GBS1.14 / 基于GBS1.14构建
+
+---
+
 ## [1.5.1] - 2026-01-16
 
 ### Added / 新增

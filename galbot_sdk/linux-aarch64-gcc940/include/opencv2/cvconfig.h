@@ -82,12 +82,12 @@
 /* #undef HAVE_GDCM */
 
 /* NVIDIA Video Decoding API*/
-#define HAVE_NVCUVID
-#define HAVE_NVCUVID_HEADER
+/* #undef HAVE_NVCUVID */
+/* #undef HAVE_NVCUVID_HEADER */
 /* #undef HAVE_DYNLINK_NVCUVID_HEADER */
 
 /* NVIDIA Video Encoding API*/
-#define HAVE_NVCUVENC
+/* #undef HAVE_NVCUVENC */
 
 /* OpenCL Support */
 #define HAVE_OPENCL

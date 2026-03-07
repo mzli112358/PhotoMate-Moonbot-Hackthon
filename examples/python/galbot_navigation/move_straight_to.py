@@ -1,6 +1,7 @@
-from galbot_sdk.g1 import GalbotNavigation, GalbotRobot
+from galbot_sdk.g1 import GalbotNavigation, GalbotRobot, ControllerName, ControlStatus
 import numpy as np
 import time
+import sys
 
 nav = GalbotNavigation.get_instance()
 nav.init()
@@ -8,6 +9,13 @@ robot = GalbotRobot.get_instance()
 robot.init()
 
 target = np.array([0.2, 0.0, 0.0, 0, 0, 0.0, 1.0])
+
+res = robot.switch_controller(ControllerName.CHASSIS_POSE_CTRL)
+if res != ControlStatus.SUCCESS:
+    print("切换控制器失败！")
+    sys.exit(1)
+else:
+    print("切换控制器成功！")
 
 nav.move_straight_to(target, is_blocking=False, timeout=10)
 time.sleep(1.0)

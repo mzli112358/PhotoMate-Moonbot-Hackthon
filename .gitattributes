@@ -1,2 +1,0 @@
-toolchain.tar.gz filter=lfs diff=lfs merge=lfs -text
-galbot_one_golf_description.tar.gz filter=lfs diff=lfs merge=lfs -text

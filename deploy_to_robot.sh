@@ -27,12 +27,61 @@ print_info()    { echo -e "${BLUE}ℹ${NC} $1"; }
 # Check for sshpass / 检查 sshpass 是否已安装
 # -----------------------------------------------------------------------------
 check_sshpass() {
-    if ! command -v sshpass >/dev/null 2>&1; then
-        print_warning "sshpass not found / 未找到 sshpass"
-        echo "  Ubuntu/Debian: sudo apt install sshpass"
-        echo "  CentOS/RHEL:  sudo yum install sshpass"
+    # 判断是否 root 用户
+    if [ "$(id -u)" -eq 0 ]; then
+        SUDO=""
+    else
+        SUDO="sudo"
+    fi
+
+    if command -v sshpass >/dev/null 2>&1; then
+        echo "sshpass 已安装 ✔"
+        return 0
+    fi
+
+    echo "sshpass 未找到，尝试自动安装..."
+
+    if [ -f /etc/os-release ]; then
+        . /etc/os-release
+        distro=${ID_LIKE:-$ID}
+    else
+        echo "无法识别系统类型，请手动安装 sshpass"
         exit 1
     fi
+
+    case "$distro" in
+        *debian*|*ubuntu*|*linuxmint*)
+            echo "Detected Debian/Ubuntu 系列..."
+            $SUDO apt-get update -y || { echo "apt update 失败，请手动安装 sshpass"; exit 1; }
+            $SUDO apt-get install -y sshpass || { echo "sshpass 安装失败，请手动安装"; exit 1; }
+            ;;
+        *rhel*|*centos*|*rocky*|*almalinux*|*fedora*|*amazon*|*ol*)
+            echo "Detected RHEL/CentOS/Fedora 系列..."
+            if command -v dnf >/dev/null 2>&1; then
+                $SUDO dnf install -y epel-release || echo "epel-release 已存在或安装失败"
+                $SUDO dnf install -y sshpass || { echo "sshpass 安装失败，请手动安装"; exit 1; }
+            else
+                $SUDO yum install -y epel-release || echo "epel-release 已存在或安装失败"
+                $SUDO yum install -y sshpass || { echo "sshpass 安装失败，请手动安装"; exit 1; }
+            fi
+            ;;
+        *arch*|*manjaro*)
+            echo "Detected Arch/Manjaro 系列..."
+            $SUDO pacman -Sy --noconfirm sshpass || { echo "sshpass 安装失败，请手动安装"; exit 1; }
+            ;;
+        *)
+            echo "未知的 Linux 发行版 ($distro)，请手动安装 sshpass"
+            exit 1
+            ;;
+    esac
+
+    # 再次确认 sshpass 是否安装成功
+    if ! command -v sshpass >/dev/null 2>&1; then
+        echo "sshpass 安装失败，请手动安装"
+        exit 1
+    fi
+
+    echo "sshpass 安装完成 ✔"
 }
 
 # -----------------------------------------------------------------------------

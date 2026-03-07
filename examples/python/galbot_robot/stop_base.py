@@ -1,4 +1,5 @@
 from galbot_sdk.g1 import GalbotRobot, ControlStatus
+import time
 
 # 获取 GalbotRobot 的单例并初始化
 robot = GalbotRobot.get_instance()

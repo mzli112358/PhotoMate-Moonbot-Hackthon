@@ -1,8 +1,8 @@
 # Galbot SDK
 
-![Version](https://img.shields.io/badge/version-1.5.1-blue.svg)
+![Version](https://img.shields.io/badge/version-1.6.0-blue.svg)
 ![Robot Model](https://img.shields.io/badge/Robot-G1-red.svg)
-![GBS Version](https://img.shields.io/badge/GBS-1.3-green.svg)
+![GBS Version](https://img.shields.io/badge/GBS-1.15-green.svg)
 ![Ubuntu](https://img.shields.io/badge/Ubuntu-20--24-orange.svg)
 ![Python](https://img.shields.io/badge/Python-3.8--3.14-yellow.svg)
 
@@ -20,14 +20,6 @@
 
 ```bash
 git clone https://github.com/GalaxyGeneralRobotics/GalbotSDK.git
-cd GalbotSDK
-git lfs pull
-```
-
-请确保安装了 git-lfs，如 Ubuntu/Debian 下可用如下命令安装：
-
-```bash
-sudo apt-get install git-lfs
 ```
 
 ### 📌 版本匹配
@@ -36,9 +28,9 @@ sudo apt-get install git-lfs
 
 #### 当前版本
 
-- **最新 SDK**: V1.5.1
-- **发布日期**: 2026-01-16
-- **对应机器人版本**: V1.13.9
+- **最新 SDK**: V1.6.0
+- **发布日期**: 2026-03-06
+- **对应机器人环境版本**: V1.15
 - **维护状态**: ✅ 当前维护版本
 
 更多版本历史请参阅 [CHANGELOG.md](CHANGELOG.md)
@@ -74,14 +66,6 @@ This SDK supports C++ and Python, providing complete API reference, tutorials, a
 
 ```bash
 git clone https://github.com/GalaxyGeneralRobotics/GalbotSDK.git
-cd GalbotSDK
-git lfs pull
-```
-
-Please ensure git-lfs is installed. For Ubuntu/Debian, you can install it with:
-
-```bash
-sudo apt-get install git-lfs
 ```
 
 ### 📌 Version Compatibility
@@ -90,9 +74,9 @@ sudo apt-get install git-lfs
 
 #### Current Version
 
-- **Latest SDK**: V1.5.1
-- **Release Date**: 2026-01-16
-- **Compatible Robot Version**: V1.13.9
+- **Latest SDK**: V1.6.0
+- **Release Date**: 2026-03-06
+- **Compatible Robot Version**: V1.15
 - **Maintenance Status**: ✅ Currently Maintained
 
 For more version history, please refer to [CHANGELOG.md](CHANGELOG.md)

@@ -157,7 +157,7 @@ def main():
             print("GalbotRobot initialization failed")
 
         # Program starts immediately, wait for data readiness time
-        time.sleep(1)
+        time.sleep(3)
 
         # Define target pose
         chain_pose_baselink = {
@@ -166,6 +166,27 @@ def main():
             "left_arm": [0.1267,0.2342,0.7356,0.0220,0.0127,0.0343,0.9991],
             "right_arm": [0.1267,-0.2345,0.7358,-0.0225,0.0126,-0.0343,0.9991]
         }
+
+        # set initial joint positions
+        joint_pos = [0.5, 1.5, 1.0, 0.0, 0.0,
+                     0.0, 0.0,
+                     2.0, -1.5, -0.6, -1.7, 0.0, -0.8, 0.0,
+                     -2.0, 1.5, 0.6, 1.7, 0.0, 0.8, 0.0]
+        joint_groups_names = ["leg", "head", "left_arm", "right_arm"]
+        joint_names = []
+        is_blocking = True
+        max_speed_rad_s = 0.1
+        timeout_s = 30.0
+
+        status = robot.set_joint_positions(
+            joint_pos, joint_groups_names, joint_names, is_blocking, max_speed_rad_s, timeout_s
+        )
+
+        if status != ControlStatus.SUCCESS:
+            print("set join position failed")
+        else:
+            print("set join position successful")
+                
         # Define target chain name, target pose, reference pose, end link
         target_frame = "EndEffector"
         reference_frame = "base_link"

@@ -79,10 +79,7 @@ class GalbotNavigation {
    *
    * @note This method is thread-safe as of C++11.
    */
-  static GalbotNavigation& get_instance() {
-    static GalbotNavigation instance;
-    return instance;
-  }
+  static GalbotNavigation& get_instance();
 
   /**
    * @brief Initialize the navigation subsystem and its dependencies.
@@ -311,6 +308,22 @@ class GalbotNavigation {
    * @note If no navigation command is active, this method returns false.
    */
   bool check_goal_arrival();
+
+  /**
+   * @brief Get the current navigation task state.
+   *
+   * Returns the most recent task state reported by the navigation system
+   * (UNKNOWN, RUNNING, SUCCESS, or FAILED). Use this when running non-blocking
+   * navigation to poll for state and exit error logic in time on FAILED or
+   * timeout, avoiding deadlock or indefinite wait.
+   *
+   * @return NavigationTaskStatus Current task state. UNKNOWN if no status yet;
+   *         RUNNING while navigating; SUCCESS or FAILED when task has finished.
+   *
+   * @note Useful in non-blocking navigation: loop on get_navigation_status()
+   *       and break on SUCCESS, FAILED, or after a timeout.
+   */
+  NavigationTaskStatus get_navigation_status();
 
  private:
   /// @brief Default constructor. Private to enforce singleton pattern.

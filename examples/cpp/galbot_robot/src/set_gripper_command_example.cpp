@@ -33,14 +33,14 @@ int main() {
     std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
     // 夹爪宽度（米）
-    double width_m = 0.1;
+    double width_m = 0.02;
     // 夹爪速度（米/秒）
     double velocity_mps = 0.05;
     // 夹爪力矩（牛米）
     double effort = 10;
     // 是否阻塞等待执行完成
     bool is_blocking = true;
-    // 设置左夹爪宽度为0.1米，以0.05米速度执行，力矩为10，并阻塞等待执行完成
+    // 设置左夹爪宽度为0.02米，以0.05米速度执行，力矩为10，并阻塞等待执行完成
     galbot::sdk::g1::ControlStatus gripper_execution_status =
         robot.set_gripper_command(JointGroup::LEFT_GRIPPER, width_m, velocity_mps,
                                         effort, is_blocking);
@@ -59,6 +59,25 @@ int main() {
         std::cerr << "get gripper state error" << std::endl;
     } else {
         print_gripper_state(gripper_state_ptr);
+    }
+
+    // 夹爪宽度（米）
+    width_m = 0.1;
+    // 夹爪速度（米/秒）
+    velocity_mps = 0.05;
+    // 夹爪力矩（牛米）
+    effort = 10;
+    // 是否阻塞等待执行完成
+    is_blocking = false;
+    // 设置左夹爪宽度为0.1米，以0.05米速度执行，力矩为10，并阻塞等待执行完成
+    gripper_execution_status =
+        robot.set_gripper_command(JointGroup::LEFT_GRIPPER, width_m, velocity_mps,
+                                        effort, is_blocking);
+
+    if (gripper_execution_status == ControlStatus::SUCCESS) {
+        std::cout << "夹爪命令设置成功！" << std::endl;
+    } else {
+        std::cerr << "夹爪命令设置失败！" << std::endl;
     }
 
     // 退出系统并进行SDK资源释放

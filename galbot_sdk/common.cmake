@@ -15,9 +15,9 @@ set(EMBOSA_SDK_LIBS
   galbot_g1_sdk tf2_proto fastcdr fastrtps boost_thread spdlog
   tinyxml2 foonathan_memory-0.7.3 ssl crypto
   embosa core_proto aphropm_proto singorix_proto 
-  tf2_proto sensor_proto spatial_proto navigation_proto
+  tf2_proto sensor_proto spatial_proto navigation_proto system_proto
   protobuf rt z dl pthread embosa_basic_interface tf2_base tf2_embosa
-  opencv_core opencv_imgproc  opencv_imgcodecs png)
+  opencv_core opencv_imgproc  opencv_imgcodecs png jpeg)
 
 message(STATUS EMBOSA_SDK_ROOT_DIR:${EMBOSA_SDK_ROOT_DIR})
 message(STATUS EMBOSA_SDK_INCLUDES:${EMBOSA_SDK_INCLUDES})

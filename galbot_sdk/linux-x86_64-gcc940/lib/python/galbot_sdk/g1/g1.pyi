@@ -5,7 +5,45 @@ from __future__ import annotations
 import collections.abc
 import numpy
 import typing
-__all__: list[str] = ['COMM_DISCONNECTED', 'CYLINDER', 'CollisionCheckOption', 'ControlStatus', 'DATA_FETCH_FAILED', 'DepthData', 'EUCLIDEAN_DISTANCE', 'FAULT', 'ForceData', 'GalbotMotion', 'GalbotNavigation', 'GalbotOneFoxtrotSensor', 'GalbotRobot', 'GripperState', 'Header', 'IKSolverConfig', 'INIT_FAILED', 'INVALID_INPUT', 'IN_PROGRESS', 'ImuData', 'JOINT', 'JointCommand', 'JointGroup', 'JointState', 'JointStates', 'KinematicsBoundary', 'LINE', 'LidarData', 'LineTrajCheckPrimitive', 'MotionPlanConfig', 'MotionStatus', 'OdomData', 'POSE', 'PUBLISH_FAIL', 'Parameter', 'Point', 'PointField', 'PointFieldDataType', 'Pose', 'PoseState', 'PrimitiveType', 'Quaternion', 'RADIAN_DISTANCE', 'RANDOM_PROGRESSIVE_SEED', 'RANDOM_SEED', 'ROBOT_STATES', 'RgbData', 'RobotStates', 'RobotStatesType', 'STATUS_NUM', 'STOPPED_UNREACHED', 'SUCCESS', 'SUCTION_ACTION_STATE', 'SamplerConfig', 'SeedType', 'SensorType', 'StateCheckType', 'SuctionCupState', 'TIMEOUT', 'TIMEOUT_AND_EXACT_SOLUTION', 'TerminationConditionType', 'Timestamp', 'Trajectory', 'TrajectoryControlStatus', 'TrajectoryFeasibilityCheckOption', 'TrajectoryPlanConfig', 'TrajectoryPoint', 'UNSUPPORTED_FUNCRION', 'USER_DEFINED_SEED', 'UltrasonicData', 'UltrasonicType', 'Vector3', 'WBCException', 'check_motion_status', 'create_joint_state', 'create_parameter', 'create_pose_state']
+__all__: list[str] = ['AudioData', 'COMM_DISCONNECTED', 'CYLINDER', 'CollisionCheckOption', 'ControlStatus', 'ControllerName', 'DATA_FETCH_FAILED', 'DepthData', 'EUCLIDEAN_DISTANCE', 'FAILED', 'FAULT', 'ForceData', 'GalbotMotion', 'GalbotNavigation', 'GalbotOneFoxtrotSensor', 'GalbotRobot', 'GripperState', 'Header', 'IKSolverConfig', 'INIT_FAILED', 'INVALID_INPUT', 'IN_PROGRESS', 'ImuData', 'JOINT', 'JointCommand', 'JointGroup', 'JointState', 'JointStates', 'KinematicsBoundary', 'LINE', 'LidarData', 'LineTrajCheckPrimitive', 'LogLevel', 'MotionPlanConfig', 'MotionStatus', 'NavigationTaskStatus', 'OdomData', 'POSE', 'PUBLISH_FAIL', 'Parameter', 'Point', 'PointField', 'PointFieldDataType', 'Pose', 'PoseState', 'PrimitiveType', 'Quaternion', 'RADIAN_DISTANCE', 'RANDOM_PROGRESSIVE_SEED', 'RANDOM_SEED', 'ROBOT_STATES', 'RUNNING', 'RgbData', 'RobotStates', 'RobotStatesType', 'STATUS_NUM', 'STOPPED_UNREACHED', 'SUCCESS', 'SUCTION_ACTION_STATE', 'SamplerConfig', 'SeedType', 'SensorType', 'StateCheckType', 'SuctionCupState', 'TIMEOUT', 'TIMEOUT_AND_EXACT_SOLUTION', 'TerminationConditionType', 'Timestamp', 'Trajectory', 'TrajectoryControlStatus', 'TrajectoryFeasibilityCheckOption', 'TrajectoryPlanConfig', 'TrajectoryPoint', 'UNKNOWN', 'UNSUPPORTED_FUNCRION', 'USER_DEFINED_SEED', 'UltrasonicData', 'UltrasonicType', 'Vector3', 'WBCException', 'check_motion_status', 'create_joint_state', 'create_parameter', 'create_pose_state']
+class AudioData:
+    """
+    Audio stream data
+    """
+    def __init__(self) -> None:
+        ...
+    @property
+    def data(self) -> list[int]:
+        """
+        Binary data packet - for pcm format: 2560 bytes per 80ms, for json: text length or empty
+        """
+    @data.setter
+    def data(self, arg0: collections.abc.Sequence[typing.SupportsInt]) -> None:
+        ...
+    @property
+    def format(self) -> str:
+        """
+        Audio format: 'pcm' (16000Hz 16-bit mono) or 'json' (UTF-8 text)
+        """
+    @format.setter
+    def format(self, arg0: str) -> None:
+        ...
+    @property
+    def header(self) -> Header:
+        """
+        Message header with timestamp and frame ID
+        """
+    @header.setter
+    def header(self, arg0: Header) -> None:
+        ...
+    @property
+    def type(self) -> str:
+        """
+        Audio type identifier: 'waken_up' (wake-up event), 'denoise_chunk' (denoised audio), 'vad_begin' (VAD start), 'vad_chunk' (VAD audio), 'vad_end' (VAD end)
+        """
+    @type.setter
+    def type(self, arg0: str) -> None:
+        ...
 class CollisionCheckOption:
     def __init__(self) -> None:
         ...
@@ -54,6 +92,73 @@ class ControlStatus:
     SUCCESS: typing.ClassVar[ControlStatus]  # value = <ControlStatus.SUCCESS: 0>
     TIMEOUT: typing.ClassVar[ControlStatus]  # value = <ControlStatus.TIMEOUT: 1>
     __members__: typing.ClassVar[dict[str, ControlStatus]]  # value = {'SUCCESS': <ControlStatus.SUCCESS: 0>, 'TIMEOUT': <ControlStatus.TIMEOUT: 1>, 'FAULT': <ControlStatus.FAULT: 2>, 'INVALID_INPUT': <ControlStatus.INVALID_INPUT: 3>, 'INIT_FAILED': <ControlStatus.INIT_FAILED: 4>, 'IN_PROGRESS': <ControlStatus.IN_PROGRESS: 5>, 'STOPPED_UNREACHED': <ControlStatus.STOPPED_UNREACHED: 6>, 'DATA_FETCH_FAILED': <ControlStatus.DATA_FETCH_FAILED: 7>, 'PUBLISH_FAIL': <ControlStatus.PUBLISH_FAIL: 8>, 'COMM_DISCONNECTED': <ControlStatus.COMM_DISCONNECTED: 9>}
+    def __eq__(self, other: typing.Any) -> bool:
+        ...
+    def __getstate__(self) -> int:
+        ...
+    def __hash__(self) -> int:
+        ...
+    def __index__(self) -> int:
+        ...
+    def __init__(self, value: typing.SupportsInt) -> None:
+        ...
+    def __int__(self) -> int:
+        ...
+    def __ne__(self, other: typing.Any) -> bool:
+        ...
+    def __repr__(self) -> str:
+        ...
+    def __setstate__(self, state: typing.SupportsInt) -> None:
+        ...
+    def __str__(self) -> str:
+        ...
+    @property
+    def name(self) -> str:
+        ...
+    @property
+    def value(self) -> int:
+        ...
+class ControllerName:
+    """
+    Members:
+    
+      CHASSIS_POSE_CTRL : Chassis pose controller
+    
+      CHASSIS_TWIST_CTRL : Chassis twist controller
+    
+      LEG_PVT_BYPASS_CTRL : Leg PVT bypass controller
+    
+      LEG_PVT_CTRL : Leg PVT controller
+    
+      HEAD_PVT_BYPASS_CTRL : Head PVT bypass controller
+    
+      HEAD_PVT_CTRL : Head PVT controller
+    
+      LEFT_ARM_PVT_BYPASS_CTRL : Left arm PVT bypass controller
+    
+      LEFT_ARM_PVT_CTRL : Left arm PVT controller
+    
+      RIGHT_ARM_PVT_BYPASS_CTRL : Right arm PVT bypass controller
+    
+      RIGHT_ARM_PVT_CTRL : Right arm PVT controller
+    
+      LEFT_GRIPPER_CTRL : Left gripper controller
+    
+      RIGHT_GRIPPER_CTRL : Right gripper controller
+    """
+    CHASSIS_POSE_CTRL: typing.ClassVar[ControllerName]  # value = <ControllerName.CHASSIS_POSE_CTRL: 0>
+    CHASSIS_TWIST_CTRL: typing.ClassVar[ControllerName]  # value = <ControllerName.CHASSIS_TWIST_CTRL: 1>
+    HEAD_PVT_BYPASS_CTRL: typing.ClassVar[ControllerName]  # value = <ControllerName.HEAD_PVT_BYPASS_CTRL: 4>
+    HEAD_PVT_CTRL: typing.ClassVar[ControllerName]  # value = <ControllerName.HEAD_PVT_CTRL: 5>
+    LEFT_ARM_PVT_BYPASS_CTRL: typing.ClassVar[ControllerName]  # value = <ControllerName.LEFT_ARM_PVT_BYPASS_CTRL: 6>
+    LEFT_ARM_PVT_CTRL: typing.ClassVar[ControllerName]  # value = <ControllerName.LEFT_ARM_PVT_CTRL: 7>
+    LEFT_GRIPPER_CTRL: typing.ClassVar[ControllerName]  # value = <ControllerName.LEFT_GRIPPER_CTRL: 10>
+    LEG_PVT_BYPASS_CTRL: typing.ClassVar[ControllerName]  # value = <ControllerName.LEG_PVT_BYPASS_CTRL: 2>
+    LEG_PVT_CTRL: typing.ClassVar[ControllerName]  # value = <ControllerName.LEG_PVT_CTRL: 3>
+    RIGHT_ARM_PVT_BYPASS_CTRL: typing.ClassVar[ControllerName]  # value = <ControllerName.RIGHT_ARM_PVT_BYPASS_CTRL: 8>
+    RIGHT_ARM_PVT_CTRL: typing.ClassVar[ControllerName]  # value = <ControllerName.RIGHT_ARM_PVT_CTRL: 9>
+    RIGHT_GRIPPER_CTRL: typing.ClassVar[ControllerName]  # value = <ControllerName.RIGHT_GRIPPER_CTRL: 11>
+    __members__: typing.ClassVar[dict[str, ControllerName]]  # value = {'CHASSIS_POSE_CTRL': <ControllerName.CHASSIS_POSE_CTRL: 0>, 'CHASSIS_TWIST_CTRL': <ControllerName.CHASSIS_TWIST_CTRL: 1>, 'LEG_PVT_BYPASS_CTRL': <ControllerName.LEG_PVT_BYPASS_CTRL: 2>, 'LEG_PVT_CTRL': <ControllerName.LEG_PVT_CTRL: 3>, 'HEAD_PVT_BYPASS_CTRL': <ControllerName.HEAD_PVT_BYPASS_CTRL: 4>, 'HEAD_PVT_CTRL': <ControllerName.HEAD_PVT_CTRL: 5>, 'LEFT_ARM_PVT_BYPASS_CTRL': <ControllerName.LEFT_ARM_PVT_BYPASS_CTRL: 6>, 'LEFT_ARM_PVT_CTRL': <ControllerName.LEFT_ARM_PVT_CTRL: 7>, 'RIGHT_ARM_PVT_BYPASS_CTRL': <ControllerName.RIGHT_ARM_PVT_BYPASS_CTRL: 8>, 'RIGHT_ARM_PVT_CTRL': <ControllerName.RIGHT_ARM_PVT_CTRL: 9>, 'LEFT_GRIPPER_CTRL': <ControllerName.LEFT_GRIPPER_CTRL: 10>, 'RIGHT_GRIPPER_CTRL': <ControllerName.RIGHT_GRIPPER_CTRL: 11>}
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -335,6 +440,22 @@ class GalbotMotion:
                             Returns:
                                 Pose: The computed pose of the end-effector frame on the specified chain.
         """
+    def get_link_names(self, only_end_effector: bool = False) -> list[str]:
+        """
+                            Get robot link names from kinematic model.
+                                
+                            Parameters:
+                                only_end_effector (bool, optional): If true, returns only end-effector/tool links;
+                                    if false, returns all links including base, intermediate, and end-effector links.
+                                    Default: false (all links).
+                                
+                            Returns:
+                                list: Vector of link name strings (empty if retrieval fails)
+                                
+                            Note:
+                                End-effector detection based on link having no child links in kinematic tree.
+                                Useful for forward kinematics queries or TF frame validation.
+        """
     def get_motion_plan_config(self) -> tuple[MotionStatus, MotionPlanConfig]:
         """
         get motion config
@@ -351,6 +472,12 @@ class GalbotMotion:
         """
         Get the list of supported reference frames.
         """
+     
+    def get_supported_links(self) -> set[str]:
+        """
+        Initialize system interface dependencies.
+        """
+     
     def get_supported_links(self) -> set[str]:
         """
         Initialize system interface dependencies.
@@ -478,6 +605,13 @@ class GalbotMotion:
                             Returns:
                                 bool: True if the motion planning is successful, False otherwise.
         """
+    def move_whole_body_joint_zero(self, is_blocking: bool = True, leg_head_speed_rad_s: typing.SupportsFloat = 0.2, leg_head_timeout_s: typing.SupportsFloat = 15.0, params: Parameter = ...) -> MotionStatus:
+        """
+                            Move whole-body joints to the predefined zero (home) configuration.
+        
+                            - leg/head are commanded via GalbotRobot direct joint control
+                            - left/right arms are planned via motion planner with collision checking enabled
+        """
     def remove_obstacle(self, obstacle_id: str) -> MotionStatus:
         """
         Remove an obstacle by its ID
@@ -545,6 +679,18 @@ class GalbotNavigation:
                             
                             Returns:
                                 array: [x, y, z, qx, qy, qz, qw], map frame
+        """
+    def get_navigation_status(self) -> NavigationTaskStatus:
+        """
+                    Get the current navigation task state (UNKNOWN, RUNNING, SUCCESS, FAILED).
+                    Use when running non-blocking navigation to poll and exit error logic in time
+                    on FAILED or timeout.
+        
+                    Parameters:
+                        None
+        
+                    Returns:
+                        NavigationTaskStatus: Current task state.
         """
     def init(self) -> bool:
         """
@@ -671,6 +817,19 @@ class GalbotRobot:
                     Returns:
                         GalbotRobot: The singleton instance of GalbotRobot.
         """
+    def acquire_controller(self, controller_name: ControllerName) -> ControlStatus:
+        """
+                    Acquire a controller for a specific joint group.
+                    
+                    Acquires the specified controller. This is the opposite operation of release_controller.
+                    It activates the specified controller strategy and grants it authority over the hardware.
+        
+                    Parameters:
+                        controller_name (ControllerName): The controller to acquire.
+                    
+                    Returns:
+                        ControlStatus: Result of the operation.
+        """
      
     def check_trajectory_execution_status(self, joint_groups: collections.abc.Sequence[str] = []) -> list[TrajectoryControlStatus]:
         ...
@@ -706,6 +865,92 @@ class GalbotRobot:
                     Returns:
                         ControlStatus: Trajectory execution/sending result.
         """
+     
+    def execute_whole_body_target(self, joint_positions: collections.abc.Sequence[typing.SupportsFloat], linear_velocity: typing.Annotated[collections.abc.Sequence[typing.SupportsFloat], "FixedSize(3)"], angular_velocity: typing.Annotated[collections.abc.Sequence[typing.SupportsFloat], "FixedSize(3)"], is_blocking: bool = True, speed_rad_s: typing.SupportsFloat = 0.2, timeout_s: typing.SupportsFloat = 15.0) -> ControlStatus:
+        """
+                    Execute whole-body target with base velocity.
+        
+                    Parameters:
+                        joint_positions (List[float]): Whole-body joint positions.
+                        linear_velocity (List[float]): Base linear velocity [vx, vy, vz].
+                        angular_velocity (List[float]): Base angular velocity [wx, wy, wz].
+                        is_blocking (bool): Whether to block (optional, default: True).
+                        speed_rad_s (float): Joint speed limit in rad/s (optional, default: 0.2).
+                        timeout_s (float): Blocking timeout in seconds (optional, default: 15.0).
+        """
+     
+    def execute_whole_body_target(self, joint_positions: collections.abc.Sequence[typing.SupportsFloat], base_pose: ..., is_blocking: bool = True, speed_rad_s: typing.SupportsFloat = 0.2, timeout_s: typing.SupportsFloat = 15.0) -> ControlStatus:
+        """
+                    Execute whole-body target with base pose.
+        """
+     
+    def execute_whole_body_target(self, joint_positions: collections.abc.Sequence[typing.SupportsFloat], x: typing.SupportsFloat, y: typing.SupportsFloat, yaw: typing.SupportsFloat, frame_id: str = '', reference_frame_id: str = 'odom', is_blocking: bool = True, speed_rad_s: typing.SupportsFloat = 0.2, time_from_start_s: typing.SupportsFloat = 10.0, timeout_s: typing.SupportsFloat = 15.0) -> ControlStatus:
+        """
+                    Execute whole-body target with base pose and frame ids.
+        """
+     
+    def get_active_controller(self, group_name: str) -> ControllerName:
+        """
+                    Get the active controller for a joint group name.
+        
+                    Parameters:
+                        group_name (str): The joint group name to query.
+        
+                    Returns:
+                        ControllerName: Active controller for the group.
+        """
+     
+    def get_active_controller(self, joint_group: JointGroup) -> ControllerName:
+        """
+                    Get the active controller for a joint group enum.
+        
+                    Parameters:
+                        joint_group (JointGroup): The joint group to query.
+        
+                    Returns:
+                        ControllerName: Active controller for the group.
+        """
+    def get_bms_information(self) -> dict:
+        """
+                    Get EMS/BMS information.
+        
+                    Parameters:
+                        None
+        
+                    Returns:
+                        dict: Dictionary containing the following keys:
+                            - 'voltage': Battery voltage in V
+                            - 'current': Battery current in A
+                            - 'battery_level': Battery level in %
+                            - 'temperature': Battery temperature in C
+                            - 'charging_status': Charging status (bool)
+                            - 'health_status': Health status (bool)
+                            - 'capacity': Remaining capacity in Ah
+        
+                        Returns empty dictionary on failure.
+        """
+    def get_camera_intrinsic(self, camera_id: SensorType) -> dict:
+        """
+                    Get camera intrinsic parameters.
+                    
+                    Parameters:
+                        camera_id (SensorType): Camera sensor ID to query.
+                    
+                    Returns:
+                        dict: Dictionary containing camera intrinsic parameters.
+                            - header: Message header with timestamp and frame information
+                            - height: Image height in pixels
+                            - width: Image width in pixels
+                            - distortion_model: Distortion model, e.g., 'plumb_bob'
+                            - D: Distortion coefficients (list of float)
+                            - K: Camera intrinsic matrix (list of 9 float)
+                            - binning_x: Horizontal binning factor
+                            - binning_y: Vertical binning factor
+                            - roi: Region of interest (list of int)
+                            - camera_type: camera type
+                            ...
+                            Returns empty dictionary on failure.
+        """
     def get_depth_data(self, camera_id: SensorType) -> dict:
         """
                     Get latest depth image data from specified camera.
@@ -723,6 +968,23 @@ class GalbotRobot:
                             - 'data': Compressed depth image binary data (bytes).
                         Returns empty dictionary on failure.
         """
+    def get_device_information(self) -> dict:
+        """
+                    Get device information including model, serial number, firmware version, hardware version, and manufacturer.
+              
+                    Parameters:
+                        None
+                    
+                    Returns:
+                        dict: Dictionary containing the following keys:
+                            - 'model': Device model name or identifier (str)
+                            - 'serial_number': Unique serial number for device identification (str)
+                            - 'firmware_version': System firmware version string (str)
+                            - 'hardware_version': Hardware version or revision number (str)
+                            - 'manufacturer': Manufacturer name or company identifier (str)
+                        
+                        Returns empty dictionary on failure.
+        """
     def get_force_sensor_data(self, sensor_type: GalbotOneFoxtrotSensor) -> dict:
         """
                     Get data from specified force sensor.
@@ -737,6 +999,16 @@ class GalbotRobot:
                             - 'torque': Torque vector dictionary with 'x', 'y', 'z' keys
                         
                         Returns empty dictionary on failure.
+        """
+    def get_frame_names(self) -> list[str]:
+        """
+                    Get all frame names.
+        
+                    Parameters:
+                        None
+        
+                    Returns:
+                        list(str): List of all frame names.
         """
     def get_gripper_state(self, end_effector: JointGroup) -> GripperState:
         """
@@ -830,6 +1102,20 @@ class GalbotRobot:
                         dict: Dictionary containing point cloud data fields and binary point data.
                             Returns empty dictionary on failure.
         """
+    def get_log_information(self, arg0: typing.SupportsInt, arg1: LogLevel) -> dict:
+        """
+                    Get log information.
+        
+                    Parameters:
+                        timewindow_s (int64_t): Time window in seconds.
+                        log_level (int): Log level.
+        
+                    Returns:
+                        dict: Dictionary containing the following keys:
+                            - 'level': Log level
+                            - 'message': Log message
+                        Returns empty dictionary on failure.
+        """
     def get_odom(self) -> dict:
         """
                     Get odometry information.
@@ -839,7 +1125,7 @@ class GalbotRobot:
                     
                     Returns:
                         dict: Dictionary containing the following keys:
-                            - 'timestamp': Timestamp in seconds
+                            - 'timestamp_ns': Timestamp in nanoseconds
                             - 'position': Position array [x, y, z] in meters
                             - 'orientation': Quaternion array [x, y, z, w]
                         
@@ -860,6 +1146,32 @@ class GalbotRobot:
                         
                         Returns empty dictionary on failure.
         """
+     
+    def get_sensor_extrinsic(self, sensor_id: SensorType, reference_frame: str = 'base_link') -> tuple:
+        """
+                   Query sensor extrinsic transform (TF) from reference frame to sensor frame.
+             
+                   Parameters:
+                       sensor_id (SensorType): Sensor enum to query.
+                       reference_frame (str): Name of the reference coordinate frame (frame to transform from).
+                                             Default is "base_link".
+                   
+                   Returns:
+                       tuple(List[float], int): Transform [x, y, z, qx, qy, qz, qw] and timestamp. Returns empty list on failure.
+        """
+     
+    def get_sensor_extrinsic(self, sensor_id: SensorType, reference_frame: str = 'base_link') -> tuple:
+        """
+                    Query sensor extrinsic transform (TF) from reference_frame to sensor frame.
+                    Note: Now we DO NOT implemented the extrinsic parameters of the ultrasonic sensor.
+        
+                    Parameters:
+                        sensor_id (SensorType): Sensor enum to query.
+                        reference_frame (str): Reference coordinate frame (optional, default: "base_link").
+        
+                    Returns:
+                        tuple(List[float], int): Transform vector list and timestamp. Returns empty list on failure or if the transform is not available.
+        """
     def get_suction_cup_state(self, end_effector: JointGroup) -> SuctionCupState:
         """
                     Get suction cup state.
@@ -875,8 +1187,8 @@ class GalbotRobot:
                     Query coordinate frame transform (TF).
               
                     Parameters:
-                        target_frame (str): Target coordinate frame.
-                        source_frame (str): Source coordinate frame.
+                        target_frame (str): Target coordinate frame (e.g., map, base_link, imu_base_link; actual list is from get_frame_names()).
+                        source_frame (str): Source coordinate frame (e.g., map, base_link, imu_base_link; actual list is from get_frame_names()).
                         timestamp_ns (int): Desired transform timestamp in nanoseconds, 0 for latest (optional, default: 0).
                         timeout_ms (int): Query timeout in milliseconds (optional, default: 100).
                     
@@ -896,6 +1208,16 @@ class GalbotRobot:
                             - 'distance': Distance value in meters
                         
                         Returns empty dictionary on failure.
+        """
+    def get_volume(self) -> float:
+        """
+                    Get current system global volume value.
+                    
+                    Parameters:
+                        None
+                    
+                    Returns:
+                        float: Current volume value, range 0.0 to 100.0.
         """
     def init(self, enable_sensor_set: collections.abc.Set[SensorType] = ...) -> bool:
         """
@@ -917,6 +1239,58 @@ class GalbotRobot:
                     Returns:
                         bool: True if system is running, False if shutdown signal captured and preparing to shutdown.
         """
+     
+    def release_controller(self, group_name: str = 'all') -> ControlStatus:
+        """
+                    Release a controller for a specific joint group.
+                    
+                    Releases the specified controller for the given joint group. This puts the
+                    controller in a released state where it stops sending commands to the joints.
+                    This is the opposite operation of acquire_controller.
+        
+                    Parameters:
+                        group_name (str): Name of the joint group (default: "all").
+                    
+                    Returns:
+                        ControlStatus: Result of the operation.
+        """
+     
+    def release_controller(self, joint_group: JointGroup) -> ControlStatus:
+        """
+                    Release a controller for a specific joint group using enum.
+                    
+                    Releases the specified controller for the given joint group. This puts the
+                    controller in a released state where it stops sending commands to the joints.
+                    This is the opposite operation of acquire_controller.
+        
+                    Parameters:
+                        joint_group (JointGroup): Enum of the joint group.
+                    
+                    Returns:
+                        ControlStatus: Result of the operation.
+        """
+     
+    def reload_controller(self, group_name: str = 'all') -> ControlStatus:
+        """
+                    Reload a controller for a specific joint group.
+                    
+                    Parameters:
+                        group_name (str): Name of the joint group (default: "all").
+                    
+                    Returns:
+                        ControlStatus: Result of the operation.
+        """
+     
+    def reload_controller(self, joint_group: JointGroup) -> ControlStatus:
+        """
+                    Reload a controller for a specific joint group using enum.
+                    
+                    Parameters:
+                        joint_group (JointGroup): Enum of the joint group.
+                    
+                    Returns:
+                        ControlStatus: Result of the operation.
+        """
     def request_shutdown(self) -> None:
         """
                     Send SIGINT signal to request shutdown.
@@ -927,13 +1301,45 @@ class GalbotRobot:
                     Returns:
                         None
         """
-    def set_base_velocity(self, linear_velocity: typing.Annotated[collections.abc.Sequence[typing.SupportsFloat], "FixedSize(3)"], angular_velocity: typing.Annotated[collections.abc.Sequence[typing.SupportsFloat], "FixedSize(3)"]) -> ControlStatus:
+     
+    def set_base_pose(self, base_pose: ..., is_blocking: bool = True, timeout_s: typing.SupportsFloat = 15.0) -> ControlStatus:
+        """
+                    Set base pose command using Pose.
+        
+                    Parameters:
+                        base_pose (Pose): Target base pose.
+                        is_blocking (bool): Whether to block until command execution completes (optional, default: True).
+                        timeout_s (float): Blocking timeout in seconds (optional, default: 15.0).
+        
+                    Returns:
+                        ControlStatus: Command sending result.
+        """
+     
+    def set_base_pose(self, x: typing.SupportsFloat, y: typing.SupportsFloat, yaw: typing.SupportsFloat, frame_id: str = '', reference_frame_id: str = 'odom', is_blocking: bool = True, timeout_s: typing.SupportsFloat = 15.0) -> ControlStatus:
+        """
+                    Set base pose command with frame ids.
+        
+                    Parameters:
+                        x (float): Target x position.
+                        y (float): Target y position.
+                        yaw (float): Target yaw (rad).
+                        frame_id (str): Frame id ("base_link"/"odom"/"map"). Reserved for future versions; pass "".
+                        reference_frame_id (str): Reference frame id ("odom"/"map"). Default "odom".
+                        is_blocking (bool): Whether to block until command execution completes (optional, default: True).
+                        timeout_s (float): Blocking timeout in seconds (optional, default: 15.0).
+        
+                    Returns:
+                        ControlStatus: Command sending result.
+        """
+    def set_base_velocity(self, linear_velocity: typing.Annotated[collections.abc.Sequence[typing.SupportsFloat], "FixedSize(3)"], angular_velocity: typing.Annotated[collections.abc.Sequence[typing.SupportsFloat], "FixedSize(3)"], duration_s: typing.SupportsFloat = 0.0) -> ControlStatus:
         """
                     Set base velocity command.
               
                     Parameters:
                         linear_velocity (List[float]): Linear velocity command [vx, vy, vz] in m/s.
                         angular_velocity (List[float]): Angular velocity command [wx, wy, wz] in rad/s.
+                        duration_s (float): Duration in seconds before auto-stop (optional, default: 0.0).
+                                            If <= 0.0, no automatic stop is performed.
                     
                     Returns:
                         ControlStatus: Command sending result.
@@ -953,10 +1359,10 @@ class GalbotRobot:
                         ControlStatus: Command execution/sending result.
         """
      
-    def set_joint_commands(self, joint_commands: collections.abc.Sequence[JointCommand], joint_groups: collections.abc.Sequence[str] = [], joint_names: collections.abc.Sequence[str] = []) -> ControlStatus:
+    def set_joint_commands(self, joint_commands: collections.abc.Sequence[JointCommand], joint_groups: collections.abc.Sequence[str] = [], joint_names: collections.abc.Sequence[str] = [], time_from_start_s: typing.SupportsFloat = 10.0) -> ControlStatus:
         ...
      
-    def set_joint_commands(self, joint_commands: collections.abc.Sequence[JointCommand], joint_groups: collections.abc.Sequence[JointGroup] = [], joint_names: collections.abc.Sequence[str] = []) -> ControlStatus:
+    def set_joint_commands(self, joint_commands: collections.abc.Sequence[JointCommand], joint_groups: collections.abc.Sequence[JointGroup] = [], joint_names: collections.abc.Sequence[str] = [], time_from_start_s: typing.SupportsFloat = 10.0) -> ControlStatus:
         """
                     Set joint commands with JointGroup enums.
               
@@ -964,9 +1370,29 @@ class GalbotRobot:
                         joint_commands (List[JointCommand]): List of joint commands to control.
                         joint_groups (List[str] or List[JointGroup]): Joint groups to control, can use strings or enums (optional).
                         joint_names (List[str]): Specific joint names, takes priority over joint_groups (optional).
+                        time_from_start_s (float): Time in seconds from the start of the motion to execute the command (optional, default: 10.0).
                     
                     Returns:
                         ControlStatus: Result of command execution.
+        """
+    def set_joint_commands_batch(self, trajectory: Trajectory) -> ControlStatus:
+        """
+                    Set joint commands in batch mode (non-blocking).
+              
+                    Sets multiple joint command trajectory points in real-time control mode,
+                    supporting one-time submission of trajectory control commands for multiple
+                    time points. Provides a non-blocking high-frequency trajectory execution
+                    interface. Similar to set_joint_commands but supports batch trajectory control,
+                    suitable for scenarios such as VLA inference batch output.
+              
+                    Parameters:
+                        trajectory (Trajectory): Trajectory data structure containing waypoints with joint commands.
+                                               Each TrajectoryPoint contains time_from_start and a list of JointCommand.
+                                               JointCommand includes position (rad), velocity (rad/s), acceleration (rad/s²),
+                                               effort (N·m), Kp (position gain), and Kd (velocity gain).
+                    
+                    Returns:
+                        ControlStatus: Command submission result. Returns immediately without waiting for execution completion (non-blocking).
         """
      
     def set_joint_positions(self, joint_positions: collections.abc.Sequence[typing.SupportsFloat], joint_groups: collections.abc.Sequence[str] = [], joint_names: collections.abc.Sequence[str] = [], is_blocking: bool = True, speed_rad_s: typing.SupportsFloat = 0.2, timeout_s: typing.SupportsFloat = 15.0) -> ControlStatus:
@@ -998,6 +1424,73 @@ class GalbotRobot:
                     Returns:
                         ControlStatus: Command sending result.
         """
+    def set_volume(self, volume: typing.SupportsFloat) -> bool:
+        """
+                    Set system global volume value.
+                    
+                    Parameters:
+                        volume (float): Target volume value, range 0.0 to 100.0.
+                    
+                    Returns:
+                        bool: Returns the volume setting result. True indicates the volume was set successfully, False indicates the volume setting failed.
+        """
+     
+    def start_controller(self, group_name: str = 'all') -> ControlStatus:
+        """
+                    Start a controller for a specific joint group.
+                    
+                    Starts the specified controller for the given joint group. This puts the
+                    controller in an active state where it can send commands to the joints.
+                    This is the opposite operation of stop_controller.
+        
+                    Parameters:
+                        group_name (str): Name of the joint group (default: "all").
+                    
+                    Returns:
+                        ControlStatus: Result of the operation.
+        """
+     
+    def start_controller(self, joint_group: JointGroup) -> ControlStatus:
+        """
+                    Start a controller for a specific joint group using enum.
+                    
+                    Starts the specified controller for the given joint group. This puts the
+                    controller in an active state where it can send commands to the joints.
+                    This is the opposite operation of stop_controller.
+        
+                    Parameters:
+                        joint_group (JointGroup): Enum of the joint group.
+                    
+                    Returns:
+                        ControlStatus: Result of the operation.
+        """
+    def start_microphone_stream_input(self, callback: typing.Callable, chunk_size: typing.SupportsInt = 2560, use_raw_audio: bool = False) -> str:
+        """
+                    Start microphone streaming audio input.
+        
+                    Parameters:
+                        callback (callable): Audio data callback function with signature: void(dict audio_data).
+                                            The audio_data dict contains:
+                                            - 'header': Message header with timestamp and frame information
+                                            - 'type': Audio data type ('waken_up', 'denoise_chunk', 'vad_begin', 'vad_chunk', 'vad_end')
+                                            - 'format': Audio format ('pcm', 'json')
+                                            - 'data': Audio binary data (bytes)
+                        chunk_size (int): Audio data chunk size in bytes, default value 2560. Dynamic configuration not supported yet
+                        use_raw_audio (bool): Whether to use raw audio, default false. Dynamic configuration not supported yet.
+                    
+                    Returns:
+                        str: Stream ID used to identify the audio input stream.
+        """
+    def stop_audio_stream_output(self, stream_id: str = '') -> None:
+        """
+                    Stop the specified audio output stream or all active audio output streams playback.
+                    
+                    Parameters:
+                        stream_id (str): Audio output stream ID to stop. Empty string means stop all active audio output streams (optional, default: "").
+                    
+                    Returns:
+                        None
+        """
     def stop_base(self) -> ControlStatus:
         """
                     Stop base motion.
@@ -1007,6 +1500,46 @@ class GalbotRobot:
                     
                     Returns:
                         ControlStatus: Command sending result.
+        """
+     
+    def stop_controller(self, group_name: str = 'all') -> ControlStatus:
+        """
+                    Stop a controller for a specific joint group.
+                    
+                    Stops the specified controller for the given joint group. This puts the
+                    controller in a stopped state where it no longer sends commands to the joints.
+                    This is the opposite operation of start_controller.
+        
+                    Parameters:
+                        group_name (str): Name of the joint group (default: "all").
+                    
+                    Returns:
+                        ControlStatus: Result of the operation.
+        """
+     
+    def stop_controller(self, joint_group: JointGroup) -> ControlStatus:
+        """
+                    Stop a controller for a specific joint group using enum.
+                    
+                    Stops the specified controller for the given joint group. This puts the
+                    controller in a stopped state where it no longer sends commands to the joints.
+                    This is the opposite operation of start_controller.
+        
+                    Parameters:
+                        joint_group (JointGroup): Enum of the joint group.
+                    
+                    Returns:
+                        ControlStatus: Result of the operation.
+        """
+    def stop_microphone_stream_input(self, stream_id: str = '') -> None:
+        """
+                    Stop the specified microphone streaming audio input.
+                    
+                    Parameters:
+                        stream_id (str): Audio input stream ID to stop. Empty string stops all active streams (optional, default: "").
+                    
+                    Returns:
+                        None
         """
     def stop_trajectory_execution(self) -> ControlStatus:
         """
@@ -1018,6 +1551,16 @@ class GalbotRobot:
                     Returns:
                         ControlStatus: Command sending result.
         """
+    def switch_controller(self, controller_name: ControllerName) -> ControlStatus:
+        """
+                    Switch controller for a specific joint group.
+                    
+                    Parameters:
+                        controller_name (ControllerName): The controller to switch to.
+                    
+                    Returns:
+                        ControlStatus: Result of the operation.
+        """
     def wait_for_shutdown(self) -> None:
         """
                     Sleep continuously until shutdown signal is received.
@@ -1027,6 +1570,27 @@ class GalbotRobot:
                     
                     Returns:
                         None
+        """
+    def write_audio_stream_output(self, audio_chunk: str, stream_id: str = '') -> bool:
+        """
+                    Write PCM format audio data chunk to audio output stream for real-time playback.
+                    
+                    Parameters:
+                        audio_chunk (bytes or str): Audio data chunk in PCM format (16000 Hz, 16-bit little-endian), single channel.
+                        stream_id (str): Audio stream ID to distinguish different audio sources. Empty string means use default stream (optional, default: "").
+                    
+                    Returns:
+                        bool: True if audio data has been successfully written and playback task issued, False if write failed.
+        """
+     
+    def zero_whole_body_and_base(self, base_zero_pose: ..., is_blocking: bool = True, leg_head_speed_rad_s: typing.SupportsFloat = 0.2, leg_head_timeout_s: typing.SupportsFloat = 15.0, params: ... = None) -> tuple[..., ControlStatus]:
+        """
+                    One-key zero: move whole-body joints to zero and base to zero pose.
+        """
+     
+    def zero_whole_body_and_base(self, frame_id: str = '', reference_frame_id: str = 'odom', is_blocking: bool = True, leg_head_speed_rad_s: typing.SupportsFloat = 0.2, leg_head_timeout_s: typing.SupportsFloat = 15.0, params: ... = None) -> tuple[..., ControlStatus]:
+        """
+                    One-key zero: move whole-body joints to zero and base (x,y,yaw) to zero with frames.
         """
 class GripperState:
     """
@@ -1097,12 +1661,12 @@ class Header:
     def frame_id(self, arg0: str) -> None:
         ...
     @property
-    def stamp(self) -> Timestamp:
+    def timestamp_ns(self) -> int:
         """
-        Timestamp
+        Timestamp (nanoseconds since epoch)
         """
-    @stamp.setter
-    def stamp(self, arg0: Timestamp) -> None:
+    @timestamp_ns.setter
+    def timestamp_ns(self, arg0: typing.SupportsInt) -> None:
         ...
 class IKSolverConfig:
     def __init__(self) -> None:
@@ -1451,6 +2015,55 @@ class LineTrajCheckPrimitive:
         ...
     def set_line_prim_curvature(self, arg0: typing.SupportsFloat) -> None:
         ...
+class LogLevel:
+    """
+    Members:
+    
+      TRACE : Trace level
+    
+      DEBUG : Debug level
+    
+      INFO : Info level
+    
+      WARN : Warning level
+    
+      ERROR : Error level
+    
+      CRITICAL : Critical level
+    """
+    CRITICAL: typing.ClassVar[LogLevel]  # value = <LogLevel.CRITICAL: 5>
+    DEBUG: typing.ClassVar[LogLevel]  # value = <LogLevel.DEBUG: 1>
+    ERROR: typing.ClassVar[LogLevel]  # value = <LogLevel.ERROR: 4>
+    INFO: typing.ClassVar[LogLevel]  # value = <LogLevel.INFO: 2>
+    TRACE: typing.ClassVar[LogLevel]  # value = <LogLevel.TRACE: 0>
+    WARN: typing.ClassVar[LogLevel]  # value = <LogLevel.WARN: 3>
+    __members__: typing.ClassVar[dict[str, LogLevel]]  # value = {'TRACE': <LogLevel.TRACE: 0>, 'DEBUG': <LogLevel.DEBUG: 1>, 'INFO': <LogLevel.INFO: 2>, 'WARN': <LogLevel.WARN: 3>, 'ERROR': <LogLevel.ERROR: 4>, 'CRITICAL': <LogLevel.CRITICAL: 5>}
+    def __eq__(self, other: typing.Any) -> bool:
+        ...
+    def __getstate__(self) -> int:
+        ...
+    def __hash__(self) -> int:
+        ...
+    def __index__(self) -> int:
+        ...
+    def __init__(self, value: typing.SupportsInt) -> None:
+        ...
+    def __int__(self) -> int:
+        ...
+    def __ne__(self, other: typing.Any) -> bool:
+        ...
+    def __repr__(self) -> str:
+        ...
+    def __setstate__(self, state: typing.SupportsInt) -> None:
+        ...
+    def __str__(self) -> str:
+        ...
+    @property
+    def name(self) -> str:
+        ...
+    @property
+    def value(self) -> int:
+        ...
 class MotionPlanConfig:
     def __init__(self) -> None:
         ...
@@ -1599,6 +2212,49 @@ class MotionStatus:
     @property
     def value(self) -> int:
         ...
+class NavigationTaskStatus:
+    """
+    Members:
+    
+      UNKNOWN
+    
+      RUNNING
+    
+      SUCCESS
+    
+      FAILED
+    """
+    FAILED: typing.ClassVar[NavigationTaskStatus]  # value = <NavigationTaskStatus.FAILED: 3>
+    RUNNING: typing.ClassVar[NavigationTaskStatus]  # value = <NavigationTaskStatus.RUNNING: 1>
+    SUCCESS: typing.ClassVar[NavigationTaskStatus]  # value = <NavigationTaskStatus.SUCCESS: 2>
+    UNKNOWN: typing.ClassVar[NavigationTaskStatus]  # value = <NavigationTaskStatus.UNKNOWN: 0>
+    __members__: typing.ClassVar[dict[str, NavigationTaskStatus]]  # value = {'UNKNOWN': <NavigationTaskStatus.UNKNOWN: 0>, 'RUNNING': <NavigationTaskStatus.RUNNING: 1>, 'SUCCESS': <NavigationTaskStatus.SUCCESS: 2>, 'FAILED': <NavigationTaskStatus.FAILED: 3>}
+    def __eq__(self, other: typing.Any) -> bool:
+        ...
+    def __getstate__(self) -> int:
+        ...
+    def __hash__(self) -> int:
+        ...
+    def __index__(self) -> int:
+        ...
+    def __init__(self, value: typing.SupportsInt) -> None:
+        ...
+    def __int__(self) -> int:
+        ...
+    def __ne__(self, other: typing.Any) -> bool:
+        ...
+    def __repr__(self) -> str:
+        ...
+    def __setstate__(self, state: typing.SupportsInt) -> None:
+        ...
+    def __str__(self) -> str:
+        ...
+    @property
+    def name(self) -> str:
+        ...
+    @property
+    def value(self) -> int:
+        ...
 class OdomData:
     """
     Odometry data
@@ -1622,12 +2278,12 @@ class OdomData:
     def position(self, arg0: typing.Annotated[collections.abc.Sequence[typing.SupportsFloat], "FixedSize(3)"]) -> None:
         ...
     @property
-    def timestamp(self) -> int:
+    def timestamp_ns(self) -> int:
         """
-        Timestamp (seconds)
+        Timestamp (nanoseconds)
         """
-    @timestamp.setter
-    def timestamp(self, arg0: typing.SupportsInt) -> None:
+    @timestamp_ns.setter
+    def timestamp_ns(self, arg0: typing.SupportsInt) -> None:
         ...
 class Parameter:
     actuate_type: ...
@@ -2636,6 +3292,7 @@ COMM_DISCONNECTED: MotionStatus  # value = <MotionStatus.COMM_DISCONNECTED: 9>
 CYLINDER: PrimitiveType  # value = <PrimitiveType.CYLINDER: 1>
 DATA_FETCH_FAILED: MotionStatus  # value = <MotionStatus.DATA_FETCH_FAILED: 7>
 EUCLIDEAN_DISTANCE: StateCheckType  # value = <StateCheckType.EUCLIDEAN_DISTANCE: 0>
+FAILED: NavigationTaskStatus  # value = <NavigationTaskStatus.FAILED: 3>
 FAULT: MotionStatus  # value = <MotionStatus.FAULT: 2>
 INIT_FAILED: MotionStatus  # value = <MotionStatus.INIT_FAILED: 4>
 INVALID_INPUT: MotionStatus  # value = <MotionStatus.INVALID_INPUT: 3>
@@ -2648,10 +3305,12 @@ RADIAN_DISTANCE: StateCheckType  # value = <StateCheckType.RADIAN_DISTANCE: 1>
 RANDOM_PROGRESSIVE_SEED: SeedType  # value = <SeedType.RANDOM_PROGRESSIVE_SEED: 1>
 RANDOM_SEED: SeedType  # value = <SeedType.RANDOM_SEED: 0>
 ROBOT_STATES: RobotStatesType  # value = <RobotStatesType.ROBOT_STATES: 2>
+RUNNING: NavigationTaskStatus  # value = <NavigationTaskStatus.RUNNING: 1>
 STATUS_NUM: MotionStatus  # value = <MotionStatus.STATUS_NUM: 10>
 STOPPED_UNREACHED: MotionStatus  # value = <MotionStatus.STOPPED_UNREACHED: 6>
 SUCCESS: MotionStatus  # value = <MotionStatus.SUCCESS: 0>
 TIMEOUT: TerminationConditionType  # value = <TerminationConditionType.TIMEOUT: 0>
 TIMEOUT_AND_EXACT_SOLUTION: TerminationConditionType  # value = <TerminationConditionType.TIMEOUT_AND_EXACT_SOLUTION: 1>
+UNKNOWN: NavigationTaskStatus  # value = <NavigationTaskStatus.UNKNOWN: 0>
 UNSUPPORTED_FUNCRION: MotionStatus  # value = <MotionStatus.UNSUPPORTED_FUNCRION: 11>
 USER_DEFINED_SEED: SeedType  # value = <SeedType.USER_DEFINED_SEED: 2>

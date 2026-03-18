@@ -59,7 +59,7 @@ namespace g1 {
  * @note This map is used for runtime string-based actuation type resolution.
  * @see ActuateType
  */
-static std::unordered_map<std::string, ActuateType> g_actuate_type_map = {
+static const std::unordered_map<std::string, ActuateType> g_actuate_type_map = {
     {"with_chain_only", ActuateType::ACTUATE_WITH_CHAIN_ONLY},
     {"with_torso", ActuateType::ACTUATE_WITH_TORSO},
     {"with_leg", ActuateType::ACTUATE_WITH_LEG},
@@ -142,7 +142,7 @@ class Parameter : public PlannerConfig {
     is_direct_execute = direct_execute;
     is_blocking = blocking;
     timeout_second = timeout;
-    actuate_type = g_actuate_type_map[actuate];
+    actuate_type = g_actuate_type_map.at(actuate);
     is_tool_pose = tool_pose;
     is_check_collision = check_collision;
   }
@@ -182,7 +182,13 @@ class Parameter : public PlannerConfig {
    *
    * @warning Must be a valid key in g_actuate_type_map, otherwise behavior is undefined.
    */
-  void setActuate(const std::string& actuate) { actuate_type = g_actuate_type_map[actuate]; }
+  void setActuate(const std::string& actuate) 
+  {
+    if (g_actuate_type_map.find(actuate) == g_actuate_type_map.end()) {
+      return;
+    }
+    actuate_type = g_actuate_type_map.at(actuate);
+  }
 
   /**
    * @brief Set tool coordinate frame usage.

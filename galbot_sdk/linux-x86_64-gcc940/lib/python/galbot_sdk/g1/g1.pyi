@@ -4,6 +4,7 @@ Motion Plan Configuration module
 from __future__ import annotations
 import collections.abc
 import numpy
+import numpy.typing
 import typing
 __all__: list[str] = ['AudioData', 'COMM_DISCONNECTED', 'CYLINDER', 'CollisionCheckOption', 'ControlStatus', 'ControllerName', 'DATA_FETCH_FAILED', 'DepthData', 'EUCLIDEAN_DISTANCE', 'FAILED', 'FAULT', 'ForceData', 'GalbotMotion', 'GalbotNavigation', 'GalbotOneFoxtrotSensor', 'GalbotRobot', 'GripperState', 'Header', 'IKSolverConfig', 'INIT_FAILED', 'INVALID_INPUT', 'IN_PROGRESS', 'ImuData', 'JOINT', 'JointCommand', 'JointGroup', 'JointState', 'JointStates', 'KinematicsBoundary', 'LINE', 'LidarData', 'LineTrajCheckPrimitive', 'LogLevel', 'MotionPlanConfig', 'MotionStatus', 'NavigationTaskStatus', 'OdomData', 'POSE', 'PUBLISH_FAIL', 'Parameter', 'Point', 'PointField', 'PointFieldDataType', 'Pose', 'PoseState', 'PrimitiveType', 'Quaternion', 'RADIAN_DISTANCE', 'RANDOM_PROGRESSIVE_SEED', 'RANDOM_SEED', 'ROBOT_STATES', 'RUNNING', 'RgbData', 'RobotStates', 'RobotStatesType', 'STATUS_NUM', 'STOPPED_UNREACHED', 'SUCCESS', 'SUCTION_ACTION_STATE', 'SamplerConfig', 'SeedType', 'SensorType', 'StateCheckType', 'SuctionCupState', 'TIMEOUT', 'TIMEOUT_AND_EXACT_SOLUTION', 'TerminationConditionType', 'Timestamp', 'Trajectory', 'TrajectoryControlStatus', 'TrajectoryFeasibilityCheckOption', 'TrajectoryPlanConfig', 'TrajectoryPoint', 'UNKNOWN', 'UNSUPPORTED_FUNCRION', 'USER_DEFINED_SEED', 'UltrasonicData', 'UltrasonicType', 'Vector3', 'WBCException', 'check_motion_status', 'create_joint_state', 'create_parameter', 'create_pose_state']
 class AudioData:
@@ -884,9 +885,21 @@ class GalbotRobot:
                     Execute whole-body target with base pose.
         """
      
-    def execute_whole_body_target(self, joint_positions: collections.abc.Sequence[typing.SupportsFloat], x: typing.SupportsFloat, y: typing.SupportsFloat, yaw: typing.SupportsFloat, frame_id: str = '', reference_frame_id: str = 'odom', is_blocking: bool = True, speed_rad_s: typing.SupportsFloat = 0.2, time_from_start_s: typing.SupportsFloat = 10.0, timeout_s: typing.SupportsFloat = 15.0) -> ControlStatus:
+    def execute_whole_body_target(self, joint_positions: collections.abc.Sequence[typing.SupportsFloat], x: typing.SupportsFloat, y: typing.SupportsFloat, yaw: typing.SupportsFloat, frame_id: str = 'odom', reference_frame_id: str = 'odom', is_blocking: bool = True, speed_rad_s: typing.SupportsFloat = 0.2, time_from_start_s: typing.SupportsFloat = 10.0, timeout_s: typing.SupportsFloat = 15.0) -> ControlStatus:
         """
                     Execute whole-body target with base pose and frame ids.
+        
+                    Parameters:
+                        joint_positions (List[float]): Whole-body joint positions.
+                        x (float): Target x position.
+                        y (float): Target y position.
+                        yaw (float): Target yaw (rad).
+                        frame_id (str): Frame id ("base_link"/"odom"/"map"). Default "odom".
+                        reference_frame_id (str): Reference frame id ("odom"/"map"). Default "odom".
+                        is_blocking (bool): Whether to block (optional, default: True).
+                        speed_rad_s (float): Joint speed limit in rad/s (optional, default: 0.2).
+                        time_from_start_s (float): Base interpolation duration in seconds (optional, default: 10.0).
+                        timeout_s (float): Blocking timeout in seconds (optional, default: 15.0).
         """
      
     def get_active_controller(self, group_name: str) -> ControllerName:
@@ -1315,7 +1328,7 @@ class GalbotRobot:
                         ControlStatus: Command sending result.
         """
      
-    def set_base_pose(self, x: typing.SupportsFloat, y: typing.SupportsFloat, yaw: typing.SupportsFloat, frame_id: str = '', reference_frame_id: str = 'odom', is_blocking: bool = True, timeout_s: typing.SupportsFloat = 15.0) -> ControlStatus:
+    def set_base_pose(self, x: typing.SupportsFloat, y: typing.SupportsFloat, yaw: typing.SupportsFloat, frame_id: str = 'odom', reference_frame_id: str = 'odom', is_blocking: bool = True, timeout_s: typing.SupportsFloat = 15.0) -> ControlStatus:
         """
                     Set base pose command with frame ids.
         
@@ -1323,7 +1336,7 @@ class GalbotRobot:
                         x (float): Target x position.
                         y (float): Target y position.
                         yaw (float): Target yaw (rad).
-                        frame_id (str): Frame id ("base_link"/"odom"/"map"). Reserved for future versions; pass "".
+                        frame_id (str): Frame id ("base_link"/"odom"/"map"). Default "odom".
                         reference_frame_id (str): Reference frame id ("odom"/"map"). Default "odom".
                         is_blocking (bool): Whether to block until command execution completes (optional, default: True).
                         timeout_s (float): Blocking timeout in seconds (optional, default: 15.0).
@@ -1365,6 +1378,12 @@ class GalbotRobot:
     def set_joint_commands(self, joint_commands: collections.abc.Sequence[JointCommand], joint_groups: collections.abc.Sequence[JointGroup] = [], joint_names: collections.abc.Sequence[str] = [], time_from_start_s: typing.SupportsFloat = 10.0) -> ControlStatus:
         """
                     Set joint commands with JointGroup enums.
+                    This interface is suitable for high-frequency control usage
+                    For standard joints (legs, head, arms, etc.), only the position field in each JointCommand will be effective; 
+                    other fields such as velocity, current/effort, are ignored.
+                    For gripper joints, the position field represents gripper width and both velocity and effort fields are supported and effective.
+                    Gripper motion uses whichever is slower between the specified velocity and `time_from_start_s`. Therefore, when setting the gripper velocity, 
+                    `time_from_start_s` can be set to 0 (fastest arrival), and the gripper will be controlled directly by the specified velocity.
               
                     Parameters:
                         joint_commands (List[JointCommand]): List of joint commands to control.
@@ -1588,9 +1607,17 @@ class GalbotRobot:
                     One-key zero: move whole-body joints to zero and base to zero pose.
         """
      
-    def zero_whole_body_and_base(self, frame_id: str = '', reference_frame_id: str = 'odom', is_blocking: bool = True, leg_head_speed_rad_s: typing.SupportsFloat = 0.2, leg_head_timeout_s: typing.SupportsFloat = 15.0, params: ... = None) -> tuple[..., ControlStatus]:
+    def zero_whole_body_and_base(self, frame_id: str = 'odom', reference_frame_id: str = 'odom', is_blocking: bool = True, leg_head_speed_rad_s: typing.SupportsFloat = 0.2, leg_head_timeout_s: typing.SupportsFloat = 15.0, params: ... = None) -> tuple[..., ControlStatus]:
         """
                     One-key zero: move whole-body joints to zero and base (x,y,yaw) to zero with frames.
+        
+                    Parameters:
+                        frame_id (str): Frame id ("base_link"/"odom"/"map"). Default "odom".
+                        reference_frame_id (str): Reference frame id ("odom"/"map"). Default "odom".
+                        is_blocking (bool): Whether to block on joint zeroing (optional, default: True).
+                        leg_head_speed_rad_s (float): Leg/head joint speed limit in rad/s (optional, default: 0.2).
+                        leg_head_timeout_s (float): Leg/head blocking timeout in seconds (optional, default: 15.0).
+                        params (Parameter | None): Motion planning parameters (optional, default: None).
         """
 class GripperState:
     """

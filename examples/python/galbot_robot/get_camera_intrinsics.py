@@ -64,6 +64,7 @@ def decode_depth_image(image_data):
     return depth_img
 
 def main():
+    SHOW_IMAGE = False
     robot = GalbotRobot.get_instance()
 
     # 获取左臂的RGB图像和深度图像，右臂的深度图像，底座的激光雷达数据，躯干的IMU数据
@@ -87,10 +88,11 @@ def main():
         # 保存RGB图像
         cv2.imwrite("rgb_image_data.jpg", img)
         # 可视化RGB图像
-        cv2.namedWindow("rgb image", cv2.WINDOW_NORMAL)
-        cv2.imshow("rgb image", img)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
+        if SHOW_IMAGE:
+            cv2.namedWindow("rgb image", cv2.WINDOW_NORMAL)
+            cv2.imshow("rgb image", img)
+            cv2.waitKey(0)
+            cv2.destroyAllWindows()
 
     # 获取左臂的相机内参
     camera_intrinsics = robot.get_camera_intrinsic(SensorType.LEFT_ARM_CAMERA)
@@ -114,10 +116,11 @@ def main():
         # 保存深度图
         cv2.imwrite("depth_data.jpg", depth_img)
         # 可视化深度图
-        cv2.namedWindow("depth image", cv2.WINDOW_NORMAL)
-        cv2.imshow("depth image", depth_img)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
+        if SHOW_IMAGE:
+            cv2.namedWindow("depth image", cv2.WINDOW_NORMAL)
+            cv2.imshow("depth image", depth_img)
+            cv2.waitKey(0)
+            cv2.destroyAllWindows()
 
     # 获取左臂的深度相机外参
     camera_extrinsics = robot.get_camera_intrinsic(SensorType.LEFT_ARM_DEPTH_CAMERA)

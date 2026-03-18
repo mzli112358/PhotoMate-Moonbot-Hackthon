@@ -88,8 +88,12 @@ class GalbotRobot {
   /**
    * @brief Set low-level joint commands for specified joints
    *
-   * Sends joint-level control commands (position, velocity, torque, stiffness, damping)
-   * to the robot's actuators. This provides fine-grained control over joint behavior.
+   * This interface is suitable for high-frequency control usage
+   * For standard joints (legs, head, arms, etc.), only the position field in each JointCommand will be effective; 
+   * other fields such as velocity, current/effort, are ignored.
+   * For gripper joints, the position field represents gripper width and both velocity and effort fields are supported and effective.
+   * Gripper motion uses whichever is slower between the specified velocity and `time_from_start_s`. Therefore, when setting the gripper velocity, 
+   * `time_from_start_s` can be set to 0 (fastest arrival), and the gripper will be controlled directly by the specified velocity.
    *
    * @param joint_commands Vector of joint commands containing control parameters for each joint
    * @param joint_groups Joint groups to control. Supported groups: legs, head, left_arm,
@@ -107,17 +111,21 @@ class GalbotRobot {
   /**
    * @brief Set low-level joint commands for specified joint groups
    *
-   * Sends joint-level control commands (position, velocity, torque, stiffness, damping)
-   * to the robot's actuators. This provides fine-grained control over joint behavior.
-   *
-   * @param joint_commands Vector of joint commands containing control parameters for each joint
+   * This interface is suitable for high-frequency control usage
+   * For standard joints (legs, head, arms, etc.), only the position field in each JointCommand will be effective; 
+   * other fields such as velocity, current/effort, are ignored.
+   * For gripper joints, the position field represents gripper width and both velocity and effort fields are supported and effective.
+   * Gripper motion uses whichever is slower between the specified velocity and `time_from_start_s`. Therefore, when setting the gripper velocity, 
+   * `time_from_start_s` can be set to 0 (fastest arrival), and the gripper will be controlled directly by the specified velocity.
+   * 
+   * @param joint_commands Vector of joint commands containing control parameters for each joint.
    * @param joint_groups Joint groups to control using JointGroup enumerations. Supported groups:
    *                     legs, head, left_arm, right_arm, gripper, suction_cup. Empty vector
    *                     defaults to all body joints (legs, head, left_arm, right_arm).
    * @param joint_names Specific joint names to control. This parameter takes precedence
    *                    over joint_groups. When provided, joint_groups is ignored.
    * @param time_from_start_s Time in seconds from the start of the motion to execute the command.
-   * @return ControlStatus indicating success or failure of command transmission
+   * @return ControlStatus indicating success or failure of command transmission.
    */
   ControlStatus set_joint_commands(const std::vector<JointCommand>& joint_commands,
                                    const std::vector<JointGroup>& joint_groups = {},
@@ -271,6 +279,8 @@ class GalbotRobot {
    *
    * @param end_effector JointGroup enumeration specifying which dexhand to control
    * @param dexhand_command Vector of dexhand commands containing control parameters for each joint
+   *                        inspire: [position, velocity, acceleration, effort] range [0-1000, 0-1000, --, 0-1000]
+   *                        brainco：[position, velocity, acceleration, effort] range [0-100, -100-100， --， --]
    * @param is_blocking If true, blocks until dexhand reaches target position or times out.
    * @return ControlStatus indicating success or failure of dexhand command
    */
@@ -427,14 +437,13 @@ class GalbotRobot {
    * @param x Target x position (meters)
    * @param y Target y position (meters)
    * @param yaw Target yaw (radians)
-   * @param frame_id Frame id of target. Options: "base_link" / "odom" / "map" (Note: reserved for future versions;
-   * currently non-functional. Use empty string.)
+   * @param frame_id Frame id of target. Options: "base_link" / "odom" / "map". Default: "odom"
    * @param reference_frame_id Reference frame id. Options: "odom" / "map"
    * @param is_blocking If true, waits for controller response; if false, returns immediately after request
    * @param timeout_s Timeout for blocking request (seconds)
    * @return ControlStatus indicating success or failure of command transmission
    */
-  ControlStatus set_base_pose(double x, double y, double yaw, const std::string& frame_id = "",
+  ControlStatus set_base_pose(double x, double y, double yaw, const std::string& frame_id = "odom",
                               const std::string& reference_frame_id = "odom", bool is_blocking = true,
                               double timeout_s = 15.0);
   /**
@@ -443,8 +452,7 @@ class GalbotRobot {
    * @param x Target x position (meters)
    * @param y Target y position (meters)
    * @param yaw Target yaw (radians)
-   * @param frame_id Frame id of target. Options: "base_link" / "odom" / "map" (Note: reserved for future versions;
-   * currently non-functional. Use empty string.)
+   * @param frame_id Frame id of target. Options: "base_link" / "odom" / "map"
    * @param reference_frame_id Reference frame id. Options: "odom" / "map"
    * @param time_from_start_s Chassis pose interpolation time (seconds)
    * @param is_blocking If true, waits for controller response; if false, returns immediately after request
@@ -496,8 +504,7 @@ class GalbotRobot {
    * @param x Target x position (meters)
    * @param y Target y position (meters)
    * @param yaw Target yaw (radians)
-   * @param frame_id Frame id of target. Options: "base_link" / "odom" / "map" (Note: reserved for future versions;
-   * currently non-functional. Use empty string.)
+   * @param frame_id Frame id of target. Options: "base_link" / "odom" / "map". Default: "odom"
    * @param reference_frame_id Reference frame id. Options: "odom" / "map"
    * @param is_blocking If true, waits for joint execution to complete or timeout
    * @param speed_rad_s Max joint speed for the joint target (rad/s)
@@ -506,7 +513,7 @@ class GalbotRobot {
    * @return ControlStatus indicating success or failure of the command
    */
   ControlStatus execute_whole_body_target(const std::vector<double>& joint_positions, double x, double y, double yaw,
-                                          const std::string& frame_id = "",
+                                          const std::string& frame_id = "odom",
                                           const std::string& reference_frame_id = "odom", bool is_blocking = true,
                                           double speed_rad_s = 0.2, double time_from_start_s = 10.0,
                                           double timeout_s = 15.0);
@@ -539,8 +546,7 @@ class GalbotRobot {
   /**
    * @brief One-key zero: move whole-body joints to zero and base (x,y,yaw) to zero with selectable frames
    *
-   * @param frame_id Frame id of target. Options: "base_link" / "odom" / "map" (Note: reserved for future versions;
-   * currently non-functional. Use empty string.)
+   * @param frame_id Frame id of target. Options: "base_link" / "odom" / "map". Default: "odom"
    * @param reference_frame_id Reference frame id. Options: "odom" / "map"
    * @param is_blocking Whether to block on joint zeroing
    * @param leg_head_speed_rad_s Max joint speed for leg/head direct control (rad/s)
@@ -549,7 +555,7 @@ class GalbotRobot {
    * @return Pair of (MotionStatus for joints, ControlStatus for base)
    */
   std::pair<MotionStatus, ControlStatus> zero_whole_body_and_base(
-      const std::string& frame_id = "", const std::string& reference_frame_id = "odom", bool is_blocking = true,
+      const std::string& frame_id = "odom", const std::string& reference_frame_id = "odom", bool is_blocking = true,
       double leg_head_speed_rad_s = 0.2, double leg_head_timeout_s = 15.0, std::shared_ptr<Parameter> params = nullptr);
   /**
    * @brief Stop all currently executing joint trajectories

@@ -8,7 +8,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [1.6.0] - 2026-02-28
+## [1.6.1] - 2026-03-18
+
+
+
+### Changed / 更改
+
+**注意变更：set_joint_commands接口为适应高频控制需求，将不再对起始位置点进行插值，会在目标时间点快速到达指定位置。在使用时目标角度和当前角度差距建议不要过大，防止机器人运动过快发生事故**
+
+**Note: To meet high-frequency control requirements, the set_joint_commands interface no longer performs interpolation from the starting position and will drive the joints to the specified target position as quickly as possible at the target time. When using this interface for the first time, it is recommended that the difference between the target angle and the current angle not be too large, to avoid excessively fast motion and potential accidents.**
+- Fix high-frequency call issue in set_joint_commands function, add time_from_start_s parameter as the expected arrival time.
+  The current version does not support torque, velocity, or acceleration settings for head, leg, and arm joint_command. /
+  set_joint_commands函数修复高频调用问题，增加time_from_start_s参数，作为期望到达时间。
+  当前版本头、腿、手臂关节joint_command暂不支持力矩、速度、加速度设置。
+
+- Update is_moving logic in get_gripper_state: if the gripper does not move within a specified time, is_moving will be set to false /
+  get_gripper_state中is_moving字段判断逻辑改为，指定时间内夹爪未移动，is_moving变为false
+
+- Add default value for frame_id parameter in set_base_pose function (default: odom frame), without affecting existing usage /
+  set_base_pose函数frame_id参数增加默认值为odom坐标系，不影响原有调用方式
+---
+
+## [1.6.0] - 2026-03-06
 
 ### Added / 新增
 - Added volume and audio management interfaces, power and device information retrieval interfaces / 增加音量、音频管理接口，电源、设备信息获取接口
@@ -19,14 +40,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed / 更改
 - Add a duration parameter to the chassis velocity control interface (without affecting existing usage) / 底盘速度控制接口增加持续时间参数（不影响原有调用方式）
-- Optimize the third-party library installation process. Based on this version, updates will be performed using incremental (delta) updates only. / 优化三方库安装流程，在此版本基础上更新，将只进行差量更新
-
----
-
-## [1.5.2] - 2026-01-23
-
-### Changed / 更改
-- Build base on GBS1.14 / 基于GBS1.14构建
 
 ---
 

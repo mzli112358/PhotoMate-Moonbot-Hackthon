@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.4">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.5">
     
     
       
@@ -7567,12 +7567,167 @@ It activates the specified controller strategy and grants it authority over the 
 
 
 </h6>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">execute_whole_body_target</span><span class="p">(</span><span class="n">joint_positions</span><span class="p">:</span> <span class="n">collections</span><span class="o">.</span><span class="n">abc</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">SupportsFloat</span><span class="p">],</span> <span class="n">x</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">SupportsFloat</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">SupportsFloat</span><span class="p">,</span> <span class="n">yaw</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">SupportsFloat</span><span class="p">,</span> <span class="n">frame_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">reference_frame_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;odom&#39;</span><span class="p">,</span> <span class="n">is_blocking</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">speed_rad_s</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">SupportsFloat</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">,</span> <span class="n">time_from_start_s</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">SupportsFloat</span> <span class="o">=</span> <span class="mf">10.0</span><span class="p">,</span> <span class="n">timeout_s</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">SupportsFloat</span> <span class="o">=</span> <span class="mf">15.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ControlStatus</span>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">execute_whole_body_target</span><span class="p">(</span><span class="n">joint_positions</span><span class="p">:</span> <span class="n">collections</span><span class="o">.</span><span class="n">abc</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">SupportsFloat</span><span class="p">],</span> <span class="n">x</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">SupportsFloat</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">SupportsFloat</span><span class="p">,</span> <span class="n">yaw</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">SupportsFloat</span><span class="p">,</span> <span class="n">frame_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;odom&#39;</span><span class="p">,</span> <span class="n">reference_frame_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;odom&#39;</span><span class="p">,</span> <span class="n">is_blocking</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">speed_rad_s</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">SupportsFloat</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">,</span> <span class="n">time_from_start_s</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">SupportsFloat</span> <span class="o">=</span> <span class="mf">10.0</span><span class="p">,</span> <span class="n">timeout_s</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">SupportsFloat</span> <span class="o">=</span> <span class="mf">15.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ControlStatus</span>
 </span></code></pre></div>
 
     <div class="doc doc-contents ">
 
         <p>Execute whole-body target with base pose and frame ids.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>joint_positions</code></td>
+            <td>
+                  <code>List[float]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Whole-body joint positions.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>x</code></td>
+            <td>
+                  <code>float</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Target x position.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>y</code></td>
+            <td>
+                  <code>float</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Target y position.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>yaw</code></td>
+            <td>
+                  <code>float</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Target yaw (rad).</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>frame_id</code></td>
+            <td>
+                  <code>str</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Frame id ("base_link"/"odom"/"map"). Default "odom".</p>
+              </div>
+            </td>
+            <td>
+                  <code>&#39;odom&#39;</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>reference_frame_id</code></td>
+            <td>
+                  <code>str</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Reference frame id ("odom"/"map"). Default "odom".</p>
+              </div>
+            </td>
+            <td>
+                  <code>&#39;odom&#39;</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>is_blocking</code></td>
+            <td>
+                  <code>bool</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Whether to block (optional, default: True).</p>
+              </div>
+            </td>
+            <td>
+                  <code>True</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>speed_rad_s</code></td>
+            <td>
+                  <code>float</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Joint speed limit in rad/s (optional, default: 0.2).</p>
+              </div>
+            </td>
+            <td>
+                  <code>0.2</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>time_from_start_s</code></td>
+            <td>
+                  <code>float</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Base interpolation duration in seconds (optional, default: 10.0).</p>
+              </div>
+            </td>
+            <td>
+                  <code>10.0</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>timeout_s</code></td>
+            <td>
+                  <code>float</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Blocking timeout in seconds (optional, default: 15.0).</p>
+              </div>
+            </td>
+            <td>
+                  <code>15.0</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
     </div>
 
@@ -9525,7 +9680,7 @@ This is the opposite operation of acquire_controller.</p>
 
 
 </h6>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">set_base_pose</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">SupportsFloat</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">SupportsFloat</span><span class="p">,</span> <span class="n">yaw</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">SupportsFloat</span><span class="p">,</span> <span class="n">frame_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">reference_frame_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;odom&#39;</span><span class="p">,</span> <span class="n">is_blocking</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">timeout_s</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">SupportsFloat</span> <span class="o">=</span> <span class="mf">15.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ControlStatus</span>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">set_base_pose</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">SupportsFloat</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">SupportsFloat</span><span class="p">,</span> <span class="n">yaw</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">SupportsFloat</span><span class="p">,</span> <span class="n">frame_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;odom&#39;</span><span class="p">,</span> <span class="n">reference_frame_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;odom&#39;</span><span class="p">,</span> <span class="n">is_blocking</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">timeout_s</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">SupportsFloat</span> <span class="o">=</span> <span class="mf">15.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ControlStatus</span>
 </span></code></pre></div>
 
     <div class="doc doc-contents ">
@@ -9593,11 +9748,11 @@ This is the opposite operation of acquire_controller.</p>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Frame id ("base_link"/"odom"/"map"). Reserved for future versions; pass "".</p>
+                <p>Frame id ("base_link"/"odom"/"map"). Default "odom".</p>
               </div>
             </td>
             <td>
-                  <code>&#39;&#39;</code>
+                  <code>&#39;odom&#39;</code>
             </td>
           </tr>
           <tr class="doc-section-item">
@@ -9912,7 +10067,13 @@ This is the opposite operation of acquire_controller.</p>
 
     <div class="doc doc-contents ">
 
-        <p>Set joint commands with JointGroup enums.</p>
+        <p>Set joint commands with JointGroup enums.
+This interface is suitable for high-frequency control usage
+For standard joints (legs, head, arms, etc.), only the position field in each JointCommand will be effective; 
+other fields such as velocity, current/effort, are ignored.
+For gripper joints, the position field represents gripper width and both velocity and effort fields are supported and effective.
+Gripper motion uses whichever is slower between the specified velocity and <code>time_from_start_s</code>. Therefore, when setting the gripper velocity, 
+<code>time_from_start_s</code> can be set to 0 (fastest arrival), and the gripper will be controlled directly by the specified velocity.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -11072,12 +11233,111 @@ This is the opposite operation of start_controller.</p>
 
 
 </h6>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">zero_whole_body_and_base</span><span class="p">(</span><span class="n">frame_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">reference_frame_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;odom&#39;</span><span class="p">,</span> <span class="n">is_blocking</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">leg_head_speed_rad_s</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">SupportsFloat</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">,</span> <span class="n">leg_head_timeout_s</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">SupportsFloat</span> <span class="o">=</span> <span class="mf">15.0</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="o">...</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">ControlStatus</span><span class="p">]</span>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">zero_whole_body_and_base</span><span class="p">(</span><span class="n">frame_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;odom&#39;</span><span class="p">,</span> <span class="n">reference_frame_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;odom&#39;</span><span class="p">,</span> <span class="n">is_blocking</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">leg_head_speed_rad_s</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">SupportsFloat</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">,</span> <span class="n">leg_head_timeout_s</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">SupportsFloat</span> <span class="o">=</span> <span class="mf">15.0</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="o">...</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">ControlStatus</span><span class="p">]</span>
 </span></code></pre></div>
 
     <div class="doc doc-contents ">
 
         <p>One-key zero: move whole-body joints to zero and base (x,y,yaw) to zero with frames.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>frame_id</code></td>
+            <td>
+                  <code>str</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Frame id ("base_link"/"odom"/"map"). Default "odom".</p>
+              </div>
+            </td>
+            <td>
+                  <code>&#39;odom&#39;</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>reference_frame_id</code></td>
+            <td>
+                  <code>str</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Reference frame id ("odom"/"map"). Default "odom".</p>
+              </div>
+            </td>
+            <td>
+                  <code>&#39;odom&#39;</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>is_blocking</code></td>
+            <td>
+                  <code>bool</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Whether to block on joint zeroing (optional, default: True).</p>
+              </div>
+            </td>
+            <td>
+                  <code>True</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>leg_head_speed_rad_s</code></td>
+            <td>
+                  <code>float</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Leg/head joint speed limit in rad/s (optional, default: 0.2).</p>
+              </div>
+            </td>
+            <td>
+                  <code>0.2</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>leg_head_timeout_s</code></td>
+            <td>
+                  <code>float</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Leg/head blocking timeout in seconds (optional, default: 15.0).</p>
+              </div>
+            </td>
+            <td>
+                  <code>15.0</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>params</code></td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="g1.Parameter" href="#g1.Parameter">Parameter</a> | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Motion planning parameters (optional, default: None).</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
     </div>
 

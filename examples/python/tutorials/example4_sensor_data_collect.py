@@ -273,6 +273,7 @@ def check_robot_safety():
             print("Invalid input, please enter 'y' or 'n'")
 
 def main():
+    SHOW_IMAGE = False
     check_robot_safety()
     try:
         # Get and initialize the GalbotRobot singleton
@@ -302,10 +303,11 @@ def main():
             # Save RGB image
             cv2.imwrite("rgb_image_data.jpg", img)
             # Visualize RGB image
-            cv2.namedWindow("rgb image", cv2.WINDOW_NORMAL)
-            cv2.imshow("rgb image", img)
-            cv2.waitKey(0)
-            cv2.destroyAllWindows()
+            if SHOW_IMAGE:
+                cv2.namedWindow("rgb image", cv2.WINDOW_NORMAL)
+                cv2.imshow("rgb image", img)
+                cv2.waitKey(0)
+                cv2.destroyAllWindows()
 
         # Get depth image from the left arm
         depth_data = robot.get_depth_data(SensorType.LEFT_ARM_DEPTH_CAMERA)
@@ -321,10 +323,11 @@ def main():
             # Save depth image
             cv2.imwrite("depth_data.jpg", depth_img)
             # Visualize depth image
-            cv2.namedWindow("depth image", cv2.WINDOW_NORMAL)
-            cv2.imshow("depth image", depth_img)
-            cv2.waitKey(0)
-            cv2.destroyAllWindows()
+            if SHOW_IMAGE:
+                cv2.namedWindow("depth image", cv2.WINDOW_NORMAL)
+                cv2.imshow("depth image", depth_img)
+                cv2.waitKey(0)
+                cv2.destroyAllWindows()
 
         # Get base LiDAR data
         lidar_data = robot.get_lidar_data(SensorType.BASE_LIDAR)
@@ -338,13 +341,14 @@ def main():
             print("get lidar data success")
 
             # Visualize LiDAR point cloud
-            vis = o3d.visualization.Visualizer()
-            vis.create_window()
-            pcd = o3d.geometry.PointCloud()
-            pcd.points = o3d.utility.Vector3dVector(xyz_points)
-            vis.add_geometry(pcd)
-            vis.run()
-            vis.destroy_window()
+            if SHOW_IMAGE:
+                vis = o3d.visualization.Visualizer()
+                vis.create_window()
+                pcd = o3d.geometry.PointCloud()
+                pcd.points = o3d.utility.Vector3dVector(xyz_points)
+                vis.add_geometry(pcd)
+                vis.run()
+                vis.destroy_window()
         
         # Get torso IMU data
         imu_data = robot.get_imu_data(SensorType.TORSO_IMU)

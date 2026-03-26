@@ -6,7 +6,7 @@ import collections.abc
 import numpy
 import numpy.typing
 import typing
-__all__: list[str] = ['AudioData', 'COMM_DISCONNECTED', 'CYLINDER', 'CollisionCheckOption', 'ControlStatus', 'ControllerName', 'DATA_FETCH_FAILED', 'DepthData', 'EUCLIDEAN_DISTANCE', 'FAILED', 'FAULT', 'ForceData', 'GalbotMotion', 'GalbotNavigation', 'GalbotOneFoxtrotSensor', 'GalbotRobot', 'GripperState', 'Header', 'IKSolverConfig', 'INIT_FAILED', 'INVALID_INPUT', 'IN_PROGRESS', 'ImuData', 'JOINT', 'JointCommand', 'JointGroup', 'JointState', 'JointStates', 'KinematicsBoundary', 'LINE', 'LidarData', 'LineTrajCheckPrimitive', 'LogLevel', 'MotionPlanConfig', 'MotionStatus', 'NavigationTaskStatus', 'OdomData', 'POSE', 'PUBLISH_FAIL', 'Parameter', 'Point', 'PointField', 'PointFieldDataType', 'Pose', 'PoseState', 'PrimitiveType', 'Quaternion', 'RADIAN_DISTANCE', 'RANDOM_PROGRESSIVE_SEED', 'RANDOM_SEED', 'ROBOT_STATES', 'RUNNING', 'RgbData', 'RobotStates', 'RobotStatesType', 'STATUS_NUM', 'STOPPED_UNREACHED', 'SUCCESS', 'SUCTION_ACTION_STATE', 'SamplerConfig', 'SeedType', 'SensorType', 'StateCheckType', 'SuctionCupState', 'TIMEOUT', 'TIMEOUT_AND_EXACT_SOLUTION', 'TerminationConditionType', 'Timestamp', 'Trajectory', 'TrajectoryControlStatus', 'TrajectoryFeasibilityCheckOption', 'TrajectoryPlanConfig', 'TrajectoryPoint', 'UNKNOWN', 'UNSUPPORTED_FUNCRION', 'USER_DEFINED_SEED', 'UltrasonicData', 'UltrasonicType', 'Vector3', 'WBCException', 'check_motion_status', 'create_joint_state', 'create_parameter', 'create_pose_state']
+__all__: list[str] = ['AudioData', 'COMM_DISCONNECTED', 'CYLINDER', 'CollisionCheckOption', 'ControlStatus', 'ControllerName', 'DATA_FETCH_FAILED', 'DepthData', 'DetectionAndSegmentationResult', 'DetectionResult', 'EUCLIDEAN_DISTANCE', 'FAILED', 'FAULT', 'FOUNDATION_STEREO', 'ForceData', 'GalbotMotion', 'GalbotNavigation', 'GalbotOneFoxtrotSensor', 'GalbotPerception', 'GalbotRobot', 'GripperState', 'Header', 'IKSolverConfig', 'INIT_FAILED', 'INVALID_INPUT', 'IN_PROGRESS', 'ImuData', 'JOINT', 'JointCommand', 'JointGroup', 'JointState', 'JointStates', 'KinematicsBoundary', 'LIGHT_STEREO', 'LINE', 'LidarData', 'LineTrajCheckPrimitive', 'LogLevel', 'MotionPlanConfig', 'MotionStatus', 'NavigationTaskStatus', 'OdomData', 'POSE', 'PUBLISH_FAIL', 'Parameter', 'PerceptionModule', 'Point', 'PointField', 'PointFieldDataType', 'Pose', 'PoseState', 'PrimitiveType', 'Quaternion', 'RADIAN_DISTANCE', 'RANDOM_PROGRESSIVE_SEED', 'RANDOM_SEED', 'ROBOT_STATES', 'RUNNING', 'RgbData', 'RobotStates', 'RobotStatesType', 'STATUS_NUM', 'STOPPED_UNREACHED', 'SUCCESS', 'SUCTION_ACTION_STATE', 'SamplerConfig', 'SeedType', 'SensorType', 'StateCheckType', 'SuctionCupState', 'TIMEOUT', 'TIMEOUT_AND_EXACT_SOLUTION', 'TerminationConditionType', 'Timestamp', 'Trajectory', 'TrajectoryControlStatus', 'TrajectoryFeasibilityCheckOption', 'TrajectoryPlanConfig', 'TrajectoryPoint', 'UNKNOWN', 'UNSUPPORTED_FUNCRION', 'USER_DEFINED_SEED', 'UltrasonicData', 'UltrasonicType', 'Vector3', 'WBCException', 'check_motion_status', 'create_joint_state', 'create_parameter', 'create_pose_state']
 class AudioData:
     """
     Audio stream data
@@ -239,6 +239,159 @@ class DepthData:
         """
     @width.setter
     def width(self, arg0: typing.SupportsInt) -> None:
+        ...
+class DetectionAndSegmentationResult:
+    """
+    Single detection/segmentation result
+    """
+    def __init__(self) -> None:
+        ...
+    def __repr__(self) -> str:
+        ...
+    @property
+    def bbox(self) -> tuple[int, int, int, int]:
+        """
+        Bounding box as (x, y, width, height)
+        """
+    @property
+    def class_index(self) -> int:
+        """
+        Class index
+        """
+    @class_index.setter
+    def class_index(self, arg0: typing.SupportsInt) -> None:
+        ...
+    @property
+    def class_name(self) -> str:
+        """
+        Class name
+        """
+    @class_name.setter
+    def class_name(self, arg0: str) -> None:
+        ...
+    @property
+    def confidence(self) -> float:
+        """
+        Confidence score
+        """
+    @confidence.setter
+    def confidence(self, arg0: typing.SupportsFloat) -> None:
+        ...
+    @property
+    def keypoints(self) -> list[tuple[float, float]]:
+        """
+        Keypoints as list of (x, y) tuples
+        """
+class DetectionResult:
+    """
+    Perception detection result
+    """
+    def __init__(self) -> None:
+        ...
+    def clear(self) -> None:
+        """
+        Clear all result fields
+        """
+    def get_result_info(self) -> str:
+        """
+        Get result summary string
+        """
+    @property
+    def bounding_boxes(self) -> list[tuple[int, int, int, int]]:
+        """
+        Bounding boxes as list of (x, y, width, height)
+        """
+    @property
+    def class_indices(self) -> list[int]:
+        """
+        List of class indices
+        """
+    @class_indices.setter
+    def class_indices(self, arg0: collections.abc.Sequence[typing.SupportsInt]) -> None:
+        ...
+    @property
+    def class_names(self) -> list[str]:
+        """
+        List of class names
+        """
+    @class_names.setter
+    def class_names(self, arg0: collections.abc.Sequence[str]) -> None:
+        ...
+    @property
+    def confidences(self) -> list[float]:
+        """
+        List of confidences
+        """
+    @confidences.setter
+    def confidences(self, arg0: collections.abc.Sequence[typing.SupportsFloat]) -> None:
+        ...
+    @property
+    def detection_results(self) -> list[DetectionAndSegmentationResult]:
+        """
+        List of DetectionAndSegmentationResult
+        """
+    @detection_results.setter
+    def detection_results(self, arg0: collections.abc.Sequence[DetectionAndSegmentationResult]) -> None:
+        ...
+    @property
+    def grasp_pose_result(self) -> list[list[float]]:
+        """
+        Grasp pose results
+        """
+    @grasp_pose_result.setter
+    def grasp_pose_result(self, arg0: collections.abc.Sequence[collections.abc.Sequence[typing.SupportsFloat]]) -> None:
+        ...
+    @property
+    def instance_mask(self) -> typing.Any:
+        """
+        Instance mask as numpy array (HxW or HxWxC), or None if empty
+        """
+    @property
+    def ocr_string(self) -> list[str]:
+        """
+        OCR results
+        """
+    @ocr_string.setter
+    def ocr_string(self, arg0: collections.abc.Sequence[str]) -> None:
+        ...
+    @property
+    def point_clouds(self) -> list:
+        """
+        Point clouds as list of Nx3 numpy arrays
+        """
+    @property
+    def running_info(self) -> str:
+        """
+        Running info string
+        """
+    @running_info.setter
+    def running_info(self, arg0: str) -> None:
+        ...
+    @property
+    def sensor_name(self) -> str:
+        """
+        Sensor name
+        """
+    @sensor_name.setter
+    def sensor_name(self, arg0: str) -> None:
+        ...
+    @property
+    def target_point_poses(self) -> list[typing.Annotated[numpy.typing.NDArray[numpy.float32], "[4, 4]"]]:
+        """
+        List of 4x4 target point pose matrices (numpy)
+        """
+    @property
+    def target_poses(self) -> list[typing.Annotated[numpy.typing.NDArray[numpy.float32], "[4, 4]"]]:
+        """
+        List of 4x4 target pose matrices (numpy)
+        """
+    @property
+    def timestamp_ns(self) -> int:
+        """
+        Timestamp in nanoseconds
+        """
+    @timestamp_ns.setter
+    def timestamp_ns(self, arg0: typing.SupportsInt) -> None:
         ...
 class ForceData:
     """
@@ -806,6 +959,60 @@ class GalbotOneFoxtrotSensor:
     @property
     def value(self) -> int:
         ...
+class GalbotPerception:
+    """
+    Perception module interface
+    """
+    @staticmethod
+    def get_instance() -> GalbotPerception:
+        """
+                Get the GalbotPerception singleton instance.
+        
+                Returns:
+                    GalbotPerception: The singleton instance.
+        """
+    def get_latest_result(self, module: PerceptionModule) -> tuple:
+        """
+                Immediately return the latest available result (non-blocking).
+        
+                Args:
+                    module (PerceptionModule): The perception module.
+        
+                Returns:
+                    tuple[bool, DetectionResult]: (success, result). success is False if no data yet.
+        """
+    def init(self, enabled_modules: collections.abc.Set[PerceptionModule]) -> bool:
+        """
+                Initialize perception modules, create communication channels and load models.
+        
+                Args:
+                    enabled_modules (set[PerceptionModule]): Set of modules to enable.
+        
+                Returns:
+                    bool: True if all modules loaded successfully.
+        """
+    def run_once(self, module: PerceptionModule) -> bool:
+        """
+                Trigger a single inference for the specified module.
+                Note: After init, wait ~10s for models to be ready before calling run_once.
+        
+                Args:
+                    module (PerceptionModule): The perception module to run once.
+        
+                Returns:
+                    bool: True if the command was sent successfully.
+        """
+    def wait_for_new_result(self, module: PerceptionModule, timeout_s: typing.SupportsFloat = 5.0) -> bool:
+        """
+                Block until the specified module produces a new result, or timeout.
+        
+                Args:
+                    module (PerceptionModule): The perception module.
+                    timeout_s (float): Timeout in seconds (default 5.0).
+        
+                Returns:
+                    bool: True if new data arrived, False on timeout.
+        """
 class GalbotRobot:
     @staticmethod
     def get_instance() -> GalbotRobot:
@@ -2399,6 +2606,45 @@ class Parameter:
     @timeout_second.setter
     def timeout_second(self, arg0: typing.SupportsFloat) -> None:
         ...
+class PerceptionModule:
+    """
+    Perception module type
+    
+    Members:
+    
+      LIGHT_STEREO : Lightweight stereo depth
+    
+      FOUNDATION_STEREO : High-precision stereo depth
+    """
+    FOUNDATION_STEREO: typing.ClassVar[PerceptionModule]  # value = <PerceptionModule.FOUNDATION_STEREO: 0>
+    LIGHT_STEREO: typing.ClassVar[PerceptionModule]  # value = <PerceptionModule.LIGHT_STEREO: 1>
+    __members__: typing.ClassVar[dict[str, PerceptionModule]]  # value = {'LIGHT_STEREO': <PerceptionModule.LIGHT_STEREO: 1>, 'FOUNDATION_STEREO': <PerceptionModule.FOUNDATION_STEREO: 0>}
+    def __eq__(self, other: typing.Any) -> bool:
+        ...
+    def __getstate__(self) -> int:
+        ...
+    def __hash__(self) -> int:
+        ...
+    def __index__(self) -> int:
+        ...
+    def __init__(self, value: typing.SupportsInt) -> None:
+        ...
+    def __int__(self) -> int:
+        ...
+    def __ne__(self, other: typing.Any) -> bool:
+        ...
+    def __repr__(self) -> str:
+        ...
+    def __setstate__(self, state: typing.SupportsInt) -> None:
+        ...
+    def __str__(self) -> str:
+        ...
+    @property
+    def name(self) -> str:
+        ...
+    @property
+    def value(self) -> int:
+        ...
 class Point:
      
     def __init__(self) -> None:
@@ -3321,10 +3567,12 @@ DATA_FETCH_FAILED: MotionStatus  # value = <MotionStatus.DATA_FETCH_FAILED: 7>
 EUCLIDEAN_DISTANCE: StateCheckType  # value = <StateCheckType.EUCLIDEAN_DISTANCE: 0>
 FAILED: NavigationTaskStatus  # value = <NavigationTaskStatus.FAILED: 3>
 FAULT: MotionStatus  # value = <MotionStatus.FAULT: 2>
+FOUNDATION_STEREO: PerceptionModule  # value = <PerceptionModule.FOUNDATION_STEREO: 0>
 INIT_FAILED: MotionStatus  # value = <MotionStatus.INIT_FAILED: 4>
 INVALID_INPUT: MotionStatus  # value = <MotionStatus.INVALID_INPUT: 3>
 IN_PROGRESS: MotionStatus  # value = <MotionStatus.IN_PROGRESS: 5>
 JOINT: RobotStatesType  # value = <RobotStatesType.JOINT: 1>
+LIGHT_STEREO: PerceptionModule  # value = <PerceptionModule.LIGHT_STEREO: 1>
 LINE: PrimitiveType  # value = <PrimitiveType.LINE: 0>
 POSE: RobotStatesType  # value = <RobotStatesType.POSE: 0>
 PUBLISH_FAIL: MotionStatus  # value = <MotionStatus.PUBLISH_FAIL: 8>

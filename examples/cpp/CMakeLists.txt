@@ -14,7 +14,7 @@ set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
 set(CMAKE_INSTALL_RPATH "")
 
 # 对每个代码片段编译一个可执行文件
-set(examples_subdir galbot_robot galbot_motion galbot_navigation tutorials)
+set(examples_subdir galbot_robot galbot_motion galbot_navigation galbot_perception tutorials)
 foreach(subdir ${examples_subdir})
     set(CUR_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/${subdir}/src)
     set(EXAMPLE_BIN_DIR ${CMAKE_CURRENT_BINARY_DIR}/${subdir})

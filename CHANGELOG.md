@@ -7,16 +7,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [1.6.2] - 2026-03-26
+
+### Added / 新增
+- Added a new perception module with support for high-precision stereo depth estimation model. / 新增感知模块，增加高精双目深度估计模型调用接口
 
 ## [1.6.1] - 2026-03-18
-
-
-
-### Changed / 更改
 
 **注意变更：set_joint_commands接口为适应高频控制需求，将不再对起始位置点进行插值，会在目标时间点快速到达指定位置。在使用时目标角度和当前角度差距建议不要过大，防止机器人运动过快发生事故**
 
 **Note: To meet high-frequency control requirements, the set_joint_commands interface no longer performs interpolation from the starting position and will drive the joints to the specified target position as quickly as possible at the target time. When using this interface for the first time, it is recommended that the difference between the target angle and the current angle not be too large, to avoid excessively fast motion and potential accidents.**
+
+### Changed / 更改
 - Fix high-frequency call issue in set_joint_commands function, add time_from_start_s parameter as the expected arrival time.
   The current version does not support torque, velocity, or acceleration settings for head, leg, and arm joint_command. /
   set_joint_commands函数修复高频调用问题，增加time_from_start_s参数，作为期望到达时间。

@@ -222,6 +222,23 @@
       }
     },
     {
+      "name": "pcl_common",
+      "version": "1.13.0",
+      "pattern": "libpcl_common.so*|libpcl_common-*.so*|libpcl_common[0-9]*.so*",
+      "platforms": {
+        "linux-aarch64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/pcl_common-1.13.0-linux-aarch64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/pcl_common-1.13.0-linux-aarch64-gcc940.tar.gz",
+          "sha256": "d109797e38b5c862b07d79be19c3ce441e93b2e68b0cf0c428695c9904baf2fe"
+        },
+        "linux-x86_64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/pcl_common-1.13.0-linux-x86_64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/pcl_common-1.13.0-linux-x86_64-gcc940.tar.gz",
+          "sha256": "1e62754f49464fb449dc62eecdffd2b281f4a9cc35cc5bbd2538b0b955efcc6b"
+        }
+      }
+    },
+    {
       "name": "png",
       "version": "16.43.0",
       "pattern": "libpng.so*|libpng16.so*",

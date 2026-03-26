@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.5">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
@@ -723,6 +723,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="2.1 配置PC网口IP">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#211-ubuntu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1.1 Ubuntu
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#212-wsl2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1.2 WSL2
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -1157,8 +1185,15 @@
 <li>IP地址：<code>192.168.1.99</code>（或同网段其他地址）</li>
 <li>子网掩码：<code>255.255.255.0</code></li>
 </ul>
-<p>Ubuntu设置路径：<strong>设置 → 网络 → 有线设置 → IPv4 → 手动</strong></p>
+<h5 id="211-ubuntu">2.1.1 Ubuntu</h5>
+<p>设置路径：<strong>设置 → 网络 → 有线设置 → IPv4 → 手动</strong></p>
 <p><img alt="IP配置" src="../image/ip.jpg" /></p>
+<h5 id="212-wsl2">2.1.2 WSL2</h5>
+<p>使用WSL2时，需要在Windows系统的当前用户目录下创建.wslconfig文件，并新增<code>networkingMode=Mirrored</code>，示例：
+<img alt="WSL配置文件路径" src="../pics/wslconfig_path.jpg" />
+<img alt="WSL配置文件内容" src="../pics/wslconfig_data.jpg" /></p>
+<p>IP在Windows系统进行设置
+<img alt="IP配置" src="../pics/windows_net.jpg" /></p>
 <p>验证配置：</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ifconfig
 </span></code></pre></div>

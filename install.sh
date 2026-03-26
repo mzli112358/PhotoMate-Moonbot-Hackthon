@@ -51,7 +51,7 @@ fi
 
 # 默认值
 DEFAULT_INSTALL_DIR="/opt/galbot"
-SDK_VERSION="1.6.0"
+SDK_VERSION="1.6.2"
 EMBOSA_LOG_DIR="/userdata/log/embosa"
 
 # 参数

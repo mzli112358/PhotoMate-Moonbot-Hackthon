@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.5">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
@@ -723,6 +723,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="2.1 Configure PC Network Interface IP">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#211-ubuntu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1.1 Ubuntu
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#212-wsl2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1.2 WSL2
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -1157,8 +1185,15 @@
 <li>IP Address: <code>192.168.1.99</code> (or other address in the same subnet)</li>
 <li>Subnet Mask: <code>255.255.255.0</code></li>
 </ul>
-<p>Ubuntu Settings Path: <strong>Settings → Network → Wired Settings → IPv4 → Manual</strong></p>
+<h5 id="211-ubuntu">2.1.1 Ubuntu</h5>
+<p>Settings path: <strong>Settings → Network → Wired Settings → IPv4 → Manual</strong></p>
 <p><img alt="IP Configuration" src="../image/ip.jpg" /></p>
+<h5 id="212-wsl2">2.1.2 WSL2</h5>
+<p>When using WSL2, create a <code>.wslconfig</code> file in the current Windows user profile directory and add <code>networkingMode=Mirrored</code>, for example:</p>
+<p><img alt="WSL config file path" src="../pics/wslconfig_path.jpg" /></p>
+<p><img alt="WSL config file content" src="../pics/wslconfig_data.jpg" /></p>
+<p>Configure the IP address in Windows:</p>
+<p><img alt="IP Configuration" src="../pics/windows_net.jpg" /></p>
 <p>Verify configuration:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ifconfig
 </span></code></pre></div>

@@ -69,6 +69,23 @@
       }
     },
     {
+      "name": "curl",
+      "version": "4.8.0",
+      "pattern": "libcurl.so*|libcurl-*.so*|libcurl[0-9]*.so*",
+      "platforms": {
+        "linux-aarch64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/curl-4.8.0-linux-aarch64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/curl-4.8.0-linux-aarch64-gcc940.tar.gz",
+          "sha256": "9b4e5e4a9ff9cc88a346e4c834f32b8371919731f9000fab8291cb56e80833fd"
+        },
+        "linux-x86_64-gcc940": {
+          "url": "https://github.com/GalaxyGeneralRobotics/GalbotSDKDeps/releases/download/V1.6.0/curl-4.8.0-linux-x86_64-gcc940.tar.gz",
+          "local_path": "deps/third_party/releases/curl-4.8.0-linux-x86_64-gcc940.tar.gz",
+          "sha256": "994e6a1d3e2f4a0c43c72d30a860a12f478d41f39ac302417b2b966e0ab2fac0"
+        }
+      }
+    },
+    {
       "name": "embosa",
       "version": "9.0.9",
       "pattern": "libembosa.so*|libembosa-*.so*|libembosa[0-9]*.so*",

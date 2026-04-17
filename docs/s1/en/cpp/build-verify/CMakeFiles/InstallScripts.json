@@ -1,0 +1,7 @@
+{
+	"InstallScripts" : 
+	[
+		"/home/lsr/Workspace/galbot/galbot_g1_sdk_source/examples/s1/cpp/build-verify/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

@@ -18,25 +18,20 @@
 #include <array>
 #include <cstdint>
 #include <memory>
+#include <string>
 #include <vector>
 
 /**
  * @namespace galbot
  * @brief Root namespace for Galbot robotics software
  */
- namespace galbot {
+namespace galbot {
 
-  /**
-   * @namespace galbot::sdk
-   * @brief Galbot Software Development Kit namespace
-   */
-  namespace sdk {
-
-  /**
-   * @namespace galbot::sdk::g1
-   * @brief Namespace for Galbot G1 humanoid robot
-   */
-  namespace g1 {
+/**
+ * @namespace galbot::sdk
+ * @brief Galbot Software Development Kit namespace
+ */
+namespace sdk {
 
 /**
  * @struct KinematicsBoundary
@@ -1205,6 +1200,5 @@ class MotionPlanConfig {
   std::vector<std::string> revert_ik_joint_limit_chains_;  /**< Chains for selective IK limit reversion */
 };
 
-}  // namespace g1
 }  // namespace sdk
 }  // namespace galbot

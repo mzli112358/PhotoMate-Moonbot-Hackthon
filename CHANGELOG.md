@@ -7,6 +7,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+
+## [1.7.0] - 2026-04-17
+
+### Added / 新增
+- Added support for the S1 robot. / 适配重载S1机器人, 部分接口因硬件差异在S1上未支持
+
+### Changed / 更改
+- Python singleton initialization no longer requires calling get_instance(); e.g., GalbotRobot.get_instance() is now simply GalbotRobot(). / Python 单例初始化不再需要调用 get_instance()，例如 GalbotRobot.get_instance() 更改为 GalbotRobot()
+- C++ singleton initialization via get_instance() now requires a MachineType argument (MachineType::G1 or MachineType::S1). / C++ 单例初始化调用 get_instance() 时需传入 MachineType::G1 或 MachineType::S1
+- C++ namespace changed from galbot::sdk::g1 to galbot::sdk. / C++ 命名空间从 galbot::sdk::g1 更改为 galbot::sdk
+- type.hpp renamed to galbot_sdk_type.hpp. / type.hpp 更名为 galbot_sdk_type.hpp
+- ControllerName is now robot-specific: use G1ControllerName for G1 and S1ControllerName for S1. / ControllerName 根据机器人型号区分，G1 使用 G1ControllerName，S1 使用 S1ControllerName
+- JointGroup is now robot-specific: use G1JointGroup for G1 and S1JointGroup for S1. / JointGroup 根据机器人型号区分，G1 使用 G1JointGroup，S1 使用 S1JointGroup
+
 ## [1.6.2] - 2026-03-26
 
 ### Added / 新增

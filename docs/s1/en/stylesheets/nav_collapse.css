@@ -1,0 +1,19 @@
+.nav-collapse-toggle{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:1.2em;
+  height:1.2em;
+  padding:0;
+  margin-right:6px;
+  color:var(--md-default-fg, #2b2b2b);
+}
+
+/* Slightly reduce indent of nested lists when collapsed/expanded */
+.md-nav__list > li .md-nav__list,
+.md-nav__sublist{
+  margin-left: 0.5em;
+}
+
+/* Ensure toggle button blends with text */
+.nav-collapse-toggle:focus{ outline: 2px solid rgba(0,0,0,0.08); outline-offset: 2px; }

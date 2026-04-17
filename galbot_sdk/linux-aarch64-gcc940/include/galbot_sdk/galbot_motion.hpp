@@ -11,21 +11,20 @@
  * Quaternions must be unit-normalized (x² + y² + z² + w² = 1) for all pose specifications.
  *
  * @author Galbot SDK Team
- * @version 1.5.1
+ * @version 1.6.0
  * @copyright Copyright (c) 2023-2026 Galbot. All rights reserved.
  */
 
 #pragma once
 
 #include <array>
-#include <functional>
 #include <memory>
-#include <optional>
-#include <unordered_map>
+#include <string>
+#include <tuple>
 #include <vector>
 
 #include "motion_plan_config.hpp"
-#include "type.hpp"
+#include "galbot_sdk_type.hpp"
 
 /**
  * @namespace galbot
@@ -38,12 +37,6 @@ namespace galbot {
  * @brief Galbot Software Development Kit namespace
  */
 namespace sdk {
-
-/**
- * @namespace galbot::sdk::g1
- * @brief Namespace for Galbot G1 humanoid robot
- */
-namespace g1 {
 
 /**
  * @var g_actuate_type_map
@@ -155,7 +148,7 @@ class Parameter : public PlannerConfig {
    * @param direct_execute If true, planned motion is immediately executed on the robot;
    *                       if false, only computes the trajectory without execution
    */
-  void setDirectExecute(bool direct_execute) { is_direct_execute = direct_execute; }
+  void set_direct_execute(bool direct_execute) { is_direct_execute = direct_execute; }
 
   /**
    * @brief Set blocking execution mode.
@@ -163,7 +156,7 @@ class Parameter : public PlannerConfig {
    * @param blocking If true, function blocks until motion completes or times out;
    *                 if false, returns immediately after sending motion command
    */
-  void setBlocking(bool blocking) { is_blocking = blocking; }
+  void set_blocking(bool blocking) { is_blocking = blocking; }
 
   /**
    * @brief Set motion execution timeout.
@@ -172,7 +165,7 @@ class Parameter : public PlannerConfig {
    *
    * @note Only applies when blocking mode is enabled.
    */
-  void setTimeout(double timeout) { timeout_second = timeout; }
+  void set_timeout(double timeout) { timeout_second = timeout; }
 
   /**
    * @brief Set actuation type for whole-body coordination.
@@ -182,7 +175,7 @@ class Parameter : public PlannerConfig {
    *
    * @warning Must be a valid key in g_actuate_type_map, otherwise behavior is undefined.
    */
-  void setActuate(const std::string& actuate) 
+  void set_actuate(const std::string& actuate) 
   {
     if (g_actuate_type_map.find(actuate) == g_actuate_type_map.end()) {
       return;
@@ -196,7 +189,7 @@ class Parameter : public PlannerConfig {
    * @param tool_pose If true, target poses are interpreted relative to the tool frame (TCP);
    *                  if false, relative to the end-effector flange frame
    */
-  void setToolPose(bool tool_pose) { is_tool_pose = tool_pose; }
+  void set_tool_pose(bool tool_pose) { is_tool_pose = tool_pose; }
 
   /**
    * @brief Enable or disable collision checking.
@@ -206,7 +199,7 @@ class Parameter : public PlannerConfig {
    *
    * @warning Disabling collision checking may result in unsafe trajectories.
    */
-  void setCheckCollision(bool check_collision) { is_check_collision = check_collision; }
+  void set_check_collision(bool check_collision) { is_check_collision = check_collision; }
 
   /**
    * @brief Set the reference frame for pose specifications.
@@ -215,7 +208,7 @@ class Parameter : public PlannerConfig {
    *
    * @note Must be a valid frame in the robot's TF tree.
    */
-  void setReferenceFrame(const std::string& frame) { reference_frame = frame; }
+  void set_reference_frame(const std::string& frame) { reference_frame = frame; }
 
   /**
    * @brief Set Cartesian linear motion mode.
@@ -225,7 +218,7 @@ class Parameter : public PlannerConfig {
    *
    * @note Linear motion provides predictable Cartesian paths but may have joint velocity discontinuities.
    */
-  void setMoveLine(bool flag) { move_line = flag; }
+  void set_move_line(bool flag) { move_line = flag; }
 
   // ---------- Getter methods ----------
 
@@ -234,21 +227,21 @@ class Parameter : public PlannerConfig {
    *
    * @return true if direct execution is enabled, false otherwise
    */
-  bool getDirectExecute() const { return is_direct_execute; }
+  bool get_direct_execute() const { return is_direct_execute; }
 
   /**
    * @brief Get blocking execution mode status.
    *
    * @return true if blocking mode is enabled, false otherwise
    */
-  bool getBlocking() const { return is_blocking; }
+  bool get_blocking() const { return is_blocking; }
 
   /**
    * @brief Get motion execution timeout value.
    *
    * @return Timeout duration in seconds (positive value)
    */
-  double getTimeout() const { return timeout_second; }
+  double get_timeout() const { return timeout_second; }
 
   /**
    * @brief Get actuation type as string.
@@ -257,7 +250,7 @@ class Parameter : public PlannerConfig {
    *
    * @return Actuation type string ("with_chain_only", "with_torso", "with_leg", or "unknown" if not found)
    */
-  std::string getActuateType() const {
+  std::string get_actuate_type() const {
     for (const auto& pair : g_actuate_type_map) {
       const auto& key = pair.first;
       const auto& value = pair.second;
@@ -273,28 +266,28 @@ class Parameter : public PlannerConfig {
    *
    * @return true if using tool frame (TCP), false if using end-effector flange frame
    */
-  bool getToolPose() const { return is_tool_pose; }
+  bool get_tool_pose() const { return is_tool_pose; }
 
   /**
    * @brief Get collision checking status.
    *
    * @return true if collision checking is enabled, false otherwise
    */
-  bool getCheckCollision() const { return is_check_collision; }
+  bool get_check_collision() const { return is_check_collision; }
 
   /**
    * @brief Get reference frame name.
    *
    * @return Reference frame identifier string (e.g., "base_link", "world")
    */
-  std::string getReferenceFrame() const { return reference_frame; }
+  std::string get_reference_frame() const { return reference_frame; }
 
   /**
    * @brief Check if Cartesian linear motion mode is enabled.
    *
    * @return true if using linear Cartesian interpolation, false if using joint-space interpolation
    */
-  bool isMoveLine() { return move_line; }
+  bool is_move_line() { return move_line; }
 };
 
 /**
@@ -339,7 +332,7 @@ class RobotStates {
    *
    * @return Type enumeration value, ROBOT_STATES for base class
    */
-  virtual Type getType() const { return Type::ROBOT_STATES; };
+  virtual Type get_type() const { return Type::ROBOT_STATES; };
 
   std::string chain_name = "";           ///< Kinematic chain identifier (e.g., "left_arm", "right_arm")
   std::vector<double> whole_body_joint;  ///< Complete robot joint configuration (radians), ordered by joint index
@@ -359,7 +352,7 @@ class RobotStates {
    *
    * @note Vector size should equal the total number of actuated joints in the robot.
    */
-  void setWholeBodyJoint(const std::vector<double>& joint_positions) { whole_body_joint = joint_positions; }
+  void set_whole_body_joint(const std::vector<double>& joint_positions) { whole_body_joint = joint_positions; }
 
   /**
    * @brief Set mobile base pose.
@@ -370,7 +363,7 @@ class RobotStates {
    *
    * @note Quaternion must be unit-normalized (x^2 + y^2 + z^2 + w^2 = 1).
    */
-  void setBaseState(const Pose& base_pose) {
+  void set_base_state(const Pose& base_pose) {
     base_state = {base_pose.position.x,    base_pose.position.y,    base_pose.position.z,   base_pose.orientation.x,
                   base_pose.orientation.y, base_pose.orientation.z, base_pose.orientation.w};
   }
@@ -407,7 +400,7 @@ class PoseState : public RobotStates {
    *
    * @return Type::POSE, indicating this is a Cartesian pose target
    */
-  Type getType() const override { return Type::POSE; }
+  Type get_type() const override { return Type::POSE; }
 
   std::string frame_id = "EndEffector";  ///< Target frame on the kinematic chain (e.g., "EndEffector", "Camera", "TCP")
   std::string reference_frame = "base_link";  ///< Reference coordinate frame (e.g., "base_link", "world", "odom")
@@ -437,7 +430,7 @@ class JointStates : public RobotStates {
    *
    * @return Type::JOINT, indicating this is a joint-space target
    */
-  Type getType() const override { return Type::JOINT; }
+  Type get_type() const override { return Type::JOINT; }
 
   std::vector<double> joint_positions;  ///< Target joint configuration for the chain (radians), ordered by joint index
 
@@ -472,41 +465,29 @@ class JointStates : public RobotStates {
  * @class GalbotMotion
  * @brief Unified motion planning and control interface for Galbot robots.
  *
- * This class provides a comprehensive API for robot motion control, including:
+ * This interface provides a comprehensive API for robot motion control, including:
  * - Forward and inverse kinematics computation
  * - Single-chain and multi-chain trajectory planning
  * - Collision detection (self-collision and environment)
  * - Tool and obstacle management
  * - Whole-body coordinated motion planning
  *
- * GalbotMotion follows the Singleton design pattern to ensure a single instance
- * manages all motion-related operations and robot state. Thread-safety is not
- * guaranteed; external synchronization required for multi-threaded access.
+ * Use GalbotMotion::get_instance(MachineType) to obtain a reference for a specific platform (G1/S1).
  *
  * @note All angular units are radians, linear units are meters (SI standard).
  * @note Quaternions must be unit-normalized: sqrt(x² + y² + z² + w²) = 1.
- *
- * @par Usage Example:
- * @code
- *   GalbotMotion& motion = GalbotMotion::get_instance();
- *   if (!motion.init()) {
- *     // Handle initialization failure
- *   }
- * @endcode
  */
 class GalbotMotion {
  public:
-  /**
-   * @brief Get the singleton instance of GalbotMotion.
-   *
-   * Uses static local variable to ensure thread-safe lazy initialization (C++11 guarantee).
-   *
-   * @return Reference to the unique GalbotMotion instance
-   *
-   * @note First call may block briefly for initialization.
-   */
-  static GalbotMotion& get_instance();
+  virtual ~GalbotMotion() = default;
 
+  /**
+   * @brief Runtime factory for selecting a concrete motion planning singleton.
+   * @param m Machine type identifier (e.g. MachineType::G1, MachineType::S1).
+   * @return Reference to the singleton motion interface for the specified machine type.
+   */
+  static GalbotMotion& get_instance(MachineType m);
+ 
   /**
    * @brief Initialize motion planning system and communication interfaces.
    *
@@ -519,7 +500,7 @@ class GalbotMotion {
    * @note Safe to call multiple times; subsequent calls after successful init are no-ops.
    * @warning All other API calls will fail if init() returns false.
    */
-  bool init();
+  virtual bool init() = 0;
 
   /**
    * @brief Check if the motion interface is properly initialized and operational.
@@ -529,7 +510,7 @@ class GalbotMotion {
    *
    * @note Should be checked before critical operations if init status is uncertain.
    */
-  bool is_valid();
+  virtual bool is_valid() = 0;
 
   /**
    * @brief Compute forward kinematics for a target link.
@@ -551,10 +532,10 @@ class GalbotMotion {
    * @note Joint angles in radians, output pose in meters with unit quaternion.
    * @warning target_frame must be a valid link in the URDF model.
    */
-  std::tuple<MotionStatus, std::vector<double>> forward_kinematics(
+  virtual std::tuple<MotionStatus, std::vector<double>> forward_kinematics(
       const std::string& target_frame, const std::string& reference_frame = "base_link",
       const std::unordered_map<std::string, std::vector<double>>& joint_state = {},
-      std::shared_ptr<Parameter> params = default_param);
+      std::shared_ptr<Parameter> params = default_param) = 0;
 
   /**
    * @brief Compute forward kinematics using complete robot state.
@@ -573,9 +554,9 @@ class GalbotMotion {
    *
    * @note Useful when computing FK for hypothetical states without modifying current robot state.
    */
-  std::tuple<MotionStatus, std::vector<double>> forward_kinematics_by_state(
+  virtual std::tuple<MotionStatus, std::vector<double>> forward_kinematics_by_state(
       const std::string& target_frame, const std::shared_ptr<RobotStates>& reference_robot_states = nullptr,
-      const std::string& reference_frame = "base_link", std::shared_ptr<Parameter> params = default_param);
+      const std::string& reference_frame = "base_link", std::shared_ptr<Parameter> params = default_param) = 0;
 
   /**
    * @brief Compute inverse kinematics for target Cartesian pose.
@@ -600,12 +581,11 @@ class GalbotMotion {
    * @note Seed configuration affects convergence speed and which solution is returned.
    * @warning No solution guaranteed if target is outside workspace or in singular configuration.
    */
-  std::tuple<MotionStatus, std::unordered_map<std::string, std::vector<double>>> inverse_kinematics(
+  virtual std::tuple<MotionStatus, std::unordered_map<std::string, std::vector<double>>> inverse_kinematics(
       const std::vector<double>& target_pose, const std::vector<std::string>& chain_names,
       const std::string& target_frame = "EndEffector", const std::string& reference_frame = "base_link",
       const std::unordered_map<std::string, std::vector<double>>& initial_joint_positions = {},
-      const bool& enable_collision_check = true, std::shared_ptr<Parameter> params = default_param);
-
+      const bool& enable_collision_check = true, std::shared_ptr<Parameter> params = default_param) = 0;
   /**
    * @brief Compute inverse kinematics using complete robot state as seed.
    *
@@ -626,11 +606,11 @@ class GalbotMotion {
    *
    * @note Useful for offline planning with hypothetical robot states.
    */
-  std::tuple<MotionStatus, std::unordered_map<std::string, std::vector<double>>> inverse_kinematics_by_state(
+  virtual std::tuple<MotionStatus, std::unordered_map<std::string, std::vector<double>>> inverse_kinematics_by_state(
       const std::vector<double>& target_pose, const std::vector<std::string>& chain_names,
       const std::string& target_frame = "EndEffector", const std::string& reference_frame = "base_link",
       const std::shared_ptr<RobotStates>& reference_robot_states = nullptr, const bool& enable_collision_check = true,
-      std::shared_ptr<Parameter> params = default_param);
+      std::shared_ptr<Parameter> params = default_param) = 0;
 
   /**
    * @brief Get current end-effector pose from robot state.
@@ -650,9 +630,8 @@ class GalbotMotion {
    * @note Reflects the current actual robot state (not planned state).
    * @warning Requires TF tree to be properly published and up-to-date.
    */
-  std::tuple<MotionStatus, std::vector<double>> get_end_effector_pose(const std::string& end_effector_frame,
-                                                                      const std::string& reference_frame = "base_link");
-
+  virtual std::tuple<MotionStatus, std::vector<double>> get_end_effector_pose(const std::string& end_effector_frame,
+                                                                              const std::string& reference_frame = "base_link") = 0;
   /**
    * @brief Get current end-effector pose for a specific kinematic chain.
    *
@@ -669,10 +648,10 @@ class GalbotMotion {
    *
    * @note Internally maps chain_name + frame_id to actual URDF link name.
    */
-  std::tuple<MotionStatus, std::vector<double>> get_end_effector_pose_on_chain(
+  virtual std::tuple<MotionStatus, std::vector<double>> get_end_effector_pose_on_chain(
       const std::string& chain_name,
       const std::string frame_id = "EndEffector",  // "EndEffector", "Camera"
-      const std::string& reference_frame = "base_link");
+      const std::string& reference_frame = "base_link") = 0;
 
   /**
    * @brief Command end-effector to move to target Cartesian pose.
@@ -703,11 +682,11 @@ class GalbotMotion {
    * @note For direct execution (params->is_direct_execute=true), avoid passing reference_robot_states.
    * @warning Blocking calls will halt execution until motion completes; use with caution in real-time contexts.
    */
-  MotionStatus set_end_effector_pose(const std::vector<double>& target_pose, const std::string& end_effector_frame,
-                                     const std::string& reference_frame = "base_link",
-                                     std::shared_ptr<RobotStates> reference_robot_states = nullptr,
-                                     const bool& enable_collision_check = true, const bool& is_blocking = true,
-                                     const double& timeout = -1.0, std::shared_ptr<Parameter> params = default_param);
+  virtual MotionStatus set_end_effector_pose(const std::vector<double>& target_pose, const std::string& end_effector_frame,
+                                             const std::string& reference_frame = "base_link",
+                                             std::shared_ptr<RobotStates> reference_robot_states = nullptr,
+                                             const bool& enable_collision_check = true, const bool& is_blocking = true,
+                                             const double& timeout = -1.0, std::shared_ptr<Parameter> params = default_param) = 0;
 
   /**
    * @brief Plan trajectory for a single kinematic chain.
@@ -739,10 +718,10 @@ class GalbotMotion {
    * @note For direct execution (params->is_direct_execute=true), trajectory is automatically sent to robot.
    * @warning target must be PoseState or JointStates; passing base RobotStates will cause INVALID_INPUT error.
    */
-  std::tuple<MotionStatus, std::unordered_map<std::string, std::vector<std::vector<double>>>> motion_plan(
+  virtual std::tuple<MotionStatus, std::unordered_map<std::string, std::vector<std::vector<double>>>> motion_plan(
       std::shared_ptr<RobotStates> target, std::shared_ptr<RobotStates> start = nullptr,
       std::shared_ptr<RobotStates> reference_robot_states = nullptr, bool enable_collision_check = true,
-      std::shared_ptr<Parameter> params = default_param);
+      std::shared_ptr<Parameter> params = default_param) = 0;
 
   /**
    * @brief Plan trajectory through multiple waypoints for a single chain.
@@ -773,11 +752,11 @@ class GalbotMotion {
    * @note Planner ensures C1 continuity (continuous velocity) at waypoints.
    * @note Intermediate waypoints may not be exactly reached (blending); use multiple plans for exact passing.
    */
-  std::tuple<MotionStatus, std::unordered_map<std::string, std::vector<std::vector<double>>>>
+  virtual std::tuple<MotionStatus, std::unordered_map<std::string, std::vector<std::vector<double>>>>
   motion_plan_multi_waypoints(std::shared_ptr<RobotStates> target, std::vector<std::vector<double>> targets,
                               std::shared_ptr<RobotStates> start = nullptr,
                               std::shared_ptr<RobotStates> reference_robot_states = nullptr,
-                              bool enable_collision_check = true, std::shared_ptr<Parameter> params = default_param);
+                              bool enable_collision_check = true, std::shared_ptr<Parameter> params = default_param) = 0;
 
   /**
    * @brief Plan coordinated trajectories through waypoints for multiple chains.
@@ -802,12 +781,12 @@ class GalbotMotion {
    * @note All chain trajectories are time-synchronized for coordinated execution.
    * @note Useful for bimanual manipulation or mobile manipulation tasks.
    */
-  std::tuple<MotionStatus, std::unordered_map<std::string, std::vector<std::vector<double>>>>
+  virtual std::tuple<MotionStatus, std::unordered_map<std::string, std::vector<std::vector<double>>>>
   motion_plan_multi_waypoints(
       std::unordered_map<std::shared_ptr<RobotStates>, std::vector<std::vector<double>>> targets,
       std::vector<std::shared_ptr<RobotStates>> start = {},
       std::shared_ptr<RobotStates> reference_robot_states = nullptr, bool enable_collision_check = true,
-      std::shared_ptr<Parameter> params = default_param);
+      std::shared_ptr<Parameter> params = default_param) = 0;
 
   /**
    * @brief Move the whole-body joints to the predefined zero (home) configuration.
@@ -825,9 +804,9 @@ class GalbotMotion {
    *
    * @return MotionStatus Overall execution status.
    */
-  MotionStatus move_whole_body_joint_zero(bool is_blocking = true, double leg_head_speed_rad_s = 0.2,
-                                          double leg_head_timeout_s = 15.0,
-                                          std::shared_ptr<Parameter> params = default_param);
+  virtual MotionStatus move_whole_body_joint_zero(bool is_blocking = true, double leg_head_speed_rad_s = 0.2,
+                                                  double leg_head_timeout_s = 15.0,
+                                                  std::shared_ptr<Parameter> params = default_param) = 0;
 
   /**
    * @note [Obstacle perception & point-cloud usage: galbotNav vs galbotMotion]
@@ -870,10 +849,9 @@ class GalbotMotion {
    * @note Useful for validating planned trajectories or sampling-based planners.
    * @note Respects safe_margin settings in previously added obstacles.
    */
-  std::tuple<MotionStatus, std::vector<bool>> check_collision(const std::vector<std::shared_ptr<RobotStates>>& start,
-                                                              bool enable_collision_check = true,
-                                                              std::shared_ptr<Parameter> params = default_param);
-
+  virtual std::tuple<MotionStatus, std::vector<bool>> check_collision(const std::vector<std::shared_ptr<RobotStates>>& start,
+                                                                      bool enable_collision_check = true,
+                                                                      std::shared_ptr<Parameter> params = default_param) = 0;
   /**
    * @brief Attach a tool to an end-effector.
    *
@@ -881,7 +859,7 @@ class GalbotMotion {
    * Updates the kinematic model and collision geometry to include the tool.
    *
    * @param chain  Kinematic chain for tool attachment (e.g., "left_arm", "right_arm")
-   * @param tool   Tool identifier (must be predefined in tool library, see getSupportToolList())
+   * @param tool   Tool identifier (must be predefined in tool library, see get_support_tool_list())
    *
    * @return MotionStatus:
    *         - SUCCESS: Tool attached successfully
@@ -892,8 +870,7 @@ class GalbotMotion {
    * @note Attaching a new tool automatically detaches any previously attached tool on that chain.
    * @warning Kinematics and collision checking will reflect the attached tool; update plans accordingly.
    */
-  MotionStatus attach_tool(const std::string& chain, const std::string& tool);
-
+  virtual MotionStatus attach_tool(const std::string& chain, const std::string& tool) = 0;
   /**
    * @brief Detach the current tool from an end-effector.
    *
@@ -909,7 +886,7 @@ class GalbotMotion {
    *
    * @note If no tool is attached, operation succeeds as a no-op.
    */
-  MotionStatus detach_tool(const std::string& chain);
+  virtual MotionStatus detach_tool(const std::string& chain) = 0;
   /**
    * @brief Load collision object into environment
    *
@@ -924,7 +901,7 @@ class GalbotMotion {
    *                                      Used for later removal/updates.
    * @param obstacle_type                 Obstacle geometry type (e.g., "box", "sphere", "cylinder",
    *                                      "mesh", "point_cloud", "depth_image").
-   *                                      See getSupportObstacleType() for valid types.
+   *                                      See get_support_obstacle_type() for valid types.
    * @param pose                          Obstacle pose: [x, y, z, qx, qy, qz, qw] (meters, quaternion)
    *                                      relative to target_frame.
    * @param scale                         Geometry dimensions (meters):
@@ -960,42 +937,35 @@ class GalbotMotion {
    * @note For moving obstacles, remove and re-add at new poses (no update method currently).
    * @warning Large safe_margin values may over-constrain planning; use conservatively.
    */
-  MotionStatus add_obstacle(const std::string& obstacle_id, const std::string& obstacle_type,
+  virtual MotionStatus add_obstacle(const std::string& obstacle_id, const std::string& obstacle_type,
                             const std::vector<double>& pose, const std::array<double, 3>& scale = {},
                             const std::string& key = "", const std::string& target_frame = "world",
                             const std::string& ee_frame = "ee_base",
                             const std::vector<double>& reference_joint_positions = {},
                             const std::vector<double>& reference_base_pose = {},
                             const std::vector<std::string>& ignore_collision_link_names = {},
-                            const double& safe_margin = 0, const double& resolution = 0.01);
-
+                            const double& safe_margin = 0, const double& resolution = 0.01) = 0;
   /**
    * @brief Remove a collision obstacle from the planning scene.
    *
    * @param obstacle_id  Unique identifier of obstacle to remove (must exist in scene)
    *
-   * @return MotionStatus:
-   *         - SUCCESS: Obstacle removed successfully
-   *         - INVALID_INPUT: obstacle_id not found in scene
-   *         - FAULT: Removal operation failed
+   * @return MotionStatus: SUCCESS, INVALID_INPUT (obstacle_id not found), or FAULT
    *
    * @note Removing a non-existent obstacle returns INVALID_INPUT (not silently ignored).
    */
-  MotionStatus remove_obstacle(const std::string& obstacle_id);
-
+  virtual MotionStatus remove_obstacle(const std::string& obstacle_id) = 0;
   /**
    * @brief Remove all collision obstacles from the planning scene.
    *
    * Clears the entire obstacle set, resetting the planning scene to empty (except robot geometry).
    *
-   * @return MotionStatus:
-   *         - SUCCESS: All obstacles cleared successfully
-   *         - FAULT: Clear operation failed
+   * @return MotionStatus: SUCCESS or FAULT
    *
    * @note Attached objects (see attach_target_object) are not affected.
    * @note Safe to call even if scene is already empty.
    */
-  MotionStatus clear_obstacle();
+  virtual MotionStatus clear_obstacle() = 0;
   /**
    * @brief Attach a collision object to the robot (e.g., grasped object).
    *
@@ -1005,7 +975,7 @@ class GalbotMotion {
    *
    * @param obstacle_id                   Unique object identifier (must not exist in scene).
    * @param obstacle_type                 Object geometry type (e.g., "box", "sphere", "mesh").
-   *                                      See getSupportObstacleType() for valid types.
+   *                                      See get_support_obstacle_type() for valid types.
    * @param pose                          Object pose: [x, y, z, qx, qy, qz, qw] (meters, quaternion)
    *                                      relative to target_frame at attachment time.
    * @param scale                         Geometry dimensions (meters):
@@ -1028,32 +998,20 @@ class GalbotMotion {
    * @param safe_margin                   Safety distance buffer (meters). Default: 0.
    * @param resolution                    Discretization resolution for complex geometries (meters). Default: 0.01m.
    *
-   * @return MotionStatus:
-   *         - SUCCESS: Object attached successfully
-   *         - INVALID_INPUT: Invalid parameters or duplicate obstacle_id
-   *         - FAULT: Attachment operation failed
+   * @return MotionStatus: SUCCESS, INVALID_INPUT, or FAULT
    *
    * @note Attached objects move with the robot; their collision geometry is updated automatically.
    * @note Typically used in pick-and-place: attach_target_object after grasp, detach after release.
    * @warning Ensure ignore_collision_link_names includes grasping links to avoid false collisions.
-   *
-   * @par Usage Example (grasping):
-   * @code
-   *   // After successful grasp
-   *   motion.attach_target_object("grasped_box", "box", pose, {0.05, 0.05, 0.1},
-   *                               "", "right_arm", "ee_base", {}, {},
-   *                               {"right_gripper_left_finger", "right_gripper_right_finger"});
-   * @endcode
    */
-  MotionStatus attach_target_object(const std::string& obstacle_id, const std::string& obstacle_type,
-                                    const std::vector<double>& pose, const std::array<double, 3>& scale = {},
-                                    const std::string& key = "", const std::string& target_frame = "world",
-                                    const std::string& ee_frame = "ee_base",
-                                    const std::vector<double>& reference_joint_positions = {},
-                                    const std::vector<double>& reference_base_pose = {},
-                                    const std::vector<std::string>& ignore_collision_link_names = {},
-                                    const double& safe_margin = 0, const double& resolution = 0.01);
-
+  virtual MotionStatus attach_target_object(const std::string& obstacle_id, const std::string& obstacle_type,
+                                            const std::vector<double>& pose, const std::array<double, 3>& scale = {},
+                                            const std::string& key = "", const std::string& target_frame = "world",
+                                            const std::string& ee_frame = "ee_base",
+                                            const std::vector<double>& reference_joint_positions = {},
+                                            const std::vector<double>& reference_base_pose = {},
+                                            const std::vector<std::string>& ignore_collision_link_names = {},
+                                            const double& safe_margin = 0, const double& resolution = 0.01) = 0;
   /**
    * @brief Detach an object from the robot (e.g., after release).
    *
@@ -1062,24 +1020,12 @@ class GalbotMotion {
    *
    * @param obstacle_id  Unique identifier of attached object to remove
    *
-   * @return MotionStatus:
-   *         - SUCCESS: Object detached successfully
-   *         - INVALID_INPUT: obstacle_id not found in attached objects
-   *         - FAULT: Detachment operation failed
+   * @return MotionStatus: SUCCESS, INVALID_INPUT (obstacle_id not found), or FAULT
    *
    * @note To keep the object in the scene as a static obstacle after release, call
    *       detach_target_object() then add_obstacle() with the object's final pose.
-   *
-   * @par Usage Example (release):
-   * @code
-   *   // After placing object
-   *   motion.detach_target_object("grasped_box");
-   *   // Optionally add as static obstacle at placement location
-   *   motion.add_obstacle("placed_box", "box", final_pose, {0.05, 0.05, 0.1});
-   * @endcode
    */
-  MotionStatus detach_target_object(const std::string& obstacle_id);
-
+  virtual MotionStatus detach_target_object(const std::string& obstacle_id) = 0;
   /**
    * @brief Set global motion planning configuration.
    *
@@ -1096,7 +1042,7 @@ class GalbotMotion {
    * @note Changes persist until explicitly reset or process restart.
    * @note See MotionPlanConfig documentation for available parameters.
    */
-  MotionStatus set_motion_plan_config(std::shared_ptr<MotionPlanConfig> config);
+  virtual MotionStatus set_motion_plan_config(std::shared_ptr<MotionPlanConfig> config) = 0;
 
   /**
    * @brief Get current motion planning configuration.
@@ -1110,7 +1056,7 @@ class GalbotMotion {
    *
    * @note Useful for inspecting current limits or saving/restoring configurations.
    */
-  std::tuple<MotionStatus, MotionPlanConfig> get_motion_plan_config();
+  virtual std::tuple<MotionStatus, MotionPlanConfig> get_motion_plan_config() = 0;
 
   /**
    * @brief Get robot link names from kinematic model.
@@ -1127,10 +1073,7 @@ class GalbotMotion {
    * @note End-effector detection based on link having no child links in kinematic tree.
    * @note Useful for forward kinematics queries or TF frame validation.
    */
-  std::vector<std::string> get_link_names(bool only_end_effector = false);
-
- public:
-  // ---------- Capability query methods ----------
+  virtual std::vector<std::string> get_link_names(bool only_end_effector = false) = 0;
 
   /**
    * @brief Get set of valid link names in robot model.
@@ -1142,7 +1085,7 @@ class GalbotMotion {
    *
    * @note Set is populated during initialization from robot URDF.
    */
-  const std::set<std::string>& getSupportLinks();
+  virtual const std::set<std::string>& get_support_links() = 0;
 
   /**
    * @brief Get set of valid kinematic chain names.
@@ -1155,7 +1098,7 @@ class GalbotMotion {
    *
    * @note Chain definitions are specified in robot configuration files.
    */
-  const std::set<std::string>& getSupportChains();
+  virtual const std::set<std::string>& get_support_chains() = 0;
 
   /**
    * @brief Get set of valid reference frame names.
@@ -1167,7 +1110,7 @@ class GalbotMotion {
    *
    * @note These are global/base frames; individual link frames accessed via TF.
    */
-  const std::set<std::string>& getSupportFrame();
+  virtual const std::set<std::string>& get_support_frame() = 0;
 
   /**
    * @brief Get set of valid end-effector frame types.
@@ -1179,7 +1122,7 @@ class GalbotMotion {
    *
    * @note Actual link names derived by combining chain name + frame type.
    */
-  const std::set<std::string>& getSupportEEFrame();
+  virtual const std::set<std::string>& get_support_ee_frame() = 0;
 
   /**
    * @brief Get list of available tools that can be attached.
@@ -1191,7 +1134,7 @@ class GalbotMotion {
    *
    * @note Tools must be pre-configured with geometry and kinematic offsets.
    */
-  const std::set<std::string>& getSupportToolList();
+  virtual const std::set<std::string>& get_support_tool_list() = 0;
 
   /**
    * @brief Get list of supported collision obstacle geometry types.
@@ -1203,7 +1146,7 @@ class GalbotMotion {
    *
    * @note Different types require different scale/key parameter formats.
    */
-  std::set<std::string> getSupportObstacleType();
+  virtual std::set<std::string> get_support_obstacle_type() = 0;
 
   /**
    * @brief Get list of currently added obstacles in planning scene.
@@ -1215,7 +1158,7 @@ class GalbotMotion {
    *
    * @note Useful for debugging scene state or preventing duplicate IDs.
    */
-  std::vector<std::string> getBuiltObjectList();
+  virtual std::vector<std::string> get_built_object_list() = 0;
 
   /**
    * @brief Get list of currently attached objects on the robot.
@@ -1227,7 +1170,7 @@ class GalbotMotion {
    *
    * @note Useful for tracking grasped objects or payloads.
    */
-  std::vector<std::string> getAttachedObjectList();
+  virtual std::vector<std::string> get_attached_object_list() = 0;
 
   // ---------- Validation methods ----------
 
@@ -1244,9 +1187,9 @@ class GalbotMotion {
    *
    * @throws std::invalid_argument if throw_exception=true and validation fails
    *
-   * @note Use getSupportLinks() to retrieve valid link names.
+   * @note Use get_support_links() to retrieve valid link names.
    */
-  bool isLinkNameValid(const std::string& value, bool throw_exception = false);
+  virtual bool is_link_name_valid(const std::string& value, bool throw_exception = false) = 0;
 
   /**
    * @brief Validate kinematic chain name.
@@ -1260,9 +1203,9 @@ class GalbotMotion {
    *
    * @throws std::invalid_argument if throw_exception=true and validation fails
    *
-   * @note Use getSupportChains() to retrieve valid chain names.
+   * @note Use get_support_chains() to retrieve valid chain names.
    */
-  bool isChainNameValid(const std::string& value, bool throw_exception = false);
+  virtual bool is_chain_name_valid(const std::string& value, bool throw_exception = false) = 0;
 
   /**
    * @brief Validate reference frame name.
@@ -1276,9 +1219,9 @@ class GalbotMotion {
    *
    * @throws std::invalid_argument if throw_exception=true and validation fails
    *
-   * @note Use getSupportFrame() to retrieve valid frame names.
+   * @note Use get_support_frame() to retrieve valid frame names.
    */
-  bool isFrameNameValid(const std::string& value, bool throw_exception = false);
+  virtual bool is_frame_name_valid(const std::string& value, bool throw_exception = false) = 0;
 
   /**
    * @brief Validate end-effector frame type.
@@ -1292,9 +1235,9 @@ class GalbotMotion {
    *
    * @throws std::invalid_argument if throw_exception=true and validation fails
    *
-   * @note Use getSupportEEFrame() to retrieve valid frame types.
+   * @note Use get_support_ee_frame() to retrieve valid frame types.
    */
-  bool isEEFrameValid(const std::string& value, bool throw_exception = false);
+  virtual bool is_ee_frame_valid(const std::string& value, bool throw_exception = false) = 0;
 
   /**
    * @brief Validate tool name.
@@ -1308,9 +1251,9 @@ class GalbotMotion {
    *
    * @throws std::invalid_argument if throw_exception=true and validation fails
    *
-   * @note Use getSupportToolList() to retrieve available tools.
+   * @note Use get_support_tool_list() to retrieve available tools.
    */
-  bool isToolNameValid(const std::string& value, bool throw_exception = false);
+  virtual bool is_tool_name_valid(const std::string& value, bool throw_exception = false) = 0;
 
   /**
    * @brief Validate obstacle geometry type.
@@ -1324,9 +1267,9 @@ class GalbotMotion {
    *
    * @throws std::invalid_argument if throw_exception=true and validation fails
    *
-   * @note Use getSupportObstacleType() to retrieve supported types.
+   * @note Use get_support_obstacle_type() to retrieve supported types.
    */
-  bool isObstacleTypeValid(const std::string& value, bool throw_exception = false);
+  virtual bool is_obstacle_type_valid(const std::string& value, bool throw_exception = false) = 0;
 
   /**
    * @brief Validate whole-body joint configuration vector.
@@ -1340,16 +1283,15 @@ class GalbotMotion {
    *
    * @throws std::invalid_argument if throw_exception=true and validation fails
    *
-   * @note Expected size: getRobotDof() elements.
+   * @note Expected size: get_robot_dof() elements.
    * @note Does not validate joint limit compliance, only vector dimensionality.
    */
-  bool isWholeBodyStateValid(const std::vector<double>& value, bool throw_exception = false);
+  virtual bool is_whole_body_state_valid(const std::vector<double>& value, bool throw_exception = false) = 0;
 
   /**
    * @brief Validate 7D pose vector (position + quaternion).
    *
    * Checks if the provided pose vector has exactly 7 elements: [x, y, z, qx, qy, qz, qw].
-   * Optionally validates quaternion normalization.
    *
    * @param value            Pose vector to validate
    * @param throw_exception  If true, throws exception on failure. Default: false.
@@ -1361,7 +1303,7 @@ class GalbotMotion {
    * @note Does not enforce quaternion normalization; only checks dimensionality.
    * @warning Using non-normalized quaternions will cause undefined behavior in kinematics.
    */
-  bool isPose7dValid(const std::vector<double>& value, bool throw_exception = false);
+  virtual bool is_pose_7d_valid(const std::vector<double>& value, bool throw_exception = false) = 0;
 
   /**
    * @brief Validate chain-indexed joint configuration map.
@@ -1377,10 +1319,8 @@ class GalbotMotion {
    *
    * @note Validates both chain name existence and joint vector dimensionality per chain.
    */
-  bool isChainJointStateValid(const std::unordered_map<std::string, std::vector<double>>& value,
-                              bool throw_exception = false);
-
-  // ---------- State query methods ----------
+  virtual bool is_chain_joint_state_valid(const std::unordered_map<std::string, std::vector<double>>& value,
+                                          bool throw_exception = false) = 0;
 
   /**
    * @brief Get robot total degrees of freedom (DOF).
@@ -1392,7 +1332,7 @@ class GalbotMotion {
    *
    * @note Typical humanoid/mobile manipulator: 15-30 DOF.
    */
-  int getRobotDof();
+  virtual int get_robot_dof() = 0;
 
   /**
    * @brief Get current complete robot state.
@@ -1407,18 +1347,18 @@ class GalbotMotion {
    * @note Reflects actual robot state (from sensor feedback/state estimation).
    * @note Useful as seed/reference for planning operations.
    */
-  RobotStates getRobotStates();
+  virtual RobotStates get_robot_states() = 0;
 
   /**
    * @brief Get current whole-body joint configuration.
    *
    * Retrieves joint angles for all actuated joints in the robot.
    *
-   * @return Vector of joint angles (radians), size = getRobotDof()
+   * @return Vector of joint angles (radians), size = get_robot_dof()
    *
    * @note Joint ordering defined by robot URDF/configuration.
    */
-  std::vector<double> getWholeBodyState();
+  virtual std::vector<double> get_whole_body_state() = 0;
 
   /**
    * @brief Get current mobile base pose.
@@ -1430,7 +1370,7 @@ class GalbotMotion {
    * @note For non-mobile robots, typically returns identity pose.
    * @note Pose obtained from localization/odometry system.
    */
-  std::vector<double> getChassisState();
+  virtual std::vector<double> get_chassis_state() = 0;
 
   /**
    * @brief Get current joint configurations for all kinematic chains.
@@ -1443,7 +1383,7 @@ class GalbotMotion {
    *
    * @note Joint vector sizes vary by chain DOF.
    */
-  std::unordered_map<std::string, std::vector<double>> getChainJointState();
+  virtual std::unordered_map<std::string, std::vector<double>> get_chain_joint_state() = 0;
 
   /**
    * @brief Get current Cartesian poses for all kinematic chains.
@@ -1456,9 +1396,9 @@ class GalbotMotion {
    * @return Map of {chain_name -> pose_vector}, where pose_vector is
    *         [x, y, z, qx, qy, qz, qw] (meters, quaternion) for each chain's end-effector
    *
-   * @note Computationally more expensive than getChainJointState() (requires FK computation).
+   * @note Computationally more expensive than get_chain_joint_state() (requires FK computation).
    */
-  std::unordered_map<std::string, std::vector<double>> getChainPoseState(const std::string& frame = "base_link");
+  virtual std::unordered_map<std::string, std::vector<double>> get_chain_pose_state(const std::string& frame = "base_link") = 0;
 
   /**
    * @brief Update a specific chain's joints in a whole-body configuration.
@@ -1472,13 +1412,11 @@ class GalbotMotion {
    *
    * @return true if replacement succeeds, false if chain_name invalid or size mismatch
    *
-   * @note whole_body_joint is modified in-place; ensure it has correct size (getRobotDof()).
+   * @note whole_body_joint is modified in-place; ensure it has correct size (get_robot_dof()).
    * @note Useful for offline state manipulation or custom planning seeds.
    */
-  bool replace_joint_state(const std::string& chain_name, const std::vector<double>& chain_joint,
-                           std::vector<double>& whole_body_joint);
-
-  // ---------- Utility methods ----------
+  virtual bool replace_joint_state(const std::string& chain_name, const std::vector<double>& chain_joint,
+                                   std::vector<double>& whole_body_joint) = 0;
 
   /**
    * @brief Convert MotionStatus enum to human-readable string.
@@ -1492,138 +1430,8 @@ class GalbotMotion {
    *
    * @note Uses status_string_map_ for lookup; returns "UNKNOWN" if status not found.
    */
-  std::string status_to_string(MotionStatus status);
-
- private:
-  // ---------- Internal helper methods ----------
-
-  /**
-   * @brief Validate chain names and determine actuation type.
-   *
-   * Internal method for validating a set of chain names and inferring the appropriate
-   * ActuateType based on the combination (e.g., arm-only, arm+torso, arm+legs).
-   *
-   * @param chain_names  Vector of chain names to validate and classify
-   *
-   * @return Tuple of (error_message, actuate_type_string):
-   *         - error_message: Empty if valid, error description if invalid
-   *         - actuate_type_string: Actuation type key (e.g., "with_chain_only", "with_torso")
-   *
-   * @note Used internally by IK and planning methods to validate chain combinations.
-   */
-  std::tuple<std::string, std::string> validateAndGetChainType(const std::vector<std::string>& chain_names);
-
-  /**
-   * @brief Convert pose vector to Pose structure.
-   *
-   * Internal utility for converting 7-element pose vectors to structured Pose objects.
-   *
-   * @param custom_pose  Pose as vector: [x, y, z, qx, qy, qz, qw] (meters, quaternion)
-   *
-   * @return Pose object (default-constructed if input size != 7)
-   */
-  Pose convert_custom_pose(const std::vector<double>& custom_pose) {
-    Pose pose;
-    if (custom_pose.size() == 7) {
-      pose.position.x = custom_pose[0];
-      pose.position.y = custom_pose[1];
-      pose.position.z = custom_pose[2];
-      pose.orientation.x = custom_pose[3];
-      pose.orientation.y = custom_pose[4];
-      pose.orientation.z = custom_pose[5];
-      pose.orientation.w = custom_pose[6];
-    }
-    return pose;
-  }
-
-  /**
-   * @brief Convert Pose structure to pose vector.
-   *
-   * Internal utility for converting structured Pose objects to 7-element vectors.
-   *
-   * @param pose  Pose object to convert
-   *
-   * @return Vector: [x, y, z, qx, qy, qz, qw] (meters, quaternion)
-   */
-  std::vector<double> convert_pose_to_vec(const Pose& pose) {
-    std::vector<double> vec = std::vector<double>(7);
-    vec[0] = pose.position.x;
-    vec[1] = pose.position.y;
-    vec[2] = pose.position.z;
-    vec[3] = pose.orientation.x;
-    vec[4] = pose.orientation.y;
-    vec[5] = pose.orientation.z;
-    vec[6] = pose.orientation.w;
-    return vec;
-  }
-
-  /**
-   * @brief Internal unified obstacle/attached object addition.
-   *
-   * Common implementation for add_obstacle() and attach_target_object().
-   *
-   * @param attached_frame  Empty for static obstacles, frame name for attached objects
-   * @param obstacle_id     Unique object identifier
-   * @param obstacle_type   Geometry type
-   * @param pose            Object pose
-   * @param scale           Geometry dimensions
-   * @param key             Type-specific data
-   * @param target_frame    Reference frame for pose
-   * @param ee_frame        End-effector frame (if target_frame is chain)
-   * @param reference_joint_positions  Robot joint state for transform computation
-   * @param reference_base_pose        Robot base pose in map
-   * @param ignore_collision_link_names  Links to exclude from collision
-   * @param safe_margin     Safety distance buffer
-   * @param resolution      Discretization resolution
-   *
-   * @return MotionStatus indicating success/failure
-   */
-  MotionStatus add_object(const std::string& attached_frame, const std::string& obstacle_id,
-                          const std::string& obstacle_type, const std::vector<double>& pose,
-                          const std::array<double, 3>& scale = {}, const std::string& key = "",
-                          const std::string& target_frame = "world", const std::string& ee_frame = "ee_base",
-                          const std::vector<double>& reference_joint_positions = {},
-                          const std::vector<double>& reference_base_pose = {},
-                          const std::vector<std::string>& ignore_collision_link_names = {},
-                          const double& safe_margin = 0, const double& resolution = 0.01);
-
-  /**
-   * @brief Internal unified obstacle/attached object removal.
-   *
-   * Common implementation for remove_obstacle() and detach_target_object().
-   *
-   * @param attached_frame  Empty for static obstacles, frame name for attached objects
-   * @param obstacle_id     Unique object identifier to remove
-   *
-   * @return MotionStatus indicating success/failure
-   */
-  MotionStatus remove_object(const std::string& attached_frame, const std::string& obstacle_id);
-
-  /**
-   * @brief Internal unified scene clearing.
-   *
-   * Common implementation for clearing obstacles/attached objects.
-   *
-   * @param attached_frame  Empty for static obstacles, frame name for attached objects
-   *
-   * @return MotionStatus indicating success/failure
-   */
-  MotionStatus clear_object(const std::string& attached_frame);
-
- private:
-  // ---------- Singleton enforcement (non-copyable, non-movable) ----------
-
-  GalbotMotion() = default;                               ///< Private default constructor
-  GalbotMotion(const GalbotMotion&) = delete;             ///< Copy constructor deleted
-  GalbotMotion& operator=(const GalbotMotion&) = delete;  ///< Copy assignment deleted
-  GalbotMotion(GalbotMotion&&) = delete;                  ///< Move constructor deleted
-  GalbotMotion& operator=(GalbotMotion&&) = delete;       ///< Move assignment deleted
-
-  // ---------- Member variables ----------
-
-  // int robot_dof_ = 21;  ///< Robot degrees of freedom (total actuated joints), default: 21
+  virtual std::string status_to_string(MotionStatus status) = 0;
 };
 
-}  // namespace g1
 }  // namespace sdk
 }  // namespace galbot

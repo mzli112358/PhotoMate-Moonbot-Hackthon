@@ -1,0 +1,2 @@
+# Empty dependencies file for galbot_navigation_blocked_navigation_example.
+# This may be replaced when dependencies are built.

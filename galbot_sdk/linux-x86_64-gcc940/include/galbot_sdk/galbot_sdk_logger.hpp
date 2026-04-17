@@ -3,11 +3,10 @@
 #include <sstream>
 #include <string>
 
-#include "type.hpp"
+#include "galbot_sdk_type.hpp"
 
 namespace galbot {
 namespace sdk {
-namespace g1 {
 /**
  * @brief Initialize the user logger for the Galbot SDK
  *
@@ -60,35 +59,34 @@ class GalbotSdkLogStream {
 };
 
 #define GALBOT_SDK_LOG_TRACE                                                                                        \
-  galbot::sdk::g1::GalbotSdkLogStream(galbot::sdk::g1::LogLevel::TRACE,                                             \
+  galbot::sdk::GalbotSdkLogStream(galbot::sdk::LogLevel::TRACE,                                             \
                                       (strrchr(__FILE__, '/') ? (strrchr(__FILE__, '/') + 1) : __FILE__), __func__, \
                                       __LINE__)
 
 #define GALBOT_SDK_LOG_DEBUG                                                                                        \
-  galbot::sdk::g1::GalbotSdkLogStream(galbot::sdk::g1::LogLevel::DEBUG,                                             \
+  galbot::sdk::GalbotSdkLogStream(galbot::sdk::LogLevel::DEBUG,                                             \
                                       (strrchr(__FILE__, '/') ? (strrchr(__FILE__, '/') + 1) : __FILE__), __func__, \
                                       __LINE__)
 
 #define GALBOT_SDK_LOG_INFO                                                                                         \
-  galbot::sdk::g1::GalbotSdkLogStream(galbot::sdk::g1::LogLevel::INFO,                                              \
+  galbot::sdk::GalbotSdkLogStream(galbot::sdk::LogLevel::INFO,                                              \
                                       (strrchr(__FILE__, '/') ? (strrchr(__FILE__, '/') + 1) : __FILE__), __func__, \
                                       __LINE__)
 
 #define GALBOT_SDK_LOG_WARN                                                                                         \
-  galbot::sdk::g1::GalbotSdkLogStream(galbot::sdk::g1::LogLevel::WARN,                                              \
+  galbot::sdk::GalbotSdkLogStream(galbot::sdk::LogLevel::WARN,                                              \
                                       (strrchr(__FILE__, '/') ? (strrchr(__FILE__, '/') + 1) : __FILE__), __func__, \
                                       __LINE__)
 
 #define GALBOT_SDK_LOG_ERROR                                                                                        \
-  galbot::sdk::g1::GalbotSdkLogStream(galbot::sdk::g1::LogLevel::ERROR,                                             \
+  galbot::sdk::GalbotSdkLogStream(galbot::sdk::LogLevel::ERROR,                                             \
                                       (strrchr(__FILE__, '/') ? (strrchr(__FILE__, '/') + 1) : __FILE__), __func__, \
                                       __LINE__)
 
 #define GALBOT_SDK_LOG_CRITICAL                                                                                     \
-  galbot::sdk::g1::GalbotSdkLogStream(galbot::sdk::g1::LogLevel::CRITICAL,                                          \
+  galbot::sdk::GalbotSdkLogStream(galbot::sdk::LogLevel::CRITICAL,                                          \
                                       (strrchr(__FILE__, '/') ? (strrchr(__FILE__, '/') + 1) : __FILE__), __func__, \
                                       __LINE__)
 
-}  // namespace g1
 }  // namespace sdk
 }  // namespace galbot

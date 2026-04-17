@@ -51,7 +51,7 @@ fi
 
 # 默认值
 DEFAULT_INSTALL_DIR="/opt/galbot"
-SDK_VERSION="1.6.2"
+SDK_VERSION="1.7.0"
 EMBOSA_LOG_DIR="/userdata/log/embosa"
 
 # 参数
@@ -561,7 +561,7 @@ install_sdk_core_for_platform() {
         log_info "  复制 SDK 核心库..."
         
         # 只复制 SDK 核心库（三方库通过 install_thirdparty 安装）
-        for f in "$SCRIPT_DIR/galbot_sdk/$platform/lib/"libgalbot_g1_sdk.so*; do
+        for f in "$SCRIPT_DIR/galbot_sdk/$platform/lib/"libgalbot_sdk.so*; do
             if [ -e "$f" ]; then
                 run_cmd cp -a "$f" "$sdk_dir/$platform/lib/"
             fi
@@ -659,22 +659,29 @@ install_extras() {
 update_example_paths() {
     local sdk_path="$INSTALL_DIR/galbot_sdk"
     local toolchain_path="$sdk_path/toolchain"
-    
-    # 更新 cmake toolchain 路径
-    for f in "$INSTALL_DIR/examples/cpp/cmake/linux-aarch64-gcc940.cmake" \
-             "$INSTALL_DIR/examples/cpp/cmake/linux-x86_64-gcc940.cmake"; do
-        if [ -f "$f" ]; then
-            local new_line="set(toolchain $INSTALL_DIR/toolchain/\${toolchain_target_plat})"
-            run_cmd sed -i "7c\\$new_line" "$f"
+    local new_line="set(toolchain $INSTALL_DIR/toolchain/\${toolchain_target_plat})"
+    local sdk_line="set(SDK_INSTALL_PATH $INSTALL_DIR)"
+
+    # 更新 cmake toolchain 路径（仅 g1/s1 的 cpp/cmake）
+    local cmake_locations=(
+        "$INSTALL_DIR/examples/g1/cpp/cmake"
+        "$INSTALL_DIR/examples/s1/cpp/cmake"
+    )
+    for dir in "${cmake_locations[@]}"; do
+        for f in "$dir/linux-aarch64-gcc940.cmake" "$dir/linux-x86_64-gcc940.cmake"; do
+            if [ -f "$f" ]; then
+                run_cmd sed -i "7c\\$new_line" "$f"
+            fi
+        done
+    done
+
+    # 更新 CMakeLists.txt 中的 SDK 路径（g1/s1 各自 cpp 目录）
+    for cmake_file in "$INSTALL_DIR/examples/g1/cpp/CMakeLists.txt" \
+                      "$INSTALL_DIR/examples/s1/cpp/CMakeLists.txt"; do
+        if [ -f "$cmake_file" ]; then
+            run_cmd sed -i "7c\\$sdk_line" "$cmake_file"
         fi
     done
-    
-    # 更新 CMakeLists.txt 中的 SDK 路径
-    local cmake_file="$INSTALL_DIR/examples/cpp/CMakeLists.txt"
-    if [ -f "$cmake_file" ]; then
-        local sdk_line="set(SDK_INSTALL_PATH $INSTALL_DIR)"
-        run_cmd sed -i "7c\\$sdk_line" "$cmake_file"
-    fi
 }
 
 # 显示安装摘要

@@ -142,7 +142,7 @@ SSH_OPTS="-o StrictHostKeyChecking=no \
 print_step 2 "Pre-deployment Validation" "部署前验证"
 
 [ ! -d "$LIB_DIR" ] && { print_error "Local library directory not found"; exit 1; }
-CPP_LIB_COUNT=$(find "$LIB_DIR" -name "libgalbot_g1_sdk.*" | wc -l)
+CPP_LIB_COUNT=$(find "$LIB_DIR" -name "libgalbot_sdk.*" | wc -l)
 
 print_success "Local directory OK"
 print_info "C++ libraries: $CPP_LIB_COUNT"
@@ -165,7 +165,7 @@ print_step 4 "Deploying C++ Libraries" "部署 C++ 库"
 sshpass -p "$SSHPASS" \
 rsync -avz \
 -e "ssh $SSH_OPTS" \
-"$LIB_DIR"/libgalbot_g1_sdk.* \
+"$LIB_DIR"/libgalbot_sdk.* \
 "$ROBOT_USER@$ROBOT_IP:$REMOTE_DIR/" \
 && print_success "C++ libraries deployed" \
 || { print_error "C++ deployment failed"; exit 1; }
@@ -194,7 +194,7 @@ print_step 6 "Post-deployment Verification" "部署后验证"
 
 sshpass -p "$SSHPASS" \
 ssh $SSH_OPTS "$ROBOT_USER@$ROBOT_IP" "
-ls '$REMOTE_DIR'/libgalbot_g1_sdk.* >/dev/null 2>&1 && echo CPP_OK=1 || echo CPP_OK=0
+ls '$REMOTE_DIR'/libgalbot_sdk.* >/dev/null 2>&1 && echo CPP_OK=1 || echo CPP_OK=0
 [ -d '$REMOTE_DIR/galbot_sdk' ] && echo PY_OK=1 || echo PY_OK=0
 "
 

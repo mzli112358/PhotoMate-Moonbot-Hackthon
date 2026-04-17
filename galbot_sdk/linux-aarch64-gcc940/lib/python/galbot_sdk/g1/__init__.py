@@ -1,48 +1,97 @@
-import sys
-import importlib.util
-from pathlib import Path
-import platform
+"""
+G1 SDK Package - Pre-configured for MachineType.G1
 
-# 确定确定平台架构与pyhton版本
-_python_version = f"{sys.version_info.major}{sys.version_info.minor}"
+This package provides G1-specific wrappers for GalbotNavigation, GalbotMotion, 
+and GalbotRobot that automatically initialize with MachineType.G1.
 
-_machine = platform.machine().lower()
-if _machine in ("x86_64", "amd64"):
-    _arch = "x86_64-linux-gnu"
-elif _machine in ("aarch64", "arm64"):
-    _arch = "aarch64-linux-gnu"
-else:
-    raise RuntimeError(f"Unsupported architecture: {_machine}")
+Usage:
+    from galbot_sdk.g1 import GalbotNavigation, GalbotMotion, GalbotRobot
 
-# 查找相应库
-_so_filename = f"galbot_g1.cpython-{_python_version}-{_arch}.so"
+    nav = GalbotNavigation()
+    nav.init()
 
-_current_dir = Path(__file__).parent
-_so_path = _current_dir / _so_filename
-# 匹配失败
-if not _so_path.exists():
-    raise ImportError(
-        "[galbot][ERROR] galbot_g1 shared library not found.\n"
-        f"  Expected file : {_so_filename}\n"
-        f"  Python        : {_python_version}\n"
-        f"  Architecture  : {_arch}\n"
-        f"  Search path   : {_current_dir}\n"
-        "This usually means:\n"
-        "  - Python version mismatch\n"
-        "  - Architecture mismatch\n"
-    )
+    motion = GalbotMotion()
+    motion.init()
 
-# 加载动态库
-spec = importlib.util.spec_from_file_location("g1", _so_path)
-if spec is None or spec.loader is None:
-    raise ImportError(f"Failed to load galbot_g1 module from {_so_path}")
+    robot = GalbotRobot()
+    robot.init()
+"""
 
-_g1_module = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(_g1_module)
+from .. import (
+    MachineType,
+    GalbotNavigation as _BaseGalbotNavigation,
+    GalbotMotion as _BaseGalbotMotion,
+    GalbotRobot as _BaseGalbotRobot,
+)
+from .. import *  # noqa: F401, F403
 
-for _name in dir(_g1_module):
-    if not _name.startswith("_"):
-        globals()[_name] = getattr(_g1_module, _name)
 
-# 清理临时变量
-del _g1_module, _current_dir, _python_version, _arch, _so_filename, _so_path
+class GalbotNavigation:
+    """
+    G1-specific GalbotNavigation wrapper.
+    Automatically initialized with MachineType.G1 - no need to pass it explicitly.
+    """
+    _instance = None
+    _py_instance = None
+
+    def __new__(cls):
+        if cls._py_instance is None:
+            cls._py_instance = super().__new__(cls)
+        return cls._py_instance
+
+    def __init__(self):
+        if GalbotNavigation._instance is None:
+            GalbotNavigation._instance = _BaseGalbotNavigation.get_instance(MachineType.G1)
+            self._impl = GalbotNavigation._instance
+
+    def __getattr__(self, name):
+        return getattr(self._impl, name)
+
+
+class GalbotMotion:
+    """
+    G1-specific GalbotMotion wrapper.
+    Automatically initialized with MachineType.G1 - no need to pass it explicitly.
+    """
+    _instance = None
+    _py_instance = None
+
+    def __new__(cls):
+        if cls._py_instance is None:
+            cls._py_instance = super().__new__(cls)
+        return cls._py_instance
+
+    def __init__(self):
+        if GalbotMotion._instance is None:
+            GalbotMotion._instance = _BaseGalbotMotion.get_instance(MachineType.G1)
+            self._impl = GalbotMotion._instance
+
+    def __getattr__(self, name):
+        return getattr(self._impl, name)
+
+
+class GalbotRobot:
+    """
+    G1 的 GalbotRobot 包装，与 GalbotNavigation、GalbotMotion 用法一致。
+    robot = GalbotRobot()
+    robot.init()
+    """
+    _instance = None
+    _py_instance = None
+
+    def __new__(cls):
+        if cls._py_instance is None:
+            cls._py_instance = super().__new__(cls)
+        return cls._py_instance
+
+    def __init__(self):
+        if GalbotRobot._instance is None:
+            GalbotRobot._instance = _BaseGalbotRobot.get_instance(MachineType.G1)
+            self._impl = GalbotRobot._instance
+
+    def __getattr__(self, name):
+        return getattr(self._impl, name)
+
+
+# 暴露所有从父包导入的公开符号 + 本文件定义的 G1 包装类
+__all__ = [name for name in globals().keys() if not name.startswith("_")]

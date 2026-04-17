@@ -1,58 +1,76 @@
+/**
+ * @file galbot_perception.hpp
+ * @brief Perception interface for on-device vision algorithms (G1 only).
+ *
+ * @author Galbot SDK Team
+ * @copyright Copyright (c) 2023-2026 Galbot. All rights reserved.
+ */
+
 #pragma once
 
 #include <set>
 
+#include "galbot_sdk_type.hpp"
 #include "galbot_perception_types.hpp"
 
 namespace galbot {
 namespace sdk {
-namespace g1 {
 
+/**
+ * @class GalbotPerception
+ * @brief Perception module interface; obtain the singleton via get_instance(MachineType).
+ *
+ * Implemented for G1 only: get_instance(MachineType::S1) throws std::runtime_error.
+ *
+ * @robot G1
+ */
 class GalbotPerception {
  public:
+  virtual ~GalbotPerception() = default;
+
   /**
    * @brief Get the singleton instance of GalbotPerception.
-   * @return Reference to the singleton instance.
+   * @param m Machine type (e.g. MachineType::G1). MachineType::S1 is not supported and throws.
+   * @return Reference to the singleton instance for the given machine type.
    */
-  static GalbotPerception& get_instance();
+  static GalbotPerception& get_instance(MachineType m);
 
   /**
    * @brief Initialize perception and load models for the selected modules.
    * @param enabled_modules Set of perception modules to enable.
    * @return True if every requested module loaded successfully.
    */
-  bool init(const std::set<PerceptionModule>& enabled_modules);
+  virtual bool init(const std::set<PerceptionModule>& enabled_modules) = 0;
 
   /**
    * @brief Run a single inference for the given module.
    * @note After init, wait ~10s for models to be ready before calling run_once.
    * @param module Perception module to run.
    */
-  bool run_once(PerceptionModule module);
+  virtual bool run_once(PerceptionModule module) = 0;
 
   /**
    * @brief Block until the module produces a new result, or timeout. Use with run_once to fetch the latest output.
    * @param module    Perception module.
    * @param timeout_s Timeout in seconds.
    */
-  bool wait_for_new_result(PerceptionModule module, double timeout_s = 5.0);
+  virtual bool wait_for_new_result(PerceptionModule module, double timeout_s = 5.0) = 0;
 
   /**
    * @brief Return the latest cached result for the module without blocking.
    * @param module Perception module.
    * @param result Output detection result.
-   * @return True if a result is available, false if none.   */
-  bool get_latest_result(PerceptionModule module, DetectionResult& result);
+   * @return True if a result is available, false if none.
+   */
+  virtual bool get_latest_result(PerceptionModule module, DetectionResult& result) = 0;
 
- private:
+ protected:
   GalbotPerception() = default;
-
   GalbotPerception(const GalbotPerception&) = delete;
   GalbotPerception& operator=(const GalbotPerception&) = delete;
   GalbotPerception(GalbotPerception&&) = delete;
   GalbotPerception& operator=(GalbotPerception&&) = delete;
 };
 
-}  // namespace g1
 }  // namespace sdk
 }  // namespace galbot

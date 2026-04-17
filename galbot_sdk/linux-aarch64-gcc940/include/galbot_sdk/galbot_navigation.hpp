@@ -19,25 +19,19 @@
 
 #pragma once
 
-#include "type.hpp"
+#include "galbot_sdk_type.hpp"
 
 /**
  * @namespace galbot
  * @brief Root namespace for Galbot robotics software
  */
- namespace galbot {
+namespace galbot {
 
-  /**
-   * @namespace galbot::sdk
-   * @brief Galbot Software Development Kit namespace
-   */
-  namespace sdk {
-
-  /**
-   * @namespace galbot::sdk::g1
-   * @brief Namespace for Galbot G1 humanoid robot
-   */
-  namespace g1 {
+/**
+ * @namespace galbot::sdk
+ * @brief Galbot Software Development Kit namespace
+ */
+namespace sdk {
 
 /**
  * @class GalbotNavigation
@@ -56,30 +50,40 @@
  *
  * Typical usage:
  * @code
- *   auto& nav = GalbotNavigation::get_instance();
+ *   auto& nav = GalbotNavigation::get_instance(MachineType::G1);
  *   if (nav.init()) {
  *     Pose goal;
  *     goal.x = 1.0;  // meters
  *     goal.y = 2.0;  // meters
- *     goal.theta = 0.0;  // radians
+ *     goal.orientation.w = 1.0;  // identity quaternion (x,y,z default 0)
  *     nav.navigate_to_goal(goal, true, false, 30.0, true);
  *   }
  * @endcode
+ *
  */
 class GalbotNavigation {
  public:
+  virtual ~GalbotNavigation() = default;
+
   /**
-   * @brief Get the thread-safe singleton instance of GalbotNavigation.
+   * @brief Runtime factory for selecting a concrete navigation singleton.
    *
-   * This method provides access to the single global instance of the navigation
-   * interface. The instance is created on first call using C++11 thread-safe
-   * static initialization.
+   * This static factory method allows runtime selection of the navigation
+   * implementation based on the robot machine type. The method declaration
+   * resides in the interface header for compile-time availability, while the
+   * actual implementation logic (including platform-specific includes and
+   * switch statements) is contained in the corresponding .cpp file. This
+   * design keeps the interface clean while enabling platform-specific
+   * instantiation without exposing implementation details.
    *
-   * @return Reference to the GalbotNavigation singleton instance.
+   * @param m Machine type identifier specifying which robot platform to use.
+   * @return Reference to the singleton navigation interface instance for the
+   *         specified machine type.
    *
-   * @note This method is thread-safe as of C++11.
+   * @note Adding support for a new machine type requires updating the
+   *       MachineType enumeration and the factory implementation in the .cpp file.
    */
-  static GalbotNavigation& get_instance();
+  static GalbotNavigation& get_instance(MachineType m);
 
   /**
    * @brief Initialize the navigation subsystem and its dependencies.
@@ -96,14 +100,7 @@ class GalbotNavigation {
    * @warning Calling navigation methods before successful initialization will result
    *          in undefined behavior.
    */
-  bool init();
-
-  // /**
-  //  * @brief Save map, only valid in deployment mode
-  //  *
-  //  * @return NavigationStatus Execution result
-  //  */
-  // NavigationStatus save_map();
+  virtual bool init() = 0;
 
   /**
    * @brief Perform relocalization to re-estimate the robot's pose in the map frame.
@@ -113,9 +110,9 @@ class GalbotNavigation {
    * when the robot has lost localization or when manually placing the robot at a
    * known position.
    *
-   * @param init_pose Initial pose estimate in the map frame (x, y in meters,
-   *                  theta in radians). This serves as the starting point for the
-   *                  relocalization algorithm.
+   * @param init_pose Initial pose estimate in the map frame: position (x, y, z) in meters
+   *                  and orientation as unit quaternion (x, y, z, w). Serves as the starting
+   *                  point for the relocalization algorithm.
    *
    * @return NavigationStatus indicating the result of the relocalization request.
    *         See NavigationStatus enumeration for possible values.
@@ -124,7 +121,7 @@ class GalbotNavigation {
    * @note After calling this method, use is_localized() to verify successful
    *       relocalization before proceeding with navigation tasks.
    */
-  NavigationStatus relocalize(const Pose& init_pose);
+  virtual NavigationStatus relocalize(const Pose& init_pose) = 0;
 
   /**
    * @brief Check whether the robot is currently localized in the map.
@@ -141,7 +138,7 @@ class GalbotNavigation {
    * @note If this returns false, consider calling relocalize() with a known
    *       pose estimate.
    */
-  bool is_localized();
+  virtual bool is_localized() = 0;
 
   /**
    * @brief Get the current estimated pose of the robot chassis in the map frame.
@@ -150,15 +147,13 @@ class GalbotNavigation {
    * The pose represents the position and orientation of the robot's base_link frame
    * relative to the map frame origin.
    *
-   * @return Pose structure containing:
-   *         - x: X-coordinate in meters (map frame)
-   *         - y: Y-coordinate in meters (map frame)
-   *         - theta: Orientation in radians (map frame, counter-clockwise from x-axis)
+   * @return Pose: position (x, y, z) in meters and orientation as unit quaternion (x, y, z, w)
+   *         in the map frame.
    *
    * @note The returned pose is only valid if is_localized() returns true.
    * @note The pose represents the center of the robot's base footprint.
    */
-  Pose get_current_pose();
+  virtual Pose get_current_pose() = 0;
 
   /**
    * @brief Navigate the robot to a target goal pose in the map frame.
@@ -168,10 +163,8 @@ class GalbotNavigation {
    * a collision-free path from the current pose to the goal, considering both static
    * map obstacles and dynamic obstacles if collision checking is enabled.
    *
-   * @param goal_pose Target goal pose in the map frame. Contains:
-   *                  - x: Target x-coordinate in meters
-   *                  - y: Target y-coordinate in meters
-   *                  - theta: Target orientation in radians
+   * @param goal_pose Target goal pose in the map frame: position (x, y, z) in meters and
+   *                  target orientation as unit quaternion (x, y, z, w).
    * @param enable_collision_check If true, enables dynamic obstacle detection and
    *                               avoidance during navigation. If false, only static
    *                               map obstacles are considered. Default: true.
@@ -202,8 +195,9 @@ class GalbotNavigation {
    * @warning In non-blocking mode, monitor navigation progress separately to detect
    *          completion or failures.
    */
-  NavigationStatus navigate_to_goal(const Pose& goal_pose, bool enable_collision_check = true, bool is_blocking = false,
-                                    float timeout = 8, bool omni_plan = true);
+  virtual NavigationStatus navigate_to_goal(const Pose& goal_pose, bool enable_collision_check = true,
+                                            bool is_blocking = false, float timeout = 8, bool omni_plan = true) = 0;
+
   /**
    * @brief Move the robot to a relative target pose in the odometry frame.
    *
@@ -213,10 +207,9 @@ class GalbotNavigation {
    * this method does NOT perform dynamic obstacle detection or global path planning.
    * It uses omnidirectional motion planning for direct movement to the target.
    *
-   * @param goal_pose Target pose relative to the current robot base_link frame. Contains:
-   *                  - x: Forward/backward displacement in meters (+ forward, - backward)
-   *                  - y: Left/right displacement in meters (+ left, - right)
-   *                  - theta: Relative rotation in radians (counter-clockwise positive)
+   * @param goal_pose Target pose relative to the current base_link frame: position (x, y, z)
+   *                  in meters (typically x forward, y left, z up) and relative orientation as
+   *                  unit quaternion (x, y, z, w).
    * @param is_blocking Execution mode flag. Default: true.
    *                    - true (blocking): Blocks until the motion is complete, fails,
    *                      or timeout occurs. The return status reflects the final outcome.
@@ -240,7 +233,7 @@ class GalbotNavigation {
    * @warning Odometry drift may affect accuracy over longer distances. For accurate
    *          long-distance navigation, use navigate_to_goal() instead.
    */
-  NavigationStatus move_straight_to(const Pose& goal_pose, bool is_blocking = true, float timeout = 8);
+  virtual NavigationStatus move_straight_to(const Pose& goal_pose, bool is_blocking = true, float timeout = 8) = 0;
 
   /**
    * @brief Stop the current navigation task and bring the robot to a halt.
@@ -258,7 +251,7 @@ class GalbotNavigation {
    * @note After stopping, the robot's position may not match the original goal.
    * @note The robot will attempt to stop smoothly following its acceleration limits.
    */
-  NavigationStatus stop_navigation();
+  virtual NavigationStatus stop_navigation() = 0;
 
   /**
    * @brief Check if a collision-free path exists from start to goal in the map.
@@ -268,14 +261,10 @@ class GalbotNavigation {
    * This is useful for validating goal poses before attempting navigation,
    * or for multi-goal path planning.
    *
-   * @param goal_pose Goal pose in the map frame. Contains:
-   *                  - x: Goal x-coordinate in meters
-   *                  - y: Goal y-coordinate in meters
-   *                  - theta: Goal orientation in radians
-   * @param start_pose Start pose in the map frame. Contains:
-   *                   - x: Start x-coordinate in meters
-   *                   - y: Start y-coordinate in meters
-   *                   - theta: Start orientation in radians
+   * @param goal_pose Goal pose in the map frame: position (x, y, z) in meters and orientation
+   *                  quaternion (x, y, z, w).
+   * @param start_pose Start pose in the map frame: position (x, y, z) in meters and orientation
+   *                   quaternion (x, y, z, w).
    *
    * @return true if a collision-free path exists from start to goal,
    *         false if no valid path can be found.
@@ -287,7 +276,7 @@ class GalbotNavigation {
    * @note A return value of true does not guarantee successful navigation, as
    *       dynamic obstacles or localization errors may still cause failures.
    */
-  bool check_path_reachability(const Pose& goal_pose, const Pose& start_pose);
+  virtual bool check_path_reachability(const Pose& goal_pose, const Pose& start_pose) = 0;
 
   /**
    * @brief Check if the robot has successfully reached the current goal.
@@ -307,7 +296,7 @@ class GalbotNavigation {
    *       and a few degrees in orientation).
    * @note If no navigation command is active, this method returns false.
    */
-  bool check_goal_arrival();
+  virtual bool check_goal_arrival() = 0;
 
   /**
    * @brief Get the current navigation task state.
@@ -323,25 +312,8 @@ class GalbotNavigation {
    * @note Useful in non-blocking navigation: loop on get_navigation_status()
    *       and break on SUCCESS, FAILED, or after a timeout.
    */
-  NavigationTaskStatus get_navigation_status();
-
- private:
-  /// @brief Default constructor. Private to enforce singleton pattern.
-  GalbotNavigation() = default;
-
-  /// @brief Copy constructor (deleted). Prevents copying of singleton instance.
-  GalbotNavigation(const GalbotNavigation&) = delete;
-
-  /// @brief Copy assignment operator (deleted). Prevents assignment of singleton instance.
-  GalbotNavigation& operator=(const GalbotNavigation&) = delete;
-
-  /// @brief Move constructor (deleted). Prevents moving of singleton instance.
-  GalbotNavigation(GalbotNavigation&&) = delete;
-
-  /// @brief Move assignment operator (deleted). Prevents move-assignment of singleton instance.
-  GalbotNavigation& operator=(GalbotNavigation&&) = delete;
+  virtual NavigationTaskStatus get_navigation_status() = 0;
 };
 
-}  // namespace g1
 }  // namespace sdk
 }  // namespace galbot

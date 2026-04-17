@@ -1,0 +1,75 @@
+/* Custom styles */
+
+/* 增大图片默认显示尺寸 */
+.md-content img {
+  max-width: 90%;
+  height: auto;
+  display: block;
+  margin: 1.5rem auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* 全屏图片样式 */
+.full-width-image {
+  width: 100%;
+  max-width: none;
+  margin: 2rem 0;
+}
+
+/* 左右排版优化 - 图片占据更大空间 */
+.two-column-layout {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  margin: 2rem 0;
+}
+
+.two-column-layout img {
+  flex: 1;
+  max-width: 55%;
+}
+
+.two-column-layout .text-content {
+  flex: 1;
+}
+
+/* 响应式设计 - 移动端垂直排列 */
+@media (max-width: 768px) {
+  .two-column-layout {
+    flex-direction: column;
+  }
+
+  .two-column-layout img {
+    max-width: 100%;
+    width: 100%;
+  }
+}
+
+/* 图片说明文字 */
+figure {
+  margin: 2rem 0;
+  text-align: center;
+}
+
+figure img {
+  max-width: 90%;
+  margin-bottom: 0.5rem;
+}
+
+figcaption {
+  font-size: 0.9rem;
+  color: #666;
+  font-style: italic;
+  margin-top: 0.5rem;
+}
+
+/* Right sidebar active item highlight for scroll spy */
+.md-sidebar--secondary .md-nav__item--active > .md-nav__link {
+  color: var(--md-primary-fg-color);
+  font-weight: 700;
+}
+
+.md-sidebar--secondary .md-nav__item--active > .md-nav__link::before {
+  background-color: var(--md-primary-fg-color);
+}

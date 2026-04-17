@@ -15,6 +15,11 @@
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
 
+/**
+ * @brief Enabled perception pipelines (model sets loaded at init).
+ *
+ * @robot G1
+ */
 enum class PerceptionModule {
     FOUNDATION_STEREO = 0,  // High-accuracy stereo depth; for tasks needing precision (e.g. box handling).
     LIGHT_STEREO,   // Lightweight stereo depth; for looser accuracy (e.g. greeting). Not supported in this version.
@@ -29,6 +34,11 @@ enum class PerceptionModule {
 using PointCloud = pcl::PointCloud<pcl::PointXYZ>;
 using PointCloudPtr = pcl::PointCloud<pcl::PointXYZ>::Ptr;
 
+/**
+ * @brief Axis-aligned 2D bounding box with class id and score helpers.
+ *
+ * @robot G1
+ */
 typedef struct {
     cv::Rect rect;
     std::pair<int, float> cls;
@@ -44,6 +54,11 @@ typedef struct {
     }
 } BBox;
 
+/**
+ * @brief Structured garbage / bin-like detection output (3D boxes and optional clouds).
+ *
+ * @robot G1
+ */
 struct GarbageResult {
     SENSORDATA_POINTER_TYPEDEFS(GarbageResult);
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
@@ -62,6 +77,11 @@ struct GarbageResult {
     }
 };
 
+/**
+ * @brief Single-object detection or instance segmentation record (2D box, class, optional mask/keypoints).
+ *
+ * @robot G1
+ */
 struct DetectionAndSegmentationResult {
     SENSORDATA_POINTER_TYPEDEFS(DetectionAndSegmentationResult);
     cv::Rect bbox;                       // Bounding box.
@@ -107,6 +127,11 @@ inline std::ostream& operator<<(std::ostream& os, const DetectionAndSegmentation
     return os;
 }
 
+/**
+ * @brief Aggregated perception output for one module tick (images, masks, poses, point clouds, etc.).
+ *
+ * @robot G1
+ */
 struct DetectionResult {
     SENSORDATA_POINTER_TYPEDEFS(DetectionResult);
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW

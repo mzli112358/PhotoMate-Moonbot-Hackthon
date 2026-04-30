@@ -7898,7 +7898,8 @@
 </span></code></pre></div>
 <p><small>Check robot states for collisions.</p>
 <p>Therefore, if you need Motion to consider environmental obstacles (including point clouds), you must load the obstacle map/objects explicitly (e.g., obstacle_type = point_cloud with a file path in key).</p>
-<p>Note: integrating real-time perception (navigation-style obstacle updates / point-cloud map) into galbotMotion is a planned future feature and has limited internal validation at the moment. Validates whether given robot configurations are collision-free. Checks both self-collisions (robot links with each other) and environment collisions (robot with scene obstacles). Batch processing supported for efficiency.</small></p>
+<p>Note: integrating real-time perception (navigation-style obstacle updates / point-cloud map) into galbotMotion is a planned future feature and has limited internal validation at the moment.</p>
+<p>Validates whether given robot configurations are collision-free. Checks both self-collisions (robot links with each other) and environment collisions (robot with scene obstacles). Batch processing supported for efficiency.</small></p>
 <p><strong>Parameters</strong></p>
 <table>
 <thead>
@@ -14556,8 +14557,8 @@
 </table>
 <hr />
 <h3 id="trajectory-class">Trajectory</h3>
-<p><small>Joint trajectory.</p>
-<p>Represents a complete robot trajectory consisting of multiple waypoints over time.</small></p>
+<p><small>Trajectory result.</p>
+<p>Contains the complete planned trajectory with joint positions and timing information.</small></p>
 <h5 id="member-variables_31">Member Variables</h5>
 <table>
 <thead>

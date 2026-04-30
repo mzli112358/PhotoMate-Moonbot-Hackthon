@@ -8,7 +8,7 @@ import sys
 import time
 from pathlib import Path
 
-SDK_VERSION = "1.7.0"
+SDK_VERSION = "1.7.1"
 REQUIRED_ROBOT_VERSION = "GBS_1.15"
 DEFAULT_CFG_PATH = "/data/config/system.cfg"
 

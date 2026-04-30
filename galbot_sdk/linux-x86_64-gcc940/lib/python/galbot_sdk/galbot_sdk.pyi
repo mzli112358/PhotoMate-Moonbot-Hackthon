@@ -1430,7 +1430,7 @@ class GalbotRobot:
                     Returns:
                         float: Current volume value, range 0.0 to 100.0.
         """
-    def init(self, enable_sensor_set: collections.abc.Set[SensorType] = ...) -> bool:
+    def init(self, enable_sensor_set: collections.abc.Set[SensorType] = set()) -> bool:
         """
                     Initialize the robot control system (hardware communication, middleware, sensor interfaces).
                     Only sensors in enable_sensor_set are initialized; specify only required sensors to reduce overhead.
@@ -3119,6 +3119,10 @@ class SensorType:
     """
     Members:
     
+      HEAD_CAMERA : Head camera
+    
+      HEAD_DEPTH_CAMERA : Head depth camera
+    
       HEAD_LEFT_CAMERA : Head left camera
     
       HEAD_RIGHT_CAMERA : Head right camera
@@ -3157,26 +3161,28 @@ class SensorType:
     
       CHASSIS_IMU : Chassis LiDAR IMU
     """
-    BACK_IMU: typing.ClassVar[SensorType]  # value = <SensorType.BACK_IMU: 11>
-    BACK_LIDAR: typing.ClassVar[SensorType]  # value = <SensorType.BACK_LIDAR: 8>
-    BASE_LIDAR: typing.ClassVar[SensorType]  # value = <SensorType.BASE_LIDAR: 6>
-    BASE_ULTRASONIC: typing.ClassVar[SensorType]  # value = <SensorType.BASE_ULTRASONIC: 14>
-    CHASSIS_IMU: typing.ClassVar[SensorType]  # value = <SensorType.CHASSIS_IMU: 12>
-    CHASSIS_LIDAR: typing.ClassVar[SensorType]  # value = <SensorType.CHASSIS_LIDAR: 9>
-    HEAD_IMU: typing.ClassVar[SensorType]  # value = <SensorType.HEAD_IMU: 10>
-    HEAD_LEFT_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.HEAD_LEFT_CAMERA: 0>
-    HEAD_LIDAR: typing.ClassVar[SensorType]  # value = <SensorType.HEAD_LIDAR: 7>
-    HEAD_RIGHT_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.HEAD_RIGHT_CAMERA: 1>
-    LEFT_ARM_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.LEFT_ARM_CAMERA: 2>
-    LEFT_ARM_DEPTH_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.LEFT_ARM_DEPTH_CAMERA: 4>
-    LEFT_FRONT_SURROUND_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.LEFT_FRONT_SURROUND_CAMERA: 15>
-    LEFT_REAR_SURROUND_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.LEFT_REAR_SURROUND_CAMERA: 17>
-    RIGHT_ARM_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.RIGHT_ARM_CAMERA: 3>
-    RIGHT_ARM_DEPTH_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.RIGHT_ARM_DEPTH_CAMERA: 5>
-    RIGHT_FRONT_SURROUND_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.RIGHT_FRONT_SURROUND_CAMERA: 16>
-    RIGHT_REAR_SURROUND_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.RIGHT_REAR_SURROUND_CAMERA: 18>
-    TORSO_IMU: typing.ClassVar[SensorType]  # value = <SensorType.TORSO_IMU: 13>
-    __members__: typing.ClassVar[dict[str, SensorType]]  # value = {'HEAD_LEFT_CAMERA': <SensorType.HEAD_LEFT_CAMERA: 0>, 'HEAD_RIGHT_CAMERA': <SensorType.HEAD_RIGHT_CAMERA: 1>, 'LEFT_ARM_CAMERA': <SensorType.LEFT_ARM_CAMERA: 2>, 'RIGHT_ARM_CAMERA': <SensorType.RIGHT_ARM_CAMERA: 3>, 'LEFT_ARM_DEPTH_CAMERA': <SensorType.LEFT_ARM_DEPTH_CAMERA: 4>, 'RIGHT_ARM_DEPTH_CAMERA': <SensorType.RIGHT_ARM_DEPTH_CAMERA: 5>, 'BASE_ULTRASONIC': <SensorType.BASE_ULTRASONIC: 14>, 'BASE_LIDAR': <SensorType.BASE_LIDAR: 6>, 'TORSO_IMU': <SensorType.TORSO_IMU: 13>, 'LEFT_FRONT_SURROUND_CAMERA': <SensorType.LEFT_FRONT_SURROUND_CAMERA: 15>, 'RIGHT_FRONT_SURROUND_CAMERA': <SensorType.RIGHT_FRONT_SURROUND_CAMERA: 16>, 'LEFT_REAR_SURROUND_CAMERA': <SensorType.LEFT_REAR_SURROUND_CAMERA: 17>, 'RIGHT_REAR_SURROUND_CAMERA': <SensorType.RIGHT_REAR_SURROUND_CAMERA: 18>, 'HEAD_LIDAR': <SensorType.HEAD_LIDAR: 7>, 'BACK_LIDAR': <SensorType.BACK_LIDAR: 8>, 'CHASSIS_LIDAR': <SensorType.CHASSIS_LIDAR: 9>, 'HEAD_IMU': <SensorType.HEAD_IMU: 10>, 'BACK_IMU': <SensorType.BACK_IMU: 11>, 'CHASSIS_IMU': <SensorType.CHASSIS_IMU: 12>}
+    BACK_IMU: typing.ClassVar[SensorType]  # value = <SensorType.BACK_IMU: 13>
+    BACK_LIDAR: typing.ClassVar[SensorType]  # value = <SensorType.BACK_LIDAR: 10>
+    BASE_LIDAR: typing.ClassVar[SensorType]  # value = <SensorType.BASE_LIDAR: 8>
+    BASE_ULTRASONIC: typing.ClassVar[SensorType]  # value = <SensorType.BASE_ULTRASONIC: 16>
+    CHASSIS_IMU: typing.ClassVar[SensorType]  # value = <SensorType.CHASSIS_IMU: 14>
+    CHASSIS_LIDAR: typing.ClassVar[SensorType]  # value = <SensorType.CHASSIS_LIDAR: 11>
+    HEAD_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.HEAD_CAMERA: 0>
+    HEAD_DEPTH_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.HEAD_DEPTH_CAMERA: 1>
+    HEAD_IMU: typing.ClassVar[SensorType]  # value = <SensorType.HEAD_IMU: 12>
+    HEAD_LEFT_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.HEAD_LEFT_CAMERA: 2>
+    HEAD_LIDAR: typing.ClassVar[SensorType]  # value = <SensorType.HEAD_LIDAR: 9>
+    HEAD_RIGHT_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.HEAD_RIGHT_CAMERA: 3>
+    LEFT_ARM_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.LEFT_ARM_CAMERA: 4>
+    LEFT_ARM_DEPTH_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.LEFT_ARM_DEPTH_CAMERA: 6>
+    LEFT_FRONT_SURROUND_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.LEFT_FRONT_SURROUND_CAMERA: 17>
+    LEFT_REAR_SURROUND_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.LEFT_REAR_SURROUND_CAMERA: 19>
+    RIGHT_ARM_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.RIGHT_ARM_CAMERA: 5>
+    RIGHT_ARM_DEPTH_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.RIGHT_ARM_DEPTH_CAMERA: 7>
+    RIGHT_FRONT_SURROUND_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.RIGHT_FRONT_SURROUND_CAMERA: 18>
+    RIGHT_REAR_SURROUND_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.RIGHT_REAR_SURROUND_CAMERA: 20>
+    TORSO_IMU: typing.ClassVar[SensorType]  # value = <SensorType.TORSO_IMU: 15>
+    __members__: typing.ClassVar[dict[str, SensorType]]  # value = {'HEAD_CAMERA': <SensorType.HEAD_CAMERA: 0>, 'HEAD_DEPTH_CAMERA': <SensorType.HEAD_DEPTH_CAMERA: 1>, 'HEAD_LEFT_CAMERA': <SensorType.HEAD_LEFT_CAMERA: 2>, 'HEAD_RIGHT_CAMERA': <SensorType.HEAD_RIGHT_CAMERA: 3>, 'LEFT_ARM_CAMERA': <SensorType.LEFT_ARM_CAMERA: 4>, 'RIGHT_ARM_CAMERA': <SensorType.RIGHT_ARM_CAMERA: 5>, 'LEFT_ARM_DEPTH_CAMERA': <SensorType.LEFT_ARM_DEPTH_CAMERA: 6>, 'RIGHT_ARM_DEPTH_CAMERA': <SensorType.RIGHT_ARM_DEPTH_CAMERA: 7>, 'BASE_ULTRASONIC': <SensorType.BASE_ULTRASONIC: 16>, 'BASE_LIDAR': <SensorType.BASE_LIDAR: 8>, 'TORSO_IMU': <SensorType.TORSO_IMU: 15>, 'LEFT_FRONT_SURROUND_CAMERA': <SensorType.LEFT_FRONT_SURROUND_CAMERA: 17>, 'RIGHT_FRONT_SURROUND_CAMERA': <SensorType.RIGHT_FRONT_SURROUND_CAMERA: 18>, 'LEFT_REAR_SURROUND_CAMERA': <SensorType.LEFT_REAR_SURROUND_CAMERA: 19>, 'RIGHT_REAR_SURROUND_CAMERA': <SensorType.RIGHT_REAR_SURROUND_CAMERA: 20>, 'HEAD_LIDAR': <SensorType.HEAD_LIDAR: 9>, 'BACK_LIDAR': <SensorType.BACK_LIDAR: 10>, 'CHASSIS_LIDAR': <SensorType.CHASSIS_LIDAR: 11>, 'HEAD_IMU': <SensorType.HEAD_IMU: 12>, 'BACK_IMU': <SensorType.BACK_IMU: 13>, 'CHASSIS_IMU': <SensorType.CHASSIS_IMU: 14>}
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:

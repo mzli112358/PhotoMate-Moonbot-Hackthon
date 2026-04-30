@@ -5726,7 +5726,7 @@
 </tbody>
 </table>
 <h3 id="galbotrobot-init-function">init</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">init</span><span class="p">(</span><span class="n">enable_sensor_set</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">SensorType</span><span class="p">]</span> <span class="o">=</span> <span class="o">...</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">init</span><span class="p">(</span><span class="n">enable_sensor_set</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">SensorType</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">())</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
 </span></code></pre></div>
 <p><small>Initialize the robot control system.</p>
 <p>Initializes the robot hardware communication, middleware, and sensor interfaces. To optimize resource usage, only sensors specified in the enable_sensor_set will be initialized and available for data reading.</small></p>
@@ -5744,7 +5744,7 @@
 <tr>
 <td><code>enable_sensor_set</code></td>
 <td>Set[<a href="#sensortype-enum">SensorType</a>]</td>
-<td><code>...</code></td>
+<td><code>set()</code></td>
 <td>Set of sensors to enable. Empty set uses default sensors.</td>
 </tr>
 </tbody>
@@ -7225,7 +7225,8 @@
 </span></code></pre></div>
 <p><small>Check robot states for collisions.</p>
 <p>Therefore, if you need Motion to consider environmental obstacles (including point clouds), you must load the obstacle map/objects explicitly (e.g., obstacle_type = point_cloud with a file path in key).</p>
-<p>Note: integrating real-time perception (navigation-style obstacle updates / point-cloud map) into galbotMotion is a planned future feature and has limited internal validation at the moment. Validates whether given robot configurations are collision-free. Checks both self-collisions (robot links with each other) and environment collisions (robot with scene obstacles). Batch processing supported for efficiency.</small></p>
+<p>Note: integrating real-time perception (navigation-style obstacle updates / point-cloud map) into galbotMotion is a planned future feature and has limited internal validation at the moment.</p>
+<p>Validates whether given robot configurations are collision-free. Checks both self-collisions (robot links with each other) and environment collisions (robot with scene obstacles). Batch processing supported for efficiency.</small></p>
 <p><strong>Parameters</strong></p>
 <table>
 <thead>
@@ -13090,6 +13091,14 @@
 <td>S1 Chassis LiDAR (front), mounted on chassis for forward perception .</td>
 </tr>
 <tr>
+<td><code>HEAD_CAMERA</code></td>
+<td>Head camera, mounted on head for visual servoing .</td>
+</tr>
+<tr>
+<td><code>HEAD_DEPTH_CAMERA</code></td>
+<td>Head depth camera, provides RGB-D data for head workspace .</td>
+</tr>
+<tr>
 <td><code>HEAD_IMU</code></td>
 <td>S1 Head LiDAR IMU (Inertial Measurement Unit) .</td>
 </tr>
@@ -13479,8 +13488,8 @@
 </table>
 <hr />
 <h3 id="trajectory-class">Trajectory</h3>
-<p><small>Joint trajectory.</p>
-<p>Represents a complete robot trajectory consisting of multiple waypoints over time.</small></p>
+<p><small>Trajectory result.</p>
+<p>Contains the complete planned trajectory with joint positions and timing information.</small></p>
 <h5 id="member-variables_29">Member Variables</h5>
 <table>
 <thead>

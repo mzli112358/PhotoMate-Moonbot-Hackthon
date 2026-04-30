@@ -6172,7 +6172,7 @@
 </tbody>
 </table>
 <h3 id="galbotrobot-init-function">初始化</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">init</span><span class="p">(</span><span class="n">enable_sensor_set</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">SensorType</span><span class="p">]</span> <span class="o">=</span> <span class="o">...</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">init</span><span class="p">(</span><span class="n">enable_sensor_set</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">SensorType</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">())</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
 </span></code></pre></div>
 <p><small>初始化机器人控制系统。</p>
 <p>初始化机器人硬件通信、中间件和传感器接口。为了优化资源使用，只有在enable_sensor_set中指定的传感器才会被初始化并可用于数据读取。</small></p>
@@ -6190,7 +6190,7 @@
 <tr>
 <td><code>enable_sensor_set</code></td>
 <td>Set[<a href="#sensortype-enum">SensorType</a>]</td>
-<td><code>...</code></td>
+<td><code>set()</code></td>
 <td>要启用的传感器集合，如果为空，则启用默认的传感器集合，仅指定所需传感器可减少启动时间和资源占用</td>
 </tr>
 </tbody>

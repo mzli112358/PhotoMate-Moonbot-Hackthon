@@ -28,8 +28,8 @@ git clone https://github.com/GalaxyGeneralRobotics/GalbotSDK.git
 
 #### 当前版本
 
-- **最新 SDK**: V1.7.0
-- **发布日期**: 2026-04-17
+- **最新 SDK**: V1.7.1
+- **发布日期**: 2026-04-29
 - **对应机器人环境版本**: G1 V1.15 / S1 V1.2
 - **维护状态**: ✅ 当前维护版本
 
@@ -73,8 +73,8 @@ git clone https://github.com/GalaxyGeneralRobotics/GalbotSDK.git
 
 #### Current Version
 
-- **Latest SDK**: V1.7.0
-- **Release Date**: 2026-04-17
+- **Latest SDK**: V1.7.1
+- **Release Date**: 2026-04-29
 - **Compatible Robot Version**: G1 V1.15 / S1 V1.2
 - **Maintenance Status**: ✅ Currently Maintained
 

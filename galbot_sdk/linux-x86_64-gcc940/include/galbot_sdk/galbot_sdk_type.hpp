@@ -146,6 +146,14 @@ struct S1JointGroup {
 ///
 /// @robot G1 S1
 enum class SensorType {
+  /// @brief Head camera, mounted on head for visual servoing
+  /// @robot S1
+  HEAD_CAMERA,
+
+  /// @brief Head depth camera, provides RGB-D data for head workspace
+  /// @robot S1
+  HEAD_DEPTH_CAMERA,
+
   /// @brief Head left camera, typically RGB camera for stereo vision
   /// @robot G1 S1
   HEAD_LEFT_CAMERA,

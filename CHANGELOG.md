@@ -8,7 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [1.7.0] - 2026-04-17
+## [1.7.1] - 2026-04-29
+
+### Added / 新增
+- Added camera interface adaptation for heavy-duty S1 robots equipped with head depth cameras. / 针对搭载头部深度相机的重载S1机器人，完善相机接口适配与支持
+
+## [1.7.0] - 2026-04-03
 
 ### Added / 新增
 - Added support for the S1 robot. / 适配重载S1机器人, 部分接口因硬件差异在S1上未支持

@@ -374,7 +374,8 @@ def main() -> None:
                 # Check joint state
                 joint_states = robot.get_joint_states(joint_groups, [])
                 print_joint_states(joint_states)
-                print(f"✅ Final joint position check state after execution: {joint_states}")
+                final_positions = [getattr(js, "position", js) for js in joint_states]
+                print(f"✅ Final joint position check state after execution (positions): {final_positions}")
             else:
                 print("❌ Generated trajectory is invalid, cannot execute.")
         else:

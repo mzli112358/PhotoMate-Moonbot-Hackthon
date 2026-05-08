@@ -1,0 +1,27 @@
+# 由 docker/run.sh 注入 GALBOT_DOCKER_IMAGE、GALBOT_DOCKER_UID、GALBOT_DOCKER_GID、GALBOT_DOCKER_USER、GALBOT_DOCKER_HOME
+services:
+  galbot_sdk:
+    image: ${GALBOT_DOCKER_IMAGE:?set by run.sh}
+    container_name: galbot_sdk
+    network_mode: host
+    ipc: host
+    stdin_open: true
+    tty: true
+    user: "${GALBOT_DOCKER_UID:?}:${GALBOT_DOCKER_GID:?}"
+    environment:
+      USER: ${GALBOT_DOCKER_USER:?}
+      LOGNAME: ${GALBOT_DOCKER_USER:?}
+      HOME: ${GALBOT_DOCKER_HOME:?}
+      DISPLAY: ${GALBOT_DOCKER_DISPLAY:-}
+      XAUTHORITY: ${GALBOT_DOCKER_HOME:?}/.Xauthority
+      QT_X11_NO_MITSHM: "1"
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - /etc/shadow:/etc/shadow:ro
+      - ${GALBOT_DOCKER_HOME:?}:${GALBOT_DOCKER_HOME:?}
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1

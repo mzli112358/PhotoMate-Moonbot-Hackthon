@@ -13,14 +13,15 @@
 
 #pragma once
 
+#include <array>
 #include <functional>
 #include <memory>
 #include <unordered_map>
 #include <unordered_set>
 #include <utility>
 
-#include "galbot_sdk_type.hpp"
 #include "galbot_motion.hpp"
+#include "galbot_sdk_type.hpp"
 
 /**
  * @namespace galbot
@@ -71,6 +72,9 @@ class GalbotRobot {
    * To optimize resource usage, only sensors specified in the enable_sensor_set
    * will be initialized and available for data reading.
    *
+   * This method should only be called once at program startup. Calling it multiple
+   * times without calling destroy() will not error, but only the first call has effect.
+   *
    * @param enable_sensor_set Set of sensors to enable. If empty, a default set of sensors
    *                          will be enabled. Specify only required sensors to reduce
    *                          computational overhead and memory consumption.
@@ -117,9 +121,10 @@ class GalbotRobot {
    * For standard joints (head, legs, arms), only `JointCommand::position` is effective in current versions;
    * `velocity`, `acceleration`, and `effort` are currently ignored.
    *
-   * For gripper joints, the position field represents gripper width and both velocity and effort fields are supported and effective.
-   * Gripper motion uses whichever is slower between the specified velocity and `time_from_start_s`. Therefore, when setting the gripper velocity, 
-   * `time_from_start_s` can be set to 0 (fastest arrival), and the gripper will be controlled directly by the specified velocity.
+   * For gripper joints, the position field represents gripper width and both velocity and effort fields are supported
+   * and effective. Gripper motion uses whichever is slower between the specified velocity and `time_from_start_s`.
+   * Therefore, when setting the gripper velocity, `time_from_start_s` can be set to 0 (fastest arrival), and the
+   * gripper will be controlled directly by the specified velocity.
    *
    * @param joint_commands Vector of low-level joint commands.
    * @param joint_groups Joint groups to control. Supported groups: legs, head, left_arm,
@@ -137,7 +142,8 @@ class GalbotRobot {
                                            const std::vector<std::string>& joint_names = {},
                                            const double time_from_start_s = 10) = 0;
   /**
-   * @brief Set target joint positions for specified joint groups by name (for low-frequency keyframe/posture transitions)
+   * @brief Set target joint positions for specified joint groups by name (for low-frequency keyframe/posture
+   * transitions)
    *
    * Commands the robot to move specified joints to target positions. The motion
    * is executed as a smooth trajectory with configurable speed limits.
@@ -164,10 +170,10 @@ class GalbotRobot {
    * @return ControlStatus indicating success or failure of the motion command
    */
   virtual ControlStatus set_joint_positions(const std::vector<double>& joint_positions,
-                                             const std::vector<std::string>& joint_groups = {},
-                                             const std::vector<std::string>& joint_names = {},
-                                             const bool is_blocking = true, const double speed_rad_s = 0.2,
-                                             const double timeout_s = 15) = 0;
+                                            const std::vector<std::string>& joint_groups = {},
+                                            const std::vector<std::string>& joint_names = {},
+                                            const bool is_blocking = true, const double speed_rad_s = 0.2,
+                                            const double timeout_s = 15) = 0;
 
   /**
    * @brief Get trajectory execution status for specified joint groups
@@ -195,7 +201,7 @@ class GalbotRobot {
    *          re-submitting full trajectories.
    * @return ControlStatus indicating success or failure of trajectory execution/submission
    */
-  virtual ControlStatus execute_joint_trajectory( Trajectory trajectory, bool is_blocking = true) = 0;
+  virtual ControlStatus execute_joint_trajectory(Trajectory trajectory, bool is_blocking = true) = 0;
   /**
    * @brief Set joint commands in batch mode (non-blocking)
    *
@@ -219,7 +225,8 @@ class GalbotRobot {
    *
    * Activates or deactivates the specified suction cup end-effector.
    *
-   * @param end_effector Joint group name specifying which suction cup to control (e.g., "left_suction_cup", "right_suction_cup")
+   * @param end_effector Joint group name specifying which suction cup to control (e.g., "left_suction_cup",
+   * "right_suction_cup")
    * @param activate If true, activates vacuum suction. If false, releases suction.
    * @return ControlStatus indicating success or failure of command transmission
    * @robot G1
@@ -243,7 +250,7 @@ class GalbotRobot {
    * @return ControlStatus indicating success or failure of gripper command
    */
   virtual ControlStatus set_gripper_command(const std::string& end_effector, double width_m, double velocity_mps = 0.03,
-                                           double effort = 30, bool is_blocking = true) = 0;
+                                            double effort = 30, bool is_blocking = true) = 0;
   /**
    * @brief Get current gripper state
    *
@@ -263,7 +270,8 @@ class GalbotRobot {
    * Retrieves the current state of the specified suction cup, including
    * activation status and vacuum pressure measurements.
    *
-   * @param end_effector Joint group name specifying which suction cup to query (e.g., "left_suction_cup", "right_suction_cup")
+   * @param end_effector Joint group name specifying which suction cup to query (e.g., "left_suction_cup",
+   * "right_suction_cup")
    * @return Shared pointer to SuctionCupState, or nullptr if retrieval fails
    * @robot G1
    */
@@ -271,13 +279,18 @@ class GalbotRobot {
   /**
    * @brief Get current dexterous hand (dexhand) state
    *
-   * Retrieves the current joint state of the specified dexterous hand.
+   * Retrieves dexhand feedback into @p dexhand_state. For INSPIRE and BRAINCO, only
+   * `dexhand_state.joint_state` is filled and `force_sensor_map` is empty. For SHARPA,
+   * fills full joint state plus named force sensor data when available.
    *
    * @param end_effector Joint group name specifying which dexhand to query (e.g., "left_dexhand", "right_dexhand")
-   * @param joint_state Output: current joint state (position, velocity, effort, etc.)
+   * @param dexhand_state Output dexhand state (joint_state and optional force_sensor_map)
+   * @param dexhand_type Dexterous hand model type (INSPIRE, BRAINCO, or SHARPA)
    * @return ControlStatus indicating success or failure
    */
-  virtual ControlStatus get_dexterous_hand_state(const std::string& end_effector, JointStateMessage& joint_state) = 0;
+  virtual ControlStatus get_dexhand_state(const std::string& end_effector, DexhandState& dexhand_state,
+                                          DexHandType dexhand_type = DexHandType::INSPIRE) = 0;
+
   /**
    * @brief Control dexhand with joint commands
    *
@@ -287,11 +300,14 @@ class GalbotRobot {
    * @param dexhand_command Vector of joint commands for each dexhand joint
    *                        inspire: [position, velocity, acceleration, effort] range [0-1000, 0-1000, --, 0-1000]
    *                        brainco: [position, velocity, acceleration, effort] range [0-100, -100-100, --, --]
-   * @param is_blocking If true, blocks until command completes or times out
-   * @return ControlStatus indicating success or failure
+   *                        sharpa: 22 joint commands, [position, velocity, acceleration, effort]
+   * @param dexhand_type Dexterous hand model type.
+   * @param is_blocking If true, blocks until the hand reaches target position or times out.
+   * @return ControlStatus indicating success or failure of command transmission
    */
   virtual ControlStatus set_dexhand_command(const std::string& end_effector,
                                             const std::vector<JointCommand>& dexhand_command,
+                                            DexHandType dexhand_type = DexHandType::INSPIRE,
                                             bool is_blocking = true) = 0;
 
   /**
@@ -306,7 +322,7 @@ class GalbotRobot {
    * @return Vector of current joint angles in radians
    */
   virtual std::vector<double> get_joint_positions(const std::vector<std::string>& joint_groups,
-                                                   const std::vector<std::string>& joint_names) = 0;
+                                                  const std::vector<std::string>& joint_names) = 0;
   /**
    * @brief Get available joint group names for the robot
    *
@@ -341,7 +357,7 @@ class GalbotRobot {
    * @return Vector of JointState structures containing current state for each joint
    */
   virtual std::vector<JointState> get_joint_states(const std::vector<std::string>& joint_group_vec,
-                                                    const std::vector<std::string>& joint_names_vec = {}) = 0;
+                                                   const std::vector<std::string>& joint_names_vec = {}) = 0;
   /**
    * @brief Set mobile base velocity command
    *
@@ -363,8 +379,7 @@ class GalbotRobot {
    * @return ControlStatus indicating success or failure of command transmission
    */
   virtual ControlStatus set_base_velocity(const std::array<double, 3>& linear_velocity,
-                                          const std::array<double, 3>& angular_velocity,
-                                          double duration_s = 0.0) = 0;
+                                          const std::array<double, 3>& angular_velocity, double duration_s = 0.0) = 0;
   /**
    * @brief Set mobile base pose command
    *
@@ -415,6 +430,46 @@ class GalbotRobot {
                                       bool is_blocking = true, double timeout_s = 15.0) = 0;
 
   /**
+   * @brief Set WBC end-effector pose commands (task trajectory publish).
+   *
+   * Each row of `poses` is [x, y, z, qx, qy, qz, qw] (meters, quaternion xyzw).
+   * `poses` and `end_effector_frames` must have equal length.
+   *
+   * @param poses Row-major poses: one vector per end effector, seven values each.
+   * @param end_effector_frames Target frame names (e.g. link names).
+   * @param reference_frames Optional; per-pose reference frame id. If omitted or empty, every pose uses `"world"`.
+   *                         Typical values: `"world"` (default). Length must match `poses` when non-empty.
+   * @param time_from_start_s Time from trajectory start (seconds); default 0.0.
+   * @return ControlStatus indicating success or failure of command transmission
+   */
+  virtual ControlStatus set_end_effector_command(const std::vector<std::vector<double>>& poses,
+                                                 const std::vector<std::string>& end_effector_frames,
+                                                 const std::vector<std::string>& reference_frames = {},
+                                                 double time_from_start_s = 0.0) = 0;
+
+  /**
+   * @brief Clear WBC end-effector task commands
+   *
+   * Clears published end-effector task trajectory commands for the WBC channel.
+   *
+   * @return ControlStatus indicating success or failure of command transmission
+   */
+  virtual ControlStatus clear_end_effector_command() = 0;
+
+  /**
+   * @brief Get WBC end effector poses
+   *
+   * Retrieves the current poses of WBC end effectors (left arm, right arm, head).
+   *
+   * @return Dictionary-style map containing:
+   *         - "lee_pose": [x, y, z, qx, qy, qz, qw] for left arm end effector
+   *         - "ree_pose": [x, y, z, qx, qy, qz, qw] for right arm end effector
+   *         - "head_pose": [x, y, z, qx, qy, qz, qw] for head
+   *         Returns empty entries or partial data on failure or missing keys.
+   */
+  virtual std::unordered_map<std::string, std::vector<double>> get_wbc_end_effector_poses() = 0;
+
+  /**
    * @brief Emergency stop mobile base movement
    *
    * Immediately commands the mobile base to stop all motion. This is a safety
@@ -451,8 +506,8 @@ class GalbotRobot {
    * @return Pair of (MotionStatus for joints, ControlStatus for base)
    */
   virtual std::pair<MotionStatus, ControlStatus> zero_whole_body_and_base(
-      const std::string& frame_id = "odom", const std::string& reference_frame_id = "odom",
-      bool is_blocking = true, double leg_head_speed_rad_s = 0.2, double leg_head_timeout_s = 15.0,
+      const std::string& frame_id = "odom", const std::string& reference_frame_id = "odom", bool is_blocking = true,
+      double leg_head_speed_rad_s = 0.2, double leg_head_timeout_s = 15.0,
       std::shared_ptr<Parameter> params = nullptr) = 0;
 
   /**
@@ -679,8 +734,8 @@ class GalbotRobot {
    *         Returns empty vector and timestamp 0 if retrieval fails or times out.
    */
   virtual std::pair<std::vector<double>, int64_t> get_transform(const std::string& target_frame,
-                                                                const std::string& source_frame, int64_t timestamp_ns = 0,
-                                                                int64_t timeout_ms = 100) = 0;
+                                                                const std::string& source_frame,
+                                                                int64_t timestamp_ns = 0, int64_t timeout_ms = 100) = 0;
   /**
    * @brief Get all available coordinate frame names in the TF tree
    *
@@ -704,8 +759,8 @@ class GalbotRobot {
    *
    * @note The sensor must be enabled during initialization via enable_sensor_set
    */
-  virtual std::pair<std::vector<double>, int64_t> get_sensor_extrinsic(const SensorType sensor_id,
-                                                                        const std::string& reference_frame = "base_link") = 0;
+  virtual std::pair<std::vector<double>, int64_t> get_sensor_extrinsic(
+      const SensorType sensor_id, const std::string& reference_frame = "base_link") = 0;
   /**
    * @brief Get force/torque sensor data
    *
@@ -735,9 +790,8 @@ class GalbotRobot {
    * @return std::string Stream ID used to identify this audio input stream
    * @robot G1
    */
-  virtual std::string start_microphone_stream_input(
-      std::function<void(const std::shared_ptr<AudioData>)> callback,
-      int chunk_size = 2560, bool use_raw_audio = false) = 0;
+  virtual std::string start_microphone_stream_input(std::function<void(const std::shared_ptr<AudioData>)> callback,
+                                                    int chunk_size = 2560, bool use_raw_audio = false) = 0;
   /**
    * @brief Stop the specified microphone streaming audio input
    *
@@ -750,7 +804,8 @@ class GalbotRobot {
    *
    * @param audio_chunk Audio data chunk in PCM format (16000 Hz, 16-bit little-endian), single channel
    * @param stream_id Audio stream ID to distinguish different audio sources. Empty string means use default stream
-   * @return bool Returns operation result. True means audio data has been successfully written and playback task issued, False means write failed
+   * @return bool Returns operation result. True means audio data has been successfully written and playback task
+   * issued, False means write failed
    * @robot G1
    */
   virtual bool write_audio_stream_output(const std::string& audio_chunk, const std::string& stream_id = "") = 0;
@@ -772,7 +827,8 @@ class GalbotRobot {
    * @brief Set system global volume value
    *
    * @param volume Target volume value, range 0.0 to 100.0
-   * @return bool Returns the volume setting result. True indicates the volume was set successfully, False indicates the volume setting failed.
+   * @return bool Returns the volume setting result. True indicates the volume was set successfully, False indicates the
+   * volume setting failed.
    * @robot G1
    */
   virtual bool set_volume(float volume) = 0;
@@ -790,17 +846,18 @@ class GalbotRobot {
   /**
    * @brief Request system shutdown
    *
-   * Programmatically sends a shutdown signal (SIGINT) to initiate graceful
-   * system shutdown. This triggers registered exit callbacks and begins
-   * resource cleanup.
+   * Sends a shutdown signal to initiate graceful system shutdown. This triggers
+   * registered exit callbacks and begins resource cleanup. Call this as the first
+   * step of the shutdown sequence: request_shutdown() -> wait_for_shutdown()
+   * -> destroy().
    */
   virtual void request_shutdown() = 0;
   /**
-   * @brief Block until shutdown signal is received
+   * @brief Block until shutdown is complete
    *
-   * Blocks the calling thread indefinitely until a shutdown signal (SIGINT, SIGTERM)
-   * is received. This is useful for keeping the main thread alive while background
-   * threads handle robot control.
+   * Blocks the calling thread until all modules have finished shutting down gracefully.
+   * This is the second step of the shutdown sequence, after request_shutdown() and
+   * before destroy().
    *
    * @note This function will return when is_running() becomes false
    */
@@ -808,12 +865,14 @@ class GalbotRobot {
   /**
    * @brief Clean up system resources
    *
-   * Performs cleanup of robot control system resources including middleware
-   * connections, sensor interfaces, and communication channels. Should be called
-   * before program exit to ensure graceful shutdown.
+   * Performs final cleanup of robot control system resources including middleware
+   * connections, sensor interfaces, and communication channels. This is the last
+   * step of the shutdown sequence: request_shutdown() -> wait_for_shutdown()
+   * -> destroy().
    *
-   * @note This function should be called after request_shutdown() or when
-   *       is_running() returns false
+   * This method should only be called once at program exit. After destroy(), the SDK
+   * enters a terminal state and cannot be re-initialized in the same process.
+   * To use the SDK again, exit the current process and launch a new one.
    */
   virtual void destroy() = 0;
   /**

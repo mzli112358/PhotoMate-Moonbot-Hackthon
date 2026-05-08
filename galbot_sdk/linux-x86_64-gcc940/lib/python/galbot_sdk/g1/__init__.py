@@ -1,7 +1,7 @@
 """
 G1 SDK Package - Pre-configured for MachineType.G1
 
-This package provides G1-specific wrappers for GalbotNavigation, GalbotMotion, 
+This package provides G1-specific wrappers for GalbotNavigation, GalbotMotion,
 and GalbotRobot that automatically initialize with MachineType.G1.
 
 Usage:
@@ -15,6 +15,12 @@ Usage:
 
     robot = GalbotRobot()
     robot.init()
+    robot.set_joint_positions(...)
+
+    # Clean shutdown (REQUIRED on program exit)
+    robot.request_shutdown()
+    robot.wait_for_shutdown()
+    robot.destroy()
 """
 
 from .. import (
@@ -72,9 +78,22 @@ class GalbotMotion:
 
 class GalbotRobot:
     """
-    G1 的 GalbotRobot 包装，与 GalbotNavigation、GalbotMotion 用法一致。
-    robot = GalbotRobot()
-    robot.init()
+    G1-specific GalbotRobot wrapper.
+
+    Lifecycle:
+        1. Create instance: robot = GalbotRobot()
+        2. Initialize: robot.init()
+        3. Use: robot.set_joint_positions(), robot.get_imu_data(), etc.
+        4. Clean shutdown on program exit:
+
+            robot.request_shutdown()
+            robot.wait_for_shutdown()
+            robot.destroy()
+
+    Note:
+        This is a singleton. GalbotRobot() always returns the same object.
+        init() can only be called ONCE. After destroy(), the SDK cannot be
+        re-initialized in the same process. To restart, exit and launch a new process.
     """
     _instance = None
     _py_instance = None

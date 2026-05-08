@@ -8,12 +8,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.8.0] - 2026-05-08
+
+### Added / 新增
+- Added support for WSL2 and Docker environments. / 适配WSL2与docker环境使用
+- Added support for dexterous hand control and status retrieval. / 支持灵巧手控制与状态获取功能
+- Added a real-time end-effector position control interface. / 增加末端位置实时控制接口
+- Added a check script to verify robot environment and SDK version compatibility. / 提供检查脚本，用于检测机器人环境与SDK版本是否匹配
+- Added a post-installation SDK validation program. / 增加安装SDK后的验证程序
+
 ## [1.7.1] - 2026-04-29
 
 ### Added / 新增
 - Added camera interface adaptation for heavy-duty S1 robots equipped with head depth cameras. / 针对搭载头部深度相机的重载S1机器人，完善相机接口适配与支持
 
-## [1.7.0] - 2026-04-03
+## [1.7.0] - 2026-04-17
 
 ### Added / 新增
 - Added support for the S1 robot. / 适配重载S1机器人, 部分接口因硬件差异在S1上未支持

@@ -146,14 +146,6 @@ struct S1JointGroup {
 ///
 /// @robot G1 S1
 enum class SensorType {
-  /// @brief Head camera, mounted on head for visual servoing
-  /// @robot S1
-  HEAD_CAMERA,
-
-  /// @brief Head depth camera, provides RGB-D data for head workspace
-  /// @robot S1
-  HEAD_DEPTH_CAMERA,
-
   /// @brief Head left camera, typically RGB camera for stereo vision
   /// @robot G1 S1
   HEAD_LEFT_CAMERA,
@@ -266,6 +258,20 @@ enum class UltrasonicType {
 enum class MachineType {
   G1, /**< Galbot G1 humanoid robot platform */
   S1  /**< Galbot S1 humanoid robot platform */
+};
+
+/**
+ * @brief Dexterous hand model type.
+ *
+ * The SDK uses this enumeration to route dexhand commands and state queries to
+ * the correct implementation. Inspire and BrainCo dexhands share the standard
+ * joint command/state path. Sharpa dexhands use a dedicated 22-joint topic
+ * interface; full state is returned in DexhandState (including force sensors).
+ */
+enum class DexHandType {
+  INSPIRE, /**< Inspire dexterous hand */
+  BRAINCO, /**< BrainCo dexterous hand */
+  SHARPA   /**< Sharpa dexterous hand */
 };
 
 /**
@@ -974,6 +980,19 @@ struct ForceData {
   int64_t timestamp_ns; /**< Measurement timestamp (nanoseconds since epoch) */
   Vector3 force;        /**< Force vector (Newtons): [fx, fy, fz] */
   Vector3 torque;       /**< Torque vector (Newton-meters): [tx, ty, tz] */
+};
+
+/**
+ * @brief Full dexterous hand state
+ *
+ * Contains timestamped joint feedback and, when available (e.g. Sharpa),
+ * per-sensor force/torque measurements from the dexhand force topic.
+ * sharpa per finger has 22-joint
+ */
+struct DexhandState {
+  int64_t timestamp_ns;                                         /**< State timestamp (nanoseconds since epoch) */
+  JointStateMessage joint_state;                                /**< Dexhand joint state message */
+  std::unordered_map<std::string, EffortInfo> force_sensor_map; /**< Named force sensor map (Sharpa; empty otherwise) */
 };
 
 /**

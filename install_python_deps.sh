@@ -30,19 +30,18 @@ echo "========== pip 检测完成 ✅ =========="
 echo
 echo "========== 开始安装 Python 依赖 =========="
 
-echo "[1/5] Installing numpy..."
-python3 -m pip install numpy
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REQUIREMENTS_FILE="${SCRIPT_DIR}/requirements.txt"
 
-echo "[2/5] Installing scipy..."
-python3 -m pip install scipy
+if [ ! -f "$REQUIREMENTS_FILE" ]; then
+    echo "✘ 未找到依赖文件：$REQUIREMENTS_FILE"
+    exit 1
+fi
 
-echo "[3/5] Installing open3d..."
-python3 -m pip install open3d
+echo "[1/2] Upgrading pip/setuptools/wheel..."
+python3 -m pip install --upgrade pip setuptools wheel
 
-echo "[4/5] Installing opencv-python..."
-python3 -m pip install opencv-python
-
-echo "[5/5] Re-installing numpy (ensure version)..."
-python3 -m pip install numpy
+echo "[2/2] Installing dependencies from requirements.txt..."
+python3 -m pip install -r "$REQUIREMENTS_FILE"
 
 echo "========== 所有依赖安装完成 ✅ =========="

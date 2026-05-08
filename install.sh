@@ -7,7 +7,9 @@
 # 2. 通过校验缓存压缩包的 SHA256 判断哪些依赖需要更新
 # 3. 下载/复制并安装需要更新的依赖（保存到 .cache/ 目录）
 # 4. 安装 SDK 核心库
-#
+# 5. 可选择运行 G1/S1欢迎自检程序
+# 6. 可选择下载Python example三方库依赖、和部署SDK到机器人
+
 # 缓存机制：
 # - 所有下载的压缩包都保存在 $INSTALL_DIR/.cache/ 目录
 # - 每次安装前会校验缓存文件的实际 SHA256 值
@@ -51,7 +53,7 @@ fi
 
 # 默认值
 DEFAULT_INSTALL_DIR="/opt/galbot"
-SDK_VERSION="1.7.1"
+SDK_VERSION="1.8.0"
 EMBOSA_LOG_DIR="/userdata/log/embosa"
 
 # 参数
@@ -99,6 +101,14 @@ run_cmd() {
     fi
 }
 
+cached_file_exists() {
+    run_cmd test -f "$1"
+}
+
+cached_file_sha256() {
+    run_cmd sha256sum "$1" | awk '{print $1}'
+}
+
 show_help() {
     cat << EOF
 GALBOT_G1_SDK 安装程序 v${SDK_VERSION}
@@ -116,7 +126,7 @@ GALBOT_G1_SDK 安装程序 v${SDK_VERSION}
   --force                 强制重新下载所有依赖
   --offline               离线模式，仅使用已安装的依赖
   --no-sudo               不使用 sudo（用于测试或无权限环境）
-  -y, --yes               非交互模式，使用默认值
+  -y, --yes               非交互模式，使用默认值（并跳过安装后的python依赖下载/机器人部署）
   -h, --help              显示帮助信息
 
 环境变量:
@@ -284,14 +294,15 @@ needs_toolchain_update() {
     fi
     
     # 检查缓存的压缩包是否存在
-    if [ ! -f "$cached_file" ]; then
+    if ! cached_file_exists "$cached_file"; then
         log_info "  缓存不存在: ${toolchain_name}.tar.gz"
         return 0
     fi
     
     # 计算缓存压缩包的实际 sha256
     log_info "  校验缓存: ${toolchain_name}.tar.gz ..."
-    local actual_sha256=$(sha256sum "$cached_file" | cut -d' ' -f1)
+    local actual_sha256
+    actual_sha256=$(cached_file_sha256 "$cached_file")
     
     if [ "$actual_sha256" != "$expected_sha256" ]; then
         log_warn "  缓存校验失败，需要重新下载"
@@ -326,12 +337,13 @@ needs_thirdparty_update() {
     fi
     
     # 检查缓存的压缩包是否存在
-    if [ ! -f "$cached_file" ]; then
+    if ! cached_file_exists "$cached_file"; then
         return 0
     fi
     
     # 计算缓存压缩包的实际 sha256
-    local actual_sha256=$(sha256sum "$cached_file" | cut -d' ' -f1)
+    local actual_sha256
+    actual_sha256=$(cached_file_sha256 "$cached_file")
     
     if [ "$actual_sha256" != "$expected_sha256" ]; then
         log_warn "  $pkg_name 缓存校验失败，需要重新下载"
@@ -480,21 +492,22 @@ for pkg in data.get('packages', []):
             # 创建缓存目录
             run_cmd mkdir -p "$cache_dir"
             
-            # 清理该库的旧版本缓存（保留当前版本）
-            for old_cache in "$cache_dir/${name}"-*-"${platform}.tar.gz"; do
-                if [ -f "$old_cache" ] && [ "$old_cache" != "$cached_file" ]; then
+            # 清理该库的旧版本缓存（保留当前版本）（列目录与 run_cmd 一致，避免读不到 root 的 .cache）
+            while IFS= read -r old_cache; do
+                [ -z "$old_cache" ] && continue
+                if [ "$old_cache" != "$cached_file" ]; then
                     log_info "  清理旧版本缓存: $(basename "$old_cache")"
                     run_cmd rm -f "$old_cache"
                 fi
-            done
+            done < <(run_cmd find "$cache_dir" -maxdepth 1 -name "${name}-*-${platform}.tar.gz" 2>/dev/null)
             
             # 下载到临时目录
             local tmp_file=$(mktemp)
             
             if ! download_file "$url" "$local_path" "$tmp_file" "$sha256"; then
-                log_error "  $name 下载失败"
+                log_error "  三方库 $name（平台 $platform）下载/校验失败，安装中止，请检查网络后重新下载"
                 run_cmd rm -f "$tmp_file"
-                continue
+                return 1
             fi
             
             # 移动到缓存目录
@@ -740,6 +753,210 @@ echo "=========================================="
     echo "=========================================="
 }
 
+welcome_verify_cpp_executable() {
+    local model=$1
+    local plat=$2
+    echo "$INSTALL_DIR/galbot_sdk/$plat/bin/$model/galbot_robot/galbot_robot_installation_welcome_verify"
+}
+
+run_welcome_verify_g1() {
+    local run_plat
+    run_plat=$(detect_platform)
+    local setup_sh="$INSTALL_DIR/galbot_sdk/$run_plat/setup.sh"
+    local cpp_bin
+    cpp_bin="$(welcome_verify_cpp_executable g1 "$run_plat")"
+    log_info "本机平台: $run_plat（setup.sh 与可执行文件均来自 galbot_sdk/$run_plat/）"
+    if [ ! -f "$setup_sh" ]; then
+        log_error "未找到环境脚本（用于 LD_LIBRARY_PATH）: $setup_sh"
+        return 1
+    fi
+    if [ ! -f "$cpp_bin" ] || [ ! -x "$cpp_bin" ]; then
+        log_error "未找到 G1 欢迎自检可执行文件: $cpp_bin"
+        return 1
+    fi
+
+    local pcm_default="$INSTALL_DIR/examples/g1/assets/audio/welcome_16k_mono.pcm"
+    local pcm_path=""
+    if [ -f "$pcm_default" ]; then
+        pcm_path="$pcm_default"
+        log_info "使用内置欢迎音频: $pcm_path"
+    else
+        read -r -p "未找到默认 PCM，请输入 welcome 音频绝对路径（16 kHz mono s16le .pcm）: " pcm_path || true
+        pcm_path="${pcm_path//\"/}"
+        pcm_path="${pcm_path#"${pcm_path%%[![:space:]]*}"}"
+        pcm_path="${pcm_path%"${pcm_path##*[![:space:]]}"}"
+        if [ -z "$pcm_path" ] || [ ! -f "$pcm_path" ]; then
+            log_error "PCM 路径无效或文件不存在；G1 自检需要环境变量 GALBOT_WELCOME_PCM。"
+            return 1
+        fi
+    fi
+
+    export GALBOT_WELCOME_PCM="$pcm_path"
+    log_info "已导出 GALBOT_WELCOME_PCM=$GALBOT_WELCOME_PCM"
+
+    log_info "执行 G1 安装欢迎自检: $cpp_bin"
+    set +e
+    (
+        source "$setup_sh"
+        "$cpp_bin"
+    )
+    local cpp_ret=$?
+    set -e
+
+    return 0
+}
+
+run_welcome_verify_s1() {
+    local run_plat
+    run_plat=$(detect_platform)
+    local setup_sh="$INSTALL_DIR/galbot_sdk/$run_plat/setup.sh"
+    local cpp_bin
+    cpp_bin="$(welcome_verify_cpp_executable s1 "$run_plat")"
+
+    if [ ! -f "$setup_sh" ]; then
+        log_error "未找到环境脚本（用于 LD_LIBRARY_PATH）: $setup_sh"
+        return 1
+    fi
+    if [ ! -f "$cpp_bin" ] || [ ! -x "$cpp_bin" ]; then
+        log_error "未找到 S1 欢迎自检可执行文件: $cpp_bin"
+        return 1
+    fi
+
+    log_info "执行 S1 安装欢迎自检: $cpp_bin"
+    set +e
+    (
+        source "$setup_sh"
+        "$cpp_bin"
+    )
+    local cpp_ret=$?
+    set -e
+
+    return 0
+}
+
+# 安装完成后询问是否运行欢迎自检（-y / NON_INTERACTIVE 时跳过）
+prompt_run_installation_welcome_verify() {
+    if [ "$NON_INTERACTIVE" = true ]; then
+        return 0
+    fi
+
+    echo
+    read -r -p "安装已完成。是否现在运行验证程序，将进行简单活动关节 [y/n]（直接回车为否）: " welcome_ans
+    case "$welcome_ans" in
+        [yY]|[yY][eE][sS]) ;;
+        *) return 0 ;;
+    esac
+
+    echo
+    log_info "运行前请完成以下准备："
+    echo "  • 机器人周围空旷"
+    echo "  • 如在外部 PC 中运行程序，请与机器人连接好网线，并按照文档配置本机 PC 与机器人的通讯配置文件与 IP"
+    echo "  • 将机器人背后急停旋钮旋开（解除急停）"
+    echo "  详细步骤请参考说明文档，本地文档查看方式如下："
+    echo
+    echo "    cd docs"
+    echo "    python3 -m http.server 8000"
+    echo
+    echo "然后在浏览器中打开： http://0.0.0.0:8000/"
+    echo "  （参考安装与配置章节「模式二：PC端部署」）"
+    echo
+
+    read -r -p "完成上述准备后输入 y 继续 [y/n]（直接回车或其它键取消）: " ready_ans
+    case "$ready_ans" in
+        [yY]) ;;
+        *)
+            log_warn "已取消运行检测程序。"
+            return 0
+            ;;
+    esac
+
+    local model_choice=""
+    read -r -p "请选择机型  [1] G1  [2] S1 : " model_choice
+    case "$model_choice" in
+        1) run_welcome_verify_g1 ;;
+        2) run_welcome_verify_s1 ;;
+        *)
+            log_error "无效选择，已跳过自检程序。"
+            return 0
+            ;;
+    esac
+}
+
+prompt_yes_no() {
+    local msg=$1
+    local default=${2:-n}
+    if [ "$NON_INTERACTIVE" = true ]; then
+        if [ "$default" = y ]; then
+            return 0
+        fi
+        return 1
+    fi
+    local suffix="[y/n]"
+    [ "$default" = y ] && suffix="[y/n]"
+    local ans=""
+    read -r -p "$msg $suffix: " ans || return 1
+    if [ -z "$ans" ]; then
+        [ "$default" = y ] && return 0 || return 1
+    fi
+    case "$ans" in
+        [yY]|[yY][eE][sS]) return 0 ;;
+        [nN]|[nN][oO]) return 1 ;;
+        *) return 1 ;;
+    esac
+}
+
+# 安装后可选步骤：Python 依赖、部署到机器人
+post_install_optional_steps() {
+    if [ "$CHECK_ONLY" = true ]; then
+        return 0
+    fi
+
+    echo
+    log_info "========== 可选：安装后配置（每步可单独选择） =========="
+
+    # ---------- 部署到机器人 ----------
+    local aarch_lib="$INSTALL_DIR/galbot_sdk/linux-aarch64-gcc940/lib"
+    if prompt_yes_no "是否将 SDK 库部署到机器人（若只在PC中运行SDK程序或已在机器人中安装完成可跳过）" n; then
+        if [ ! -d "$aarch_lib" ]; then
+            log_error "未找到机器人SDK库目录: $aarch_lib"
+            log_info "请先完成带 linux-aarch64-gcc940 的安装后，再进行部署"
+            log_info "手动部署：cd \"$INSTALL_DIR\" && bash \"$SCRIPT_DIR/deploy_to_robot.sh\""
+        else
+            log_info "即将在目录 \"$INSTALL_DIR\" 下运行部署脚本（相对路径 galbot_sdk/linux-aarch64-gcc940/lib）。"
+            set +e
+            (
+                cd "$INSTALL_DIR" && bash "$SCRIPT_DIR/deploy_to_robot.sh"
+            )
+            local dep_ret=$?
+            set -e
+            if [ "$dep_ret" -ne 0 ]; then
+                log_error "机器人部署失败（退出码 $dep_ret）。"
+                log_info "可确认本机与机器人网线连接正常后，手动执行: $SCRIPT_DIR/deploy_to_robot.sh脚本部署"
+            else
+                log_success "机器人部署步骤已结束。"
+            fi
+        fi
+    fi
+
+    # ---------- Python 依赖 ----------
+    if prompt_yes_no "是否安装 Python example 所需第三方依赖（耗时可能较长；若只做 C++ 开发或不需要运行 Python example 可跳过）" n; then
+        log_info "运行: $SCRIPT_DIR/install_python_deps.sh"
+        set +e
+        source "$SCRIPT_DIR/install_python_deps.sh"
+        local py_ret=$?
+        set -e
+        if [ "$py_ret" -ne 0 ]; then
+            log_error "Python example 依赖下载失败（退出码 $py_ret）。"
+            log_info "可使用 pip install 自行安装依赖包"
+            prompt_yes_no "是否继续后续可选步骤？" y || return 0
+        else
+            log_success "Python 依赖下载已完成。"
+        fi
+    fi
+
+    log_info "========== 可选步骤结束 =========="
+}
+
 #######################################
 # 主程序
 #######################################
@@ -813,6 +1030,12 @@ echo "=========================================="
     
     # 显示摘要
     show_summary
+
+    # 运行欢迎程序
+    prompt_run_installation_welcome_verify
+
+    # 可选：下载Python 依赖、部署到机器人
+    post_install_optional_steps
 }
 
 # 运行主程序

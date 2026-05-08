@@ -8,7 +8,7 @@ import numpy.typing
 import typing
 import numpy
 import numpy.typing
-__all__: list[str] = ['AudioData', 'COMM_DISCONNECTED', 'CYLINDER', 'CollisionCheckOption', 'ControlStatus', 'DATA_FETCH_FAILED', 'DepthData', 'DetectionAndSegmentationResult', 'DetectionResult', 'EUCLIDEAN_DISTANCE', 'Error', 'ErrorInfo', 'FAILED', 'FAULT', 'FOUNDATION_STEREO', 'ForceData', 'FrameTriad', 'G1ControllerName', 'G1JointGroup', 'GalbotMotion', 'GalbotNavigation', 'GalbotOneFoxtrotSensor', 'GalbotPerception', 'GalbotRobot', 'GripperState', 'GroupCommand', 'Header', 'IKSolverConfig', 'INIT_FAILED', 'INVALID_INPUT', 'IN_PROGRESS', 'ImuData', 'JOINT', 'JointCommand', 'JointState', 'JointStateMessage', 'JointStates', 'KinematicsBoundary', 'LIGHT_STEREO', 'LINE', 'LidarData', 'LineTrajCheckPrimitive', 'LogLevel', 'MachineType', 'MotionPlanConfig', 'MotionStatus', 'NavigationTaskStatus', 'OdomData', 'POSE', 'PUBLISH_FAIL', 'Parameter', 'PerceptionModule', 'Point', 'PointField', 'PointFieldDataType', 'Pose', 'PoseState', 'PrimitiveType', 'Quaternion', 'RADIAN_DISTANCE', 'RANDOM_PROGRESSIVE_SEED', 'RANDOM_SEED', 'ROBOT_STATES', 'RUNNING', 'RgbData', 'RobotStates', 'RobotStatesType', 'S1ControllerName', 'S1JointGroup', 'STATUS_NUM', 'STOPPED_UNREACHED', 'SUCCESS', 'SUCTION_ACTION_STATE', 'SamplerConfig', 'SeedType', 'SensorType', 'SingoriXTarget', 'StateCheckType', 'SuctionCupState', 'TARGET_DATA_DEFAULT', 'TARGET_DATA_FRAME_POSE', 'TARGET_DATA_FRAME_TWIST', 'TARGET_DATA_FRAME_WRENCH', 'TARGET_DATA_JOINT_ACCELERATION', 'TARGET_DATA_JOINT_EFFORT', 'TARGET_DATA_JOINT_POSITION', 'TARGET_DATA_JOINT_VELOCITY', 'TARGET_DATA_NONE', 'TARGET_TYPE_APPEND', 'TARGET_TYPE_CLEAR', 'TARGET_TYPE_DEFAULT', 'TARGET_TYPE_NONE', 'TARGET_TYPE_OVERRIDE', 'TARGET_TYPE_PREPENDNOW', 'TARGET_TYPE_PROVERRIDE', 'TARGET_TYPE_TOUCH', 'TIMEOUT', 'TIMEOUT_AND_EXACT_SOLUTION', 'TargetConfig', 'TargetGroupTrajectory', 'TargetSampling', 'TargetTaskTrajectory', 'TaskCommand', 'TerminationConditionType', 'Timestamp', 'Trajectory', 'TrajectoryControlStatus', 'TrajectoryFeasibilityCheckOption', 'TrajectoryPlanConfig', 'TrajectoryPoint', 'Twist', 'UNKNOWN', 'UNSUPPORTED_FUNCRION', 'USER_DEFINED_SEED', 'UltrasonicData', 'UltrasonicType', 'Vector3', 'WBCException', 'Wrench', 'check_motion_status', 'create_joint_state', 'create_parameter', 'create_pose_state']
+__all__: list[str] = ['AudioData', 'COMM_DISCONNECTED', 'CYLINDER', 'CollisionCheckOption', 'ControlStatus', 'DATA_FETCH_FAILED', 'DepthData', 'DetectionAndSegmentationResult', 'DetectionResult', 'DexHandType', 'DexhandState', 'EUCLIDEAN_DISTANCE', 'EffortInfo', 'Error', 'ErrorInfo', 'FAILED', 'FAULT', 'FOUNDATION_STEREO', 'ForceData', 'FrameTriad', 'G1ControllerName', 'G1JointGroup', 'GalbotMotion', 'GalbotNavigation', 'GalbotOneFoxtrotSensor', 'GalbotPerception', 'GalbotRobot', 'GripperState', 'GroupCommand', 'Header', 'IKSolverConfig', 'INIT_FAILED', 'INVALID_INPUT', 'IN_PROGRESS', 'ImuData', 'JOINT', 'JointCommand', 'JointState', 'JointStateMessage', 'JointStates', 'KinematicsBoundary', 'LIGHT_STEREO', 'LINE', 'LidarData', 'LineTrajCheckPrimitive', 'LogLevel', 'MachineType', 'MotionPlanConfig', 'MotionStatus', 'NavigationTaskStatus', 'OdomData', 'POSE', 'PUBLISH_FAIL', 'Parameter', 'PerceptionModule', 'Point', 'PointField', 'PointFieldDataType', 'Pose', 'PoseState', 'PrimitiveType', 'Quaternion', 'RADIAN_DISTANCE', 'RANDOM_PROGRESSIVE_SEED', 'RANDOM_SEED', 'ROBOT_STATES', 'RUNNING', 'RgbData', 'RobotStates', 'RobotStatesType', 'S1ControllerName', 'S1JointGroup', 'STATUS_NUM', 'STOPPED_UNREACHED', 'SUCCESS', 'SUCTION_ACTION_STATE', 'SamplerConfig', 'SeedType', 'SensorType', 'SingoriXTarget', 'StateCheckType', 'SuctionCupState', 'TARGET_DATA_DEFAULT', 'TARGET_DATA_FRAME_POSE', 'TARGET_DATA_FRAME_TWIST', 'TARGET_DATA_FRAME_WRENCH', 'TARGET_DATA_JOINT_ACCELERATION', 'TARGET_DATA_JOINT_EFFORT', 'TARGET_DATA_JOINT_POSITION', 'TARGET_DATA_JOINT_VELOCITY', 'TARGET_DATA_NONE', 'TARGET_TYPE_APPEND', 'TARGET_TYPE_CLEAR', 'TARGET_TYPE_DEFAULT', 'TARGET_TYPE_NONE', 'TARGET_TYPE_OVERRIDE', 'TARGET_TYPE_PREPENDNOW', 'TARGET_TYPE_PROVERRIDE', 'TARGET_TYPE_TOUCH', 'TIMEOUT', 'TIMEOUT_AND_EXACT_SOLUTION', 'TargetConfig', 'TargetGroupTrajectory', 'TargetSampling', 'TargetTaskTrajectory', 'TaskCommand', 'TerminationConditionType', 'Timestamp', 'Trajectory', 'TrajectoryControlStatus', 'TrajectoryFeasibilityCheckOption', 'TrajectoryPlanConfig', 'TrajectoryPoint', 'Twist', 'UNKNOWN', 'UNSUPPORTED_FUNCRION', 'USER_DEFINED_SEED', 'UltrasonicData', 'UltrasonicType', 'Vector3', 'WBCException', 'Wrench', 'check_motion_status', 'create_joint_state', 'create_parameter', 'create_pose_state']
 class AudioData:
     """
     Audio stream data
@@ -327,6 +327,106 @@ class DetectionResult:
         """
     @timestamp_ns.setter
     def timestamp_ns(self, arg0: typing.SupportsInt) -> None:
+        ...
+class DexHandType:
+    """
+    Members:
+    
+      INSPIRE : Inspire dexterous hand
+    
+      BRAINCO : BrainCo dexterous hand
+    
+      SHARPA : Sharpa dexterous hand
+    """
+    BRAINCO: typing.ClassVar[DexHandType]  # value = <DexHandType.BRAINCO: 1>
+    INSPIRE: typing.ClassVar[DexHandType]  # value = <DexHandType.INSPIRE: 0>
+    SHARPA: typing.ClassVar[DexHandType]  # value = <DexHandType.SHARPA: 2>
+    __members__: typing.ClassVar[dict[str, DexHandType]]  # value = {'INSPIRE': <DexHandType.INSPIRE: 0>, 'BRAINCO': <DexHandType.BRAINCO: 1>, 'SHARPA': <DexHandType.SHARPA: 2>}
+    def __eq__(self, other: typing.Any) -> bool:
+        ...
+    def __getstate__(self) -> int:
+        ...
+    def __hash__(self) -> int:
+        ...
+    def __index__(self) -> int:
+        ...
+    def __init__(self, value: typing.SupportsInt) -> None:
+        ...
+    def __int__(self) -> int:
+        ...
+    def __ne__(self, other: typing.Any) -> bool:
+        ...
+    def __repr__(self) -> str:
+        ...
+    def __setstate__(self, state: typing.SupportsInt) -> None:
+        ...
+    def __str__(self) -> str:
+        ...
+    @property
+    def name(self) -> str:
+        ...
+    @property
+    def value(self) -> int:
+        ...
+class DexhandState:
+    """
+    Full dexterous hand state (joint feedback and optional force sensors)
+    """
+    def __init__(self) -> None:
+        ...
+    @property
+    def force_sensor_map(self) -> dict[str, EffortInfo]:
+        """
+        Named force sensor map: sensor_name -> EffortInfo (Sharpa; empty for Inspire/BrainCo)
+        """
+    @force_sensor_map.setter
+    def force_sensor_map(self, arg0: collections.abc.Mapping[str, EffortInfo]) -> None:
+        ...
+    @property
+    def joint_state(self) -> JointStateMessage:
+        """
+        Dexhand joint state message
+        """
+    @joint_state.setter
+    def joint_state(self, arg0: JointStateMessage) -> None:
+        ...
+    @property
+    def timestamp_ns(self) -> int:
+        """
+        Timestamp (nanoseconds)
+        """
+    @timestamp_ns.setter
+    def timestamp_ns(self, arg0: typing.SupportsInt) -> None:
+        ...
+class EffortInfo:
+    """
+    6D force/torque information
+    """
+    def __init__(self) -> None:
+        ...
+    @property
+    def force(self) -> Vector3:
+        """
+        Force vector Vector3
+        """
+    @force.setter
+    def force(self, arg0: Vector3) -> None:
+        ...
+    @property
+    def timestamp_ns(self) -> int:
+        """
+        Timestamp (nanoseconds)
+        """
+    @timestamp_ns.setter
+    def timestamp_ns(self, arg0: typing.SupportsInt) -> None:
+        ...
+    @property
+    def torque(self) -> Vector3:
+        """
+        Torque vector Vector3
+        """
+    @torque.setter
+    def torque(self, arg0: Vector3) -> None:
         ...
 class Error:
     """
@@ -1107,13 +1207,28 @@ class GalbotRobot:
                     Returns:
                         List[TrajectoryControlStatus]: List of trajectory execution statuses.
         """
+    def clear_end_effector_command(self) -> ControlStatus:
+        """
+                    Clear WBC end-effector task commands.
+        
+                    Returns:
+                        ControlStatus: Command publishing result.
+        """
     def destroy(self) -> None:
         """
                     Clean up system and middleware resources.
-              
+        
+                    This MUST be called as the final step of the shutdown sequence:
+                    request_shutdown() -> wait_for_shutdown() -> destroy().
+        
+                    After this method returns, the SDK is in a terminal state and cannot be
+                    re-initialized in the same process. The destroy() method clears all internal
+                    resources (middleware, readers/writers, etc.). To use the SDK again, exit
+                    the current process and launch a new one.
+        
                     Parameters:
                         None
-                    
+        
                     Returns:
                         None
         """
@@ -1213,15 +1328,16 @@ class GalbotRobot:
                         
                         Returns empty dictionary on failure.
         """
-    def get_dexterous_hand_state(self, end_effector: str) -> tuple:
+    def get_dexhand_state(self, end_effector: str, dexhand_type: DexHandType = ...) -> typing.Any:
         """
-                    Get dexterous hand joint state.
+                    Get dexhand state.
         
                     Parameters:
                         end_effector (str): Dexhand name, e.g. "left_dexhand" or "right_dexhand".
+                        dexhand_type (DexHandType): Dexhand model type (optional, default: INSPIRE).
         
                     Returns:
-                        Tuple[ControlStatus, JointStateMessage]: Query result and current dexhand joint states.
+                        DexhandState | None: Dexhand state on success (use .joint_state; .force_sensor_map for Sharpa), otherwise None.
         """
     def get_force_sensor_data(self, sensor_type: GalbotOneFoxtrotSensor) -> dict:
         """
@@ -1430,14 +1546,24 @@ class GalbotRobot:
                     Returns:
                         float: Current volume value, range 0.0 to 100.0.
         """
+    def get_wbc_end_effector_poses(self) -> dict[str, list[float]]:
+        """
+                    Get WBC end effector poses (lee_pose, ree_pose, head_pose).
+        
+                    Returns:
+                        dict: Pose vectors [x, y, z, qx, qy, qz, qw] per key, or empty lists if unavailable.
+        """
     def init(self, enable_sensor_set: collections.abc.Set[SensorType] = ...) -> bool:
         """
                     Initialize the robot control system (hardware communication, middleware, sensor interfaces).
                     Only sensors in enable_sensor_set are initialized; specify only required sensors to reduce overhead.
-                    
+        
+                    This method should only be called once at program startup. Calling it multiple
+                    times without calling destroy() will not error, but only the first call has effect.
+        
                     Parameters:
                         enable_sensor_set (set[SensorType]): Set of sensors to enable. Empty set uses default sensors.
-                    
+        
                     Returns:
                         bool: True if initialization succeeded; False otherwise.
         """
@@ -1491,11 +1617,19 @@ class GalbotRobot:
         """
     def request_shutdown(self) -> None:
         """
-                    Send SIGINT signal to request shutdown.
-              
+                    Request graceful shutdown of the robot system.
+        
+                    Sends an async shutdown signal to all modules (WBC controller, middleware nodes,
+                    sensor data loops, etc.). This is the first step of the shutdown sequence and
+                    does NOT block — follow with wait_for_shutdown() and destroy().
+        
+                    This is a singleton instance and can only be initialized once per process. After
+                    destroy() is called, the SDK cannot be re-initialized. To restart, exit the
+                    current process and launch a new one.
+        
                     Parameters:
                         None
-                    
+        
                     Returns:
                         None
         """
@@ -1575,17 +1709,34 @@ class GalbotRobot:
                     Returns:
                         ControlStatus: Command sending result.
         """
-    def set_dexhand_command(self, end_effector: str, dexhand_command: collections.abc.Sequence[JointCommand], is_blocking: bool = True) -> ControlStatus:
+    def set_dexhand_command(self, end_effector: str, dexhand_command: collections.abc.Sequence[JointCommand], dexhand_type: DexHandType = ..., is_blocking: bool = True) -> ControlStatus:
         """
-                    Set dexterous hand joint commands.
+                    Set dexhand command.
         
                     Parameters:
                         end_effector (str): Dexhand name, e.g. "left_dexhand" or "right_dexhand".
-                        dexhand_command (List[JointCommand]): Joint commands for the dexhand.
+                        dexhand_command (List[JointCommand]): Joint command list for the dexhand.
+                        dexhand_type (DexHandType): Dexhand model type (optional, default: INSPIRE).
                         is_blocking (bool): Whether to block until action completes (optional, default: True).
         
                     Returns:
                         ControlStatus: Command execution/sending result.
+        """
+    def set_end_effector_command(self, poses: collections.abc.Sequence[collections.abc.Sequence[typing.SupportsFloat]], end_effector_frames: collections.abc.Sequence[str], reference_frames: collections.abc.Sequence[str] = [], time_from_start_s: typing.SupportsFloat = 0.0) -> ControlStatus:
+        """
+                    Set WBC end-effector pose commands.
+        
+                    Parameters:
+                        poses (List[List[float]]): One pose per end effector; each row is
+                            [x, y, z, qx, qy, qz, qw] (meters, quaternion xyzw).
+                        end_effector_frames (List[str]): Target frame id per pose (e.g. link names).
+                        reference_frames (List[str], optional): Reference frame per pose. Omit or pass [] to use
+                            ``"world"`` for every pose. Otherwise length must match ``poses``. Common values:
+                            ``"world"`` (default)
+                        time_from_start_s (float): Time from trajectory start in seconds (optional, default: 0.0).
+        
+                    Returns:
+                        ControlStatus: Command publishing result.
         """
     def set_gripper_command(self, end_effector: str, width_m: typing.SupportsFloat, velocity_mps: typing.SupportsFloat = 0.03, effort: typing.SupportsFloat = 30, is_blocking: bool = True) -> ControlStatus:
         """
@@ -1772,11 +1923,14 @@ class GalbotRobot:
         """
     def wait_for_shutdown(self) -> None:
         """
-                    Sleep continuously until shutdown signal is received.
-                    
+                    Wait for all modules to finish shutting down.
+        
+                    Blocks until all background threads (middleware, sensor callbacks, WBC loops)
+                    have stopped gracefully. Must be called after request_shutdown() and before destroy().
+        
                     Parameters:
                         None
-                    
+        
                     Returns:
                         None
         """
@@ -3119,10 +3273,6 @@ class SensorType:
     """
     Members:
     
-      HEAD_CAMERA : Head camera
-    
-      HEAD_DEPTH_CAMERA : Head depth camera
-    
       HEAD_LEFT_CAMERA : Head left camera
     
       HEAD_RIGHT_CAMERA : Head right camera
@@ -3161,28 +3311,26 @@ class SensorType:
     
       CHASSIS_IMU : Chassis LiDAR IMU
     """
-    BACK_IMU: typing.ClassVar[SensorType]  # value = <SensorType.BACK_IMU: 13>
-    BACK_LIDAR: typing.ClassVar[SensorType]  # value = <SensorType.BACK_LIDAR: 10>
-    BASE_LIDAR: typing.ClassVar[SensorType]  # value = <SensorType.BASE_LIDAR: 8>
-    BASE_ULTRASONIC: typing.ClassVar[SensorType]  # value = <SensorType.BASE_ULTRASONIC: 16>
-    CHASSIS_IMU: typing.ClassVar[SensorType]  # value = <SensorType.CHASSIS_IMU: 14>
-    CHASSIS_LIDAR: typing.ClassVar[SensorType]  # value = <SensorType.CHASSIS_LIDAR: 11>
-    HEAD_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.HEAD_CAMERA: 0>
-    HEAD_DEPTH_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.HEAD_DEPTH_CAMERA: 1>
-    HEAD_IMU: typing.ClassVar[SensorType]  # value = <SensorType.HEAD_IMU: 12>
-    HEAD_LEFT_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.HEAD_LEFT_CAMERA: 2>
-    HEAD_LIDAR: typing.ClassVar[SensorType]  # value = <SensorType.HEAD_LIDAR: 9>
-    HEAD_RIGHT_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.HEAD_RIGHT_CAMERA: 3>
-    LEFT_ARM_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.LEFT_ARM_CAMERA: 4>
-    LEFT_ARM_DEPTH_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.LEFT_ARM_DEPTH_CAMERA: 6>
-    LEFT_FRONT_SURROUND_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.LEFT_FRONT_SURROUND_CAMERA: 17>
-    LEFT_REAR_SURROUND_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.LEFT_REAR_SURROUND_CAMERA: 19>
-    RIGHT_ARM_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.RIGHT_ARM_CAMERA: 5>
-    RIGHT_ARM_DEPTH_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.RIGHT_ARM_DEPTH_CAMERA: 7>
-    RIGHT_FRONT_SURROUND_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.RIGHT_FRONT_SURROUND_CAMERA: 18>
-    RIGHT_REAR_SURROUND_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.RIGHT_REAR_SURROUND_CAMERA: 20>
-    TORSO_IMU: typing.ClassVar[SensorType]  # value = <SensorType.TORSO_IMU: 15>
-    __members__: typing.ClassVar[dict[str, SensorType]]  # value = {'HEAD_CAMERA': <SensorType.HEAD_CAMERA: 0>, 'HEAD_DEPTH_CAMERA': <SensorType.HEAD_DEPTH_CAMERA: 1>, 'HEAD_LEFT_CAMERA': <SensorType.HEAD_LEFT_CAMERA: 2>, 'HEAD_RIGHT_CAMERA': <SensorType.HEAD_RIGHT_CAMERA: 3>, 'LEFT_ARM_CAMERA': <SensorType.LEFT_ARM_CAMERA: 4>, 'RIGHT_ARM_CAMERA': <SensorType.RIGHT_ARM_CAMERA: 5>, 'LEFT_ARM_DEPTH_CAMERA': <SensorType.LEFT_ARM_DEPTH_CAMERA: 6>, 'RIGHT_ARM_DEPTH_CAMERA': <SensorType.RIGHT_ARM_DEPTH_CAMERA: 7>, 'BASE_ULTRASONIC': <SensorType.BASE_ULTRASONIC: 16>, 'BASE_LIDAR': <SensorType.BASE_LIDAR: 8>, 'TORSO_IMU': <SensorType.TORSO_IMU: 15>, 'LEFT_FRONT_SURROUND_CAMERA': <SensorType.LEFT_FRONT_SURROUND_CAMERA: 17>, 'RIGHT_FRONT_SURROUND_CAMERA': <SensorType.RIGHT_FRONT_SURROUND_CAMERA: 18>, 'LEFT_REAR_SURROUND_CAMERA': <SensorType.LEFT_REAR_SURROUND_CAMERA: 19>, 'RIGHT_REAR_SURROUND_CAMERA': <SensorType.RIGHT_REAR_SURROUND_CAMERA: 20>, 'HEAD_LIDAR': <SensorType.HEAD_LIDAR: 9>, 'BACK_LIDAR': <SensorType.BACK_LIDAR: 10>, 'CHASSIS_LIDAR': <SensorType.CHASSIS_LIDAR: 11>, 'HEAD_IMU': <SensorType.HEAD_IMU: 12>, 'BACK_IMU': <SensorType.BACK_IMU: 13>, 'CHASSIS_IMU': <SensorType.CHASSIS_IMU: 14>}
+    BACK_IMU: typing.ClassVar[SensorType]  # value = <SensorType.BACK_IMU: 11>
+    BACK_LIDAR: typing.ClassVar[SensorType]  # value = <SensorType.BACK_LIDAR: 8>
+    BASE_LIDAR: typing.ClassVar[SensorType]  # value = <SensorType.BASE_LIDAR: 6>
+    BASE_ULTRASONIC: typing.ClassVar[SensorType]  # value = <SensorType.BASE_ULTRASONIC: 14>
+    CHASSIS_IMU: typing.ClassVar[SensorType]  # value = <SensorType.CHASSIS_IMU: 12>
+    CHASSIS_LIDAR: typing.ClassVar[SensorType]  # value = <SensorType.CHASSIS_LIDAR: 9>
+    HEAD_IMU: typing.ClassVar[SensorType]  # value = <SensorType.HEAD_IMU: 10>
+    HEAD_LEFT_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.HEAD_LEFT_CAMERA: 0>
+    HEAD_LIDAR: typing.ClassVar[SensorType]  # value = <SensorType.HEAD_LIDAR: 7>
+    HEAD_RIGHT_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.HEAD_RIGHT_CAMERA: 1>
+    LEFT_ARM_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.LEFT_ARM_CAMERA: 2>
+    LEFT_ARM_DEPTH_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.LEFT_ARM_DEPTH_CAMERA: 4>
+    LEFT_FRONT_SURROUND_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.LEFT_FRONT_SURROUND_CAMERA: 15>
+    LEFT_REAR_SURROUND_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.LEFT_REAR_SURROUND_CAMERA: 17>
+    RIGHT_ARM_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.RIGHT_ARM_CAMERA: 3>
+    RIGHT_ARM_DEPTH_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.RIGHT_ARM_DEPTH_CAMERA: 5>
+    RIGHT_FRONT_SURROUND_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.RIGHT_FRONT_SURROUND_CAMERA: 16>
+    RIGHT_REAR_SURROUND_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.RIGHT_REAR_SURROUND_CAMERA: 18>
+    TORSO_IMU: typing.ClassVar[SensorType]  # value = <SensorType.TORSO_IMU: 13>
+    __members__: typing.ClassVar[dict[str, SensorType]]  # value = {'HEAD_LEFT_CAMERA': <SensorType.HEAD_LEFT_CAMERA: 0>, 'HEAD_RIGHT_CAMERA': <SensorType.HEAD_RIGHT_CAMERA: 1>, 'LEFT_ARM_CAMERA': <SensorType.LEFT_ARM_CAMERA: 2>, 'RIGHT_ARM_CAMERA': <SensorType.RIGHT_ARM_CAMERA: 3>, 'LEFT_ARM_DEPTH_CAMERA': <SensorType.LEFT_ARM_DEPTH_CAMERA: 4>, 'RIGHT_ARM_DEPTH_CAMERA': <SensorType.RIGHT_ARM_DEPTH_CAMERA: 5>, 'BASE_ULTRASONIC': <SensorType.BASE_ULTRASONIC: 14>, 'BASE_LIDAR': <SensorType.BASE_LIDAR: 6>, 'TORSO_IMU': <SensorType.TORSO_IMU: 13>, 'LEFT_FRONT_SURROUND_CAMERA': <SensorType.LEFT_FRONT_SURROUND_CAMERA: 15>, 'RIGHT_FRONT_SURROUND_CAMERA': <SensorType.RIGHT_FRONT_SURROUND_CAMERA: 16>, 'LEFT_REAR_SURROUND_CAMERA': <SensorType.LEFT_REAR_SURROUND_CAMERA: 17>, 'RIGHT_REAR_SURROUND_CAMERA': <SensorType.RIGHT_REAR_SURROUND_CAMERA: 18>, 'HEAD_LIDAR': <SensorType.HEAD_LIDAR: 7>, 'BACK_LIDAR': <SensorType.BACK_LIDAR: 8>, 'CHASSIS_LIDAR': <SensorType.CHASSIS_LIDAR: 9>, 'HEAD_IMU': <SensorType.HEAD_IMU: 10>, 'BACK_IMU': <SensorType.BACK_IMU: 11>, 'CHASSIS_IMU': <SensorType.CHASSIS_IMU: 12>}
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:

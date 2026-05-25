@@ -126,6 +126,7 @@ echo ""
 
 REMOTE_DIR="/data/galbot/lib"
 LIB_DIR="./galbot_sdk/linux-aarch64-gcc940/lib"
+REMOTE_BIN_DIR="${REMOTE_DIR}/galbot_sdk/bin"
 
 # -----------------------------------------------------------------------------
 # SSH non-interactive options (关键修复点)
@@ -179,7 +180,7 @@ if [ -d "$LIB_DIR/python/galbot_sdk" ]; then
     rsync -avz \
     -e "ssh $SSH_OPTS" \
     "$LIB_DIR/python/galbot_sdk" \
-    "$ROBOT_USER@$ROBOT_IP:$REMOTE_DIR" \
+    "$ROBOT_USER@$ROBOT_IP:$REMOTE_DIR/" \
     && print_success "Python library deployed" \
     || { print_error "Python deployment failed"; exit 1; }
 else
@@ -187,14 +188,107 @@ else
 fi
 
 # -----------------------------------------------------------------------------
-# Step 6: Verification
+# Step 6: Deploy Version Check Tool
 # -----------------------------------------------------------------------------
-print_step 6 "Post-deployment Verification" "部署后验证"
+print_step 6 "Deploying Version Check Tool" "部署版本检查工具"
+
+COMPAT_SCRIPT="./check_robot_compat.py"
+WRAPPER_SCRIPT="./galbot_sdk_wrapper.sh"
+
+if [ -f "$COMPAT_SCRIPT" ] && [ -f "$WRAPPER_SCRIPT" ]; then
+    # 在机器人上创建 bin 目录
+    sshpass -p "$SSHPASS" \
+    ssh $SSH_OPTS "$ROBOT_USER@$ROBOT_IP" "mkdir -p '$REMOTE_BIN_DIR'" \
+    || { print_error "Failed to create $REMOTE_BIN_DIR on robot"; exit 1; }
+
+    # 复制 check_robot_compat.py
+    sshpass -p "$SSHPASS" \
+    rsync -avz \
+    -e "ssh $SSH_OPTS" \
+    "$COMPAT_SCRIPT" \
+    "$ROBOT_USER@$ROBOT_IP:$REMOTE_BIN_DIR/" \
+    || { print_error "Version check tool deployment failed"; exit 1; }
+
+    # 复制 galbot_sdk wrapper 脚本并重命名
+    sshpass -p "$SSHPASS" \
+    rsync -avz \
+    -e "ssh $SSH_OPTS" \
+    "$WRAPPER_SCRIPT" \
+    "$ROBOT_USER@$ROBOT_IP:$REMOTE_BIN_DIR/galbot_sdk" \
+    && sshpass -p "$SSHPASS" ssh $SSH_OPTS "$ROBOT_USER@$ROBOT_IP" "chmod +x '$REMOTE_BIN_DIR/galbot_sdk'" \
+    && print_success "Version check tool deployed" \
+    || { print_error "Failed to deploy galbot_sdk wrapper on robot"; exit 1; }
+else
+    if [ ! -f "$COMPAT_SCRIPT" ]; then
+        print_warning "check_robot_compat.py not found, skipping"
+    fi
+    if [ ! -f "$WRAPPER_SCRIPT" ]; then
+        print_warning "galbot_sdk_wrapper.sh not found, skipping"
+    fi
+fi
+
+# -----------------------------------------------------------------------------
+# Step 7: Configure Environment Variables
+# -----------------------------------------------------------------------------
+print_step 7 "Configuring Environment Variables" "配置环境变量"
+
+# 创建临时配置脚本
+cat > /tmp/galbot_env_setup.sh << 'ENVEOF'
+#!/bin/bash
+RCFILE=~/.bashrc
+SDK_BIN="/data/galbot/lib/galbot_sdk/bin"
+SDK_LIB="/data/galbot/lib"
+NOW=$(date "+%Y-%m-%d %H:%M:%S")
+
+# 检查 PATH 是否已配置
+if ! grep -q "export PATH=.*$SDK_BIN" "$RCFILE" 2>/dev/null; then
+    echo "" >> "$RCFILE"
+    echo "# Galbot SDK PATH configuration - added on $NOW" >> "$RCFILE"
+    echo "export PATH=\"$SDK_BIN:\$PATH\"" >> "$RCFILE"
+    PATH_ADDED=1
+else
+    PATH_ADDED=0
+fi
+
+# 检查 PYTHONPATH 是否已配置
+if ! grep -q "export PYTHONPATH=.*$SDK_LIB" "$RCFILE" 2>/dev/null; then
+    echo "" >> "$RCFILE"
+    echo "# Galbot SDK PYTHONPATH configuration - added on $NOW" >> "$RCFILE"
+    echo "export PYTHONPATH=\"$SDK_LIB:\$PYTHONPATH\"" >> "$RCFILE"
+    PY_ADDED=1
+else
+    PY_ADDED=0
+fi
+
+if [ "$PATH_ADDED" -eq 1 ] || [ "$PY_ADDED" -eq 1 ]; then
+    echo "Environment variables added to ~/.bashrc"
+    echo "Run: source ~/.bashrc  to activate immediately"
+else
+    echo "Environment variables already configured in ~/.bashrc"
+fi
+ENVEOF
+
+# 上传并执行配置脚本
+sshpass -p "$SSHPASS" \
+rsync -avz -e "ssh $SSH_OPTS" \
+    /tmp/galbot_env_setup.sh \
+    "$ROBOT_USER@$ROBOT_IP:/tmp/" \
+    && sshpass -p "$SSHPASS" ssh $SSH_OPTS "$ROBOT_USER@$ROBOT_IP" "bash /tmp/galbot_env_setup.sh" \
+    && rm -f /tmp/galbot_env_setup.sh
+
+print_success "环境配置已自动添加到机器人 ~/.bashrc"
+print_info "运行 'source ~/.bashrc' 或重新 SSH 登录使配置生效"
+
+# -----------------------------------------------------------------------------
+# Step 8: Verification
+# -----------------------------------------------------------------------------
+print_step 8 "Post-deployment Verification" "部署后验证"
 
 sshpass -p "$SSHPASS" \
 ssh $SSH_OPTS "$ROBOT_USER@$ROBOT_IP" "
 ls '$REMOTE_DIR'/libgalbot_sdk.* >/dev/null 2>&1 && echo CPP_OK=1 || echo CPP_OK=0
 [ -d '$REMOTE_DIR/galbot_sdk' ] && echo PY_OK=1 || echo PY_OK=0
+[ -x '$REMOTE_BIN_DIR/galbot_sdk' ] && echo TOOL_OK=1 || echo TOOL_OK=0
 "
 
 # -----------------------------------------------------------------------------

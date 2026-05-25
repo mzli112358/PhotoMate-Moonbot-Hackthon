@@ -14,6 +14,31 @@
 
 using namespace galbot::sdk;
 
+void robot_default(GalbotRobot& robot) {
+    // Set initial joint positions
+    std::vector<double> joint_pos = {
+        0.5, 1.5, 1.0, 0.0, 0.0,           // leg (5 joints)
+        0.0, 0.0,                            // head (2 joints)
+        2.0, -1.5, -0.6, -1.7, 0.0, -0.8, 0.0,  // left_arm (7 joints)
+        -2.0, 1.5, 0.6, 1.7, 0.0, 0.8, 0.0       // right_arm (7 joints)
+    };
+    std::vector<std::string> joint_group_names = {"leg", "head", "left_arm", "right_arm"};
+    std::vector<std::string> joint_names = {};
+    bool is_blocking = true;
+    double speed_rad_s = 0.1;
+    double timeout_s = 30.0;
+
+    ControlStatus status = robot.set_joint_positions(
+        joint_pos, joint_group_names, joint_names,
+        is_blocking, speed_rad_s, timeout_s);
+
+    if (status == ControlStatus::SUCCESS) {
+        std::cout << "set joint position successful" << std::endl;
+    } else {
+        std::cout << "set joint position failed" << std::endl;
+    }
+}
+
 inline std::vector<double> quat_normalize(const std::vector<double>& q)
 {
     double norm = std::sqrt(
@@ -363,6 +388,8 @@ int main(){
 
         /* Wait for data preparation */
         std::this_thread::sleep_for(std::chrono::milliseconds(3000));
+
+        robot_default(robot);
         
         /** Calculate navigation target pose */
         Pose object_goal_pose(std::vector<double>{1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 1.0});

@@ -8,6 +8,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.8.1] - 2026-05-25
+
+### Added / 新增
+- Added Jacobian computation interfaces in the motion module (get_jacobian, get_jacobian_by_state), with corresponding C++/Python examples. / 在 motion 模块新增雅可比计算接口（get_jacobian、get_jacobian_by_state），并提供对应 C++/Python 示例
+- Added support for VMware deployment environments. / 适配 VMware 虚拟机部署环境
+- Added version and compatibility check CLI tools. / 新增版本检查和兼容性检查命令行工具
+
+### Changed / 更改
+- Optimized SDK installation, deployment, and FAQ documentation. / 优化 SDK 安装、部署和 FAQ 文档
+- Reorganized installation documentation into separate topics for system requirements, PC setup, robot deployment, Docker deployment, terminology, and version compatibility. / 将安装文档拆分为系统要求、PC 配置、机器人部署、Docker 部署、术语说明和版本兼容性等独立主题
+
+### Fixed / 修复
+- Fixed a critical execution bug in set_joint_commands_batch and execute_joint_trajectory: when body joints and grippers were specified together, command data could be parsed incorrectly and cause unintended robot motion. / 修复 set_joint_commands_batch 和 execute_joint_trajectory 的严重执行问题：同时指定身体关节和夹爪时，命令数据可能解析错误并导致机器人意外运动
+
+---
+
 ## [1.8.0] - 2026-05-08
 
 ### Added / 新增
@@ -180,4 +196,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added / 新增
 - Added basic control capabilities / 增加基础控制能力
 - Added basic sensor data reception / 增加基础传感器数据接收
-

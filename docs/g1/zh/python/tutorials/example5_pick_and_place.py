@@ -10,6 +10,7 @@ try:
     from galbot_sdk.g1 import GalbotRobot
     from galbot_sdk.g1 import GalbotMotion
     from galbot_sdk.g1 import G1JointGroup, SensorType
+    from galbot_sdk.g1 import ControlStatus
 except ImportError:
     print("Import galbot_sdk failed, please install it first or check if it is in the PYTHONPATH")
     exit(1)
@@ -36,6 +37,27 @@ except ImportError:
 
 import time
 from typing import Sequence
+
+def robot_default(robot: GalbotRobot):
+    # set initial joint positions
+    joint_pos = [0.5, 1.5, 1.0, 0.0, 0.0,
+                    0.0, 0.0,
+                    2.0, -1.5, -0.6, -1.7, 0.0, -0.8, 0.0,
+                    -2.0, 1.5, 0.6, 1.7, 0.0, 0.8, 0.0]
+    joint_groups_names = ["leg", "head", "left_arm", "right_arm"]
+    joint_names = []
+    is_blocking = True
+    max_speed_rad_s = 0.1
+    timeout_s = 30.0
+
+    status = robot.set_joint_positions(
+        joint_pos, joint_groups_names, joint_names, is_blocking, max_speed_rad_s, timeout_s
+    )
+
+    if status != ControlStatus.SUCCESS:
+        print("set join position failed")
+    else:
+        print("set join position successful")
 
 def decode_compressed_image(compressed_image, camera_info={}):
     """
@@ -425,6 +447,8 @@ def main():
 
         # Program starts immediately, wait for data readiness
         time.sleep(1)
+
+        robot_default(robot);
 
         # Calculate navigation target pose
         object_goal_pose = [-1, 0.33, 0.90, 0, 0, 1, 0]

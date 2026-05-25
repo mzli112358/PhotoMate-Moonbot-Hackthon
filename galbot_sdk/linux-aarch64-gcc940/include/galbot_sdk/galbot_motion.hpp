@@ -13,6 +13,18 @@
  * @author Galbot SDK Team
  * @version 1.6.0
  * @copyright Copyright (c) 2023-2026 Galbot. All rights reserved.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 #pragma once
@@ -611,6 +623,83 @@ class GalbotMotion {
       const std::string& target_frame = "EndEffector", const std::string& reference_frame = "base_link",
       const std::shared_ptr<RobotStates>& reference_robot_states = nullptr, const bool& enable_collision_check = true,
       std::shared_ptr<Parameter> params = default_param) = 0;
+
+
+/**
+ * @brief Compute the Jacobian matrix for a kinematic chain.
+ *
+ * Computes the 6xN Jacobian matrix relating joint velocities to the target
+ * frame's 6D spatial velocity (linear + angular).
+ *
+ * This API is the chain-level convenience form. The caller provides a
+ * chain_name and, optionally, a joint_state map for one or more chains. When
+ * joint_state is non-empty, the SDK reads the current whole-body state and
+ * replaces the specified chain joint values before sending the request. When
+ * joint_state is empty, the current robot state is used directly.
+ *
+ * Use this API when you want to evaluate the Jacobian for a specific chain
+ * with a small set of chain joint values and do not need to provide an entire
+ * RobotStates object. Use get_jacobian_by_state() instead when the complete
+ * whole-body joint vector or base pose must be specified explicitly.
+ *
+ * @param chain_name       Kinematic chain identifier (e.g., "left_arm", "right_arm")
+ * @param target_frame     Frame on chain for Jacobian computation: "EndEffector" (flange)
+ *                         or "Tool" (TCP). Default: "EndEffector"
+ * @param reference_frame  Reference coordinate frame: "base_link" (robot-base frame)
+ *                         or "world" (world-fixed frame). Default: "base_link"
+ * @param joint_state      Chain joint override map: {chain_name -> joint_angles}.
+ *                         Empty map uses current complete robot state.
+ * @param params           Planning parameters (timeout, etc.)
+ *
+ * @return Tuple of (status, jacobian_matrix):
+ *         - status: MotionStatus::SUCCESS on success, error code otherwise
+ *         - jacobian_matrix: 6xN matrix (N = chain DOF), empty on failure
+ *
+ * @note Jacobian rows: [vx, vy, vz, wx, wy, wz] (linear then angular velocity).
+ * @note Columns correspond to joints in the chain, ordered by joint index.
+ */
+virtual std::tuple<MotionStatus, std::vector<std::vector<double>>> get_jacobian(
+    const std::string& chain_name,
+    const std::string& target_frame = "EndEffector",
+    const std::string& reference_frame = "base_link",
+    const std::unordered_map<std::string, std::vector<double>>& joint_state = {},
+    std::shared_ptr<Parameter> params = default_param) = 0;
+
+/**
+ * @brief Compute the Jacobian matrix using a complete robot state.
+ *
+ * Computes the same 6xN Jacobian as get_jacobian(), but the state input is a
+ * complete RobotStates object rather than a chain-level joint_state map. The
+ * whole_body_joint field defines the complete robot joint configuration and
+ * base_state defines the mobile base pose used by the kinematic service. If
+ * reference_robot_states is nullptr, the SDK reads the current complete robot
+ * state.
+ *
+ * Use this API for offline/hypothetical-state computation, reproducible tests,
+ * or any case where the Jacobian must be evaluated at a known whole-body joint
+ * vector and base pose. Use get_jacobian() for simpler chain-level current-state
+ * or chain-joint override queries.
+ *
+ * @param chain_name              Kinematic chain identifier (e.g., "left_arm", "right_arm")
+ * @param target_frame            Frame on chain for Jacobian computation. Default: "EndEffector"
+ * @param reference_frame         Reference coordinate frame. Default: "base_link"
+ * @param reference_robot_states  Complete robot state; nullptr uses current complete robot state
+ * @param params                  Planning parameters (timeout, etc.)
+ *
+ * @return Tuple of (status, jacobian_matrix):
+ *         - status: MotionStatus::SUCCESS on success, error code otherwise
+ *         - jacobian_matrix: 6xN matrix (N = chain DOF), empty on failure
+ *
+ * @note Useful when computing Jacobian for hypothetical states without modifying current robot state.
+ */
+virtual std::tuple<MotionStatus, std::vector<std::vector<double>>> get_jacobian_by_state(
+    const std::string& chain_name,
+    const std::string& target_frame = "EndEffector",
+    const std::string& reference_frame = "base_link",
+    const std::shared_ptr<RobotStates>& reference_robot_states = nullptr,
+    std::shared_ptr<Parameter> params = default_param) = 0;
+
+
 
   /**
    * @brief Get current end-effector pose from robot state.

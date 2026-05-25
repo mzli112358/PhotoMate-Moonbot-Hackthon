@@ -10,7 +10,7 @@ time.sleep(2)
 
 # Set left gripper width to 0.02m, speed 0.05m, torque 10N, block until gripper reaches position
 status = robot.set_gripper_command(
-    G1JointGroup.left_gripper, 0.02, 0.05, 10, False
+    G1JointGroup.left_gripper, 0.02, 0.05, 10, True
 )
 if status != ControlStatus.SUCCESS:
     print("Set gripper failed")
@@ -19,7 +19,7 @@ else:
 
 # Set left gripper width to 0.1m, speed 0.05m, torque 10N, block until gripper reaches position
 status = robot.set_gripper_command(
-    G1JointGroup.left_gripper, 0.1, 0.05, 10, False
+    G1JointGroup.left_gripper, 0.1, 0.05, 10, True
 )
 
 if status != ControlStatus.SUCCESS:

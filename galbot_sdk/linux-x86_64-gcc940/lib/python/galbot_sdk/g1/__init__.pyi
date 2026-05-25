@@ -7,8 +7,6 @@ import collections.abc
 import numpy
 import numpy.typing
 import typing
-import numpy
-import numpy.typing
 
 __all__: list[str] = [
     "AudioData",
@@ -691,11 +689,6 @@ class G1JointGroup:
     right_suction_cup: typing.ClassVar[str] = "right_suction_cup"
 
 class GalbotMotion:
-    @staticmethod
-    def get_instance(machine_type: ...) -> GalbotMotion:
-        """
-        Get the motion planning instance for a specific machine type.
-        """
     def __repr__(self) -> str: ...
     def add_obstacle(
         self,
@@ -915,6 +908,70 @@ class GalbotMotion:
 
         Returns:
             Pose: The computed pose of the end-effector frame on the specified chain.
+        """
+    def get_jacobian(
+        self,
+        chain_name: str,
+        target_frame: str = "EndEffector",
+        reference_frame: str = "base_link",
+        joint_state: collections.abc.Mapping[
+            str, collections.abc.Sequence[typing.SupportsFloat]
+        ] = {},
+        params: Parameter = ...,
+    ) -> tuple[MotionStatus, list[list[float]]]:
+        """
+        Compute the Jacobian matrix for a kinematic chain.
+
+        This is the chain-level convenience API. If joint_state is provided,
+        the SDK reads the current whole-body state and replaces the specified
+        chain joint values before computing the Jacobian. If joint_state is
+        empty, the current complete robot state is used directly.
+
+        Use this API when you only need chain-level joint overrides. Use
+        get_jacobian_by_state() when you need to provide a complete
+        RobotStates object including whole-body joints and base pose.
+
+        Parameters:
+            chain_name (str): Kinematic chain (e.g., "left_arm", "right_arm")
+            target_frame (str, optional): Frame on chain. Defaults to "EndEffector".
+            reference_frame (str, optional): Reference frame. Defaults to "base_link".
+            joint_state (dict, optional): Chain joint override map. Uses current complete state if empty.
+            params (Parameter, optional): Planning parameters. Defaults to default_param.
+
+        Returns:
+            tuple: (MotionStatus, jacobian_matrix)
+                - jacobian_matrix is a list of lists: [[float]] (6 rows x N cols)
+        """
+    def get_jacobian_by_state(
+        self,
+        chain_name: str,
+        target_frame: str = "EndEffector",
+        reference_frame: str = "base_link",
+        reference_robot_states: RobotStates = None,
+        params: Parameter = ...,
+    ) -> tuple[MotionStatus, list[list[float]]]:
+        """
+        Compute the Jacobian matrix using complete robot state.
+
+        This API accepts a RobotStates object for specifying the complete
+        robot configuration (whole-body joints + base pose). Passing None
+        uses the current complete robot state.
+
+        Use this API for offline or hypothetical-state Jacobian computation,
+        reproducible tests, or cases where the base pose must be controlled
+        explicitly. Use get_jacobian() for simpler chain-level current-state
+        or chain-joint override queries.
+
+        Parameters:
+            chain_name (str): Kinematic chain (e.g., "left_arm", "right_arm")
+            target_frame (str, optional): Frame on chain. Defaults to "EndEffector".
+            reference_frame (str, optional): Reference frame. Defaults to "base_link".
+            reference_robot_states (RobotStates, optional): Complete robot state. Uses current complete state if None.
+            params (Parameter, optional): Planning parameters. Defaults to default_param.
+
+        Returns:
+            tuple: (MotionStatus, jacobian_matrix)
+                - jacobian_matrix is a list of lists: [[float]] (6 rows x N cols)
         """
     def get_link_names(self, only_end_effector: bool = False) -> list[str]:
         """
@@ -1170,16 +1227,6 @@ class GalbotMotion:
         """
 
 class GalbotNavigation:
-    @staticmethod
-    def get_instance(machine_type: MachineType) -> GalbotNavigation:
-        """
-        Get the navigation instance for a specific machine type.
-
-        Parameters:
-            machine_type: MachineType enum (e.g. MachineType.G1 / MachineType.S1)
-        Returns:
-            GalbotNavigation: The navigation instance for that machine type.
-        """
     def check_goal_arrival(self) -> bool:
         """
         Check if the robot has successfully reached the current goal (within tolerance).
@@ -1353,17 +1400,6 @@ class GalbotPerception:
     """
     Perception module interface. Use get_instance(machine_type) for the platform singleton; G1 supported, S1 raises.
     """
-    @staticmethod
-    def get_instance(machine_type: MachineType) -> GalbotPerception:
-        """
-        Get the singleton instance of GalbotPerception.
-
-        Args:
-            machine_type (MachineType): Platform selector, e.g. MachineType.G1. MachineType.S1 raises RuntimeError (not supported).
-
-        Returns:
-            GalbotPerception: Reference to the singleton instance for that machine type.
-        """
     def get_latest_result(self, module: PerceptionModule) -> tuple:
         """
         Return the latest cached result for the module without blocking.
@@ -1412,20 +1448,15 @@ class GalbotPerception:
         """
 
 class GalbotRobot:
-    @staticmethod
-    def get_instance(machine_type: MachineType) -> GalbotRobot:
-        """
-        Get the robot control instance for a specific machine type.
-        """
     def acquire_controller(self, controller_name: str) -> ControlStatus:
         """
         Acquire a controller for a specific joint group.
 
-        Acquires the specified controller. This is the opposite operation of release_controller.
-        It activates the specified controller strategy and grants it authority over the hardware.
+        Requests the specified controller to take hardware authority. This uses the
+        same WBCS switch request as switch_controller.
 
         Parameters:
-            controller_name (str): Controller name, for example "LEFT_ARM_PVT_CTRL".
+            controller_name (str): Controller name, for example "left_arm_pvt_ctrl".
 
         Returns:
             ControlStatus: Result of the operation.
@@ -1475,6 +1506,8 @@ class GalbotRobot:
 
         Parameters:
             trajectory (Trajectory): Trajectory data to execute.
+                                     Either `joint_groups` or `joint_names` must be specified;
+                                     returns INVALID_INPUT if both are empty.
             is_blocking (bool): Whether to block until trajectory execution completes (optional, default: True).
 
         Returns:
@@ -1483,6 +1516,10 @@ class GalbotRobot:
     def get_active_controller(self, group_name: str) -> str:
         """
         Get the active controller for a joint group name.
+
+        This returns the controller last known by this SDK instance. It is initialized
+        with the model default controller and updated after successful SDK controller
+        management calls.
 
         Parameters:
             group_name (str): The joint group name to query.
@@ -1656,33 +1693,45 @@ class GalbotRobot:
         """
     def get_joint_positions(
         self,
-        joint_groups: collections.abc.Sequence[str],
+        joint_groups: collections.abc.Sequence[str] = [],
         joint_names: collections.abc.Sequence[str] = [],
     ) -> list[float]:
         """
         Get joint positions.
 
         Parameters:
-            joint_groups (List[str]): Joint groups to query.
+            joint_groups (List[str]): Joint groups to query (optional).
             joint_names (List[str]): Specific joint names, takes priority over joint_groups (optional).
 
         Returns:
             List[float]: Array of corresponding joint angles in radians.
+
+        .. note::
+            Return order:
+            - **joint_names specified**: Returns in the exact order of joint_names.
+            - **Only joint_groups specified**: Returns in the order groups are defined.
+            - **Both empty**: Returns body joints in order: chassis, head, left_arm, right_arm, leg.
         """
     def get_joint_states(
         self,
-        joint_group_vec: collections.abc.Sequence[str],
-        joint_names_vec: collections.abc.Sequence[str] = [],
+        joint_groups: collections.abc.Sequence[str] = [],
+        joint_names: collections.abc.Sequence[str] = [],
     ) -> list[JointState]:
         """
         Get real-time joint states.
 
         Parameters:
-            joint_group_vec (List[str]): Joint groups to query (optional).
-            joint_names_vec (List[str]): Specific joint names, takes priority over joint_group_vec (optional).
+            joint_groups (List[str]): Joint groups to query (optional).
+            joint_names (List[str]): Specific joint names, takes priority over joint_groups (optional).
 
         Returns:
             List[JointState]: Real-time state data for corresponding joints.
+
+        .. note::
+            Return order:
+            - **joint_names specified**: Returns in the exact order of joint_names.
+            - **Only joint_groups specified**: Returns in the order groups are defined.
+            - **Both empty**: Returns body joints in order: chassis, head, left_arm, right_arm, leg.
         """
     def get_lidar_data(self, sensor_id: SensorType) -> dict:
         """
@@ -2083,8 +2132,8 @@ class GalbotRobot:
 
         Parameters:
             joint_commands (List[JointCommand]): List of joint commands to control.
-            joint_groups (List[str]): Joint groups to control (optional).
-            joint_names (List[str]): Specific joint names, takes priority over joint_groups (optional).
+            joint_groups (List[str]): Joint groups to control. Must not be empty if `joint_names` is also empty.
+            joint_names (List[str]): Specific joint names, takes priority over `joint_groups`. Must not be empty if `joint_groups` is also empty.
             time_from_start_s (float): Time in seconds from the start of the motion to execute the command (optional, default: 10.0).
 
         Returns:
@@ -2102,6 +2151,8 @@ class GalbotRobot:
 
         Parameters:
             trajectory (Trajectory): Trajectory data structure containing waypoints with joint commands.
+                                   Either `joint_groups` or `joint_names` must be specified;
+                                   returns INVALID_INPUT if both are empty.
                                    Each TrajectoryPoint contains time_from_start and a list of JointCommand.
                                    JointCommand includes position (rad), velocity (rad/s), acceleration (rad/s²),
                                    effort (N·m), Kp (position gain), and Kd (velocity gain).
@@ -2123,8 +2174,8 @@ class GalbotRobot:
 
         Parameters:
             joint_positions (List[float]): Array of joint angles in radians.
-            joint_groups (List[str]): Joint groups to control (optional).
-            joint_names (List[str]): Specific joint names, takes priority over joint_groups (optional).
+            joint_groups (List[str]): Joint groups to control. Must not be empty if `joint_names` is also empty.
+            joint_names (List[str]): Specific joint names, takes priority over `joint_groups`. Must not be empty if `joint_groups` is also empty.
             is_blocking (bool): Whether to block until command execution completes (optional, default: True).
             speed_rad_s (float): Maximum joint speed in rad/s (optional, default: 0.2).
             timeout_s (float): Maximum blocking wait time in seconds (optional, default: 15.0).
@@ -2250,7 +2301,7 @@ class GalbotRobot:
         Switch controller for a specific joint group.
 
         Parameters:
-            controller_name (str): Controller name, for example "CHASSIS_POSE_CTRL".
+            controller_name (str): Controller name, for example "chassis_pose_ctrl".
 
         Returns:
             ControlStatus: Result of the operation.
@@ -3912,20 +3963,20 @@ class Timestamp:
 
 class Trajectory:
     """
-    Trajectory object
+    Trajectory object. Note: joint_groups and joint_names must not both be empty. joint_names takes precedence.
     """
     def __init__(self) -> None: ...
     @property
     def joint_groups(self) -> list[str]:
         """
-        List of joint group names
+        List of joint group names. Recommended: use semantic groups like ["left_arm", "right_arm"].
         """
     @joint_groups.setter
     def joint_groups(self, arg0: collections.abc.Sequence[str]) -> None: ...
     @property
     def joint_names(self) -> list[str]:
         """
-        List of joint names
+        List of joint names. Takes precedence over joint_groups if both are set.
         """
     @joint_names.setter
     def joint_names(self, arg0: collections.abc.Sequence[str]) -> None: ...

@@ -19,6 +19,9 @@ get_script_source() {
 SCRIPT_SOURCE="$(get_script_source)"
 SCRIPT_DIR="$(cd "$(dirname "$SCRIPT_SOURCE")" && pwd)"
 
+# Add SDK binary path to PATH for command-line tools | 将 SDK 工具目录添加到 PATH
+export PATH="$SCRIPT_DIR/bin${PATH:+:$PATH}"
+
 # Add SDK library path to LD_LIBRARY_PATH for finding shared libraries | 将 SDK 库路径添加到 LD_LIBRARY_PATH 以查找依赖动态库
 export LD_LIBRARY_PATH="$SCRIPT_DIR/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 

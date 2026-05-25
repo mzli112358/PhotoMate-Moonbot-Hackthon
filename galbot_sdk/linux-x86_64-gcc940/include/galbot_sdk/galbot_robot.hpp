@@ -9,6 +9,18 @@
  * @author Galbot SDK Team
  * @version 1.5.1
  * @copyright Copyright (c) 2023-2026 Galbot. All rights reserved.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 #pragma once
@@ -128,10 +140,11 @@ class GalbotRobot {
    *
    * @param joint_commands Vector of low-level joint commands.
    * @param joint_groups Joint groups to control. Supported groups: legs, head, left_arm,
-   *                     right_arm, gripper, suction_cup. Empty vector defaults to all body
-   *                     joints (legs, head, left_arm, right_arm).
+   *                     right_arm, gripper, suction_cup.
+   *                     Must not be empty if `joint_names` is also empty; otherwise returns INVALID_INPUT.
    * @param joint_names Specific joint names to control. This parameter takes precedence
    *                    over joint_groups. When provided, joint_groups is ignored.
+   *                    Must not be empty if `joint_groups` is also empty; otherwise returns INVALID_INPUT.
    * @param time_from_start_s Expected arrival time (seconds) for the target command.
    * @warning Especially on the first command, avoid a large gap between current and target joint angles.
    *          Large jumps may cause excessively fast motion and safety risk.
@@ -152,10 +165,11 @@ class GalbotRobot {
    *                        the joint ordering returned by get_joint_names() for the specified
    *                        joint_groups or joint_names.
    * @param joint_groups Joint group names to control. Supported groups: "legs", "head",
-   *                     "left_arm", "right_arm". Empty vector defaults to all body joints
-   *                     (legs, head, left_arm, right_arm).
+   *                     "left_arm", "right_arm".
+   *                     Must not be empty if `joint_names` is also empty; otherwise returns INVALID_INPUT.
    * @param joint_names Specific joint names to control. This parameter takes precedence over
    *                    joint_groups. When provided, joint_groups is ignored.
+   *                    Must not be empty if `joint_groups` is also empty; otherwise returns INVALID_INPUT.
    * @param is_blocking If true, blocks until motion completes or timeout occurs.
    *                    If false, returns immediately after command is sent.
    * @param speed_rad_s Maximum joint angular velocity in radians per second (rad/s).
@@ -193,7 +207,11 @@ class GalbotRobot {
    * velocities, and timing information. The trajectory controller interpolates
    * between waypoints to generate smooth motion.
    *
-   * @param trajectory Trajectory data structure containing waypoints and timing
+   * @param trajectory Trajectory data structure containing waypoints and timing.
+   *                   Either `trajectory.joint_groups` or `trajectory.joint_names` must be specified;
+   *                   returns INVALID_INPUT if both are empty.
+   *                   @warning Each `TrajectoryPoint.joint_command_vec` order MUST match the joint order
+   *                   defined by `trajectory.joint_names` or the expanded order of `trajectory.joint_groups`.
    * @param is_blocking If true, blocks until trajectory execution completes.
    *                    If false, returns immediately after trajectory is submitted.
    * @warning For per-frame model inference output, prefer command streaming interfaces
@@ -212,9 +230,13 @@ class GalbotRobot {
    * suitable for scenarios such as VLA inference batch output.
    *
    * @param trajectory Trajectory data structure containing waypoints with joint commands.
+   *                   Either `trajectory.joint_groups` or `trajectory.joint_names` must be specified;
+   *                   returns INVALID_INPUT if both are empty.
    *                   Each TrajectoryPoint contains time_from_start and a list of JointCommand.
    *                   JointCommand includes position (rad), velocity (rad/s), acceleration (rad/s²),
    *                   effort (N·m), Kp (position gain), and Kd (velocity gain).
+   *                   @warning Each `TrajectoryPoint.joint_command_vec` order MUST match the joint order
+   *                   defined by `trajectory.joint_names` or the expanded order of `trajectory.joint_groups`.
    * @return ControlStatus indicating success or failure of command submission.
    *         Returns immediately without waiting for execution completion (non-blocking).
    */
@@ -314,12 +336,16 @@ class GalbotRobot {
    * @brief Get current joint positions by group name
    *
    * Retrieves the current angular positions of joints in the specified groups.
-   * The returned vector order matches the joint ordering from get_joint_names().
    *
    * @param joint_groups Joint group names to query. Empty vector retrieves all body joints.
    * @param joint_names Specific joint names to query. This parameter takes precedence
    *                    over joint_groups. When provided, joint_groups is ignored.
    * @return Vector of current joint angles in radians
+   *
+   * @note Return order:
+   *       - joint_names specified: Returns in the exact order of joint_names.
+   *       - Only joint_groups specified: Returns in the order groups are defined.
+   *       - Both empty: Returns body joints in order: chassis, head, left_arm, right_arm, leg.
    */
   virtual std::vector<double> get_joint_positions(const std::vector<std::string>& joint_groups,
                                                   const std::vector<std::string>& joint_names) = 0;
@@ -341,7 +367,7 @@ class GalbotRobot {
    * @param only_active_joint If true, returns only actuated joints (excludes passive/fixed joints).
    *                          If false, returns all joints including passive ones.
    * @param joint_groups Joint group names to query. Empty vector retrieves joints from all groups.
-   * @return Vector of joint names in kinematic chain order
+   * @return Vector of joint names
    */
   virtual std::vector<std::string> get_joint_names(bool only_active_joint = true,
                                                    const std::vector<std::string>& joint_groups = {}) = 0;
@@ -355,6 +381,11 @@ class GalbotRobot {
    * @param joint_names_vec Specific joint names to query. This parameter takes precedence
    *                        over joint_group_vec. When provided, joint_group_vec is ignored.
    * @return Vector of JointState structures containing current state for each joint
+   *
+   * @note Return order:
+   *       - joint_names_vec specified: Returns in the exact order of joint_names_vec.
+   *       - Only joint_group_vec specified: Returns in the order groups are defined.
+   *       - Both empty: Returns body joints in order: chassis, head, left_arm, right_arm, leg.
    */
   virtual std::vector<JointState> get_joint_states(const std::vector<std::string>& joint_group_vec,
                                                    const std::vector<std::string>& joint_names_vec = {}) = 0;
@@ -534,26 +565,32 @@ class GalbotRobot {
    * @brief Switch active controller strategy
    *
    * Transitions hardware control to a new strategy.
-   * Operation sequence: stop(old) -> release(old) -> acquire(new) -> start(new).
+   * The request is sent to the WBCS controller manager, which performs the
+   * safe switch and starts the selected controller when accepted.
    *
-   * @param controller_name Controller name string, for example "CHASSIS_POSE_CTRL".
+   * @param controller_name Controller name string, for example "chassis_pose_ctrl".
    * @return ControlStatus indicating success or failure of the switch operation.
    */
   virtual ControlStatus switch_controller(const std::string& controller_name) = 0;
   /**
    * @brief Get active controller name for specified joint group
    *
+   * Returns the controller last known by this SDK instance. It is initialized
+   * with the model default controller and updated after successful SDK
+   * controller management calls. If control has been released or the group has
+   * no known controller, returns "CONTROLLER_NAME_NUM".
+   *
    * @param group_name Name of the joint group to query.
-   * @return std::string Name of the active controller.
+   * @return std::string Name of the active controller known by this SDK instance.
    */
   virtual std::string get_active_controller(const std::string& group_name) = 0;
   /**
    * @brief Acquire hardware authority
    *
-   * Designates the controller to take ownership of the hardware.
-   * Opposite of release_controller. Controller must still be started to begin execution.
+   * Requests the specified controller to take ownership of the hardware. This
+   * uses the same WBCS switch request as switch_controller.
    *
-   * @param controller_name Controller name string, for example "LEFT_ARM_PVT_CTRL".
+   * @param controller_name Controller name string, for example "left_arm_pvt_ctrl".
    * @return ControlStatus indicating success or failure of the acquire operation.
    */
   virtual ControlStatus acquire_controller(const std::string& controller_name) = 0;

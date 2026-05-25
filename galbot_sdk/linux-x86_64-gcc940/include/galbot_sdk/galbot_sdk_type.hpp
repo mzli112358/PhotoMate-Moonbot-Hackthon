@@ -9,6 +9,18 @@
  * @author Galbot SDK Team
  * @version 1.5.1
  * @copyright Copyright (c) 2023-2026 Galbot. All rights reserved.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 #pragma once
@@ -528,26 +540,52 @@ struct JointCommand {
  * @brief Single trajectory point
  *
  * Represents a waypoint in a robot trajectory, specifying joint states at a particular time.
+ *
+ * @note The `joint_command_vec` order must match the joint order defined by `Trajectory.joint_names`
+ *       or `Trajectory.joint_groups` (expanded in order). Mismatched order will cause undefined behavior.
  */
 struct TrajectoryPoint {
   double time_from_start_second;               /**< Time from trajectory start (seconds) */
-  std::vector<JointCommand> joint_command_vec; /**< List of joint commands for all joints at this waypoint */
+  std::vector<JointCommand> joint_command_vec; /**< List of joint commands for all joints at this waypoint.
+                                                     Order must match joint_names or joint_groups expansion order. */
 };
 
 /**
  * @brief Joint trajectory
  *
  * Represents a complete robot trajectory consisting of multiple waypoints over time.
+ *
+ * @note Both `joint_groups` and `joint_names` MUST NOT be empty at the same time.
+ *       If both are empty, the function returns ControlStatus::INVALID_INPUT.
+ *       This restriction ensures deterministic joint ordering and prevents subtle
+ *       bugs caused by implicit internal default order (which may change between SDK versions).
+ *
+ * Usage:
+ * - Preferred: Set `joint_groups` with semantic group names (e.g., `{"left_arm", "right_arm"}`).
+ * - Fine-grained: Set `joint_names` with explicit joint names in the exact order of your point data.
+ * - `joint_names` takes precedence over `joint_groups` if both are set.
+ *
+ * Example:
+ * @code
+ * Trajectory traj;
+ * traj.joint_groups = {"left_arm", "right_arm"};  // Recommended
+ * // Or: traj.joint_names = {"left_arm_joint1", ..., "right_arm_joint1", ...};
+ * @endcode
  */
 struct Trajectory {
-  std::vector<TrajectoryPoint> points;   /**< Ordered list of trajectory waypoints */
+  std::vector<TrajectoryPoint> points;   /**< Ordered list of trajectory waypoints.
+                                             Each point's joint_command_vec must match the joint order
+                                             defined by either joint_names or joint_groups.
+                                             @note The joint order is determined by: (1) joint_names if non-empty,
+                                             otherwise (2) joint_groups expanded in order (e.g., {"head","left_arm"}
+                                             expands to head_joint1, head_joint2, left_arm_joint1, ... left_arm_joint7). */
   std::vector<std::string> joint_groups; /**< Joint-group names used to expand target joints in-order.
                                              Example: `{"head","left_arm"}` maps to
                                              `head_joint1, head_joint2, left_arm_joint1 ... left_arm_joint7`.
-                                             If empty (and `joint_names` is also empty), SDK defaults to all active
-                                             body joint groups. */
-  std::vector<std::string> joint_names;  /**< Explicit joint names. When non-empty, this takes precedence over
-                                             `joint_groups` and is validated as active joints only. */
+                                             @note Cannot be empty when joint_names is also empty. */
+  std::vector<std::string> joint_names;  /**< Explicit joint names. When non-empty, takes precedence over
+                                             joint_groups and is validated as active joints only.
+                                             @note Cannot be empty when joint_groups is also empty. */
 };
 
 /**
@@ -796,91 +834,31 @@ struct PlannerConfig {
 };
 
 /**
+ * @cond GALBOT_INTERNAL_DOC_HIDDEN
  * @brief Planning task result structure
  *
  * Contains the complete result of a motion planning operation, including success status,
  * generated trajectory, kinematics solutions, and collision information.
+ *
+ * @deprecated This struct is currently unused in the SDK. Commented out to avoid confusion.
+ *             May be re-enabled if motion planning APIs return this type in the future.
  */
-struct PlanTaskResult {
-  /**
-   * @brief Unique task identifier
-   *
-   * Used to track and distinguish different planning tasks, especially in asynchronous operations.
-   */
-  std::string task_id;
-
-  /**
-   * @brief Success flag
-   *
-   * - true: Planning completed successfully
-   * - false: Planning failed (check error_code and error_message for details)
-   */
-  bool success;
-
-  /**
-   * @brief Numerical error code
-   *
-   * Used for programmatic error handling. Zero typically indicates success,
-   * non-zero values indicate specific error conditions.
-   */
-  int error_code;
-
-  /**
-   * @brief Human-readable error message
-   *
-   * Provides detailed description of failure reason or exception information when success = false.
-   */
-  std::string error_message;
-
-  /**
-   * @brief Trajectory result
-   *
-   * Contains the complete planned trajectory with joint positions and timing information.
-   */
-  struct Trajectory {
-    /**
-     * @brief Joint positions at each waypoint
-     *
-     * Each element is a vector of joint angles (radians) representing robot configuration
-     * at one waypoint. Inner vector size = number of joints, outer vector size = number of waypoints.
-     */
-    std::vector<std::vector<double>> joint_positions;
-
-    /**
-     * @brief Timestamps for each waypoint (seconds)
-     *
-     * Cumulative time from trajectory start. Size must match joint_positions size.
-     */
-    std::vector<double> timestamps;
-  } trajectory;
-
-  /**
-   * @brief Inverse kinematics solution
-   *
-   * Maps kinematic chain name to solved joint configuration (radians).
-   * Key: Joint chain name (e.g., "left_arm", "right_arm")
-   * Value: Vector of joint angles (radians)
-   */
-  std::unordered_map<std::string, std::vector<double>> ik_result;
-
-  /**
-   * @brief Forward kinematics solution
-   *
-   * Maps link or end-effector name to computed pose.
-   * Key: Link or end-effector name (e.g., "left_gripper", "right_hand")
-   * Value: Computed pose (position + orientation)
-   */
-  std::unordered_map<std::string, Pose> fk_result;
-
-  /**
-   * @brief Collision detection result
-   *
-   * Optional field containing collision distances or penetration depths.
-   * Empty vector typically means no collision check was performed.
-   * Non-empty values may represent minimum distances to obstacles or collision severity.
-   */
-  std::vector<double> collision_result;
-};
+// struct PlanTaskResult {
+//   std::string task_id;
+//   bool success;
+//   int error_code;
+//   std::string error_message;
+//
+//   struct Trajectory {
+//     std::vector<std::vector<double>> joint_positions;
+//     std::vector<double> timestamps;
+//   } trajectory;
+//
+//   std::unordered_map<std::string, std::vector<double>> ik_result;
+//   std::unordered_map<std::string, Pose> fk_result;
+//   std::vector<double> collision_result;
+// };
+/** @endcond */
 
 /**
  * @brief Single joint state structure

@@ -53,7 +53,7 @@ fi
 
 # 默认值
 DEFAULT_INSTALL_DIR="/opt/galbot"
-SDK_VERSION="1.8.0"
+SDK_VERSION="1.8.1"
 EMBOSA_LOG_DIR="/userdata/log/embosa"
 
 # 参数
@@ -668,6 +668,46 @@ install_extras() {
     log_success "  配置文件和示例安装完成"
 }
 
+# 安装版本检查工具到各平台 bin 目录
+install_tools() {
+    log_info "安装版本检查工具..."
+
+    # 复制 check_robot_compat.py 和 wrapper
+    local compat_script="$SCRIPT_DIR/check_robot_compat.py"
+    local wrapper_script="$SCRIPT_DIR/galbot_sdk_wrapper.sh"
+
+    if [ ! -f "$compat_script" ]; then
+        log_warn "未找到 check_robot_compat.py，跳过工具安装"
+        return 0
+    fi
+
+    if [ ! -f "$wrapper_script" ]; then
+        log_warn "未找到 galbot_sdk_wrapper.sh，跳过工具安装"
+        return 0
+    fi
+
+    local platforms=()
+    if [ "$ALL_PLATFORMS" = true ]; then
+        platforms=("${SUPPORTED_PLATFORMS[@]}")
+    else
+        platforms=("$TARGET_PLATFORM")
+    fi
+
+    for platform in "${platforms[@]}"; do
+        local bin_dir="$INSTALL_DIR/galbot_sdk/$platform/bin"
+        run_cmd mkdir -p "$bin_dir"
+
+        run_cmd cp "$compat_script" "$bin_dir/"
+        run_cmd chmod +x "$bin_dir/check_robot_compat.py"
+
+        # 复制 galbot_sdk wrapper
+        run_cmd cp "$wrapper_script" "$bin_dir/galbot_sdk"
+        run_cmd chmod +x "$bin_dir/galbot_sdk"
+
+        log_success "  版本检查工具安装完成: $platform"
+    done
+}
+
 # 更新示例代码中的路径
 update_example_paths() {
     local sdk_path="$INSTALL_DIR/galbot_sdk"
@@ -729,18 +769,23 @@ echo "=========================================="
             echo "  │   ├── $platform/"
             echo "  │   │   ├── include/"
             echo "  │   │   ├── lib/"
+            echo "  │   │   ├── bin/         # 版本检查工具"
             echo "  │   │   └── setup.sh"
         done
     else
         echo "  │   └── $TARGET_PLATFORM/"
         echo "  │       ├── include/"
         echo "  │       ├── lib/"
+        echo "  │       ├── bin/         # 版本检查工具"
         echo "  │       └── setup.sh"
     fi
     echo "  ├── examples/"
     echo "  └── docs/"
     echo
     echo "使用方法:"
+    echo "  # 检查 SDK 与机器人版本兼容性"
+    echo "  galbot_sdk check-version [--robot-ip <IP>]"
+    echo
     if [ "$ALL_PLATFORMS" = true ]; then
         for platform in "${SUPPORTED_PLATFORMS[@]}"; do
             echo "  # $platform:"
@@ -832,6 +877,66 @@ run_welcome_verify_s1() {
     set -e
 
     return 0
+}
+
+# 自动配置本地 PC 的 PATH 环境变量
+configure_path_local() {
+    if [ "$CHECK_ONLY" = true ]; then
+        return 0
+    fi
+
+    log_info "自动配置本地 PATH 环境变量..."
+
+    # 获取目标用户（sudo 下用原始用户）
+    local target_user="$USER"
+    if [ -n "$SUDO_USER" ]; then
+        target_user="$SUDO_USER"
+    fi
+
+    # 检测用户默认 shell
+    local user_shell="bash"
+    local user_default_shell
+    user_default_shell=$(getent passwd "$target_user" | cut -d: -f7)
+    if [[ "$user_default_shell" == *"/zsh" ]]; then
+        user_shell="zsh"
+    fi
+
+    # 获取目标用户主目录（sudo 下使用原始用户）
+    local target_home="$HOME"
+    if [ -n "$SUDO_USER" ]; then
+        target_home=$(getent passwd "$SUDO_USER" | cut -d: -f6)
+        if [ -z "$target_home" ]; then
+            target_home="$HOME"
+        fi
+    fi
+
+    local rcfile
+    local setup_cmd
+    local install_subdir
+
+    if [ "$ALL_PLATFORMS" = true ]; then
+        # 多平台模式，自动检测当前平台写入 rc
+        install_subdir=$(detect_platform)
+        log_info "多平台安装模式，自动配置当前平台 PATH: $install_subdir"
+    else
+        install_subdir="$TARGET_PLATFORM"
+    fi
+    rcfile="$target_home/.${user_shell}rc"
+    setup_cmd="source $INSTALL_DIR/galbot_sdk/$install_subdir/setup.sh"
+
+    # 检查是否已配置
+    if grep -q "galbot_sdk.*setup.sh" "$rcfile" 2>/dev/null; then
+        log_info "PATH 配置已存在于 $rcfile，跳过"
+        return 0
+    fi
+
+    # 添加配置
+    echo "" >> "$rcfile"
+    echo "# Galbot SDK PATH 配置 - $(date '+%Y-%m-%d %H:%M:%S')" >> "$rcfile"
+    echo "$setup_cmd" >> "$rcfile"
+
+    log_success "PATH 配置已添加到 $rcfile (用户: $target_user)"
+    log_info "运行 'source $rcfile' 或重新登录使配置生效"
 }
 
 # 安装完成后询问是否运行欢迎自检（-y / NON_INTERACTIVE 时跳过）
@@ -1027,9 +1132,18 @@ echo "=========================================="
     # 安装配置文件和示例
     install_extras
     echo
-    
+
+    # 安装版本检查工具
+    install_tools
+    echo
+
+    # 自动配置 PATH (仅 PC 端)
+    configure_path_local
+    echo
+
     # 显示摘要
     show_summary
+    echo
 
     # 运行欢迎程序
     prompt_run_installation_welcome_verify

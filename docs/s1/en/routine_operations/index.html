@@ -11,7 +11,7 @@
         <link rel="canonical" href="https://docs.galbot.com/s1/routine_operations/">
       
       
-        <link rel="prev" href="../installation_and_configuration/">
+        <link rel="prev" href="../installation_terminology/">
       
       
         <link rel="next" href="../tutorials/">
@@ -266,17 +266,18 @@
   
   
   
-    <li class="md-tabs__item">
-      <a href="../installation_and_configuration/" class="md-tabs__link">
-        
-  
-  
     
+    
+      <li class="md-tabs__item">
+        <a href="../installation_system_requirements/" class="md-tabs__link">
+          
+  
   
   Installation and Configuration
 
-      </a>
-    </li>
+        </a>
+      </li>
+    
   
 
       
@@ -546,9 +547,23 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="../installation_and_configuration/" class="md-nav__link">
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
         
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
   
   
   <span class="md-ellipsis">
@@ -562,7 +577,135 @@
   
   
 
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Installation and Configuration
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation_system_requirements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    System Requirements
+  
+
+    
+  </span>
+  
+  
+
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation_and_configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Environment Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation_version_compatibility/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Version Compatibility Check
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation_terminology/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Terminology
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -1342,7 +1485,7 @@
 </div>
 <hr />
 <h2 id="s1-remote-control">Remote Controller Operation</h2>
-<p>The S1 heavy-duty robot uses a舵wheel steering + hub drive configuration. Due to the robot's heavy weight, manually moving the chassis is very inconvenient, so the S1 robot is equipped with a remote controller for robot movement and lift control.</p>
+<p>The S1 heavy-duty robot uses a steering-wheel plus hub-drive chassis configuration. Due to the robot's heavy weight, manually moving the chassis is very inconvenient, so the S1 robot is equipped with a remote controller for robot movement and lift control.</p>
 <p><strong>Applicable users</strong>: Developers, hardware/software testers, production/packaging personnel, or any person needing to move the robot.</p>
 <p><strong>Control objects</strong>: Chassis movement, lift movement</p>
 <p><strong>Controller model</strong>: T12D</p>
@@ -1424,21 +1567,16 @@
 <h4 id="packaging-mode-to-be-developed">Packaging Mode (To be developed)</h4>
 <ol>
 <li>
-<p>Push the packaging mode toggle switch to the top</p>
+<p>Push the packaging mode toggle switch to the top. In this mode, the chassis and lift are not controlled.</p>
 </li>
 <li>
-<p>Chassis and lift are not controlled</p>
+<p>After packaging mode completes, the four chassis wheels point outward at 45 degrees (TBD), and the lift moves to a fixed height (TBD).</p>
 </li>
 <li>
-<p>The 4 wheels will point 45° outward (tbd)</p>
-</li>
-<li>
-<p>Lift moves to a fixed height (tbd)</p>
-</li>
-<li>
-<p>After completion, turn off the main power before turning off the remote controller</p>
+<p>After packaging mode completes, turn off the main robot power first, then turn off the remote controller toggle switch.</p>
 </li>
 </ol>
+<p><img alt="Packaging" src="/image/remote_control_pack.png" /></p>
 <hr />
 <h3 id="troubleshooting">Troubleshooting</h3>
 <p><strong>Remote controller cannot control the robot</strong>:</p>
@@ -1518,6 +1656,8 @@
         <script src="../javascripts/interactive_toc.js"></script>
       
         <script src="../javascripts/search_focus.js"></script>
+      
+        <script src="../javascripts/installation_nav.js"></script>
       
     
   </body>

@@ -1,5 +1,66 @@
 /* Custom styles */
 
+/* 环境部署模式选择 */
+.deployment-mode-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.8rem;
+  margin: 1.4rem 0 2rem;
+}
+
+.deployment-mode-card,
+.pc-env-card {
+  display: block;
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 8px;
+  padding: 0.9rem 1rem;
+  color: var(--md-typeset-color);
+  background: var(--md-default-bg-color);
+  transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+.deployment-mode-card:hover,
+.pc-env-card:hover {
+  border-color: var(--md-primary-fg-color);
+  box-shadow: 0 0.25rem 0.8rem rgba(0, 0, 0, 0.08);
+  transform: translateY(-1px);
+  text-decoration: none;
+}
+
+.deployment-mode-card strong,
+.pc-env-card strong {
+  display: block;
+  margin-bottom: 0.3rem;
+  color: var(--md-primary-fg-color);
+  font-size: 1.05rem;
+}
+
+.deployment-mode-card span,
+.pc-env-card span {
+  display: block;
+  color: var(--md-default-fg-color--light);
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.pc-env-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.7rem;
+  margin: 1rem 0 1.4rem;
+}
+
+.deployment-section-title {
+  margin-top: 2.2rem;
+}
+
+@media (max-width: 900px) {
+  .deployment-mode-grid,
+  .pc-env-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* 增大图片默认显示尺寸 */
 .md-content img {
   max-width: 90%;
@@ -72,4 +133,22 @@ figcaption {
 
 .md-sidebar--secondary .md-nav__item--active > .md-nav__link::before {
   background-color: var(--md-primary-fg-color);
+}
+
+/* Keep the top header title fixed to site_name (e.g. "galbot_sdk - S1")
+   instead of letting MkDocs Material swap it for the current page/section
+   title as the user scrolls. Material renders two <div class="md-header__topic">
+   inside <div class="md-header__title">: the first one (no data-md-component
+   attribute) holds site_name, the second one (data-md-component="header-topic")
+   holds the page/section title and gets faded/translated in on scroll. We
+   force the site_name topic to stay visible and hide the page-title topic. */
+.md-header__title .md-header__topic:not([data-md-component]) {
+  opacity: 1 !important;
+  transform: none !important;
+  pointer-events: auto !important;
+  z-index: 1;
+}
+
+.md-header__title .md-header__topic[data-md-component="header-topic"] {
+  display: none !important;
 }

@@ -38,7 +38,7 @@ int main() {
     // Gripper torque (N·m)
     double effort = 10;
     // Whether to block until execution completes
-    bool is_blocking = false;
+    bool is_blocking = true;
     // Set left gripper width to 0.02m, speed 0.05m/s, torque 10, block until execution completes
     ControlStatus gripper_execution_status =
         robot.set_gripper_command("left_gripper", width_m, velocity_mps,

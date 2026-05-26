@@ -254,6 +254,74 @@ class GalbotNavigation {
   virtual NavigationStatus stop_navigation() = 0;
 
   /**
+   * @brief Add a bounding box for navigation obstacle filtering.
+   *
+   * Sends SDK-defined box regions to the fusion service so navigation can ignore
+   * the corresponding fused obstacle points instead of treating the boxes as obstacles.
+   * Each box is identified by `box_tag` and attached relative to `parent_link_name`.
+   *
+   * @param box_info Box size, pose, tag, and parent link information.
+   * @return NavigationStatus::SUCCESS if the box was accepted by fusion;
+   *         NavigationStatus::INVALID_INPUT for malformed box information;
+   *         NavigationStatus::COMM_ERR if the fusion service request failed.
+   */
+  virtual NavigationStatus add_bounding_box(const BoxInfo& box_info) = 0;
+
+  /**
+   * @brief Remove a bounding box from navigation obstacle filtering.
+   *
+   * Removes an SDK-created box by its `box_tag`. The tag is converted to the
+   * same SDK-marked box name used by add_bounding_box().
+   *
+   * @param box_tag SDK box tag to remove.
+   * @return NavigationStatus::SUCCESS if the box was removed by fusion;
+   *         NavigationStatus::COMM_ERR if the fusion service request failed.
+   */
+  virtual NavigationStatus remove_bounding_box(int box_tag) = 0;
+
+  /**
+   * @brief Get bounding boxes currently used by navigation obstacle filtering.
+   *
+   * Queries the fusion service and converts returned SDK-marked box names back
+   * to `box_tag` values when possible.
+   *
+   * @return Vector of current bounding box information. Returns an empty vector
+   *         if communication fails or no boxes are available.
+   */
+  virtual std::vector<BoxInfo> get_bounding_box() = 0;
+
+  /**
+   * @brief Attach a box collision object to a robot link.
+   *
+   * Sends the box as an attached collision object to PNS. The box object name is
+   * generated from `box_tag`, and `box_info.parent_link_name` is used as the
+   * parent link for `box_info.box_pose`.
+   *
+   * @param box_info Box size, pose, tag, and parent link information.
+   * @param ignore_collision_links Robot links to ignore for collision checking
+   *        against this attached box.
+   * @return NavigationStatus::SUCCESS if the box was attached;
+   *         NavigationStatus::INVALID_INPUT for malformed box information;
+   *         NavigationStatus::WAIT_INITIALIZED if the PNS service is not ready;
+   *         NavigationStatus::COMM_ERR if the PNS request failed.
+   */
+  virtual NavigationStatus attach_box_to_link(
+      const BoxInfo& box_info, const std::vector<std::string>& ignore_collision_links = {}) = 0;
+
+  /**
+   * @brief Detach a box collision object from its robot link.
+   *
+   * Removes the attached collision object whose SDK object name is generated
+   * from `box_tag`.
+   *
+   * @param box_tag SDK box tag to detach.
+   * @return NavigationStatus::SUCCESS if the box was detached;
+   *         NavigationStatus::WAIT_INITIALIZED if the PNS service is not ready;
+   *         NavigationStatus::COMM_ERR if the PNS request failed.
+   */
+  virtual NavigationStatus detach_box_from_link(int box_tag) = 0;
+
+  /**
    * @brief Check if a collision-free path exists from start to goal in the map.
    *
    * This method queries the global path planner to determine if a valid,

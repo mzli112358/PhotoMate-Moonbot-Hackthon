@@ -1690,6 +1690,28 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#galbotnavigation-add_bounding_box-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        add_bounding_box
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#galbotnavigation-attach_box_to_link-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        attach_box_to_link
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#galbotnavigation-check_goal_arrival-function" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1705,6 +1727,28 @@
     <span class="md-ellipsis">
       
         check_path_reachability
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#galbotnavigation-detach_box_from_link-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        detach_box_from_link
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#galbotnavigation-get_bounding_box-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        get_bounding_box
       
     </span>
   </a>
@@ -1782,6 +1826,17 @@
     <span class="md-ellipsis">
       
         relocalize
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#galbotnavigation-remove_bounding_box-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        remove_bounding_box
       
     </span>
   </a>
@@ -4683,10 +4738,32 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#wrench-create_joint_state-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        create_joint_state
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#wrench-create_parameter-function" class="md-nav__link">
     <span class="md-ellipsis">
       
         create_parameter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wrench-create_pose_state-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        create_pose_state
       
     </span>
   </a>
@@ -5726,7 +5803,7 @@
 </tbody>
 </table>
 <h3 id="galbotrobot-init-function">init</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">init</span><span class="p">(</span><span class="n">enable_sensor_set</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">SensorType</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">())</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">init</span><span class="p">(</span><span class="n">enable_sensor_set</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">SensorType</span><span class="p">]</span> <span class="o">=</span> <span class="o">...</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
 </span></code></pre></div>
 <p><small>Initialize the robot control system.</p>
 <p>Initializes the robot hardware communication, middleware, and sensor interfaces. To optimize resource usage, only sensors specified in the enable_sensor_set will be initialized and available for data reading.</small></p>
@@ -5744,7 +5821,7 @@
 <tr>
 <td><code>enable_sensor_set</code></td>
 <td>Set[<a href="#sensortype-enum">SensorType</a>]</td>
-<td><code>set()</code></td>
+<td><code>...</code></td>
 <td>Set of sensors to enable. Empty set uses default sensors.</td>
 </tr>
 </tbody>
@@ -8707,8 +8784,92 @@
 <p class="admonition-title">Note</p>
 <p>Adding support for a new machine type requires updating the MachineType enumeration and the factory implementation in the .cpp file.</p>
 </div>
+<h3 id="galbotnavigation-add_bounding_box-function">add_bounding_box</h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-82-1"><a id="__codelineno-82-1" name="__codelineno-82-1" href="#__codelineno-82-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">add_bounding_box</span><span class="p">(</span><span class="n">box_info</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span>
+</span></code></pre></div>
+<p><small>Add a bounding box for navigation obstacle filtering.</p>
+<p>Sends SDK-defined box regions to the fusion service so navigation can ignore the corresponding fused obstacle points instead of treating the boxes as obstacles. Each box is identified by box_tag and attached relative to parent_link_name.</small></p>
+<p><strong>Parameters</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>box_info</code></td>
+<td>dict</td>
+<td>required</td>
+<td>Contains:</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tuple</td>
+<td>tuple: (success: bool, status_string: str)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="galbotnavigation-attach_box_to_link-function">attach_box_to_link</h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-83-1"><a id="__codelineno-83-1" name="__codelineno-83-1" href="#__codelineno-83-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">attach_box_to_link</span><span class="p">(</span><span class="n">box_info</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">ignore_collision_links</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[])</span> <span class="o">-&gt;</span> <span class="nb">tuple</span>
+</span></code></pre></div>
+<p><small>Attach a box collision object to a robot link.</p>
+<p>Sends the box as an attached collision object to PNS. The box object name is generated from box_tag, and box_info.parent_link_name is used as the parent link for box_info.box_pose.</small></p>
+<p><strong>Parameters</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>box_info</code></td>
+<td>dict</td>
+<td>required</td>
+<td>Contains:</td>
+</tr>
+<tr>
+<td><code>ignore_collision_links</code></td>
+<td>Sequence[str]</td>
+<td><code>[]</code></td>
+<td>Robot links to ignore for collision checking.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tuple</td>
+<td>tuple: (success: bool, status_string: str)</td>
+</tr>
+</tbody>
+</table>
 <h3 id="galbotnavigation-check_goal_arrival-function">check_goal_arrival</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-82-1"><a id="__codelineno-82-1" name="__codelineno-82-1" href="#__codelineno-82-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">check_goal_arrival</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-84-1"><a id="__codelineno-84-1" name="__codelineno-84-1" href="#__codelineno-84-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">check_goal_arrival</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
 </span></code></pre></div>
 <p><small>Check if the robot has successfully reached the current goal.</p>
 <p>This method queries the navigation system to determine if the robot has arrived at the goal pose within acceptable position and orientation tolerances. This is particularly useful when using non-blocking navigation mode to poll for completion.</small></p>
@@ -8740,7 +8901,7 @@
 <p>If no navigation command is active, this method returns false.</p>
 </div>
 <h3 id="galbotnavigation-check_path_reachability-function">check_path_reachability</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-83-1"><a id="__codelineno-83-1" name="__codelineno-83-1" href="#__codelineno-83-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">check_path_reachability</span><span class="p">(</span><span class="n">goal_pose</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ArrayLike</span><span class="p">,</span> <span class="n">start_pose</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ArrayLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-85-1"><a id="__codelineno-85-1" name="__codelineno-85-1" href="#__codelineno-85-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">check_path_reachability</span><span class="p">(</span><span class="n">goal_pose</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ArrayLike</span><span class="p">,</span> <span class="n">start_pose</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ArrayLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
 </span></code></pre></div>
 <p><small>Check if a collision-free path exists from start to goal in the map.</p>
 <p>This method queries the global path planner to determine if a valid, collision-free path exists between the specified start and goal poses. This is useful for validating goal poses before attempting navigation, or for multi-goal path planning.</small></p>
@@ -8796,8 +8957,67 @@
 <p class="admonition-title">Note</p>
 <p>A return value of true does not guarantee successful navigation, as dynamic obstacles or localization errors may still cause failures.</p>
 </div>
+<h3 id="galbotnavigation-detach_box_from_link-function">detach_box_from_link</h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-86-1"><a id="__codelineno-86-1" name="__codelineno-86-1" href="#__codelineno-86-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">detach_box_from_link</span><span class="p">(</span><span class="n">box_tag</span><span class="p">:</span> <span class="n">SupportsInt</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span>
+</span></code></pre></div>
+<p><small>Detach a box collision object from its robot link.</p>
+<p>Removes the attached collision object whose SDK object name is generated from box_tag.</small></p>
+<p><strong>Parameters</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>box_tag</code></td>
+<td>SupportsInt</td>
+<td>required</td>
+<td>SDK box tag to detach.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tuple</td>
+<td>tuple: (success: bool, status_string: str)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="galbotnavigation-get_bounding_box-function">get_bounding_box</h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-87-1"><a id="__codelineno-87-1" name="__codelineno-87-1" href="#__codelineno-87-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_bounding_box</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span>
+</span></code></pre></div>
+<p><small>Get bounding boxes currently used by navigation obstacle filtering.</p>
+<p>Queries the fusion service and converts returned SDK-marked box names back to box_tag values when possible.</small></p>
+<p><strong>Returns</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>list</td>
+<td>list[dict]: Each dict contains box_size, box_pose, box_tag, and parent_link_name.</td>
+</tr>
+</tbody>
+</table>
 <h3 id="galbotnavigation-get_current_pose-function">get_current_pose</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-84-1"><a id="__codelineno-84-1" name="__codelineno-84-1" href="#__codelineno-84-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_current_pose</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-88-1"><a id="__codelineno-88-1" name="__codelineno-88-1" href="#__codelineno-88-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_current_pose</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
 </span></code></pre></div>
 <p><small>Get the current estimated pose of the robot chassis in the map frame.</p>
 <p>This method returns the most recent pose estimate from the localization system. The pose represents the position and orientation of the robot's base_link frame relative to the map frame origin.</small></p>
@@ -8825,7 +9045,7 @@
 <p>The pose represents the center of the robot's base footprint.</p>
 </div>
 <h3 id="galbotnavigation-get_navigation_status-function">get_navigation_status</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-85-1"><a id="__codelineno-85-1" name="__codelineno-85-1" href="#__codelineno-85-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_navigation_status</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">NavigationTaskStatus</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-89-1"><a id="__codelineno-89-1" name="__codelineno-89-1" href="#__codelineno-89-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_navigation_status</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">NavigationTaskStatus</span>
 </span></code></pre></div>
 <p><small>Get the current navigation task state.</p>
 <p>Returns the most recent task state reported by the navigation system (UNKNOWN, RUNNING, SUCCESS, or FAILED). Use this when running non-blocking navigation to poll for state and exit error logic in time on FAILED or timeout, avoiding deadlock or indefinite wait.</small></p>
@@ -8849,7 +9069,7 @@
 <p>Useful in non-blocking navigation: loop on get_navigation_status() and break on SUCCESS, FAILED, or after a timeout.</p>
 </div>
 <h3 id="galbotnavigation-init-function">init</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-86-1"><a id="__codelineno-86-1" name="__codelineno-86-1" href="#__codelineno-86-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">init</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-90-1"><a id="__codelineno-90-1" name="__codelineno-90-1" href="#__codelineno-90-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">init</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
 </span></code></pre></div>
 <p><small>Initialize the navigation subsystem and its dependencies.</p>
 <p>This method must be called before using any other navigation functions. It initializes communication channels, loads the map, starts the localization module, and prepares the path planner.</small></p>
@@ -8881,7 +9101,7 @@
 <p>Calling navigation methods before successful initialization will result in undefined behavior.</p>
 </div>
 <h3 id="galbotnavigation-is_localized-function">is_localized</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-87-1"><a id="__codelineno-87-1" name="__codelineno-87-1" href="#__codelineno-87-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">is_localized</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-91-1"><a id="__codelineno-91-1" name="__codelineno-91-1" href="#__codelineno-91-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">is_localized</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
 </span></code></pre></div>
 <p><small>Check whether the robot is currently localized in the map.</p>
 <p>This method queries the localization system to determine if the robot has a valid pose estimate with sufficient confidence. A robot that is not localized should not perform navigation tasks.</small></p>
@@ -8909,11 +9129,11 @@
 <p>If this returns false, consider calling relocalize() with a known pose estimate.</p>
 </div>
 <h3 id="galbotnavigation-move_straight_to-function">move_straight_to</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-88-1"><a id="__codelineno-88-1" name="__codelineno-88-1" href="#__codelineno-88-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">move_straight_to</span><span class="p">(</span>
-</span><span id="__span-88-2"><a id="__codelineno-88-2" name="__codelineno-88-2" href="#__codelineno-88-2"></a>    <span class="n">goal_pose</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ArrayLike</span><span class="p">,</span>
-</span><span id="__span-88-3"><a id="__codelineno-88-3" name="__codelineno-88-3" href="#__codelineno-88-3"></a>    <span class="n">is_blocking</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-</span><span id="__span-88-4"><a id="__codelineno-88-4" name="__codelineno-88-4" href="#__codelineno-88-4"></a>    <span class="n">timeout</span><span class="p">:</span> <span class="n">SupportsFloat</span> <span class="o">=</span> <span class="mi">8</span>
-</span><span id="__span-88-5"><a id="__codelineno-88-5" name="__codelineno-88-5" href="#__codelineno-88-5"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-92-1"><a id="__codelineno-92-1" name="__codelineno-92-1" href="#__codelineno-92-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">move_straight_to</span><span class="p">(</span>
+</span><span id="__span-92-2"><a id="__codelineno-92-2" name="__codelineno-92-2" href="#__codelineno-92-2"></a>    <span class="n">goal_pose</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ArrayLike</span><span class="p">,</span>
+</span><span id="__span-92-3"><a id="__codelineno-92-3" name="__codelineno-92-3" href="#__codelineno-92-3"></a>    <span class="n">is_blocking</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-92-4"><a id="__codelineno-92-4" name="__codelineno-92-4" href="#__codelineno-92-4"></a>    <span class="n">timeout</span><span class="p">:</span> <span class="n">SupportsFloat</span> <span class="o">=</span> <span class="mi">8</span>
+</span><span id="__span-92-5"><a id="__codelineno-92-5" name="__codelineno-92-5" href="#__codelineno-92-5"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span>
 </span></code></pre></div>
 <p><small>Move the robot to a relative target pose in the odometry frame.</p>
 <p>This method commands the robot to move to a pose specified relative to its current position in the odometry (odom) frame. This is useful for short, precise movements where map-based planning is not needed. Unlike navigate_to_goal(), this method does NOT perform dynamic obstacle detection or global path planning. It uses omnidirectional motion planning for direct movement to the target.</small></p>
@@ -8984,13 +9204,13 @@
 <p>Odometry drift may affect accuracy over longer distances. For accurate long-distance navigation, use navigate_to_goal() instead.</p>
 </div>
 <h3 id="galbotnavigation-navigate_to_goal-function">navigate_to_goal</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-89-1"><a id="__codelineno-89-1" name="__codelineno-89-1" href="#__codelineno-89-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">navigate_to_goal</span><span class="p">(</span>
-</span><span id="__span-89-2"><a id="__codelineno-89-2" name="__codelineno-89-2" href="#__codelineno-89-2"></a>    <span class="n">goal_pose</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ArrayLike</span><span class="p">,</span>
-</span><span id="__span-89-3"><a id="__codelineno-89-3" name="__codelineno-89-3" href="#__codelineno-89-3"></a>    <span class="n">enable_collision_check</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-</span><span id="__span-89-4"><a id="__codelineno-89-4" name="__codelineno-89-4" href="#__codelineno-89-4"></a>    <span class="n">is_blocking</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-</span><span id="__span-89-5"><a id="__codelineno-89-5" name="__codelineno-89-5" href="#__codelineno-89-5"></a>    <span class="n">timeout</span><span class="p">:</span> <span class="n">SupportsFloat</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
-</span><span id="__span-89-6"><a id="__codelineno-89-6" name="__codelineno-89-6" href="#__codelineno-89-6"></a>    <span class="n">omni_plan</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
-</span><span id="__span-89-7"><a id="__codelineno-89-7" name="__codelineno-89-7" href="#__codelineno-89-7"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-93-1"><a id="__codelineno-93-1" name="__codelineno-93-1" href="#__codelineno-93-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">navigate_to_goal</span><span class="p">(</span>
+</span><span id="__span-93-2"><a id="__codelineno-93-2" name="__codelineno-93-2" href="#__codelineno-93-2"></a>    <span class="n">goal_pose</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ArrayLike</span><span class="p">,</span>
+</span><span id="__span-93-3"><a id="__codelineno-93-3" name="__codelineno-93-3" href="#__codelineno-93-3"></a>    <span class="n">enable_collision_check</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-93-4"><a id="__codelineno-93-4" name="__codelineno-93-4" href="#__codelineno-93-4"></a>    <span class="n">is_blocking</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+</span><span id="__span-93-5"><a id="__codelineno-93-5" name="__codelineno-93-5" href="#__codelineno-93-5"></a>    <span class="n">timeout</span><span class="p">:</span> <span class="n">SupportsFloat</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
+</span><span id="__span-93-6"><a id="__codelineno-93-6" name="__codelineno-93-6" href="#__codelineno-93-6"></a>    <span class="n">omni_plan</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span id="__span-93-7"><a id="__codelineno-93-7" name="__codelineno-93-7" href="#__codelineno-93-7"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span>
 </span></code></pre></div>
 <p><small>Navigate the robot to a target goal pose in the map frame.</p>
 <p>This method commands the mobile base to navigate to a specified goal pose using the global path planner and local trajectory controller. The planner will compute a collision-free path from the current pose to the goal, considering both static map obstacles and dynamic obstacles if collision checking is enabled.</small></p>
@@ -9069,7 +9289,7 @@
 <p>In non-blocking mode, monitor navigation progress separately to detect completion or failures.</p>
 </div>
 <h3 id="galbotnavigation-relocalize-function">relocalize</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-90-1"><a id="__codelineno-90-1" name="__codelineno-90-1" href="#__codelineno-90-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">relocalize</span><span class="p">(</span><span class="n">init_pose</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ArrayLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-94-1"><a id="__codelineno-94-1" name="__codelineno-94-1" href="#__codelineno-94-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">relocalize</span><span class="p">(</span><span class="n">init_pose</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ArrayLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span>
 </span></code></pre></div>
 <p><small>Perform relocalization to re-estimate the robot's pose in the map frame.</p>
 <p>This method resets the localization filter and provides an initial pose estimate to help the robot re-establish its position in the known map. This is useful when the robot has lost localization or when manually placing the robot at a known position.</small></p>
@@ -9115,8 +9335,47 @@
 <p class="admonition-title">Note</p>
 <p>After calling this method, use is_localized() to verify successful relocalization before proceeding with navigation tasks.</p>
 </div>
+<h3 id="galbotnavigation-remove_bounding_box-function">remove_bounding_box</h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-95-1"><a id="__codelineno-95-1" name="__codelineno-95-1" href="#__codelineno-95-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">remove_bounding_box</span><span class="p">(</span><span class="n">box_tag</span><span class="p">:</span> <span class="n">SupportsInt</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span>
+</span></code></pre></div>
+<p><small>Remove a bounding box from navigation obstacle filtering.</p>
+<p>Removes an SDK-created box by its box_tag. The tag is converted to the same SDK-marked box name used by add_bounding_box().</small></p>
+<p><strong>Parameters</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>box_tag</code></td>
+<td>SupportsInt</td>
+<td>required</td>
+<td>SDK box tag to remove.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tuple</td>
+<td>tuple: (success: bool, status_string: str)</td>
+</tr>
+</tbody>
+</table>
 <h3 id="galbotnavigation-stop_navigation-function">stop_navigation</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-91-1"><a id="__codelineno-91-1" name="__codelineno-91-1" href="#__codelineno-91-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">stop_navigation</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">tuple</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-96-1"><a id="__codelineno-96-1" name="__codelineno-96-1" href="#__codelineno-96-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">stop_navigation</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">tuple</span>
 </span></code></pre></div>
 <p><small>Stop the current navigation task and bring the robot to a halt.</p>
 <p>This method immediately cancels any ongoing navigation command (from either navigate_to_goal() or move_straight_to()) and commands the robot to stop. The robot will decelerate according to its kinematic constraints and come to a safe stop.</small></p>
@@ -9190,7 +9449,7 @@
 <p><small>Collision detection enable/disable configuration.</p>
 <p>This structure provides fine-grained control over collision checking during motion planning and execution. It supports independent toggling of self-collision detection (robot links colliding with each other) and environment collision detection (robot colliding with obstacles or workspace boundaries). Disabling collision checks improves computational performance but may result in unsafe trajectories. Use with caution in controlled environments.</small></p>
 <h4 id="collisioncheckoption-get_disable_env_collision_check-function">get_disable_env_collision_check</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-92-1"><a id="__codelineno-92-1" name="__codelineno-92-1" href="#__codelineno-92-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_disable_env_collision_check</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-97-1"><a id="__codelineno-97-1" name="__codelineno-97-1" href="#__codelineno-97-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_disable_env_collision_check</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
 </span></code></pre></div>
 <p><small>Check if environment collision detection is disabled.</small></p>
 <p><strong>Returns</strong></p>
@@ -9209,7 +9468,7 @@
 </tbody>
 </table>
 <h4 id="collisioncheckoption-get_disable_self_collision_check-function">get_disable_self_collision_check</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-93-1"><a id="__codelineno-93-1" name="__codelineno-93-1" href="#__codelineno-93-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_disable_self_collision_check</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-98-1"><a id="__codelineno-98-1" name="__codelineno-98-1" href="#__codelineno-98-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_disable_self_collision_check</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
 </span></code></pre></div>
 <p><small>Check if self-collision detection is disabled.</small></p>
 <p><strong>Returns</strong></p>
@@ -9228,12 +9487,12 @@
 </tbody>
 </table>
 <h4 id="collisioncheckoption-print-function">print</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-94-1"><a id="__codelineno-94-1" name="__codelineno-94-1" href="#__codelineno-94-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">print</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-99-1"><a id="__codelineno-99-1" name="__codelineno-99-1" href="#__codelineno-99-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">print</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Print collision detection configuration to standard output.</p>
 <p>Outputs enabled/disabled status for each collision check type.</small></p>
 <h4 id="collisioncheckoption-set_disable_env_collision_check-function">set_disable_env_collision_check</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-95-1"><a id="__codelineno-95-1" name="__codelineno-95-1" href="#__codelineno-95-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_disable_env_collision_check</span><span class="p">(</span><span class="n">disable</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-100-1"><a id="__codelineno-100-1" name="__codelineno-100-1" href="#__codelineno-100-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_disable_env_collision_check</span><span class="p">(</span><span class="n">disable</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Enable or disable environment collision detection.</small></p>
 <p><strong>Parameters</strong></p>
@@ -9260,7 +9519,7 @@
 <p>Disabling environment checks may result in collisions with obstacles</p>
 </div>
 <h4 id="collisioncheckoption-set_disable_self_collision_check-function">set_disable_self_collision_check</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-96-1"><a id="__codelineno-96-1" name="__codelineno-96-1" href="#__codelineno-96-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_disable_self_collision_check</span><span class="p">(</span><span class="n">disable</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-101-1"><a id="__codelineno-101-1" name="__codelineno-101-1" href="#__codelineno-101-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_disable_self_collision_check</span><span class="p">(</span><span class="n">disable</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Enable or disable self-collision detection.</small></p>
 <p><strong>Parameters</strong></p>
@@ -9622,7 +9881,7 @@
 <p><small>Inverse kinematics (IK) solver configuration parameters.</p>
 <p>This structure configures the numerical inverse kinematics solver used to compute joint configurations that achieve desired end-effector poses. It supports collision-aware IK with configurable seed strategies, convergence tolerances, joint limit handling, and timeout parameters. IK solving is an iterative numerical optimization process that may benefit from multiple random initializations to find feasible collision-free solutions.</small></p>
 <h4 id="iksolverconfig-get_col_aware_ik_joint_limit_bias-function">get_col_aware_ik_joint_limit_bias</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-97-1"><a id="__codelineno-97-1" name="__codelineno-97-1" href="#__codelineno-97-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_col_aware_ik_joint_limit_bias</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-102-1"><a id="__codelineno-102-1" name="__codelineno-102-1" href="#__codelineno-102-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_col_aware_ik_joint_limit_bias</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span>
 </span></code></pre></div>
 <p><small>Get joint limit safety margin.</small></p>
 <p><strong>Returns</strong></p>
@@ -9641,7 +9900,7 @@
 </tbody>
 </table>
 <h4 id="iksolverconfig-get_col_aware_ik_timeout-function">get_col_aware_ik_timeout</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-98-1"><a id="__codelineno-98-1" name="__codelineno-98-1" href="#__codelineno-98-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_col_aware_ik_timeout</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-103-1"><a id="__codelineno-103-1" name="__codelineno-103-1" href="#__codelineno-103-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_col_aware_ik_timeout</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span>
 </span></code></pre></div>
 <p><small>Get collision-aware IK solver timeout.</small></p>
 <p><strong>Returns</strong></p>
@@ -9660,7 +9919,7 @@
 </tbody>
 </table>
 <h4 id="iksolverconfig-get_enable_collision_check_log-function">get_enable_collision_check_log</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-99-1"><a id="__codelineno-99-1" name="__codelineno-99-1" href="#__codelineno-99-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_enable_collision_check_log</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-104-1"><a id="__codelineno-104-1" name="__codelineno-104-1" href="#__codelineno-104-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_enable_collision_check_log</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
 </span></code></pre></div>
 <p><small>Check if collision check logging is enabled.</small></p>
 <p><strong>Returns</strong></p>
@@ -9679,7 +9938,7 @@
 </tbody>
 </table>
 <h4 id="iksolverconfig-get_rotation_eps-function">get_rotation_eps</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-100-1"><a id="__codelineno-100-1" name="__codelineno-100-1" href="#__codelineno-100-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_rotation_eps</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-105-1"><a id="__codelineno-105-1" name="__codelineno-105-1" href="#__codelineno-105-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_rotation_eps</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
 </span></code></pre></div>
 <p><small>Get orientation error tolerance.</small></p>
 <p><strong>Returns</strong></p>
@@ -9698,7 +9957,7 @@
 </tbody>
 </table>
 <h4 id="iksolverconfig-get_seed_type-function">get_seed_type</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-101-1"><a id="__codelineno-101-1" name="__codelineno-101-1" href="#__codelineno-101-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_seed_type</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">SeedType</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-106-1"><a id="__codelineno-106-1" name="__codelineno-106-1" href="#__codelineno-106-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_seed_type</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">SeedType</span>
 </span></code></pre></div>
 <p><small>Get IK solver seed generation strategy.</small></p>
 <p><strong>Returns</strong></p>
@@ -9717,7 +9976,7 @@
 </tbody>
 </table>
 <h4 id="iksolverconfig-get_translation_eps-function">get_translation_eps</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-102-1"><a id="__codelineno-102-1" name="__codelineno-102-1" href="#__codelineno-102-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_translation_eps</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-107-1"><a id="__codelineno-107-1" name="__codelineno-107-1" href="#__codelineno-107-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_translation_eps</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
 </span></code></pre></div>
 <p><small>Get Cartesian position error tolerance.</small></p>
 <p><strong>Returns</strong></p>
@@ -9736,12 +9995,12 @@
 </tbody>
 </table>
 <h4 id="iksolverconfig-print-function">print</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-103-1"><a id="__codelineno-103-1" name="__codelineno-103-1" href="#__codelineno-103-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">print</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-108-1"><a id="__codelineno-108-1" name="__codelineno-108-1" href="#__codelineno-108-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">print</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Print IK solver configuration to standard output.</p>
 <p>Outputs all configuration parameters for debugging and verification.</small></p>
 <h4 id="iksolverconfig-set_col_aware_ik_joint_limit_bias-function">set_col_aware_ik_joint_limit_bias</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-104-1"><a id="__codelineno-104-1" name="__codelineno-104-1" href="#__codelineno-104-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_col_aware_ik_joint_limit_bias</span><span class="p">(</span><span class="n">bias</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-109-1"><a id="__codelineno-109-1" name="__codelineno-109-1" href="#__codelineno-109-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_col_aware_ik_joint_limit_bias</span><span class="p">(</span><span class="n">bias</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Set safety margin from joint position limits.</small></p>
 <p><strong>Parameters</strong></p>
@@ -9768,7 +10027,7 @@
 <p>Prevents IK solver from proposing configurations near singularities or mechanical limits</p>
 </div>
 <h4 id="iksolverconfig-set_col_aware_ik_timeout-function">set_col_aware_ik_timeout</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-105-1"><a id="__codelineno-105-1" name="__codelineno-105-1" href="#__codelineno-105-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_col_aware_ik_timeout</span><span class="p">(</span><span class="n">timeout</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-110-1"><a id="__codelineno-110-1" name="__codelineno-110-1" href="#__codelineno-110-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_col_aware_ik_timeout</span><span class="p">(</span><span class="n">timeout</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Set timeout for collision-aware IK solver.</small></p>
 <p><strong>Parameters</strong></p>
@@ -9795,7 +10054,7 @@
 <p>Longer timeouts allow more seed attempts but delay planning</p>
 </div>
 <h4 id="iksolverconfig-set_enable_collision_check_log-function">set_enable_collision_check_log</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-106-1"><a id="__codelineno-106-1" name="__codelineno-106-1" href="#__codelineno-106-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_enable_collision_check_log</span><span class="p">(</span><span class="n">enable</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-111-1"><a id="__codelineno-111-1" name="__codelineno-111-1" href="#__codelineno-111-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_enable_collision_check_log</span><span class="p">(</span><span class="n">enable</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Enable or disable detailed collision checking diagnostic logs.</small></p>
 <p><strong>Parameters</strong></p>
@@ -9822,7 +10081,7 @@
 <p>Useful for debugging IK failures due to collision constraints</p>
 </div>
 <h4 id="iksolverconfig-set_rotation_eps-function">set_rotation_eps</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-107-1"><a id="__codelineno-107-1" name="__codelineno-107-1" href="#__codelineno-107-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_rotation_eps</span><span class="p">(</span><span class="n">eps</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-112-1"><a id="__codelineno-112-1" name="__codelineno-112-1" href="#__codelineno-112-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_rotation_eps</span><span class="p">(</span><span class="n">eps</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Set orientation error tolerance for IK convergence.</small></p>
 <p><strong>Parameters</strong></p>
@@ -9849,7 +10108,7 @@
 <p>IK solution is accepted when orientation error is within this threshold</p>
 </div>
 <h4 id="iksolverconfig-set_seed_type-function">set_seed_type</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-108-1"><a id="__codelineno-108-1" name="__codelineno-108-1" href="#__codelineno-108-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_seed_type</span><span class="p">(</span><span class="nb">type</span><span class="p">:</span> <span class="n">SeedType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-113-1"><a id="__codelineno-113-1" name="__codelineno-113-1" href="#__codelineno-113-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_seed_type</span><span class="p">(</span><span class="nb">type</span><span class="p">:</span> <span class="n">SeedType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Set initial configuration seed generation strategy.</small></p>
 <p><strong>Parameters</strong></p>
@@ -9872,7 +10131,7 @@
 </tbody>
 </table>
 <h4 id="iksolverconfig-set_translation_eps-function">set_translation_eps</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-109-1"><a id="__codelineno-109-1" name="__codelineno-109-1" href="#__codelineno-109-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_translation_eps</span><span class="p">(</span><span class="n">eps</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-114-1"><a id="__codelineno-114-1" name="__codelineno-114-1" href="#__codelineno-114-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_translation_eps</span><span class="p">(</span><span class="n">eps</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Set Cartesian position error tolerance for IK convergence.</small></p>
 <p><strong>Parameters</strong></p>
@@ -10059,7 +10318,7 @@
 </tbody>
 </table>
 <h4 id="jointstates-get_type-function">get_type</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-110-1"><a id="__codelineno-110-1" name="__codelineno-110-1" href="#__codelineno-110-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_type</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RobotStatesType</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-115-1"><a id="__codelineno-115-1" name="__codelineno-115-1" href="#__codelineno-115-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_type</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RobotStatesType</span>
 </span></code></pre></div>
 <p><small>Get runtime type identifier.</small></p>
 <p><strong>Returns</strong></p>
@@ -10078,7 +10337,7 @@
 </tbody>
 </table>
 <h4 id="jointstates-set_joint-function">set_joint</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-111-1"><a id="__codelineno-111-1" name="__codelineno-111-1" href="#__codelineno-111-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_joint</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="n">SupportsInt</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="n">SupportsInt</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-116-1"><a id="__codelineno-116-1" name="__codelineno-116-1" href="#__codelineno-116-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_joint</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="n">SupportsInt</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="n">SupportsInt</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Set individual joint angle by index.</small></p>
 <p><strong>Parameters</strong></p>
@@ -10115,7 +10374,7 @@
 <p>No error is returned for out-of-bounds access; ensure index validity externally.</p>
 </div>
 <h4 id="jointstates-set_joint_positions-function">set_joint_positions</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-112-1"><a id="__codelineno-112-1" name="__codelineno-112-1" href="#__codelineno-112-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_joint_positions</span><span class="p">(</span><span class="n">joints</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-117-1"><a id="__codelineno-117-1" name="__codelineno-117-1" href="#__codelineno-117-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_joint_positions</span><span class="p">(</span><span class="n">joints</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Set complete joint configuration for the kinematic chain.</small></p>
 <p><strong>Parameters</strong></p>
@@ -10146,7 +10405,7 @@
 <p><small>Kinematic boundary parameters for robot kinematic chain joints.</p>
 <p>This structure defines the kinematic constraints for a robot kinematic chain (e.g., manipulator arms, mobile base, or leg chains). It specifies position, velocity, acceleration, and jerk limits for each joint in the chain. These boundaries are critical for ensuring safe and physically feasible motion during trajectory planning and execution. Each vector should contain one value per joint in the kinematic chain. All joint space quantities are specified in radians or radians per unit time.</small></p>
 <h4 id="kinematicsboundary-get_acc_lower_limit-function">get_acc_lower_limit</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-113-1"><a id="__codelineno-113-1" name="__codelineno-113-1" href="#__codelineno-113-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_acc_lower_limit</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-118-1"><a id="__codelineno-118-1" name="__codelineno-118-1" href="#__codelineno-118-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_acc_lower_limit</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
 </span></code></pre></div>
 <p><small>Get joint acceleration lower bounds.</small></p>
 <p><strong>Returns</strong></p>
@@ -10165,7 +10424,7 @@
 </tbody>
 </table>
 <h4 id="kinematicsboundary-get_acc_upper_limit-function">get_acc_upper_limit</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-114-1"><a id="__codelineno-114-1" name="__codelineno-114-1" href="#__codelineno-114-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_acc_upper_limit</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-119-1"><a id="__codelineno-119-1" name="__codelineno-119-1" href="#__codelineno-119-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_acc_upper_limit</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
 </span></code></pre></div>
 <p><small>Get joint acceleration upper bounds.</small></p>
 <p><strong>Returns</strong></p>
@@ -10184,7 +10443,7 @@
 </tbody>
 </table>
 <h4 id="kinematicsboundary-get_chain_name-function">get_chain_name</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-115-1"><a id="__codelineno-115-1" name="__codelineno-115-1" href="#__codelineno-115-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_chain_name</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-120-1"><a id="__codelineno-120-1" name="__codelineno-120-1" href="#__codelineno-120-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_chain_name</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span>
 </span></code></pre></div>
 <p><small>Get the kinematic chain name identifier.</small></p>
 <p><strong>Returns</strong></p>
@@ -10203,7 +10462,7 @@
 </tbody>
 </table>
 <h4 id="kinematicsboundary-get_jerk_lower_limit-function">get_jerk_lower_limit</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-116-1"><a id="__codelineno-116-1" name="__codelineno-116-1" href="#__codelineno-116-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_jerk_lower_limit</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-121-1"><a id="__codelineno-121-1" name="__codelineno-121-1" href="#__codelineno-121-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_jerk_lower_limit</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
 </span></code></pre></div>
 <p><small>Get joint jerk lower bounds.</small></p>
 <p><strong>Returns</strong></p>
@@ -10222,7 +10481,7 @@
 </tbody>
 </table>
 <h4 id="kinematicsboundary-get_jerk_upper_limit-function">get_jerk_upper_limit</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-117-1"><a id="__codelineno-117-1" name="__codelineno-117-1" href="#__codelineno-117-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_jerk_upper_limit</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-122-1"><a id="__codelineno-122-1" name="__codelineno-122-1" href="#__codelineno-122-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_jerk_upper_limit</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
 </span></code></pre></div>
 <p><small>Get joint jerk upper bounds.</small></p>
 <p><strong>Returns</strong></p>
@@ -10241,7 +10500,7 @@
 </tbody>
 </table>
 <h4 id="kinematicsboundary-get_lower_limit-function">get_lower_limit</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-118-1"><a id="__codelineno-118-1" name="__codelineno-118-1" href="#__codelineno-118-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_lower_limit</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-123-1"><a id="__codelineno-123-1" name="__codelineno-123-1" href="#__codelineno-123-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_lower_limit</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
 </span></code></pre></div>
 <p><small>Get joint position lower bounds.</small></p>
 <p><strong>Returns</strong></p>
@@ -10260,7 +10519,7 @@
 </tbody>
 </table>
 <h4 id="kinematicsboundary-get_upper_limit-function">get_upper_limit</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-119-1"><a id="__codelineno-119-1" name="__codelineno-119-1" href="#__codelineno-119-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_upper_limit</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-124-1"><a id="__codelineno-124-1" name="__codelineno-124-1" href="#__codelineno-124-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_upper_limit</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
 </span></code></pre></div>
 <p><small>Get joint position upper bounds.</small></p>
 <p><strong>Returns</strong></p>
@@ -10279,7 +10538,7 @@
 </tbody>
 </table>
 <h4 id="kinematicsboundary-get_vel_lower_limit-function">get_vel_lower_limit</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-120-1"><a id="__codelineno-120-1" name="__codelineno-120-1" href="#__codelineno-120-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_vel_lower_limit</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-125-1"><a id="__codelineno-125-1" name="__codelineno-125-1" href="#__codelineno-125-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_vel_lower_limit</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
 </span></code></pre></div>
 <p><small>Get joint velocity lower bounds.</small></p>
 <p><strong>Returns</strong></p>
@@ -10298,7 +10557,7 @@
 </tbody>
 </table>
 <h4 id="kinematicsboundary-get_vel_upper_limit-function">get_vel_upper_limit</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-121-1"><a id="__codelineno-121-1" name="__codelineno-121-1" href="#__codelineno-121-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_vel_upper_limit</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-126-1"><a id="__codelineno-126-1" name="__codelineno-126-1" href="#__codelineno-126-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_vel_upper_limit</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
 </span></code></pre></div>
 <p><small>Get joint velocity upper bounds.</small></p>
 <p><strong>Returns</strong></p>
@@ -10317,12 +10576,12 @@
 </tbody>
 </table>
 <h4 id="kinematicsboundary-print-function">print</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-122-1"><a id="__codelineno-122-1" name="__codelineno-122-1" href="#__codelineno-122-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">print</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-127-1"><a id="__codelineno-127-1" name="__codelineno-127-1" href="#__codelineno-127-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">print</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Print kinematic boundary information to standard output.</p>
 <p>Outputs all boundary parameters for debugging and visualization purposes.</small></p>
 <h4 id="kinematicsboundary-set_acc_lower_limit-function">set_acc_lower_limit</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-123-1"><a id="__codelineno-123-1" name="__codelineno-123-1" href="#__codelineno-123-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_acc_lower_limit</span><span class="p">(</span><span class="n">limits</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-128-1"><a id="__codelineno-128-1" name="__codelineno-128-1" href="#__codelineno-128-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_acc_lower_limit</span><span class="p">(</span><span class="n">limits</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Set joint acceleration lower bounds.</small></p>
 <p><strong>Parameters</strong></p>
@@ -10349,7 +10608,7 @@
 <p>Used for trajectory optimization and smoothness constraints</p>
 </div>
 <h4 id="kinematicsboundary-set_acc_upper_limit-function">set_acc_upper_limit</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-124-1"><a id="__codelineno-124-1" name="__codelineno-124-1" href="#__codelineno-124-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_acc_upper_limit</span><span class="p">(</span><span class="n">limits</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-129-1"><a id="__codelineno-129-1" name="__codelineno-129-1" href="#__codelineno-129-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_acc_upper_limit</span><span class="p">(</span><span class="n">limits</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Set joint acceleration upper bounds.</small></p>
 <p><strong>Parameters</strong></p>
@@ -10376,7 +10635,7 @@
 <p>Used for trajectory optimization and smoothness constraints</p>
 </div>
 <h4 id="kinematicsboundary-set_chain_name-function">set_chain_name</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-125-1"><a id="__codelineno-125-1" name="__codelineno-125-1" href="#__codelineno-125-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_chain_name</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-130-1"><a id="__codelineno-130-1" name="__codelineno-130-1" href="#__codelineno-130-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_chain_name</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Set the name identifier for this kinematic chain.</small></p>
 <p><strong>Parameters</strong></p>
@@ -10399,7 +10658,7 @@
 </tbody>
 </table>
 <h4 id="kinematicsboundary-set_jerk_lower_limit-function">set_jerk_lower_limit</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-126-1"><a id="__codelineno-126-1" name="__codelineno-126-1" href="#__codelineno-126-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_jerk_lower_limit</span><span class="p">(</span><span class="n">limits</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-131-1"><a id="__codelineno-131-1" name="__codelineno-131-1" href="#__codelineno-131-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_jerk_lower_limit</span><span class="p">(</span><span class="n">limits</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Set joint jerk lower bounds.</small></p>
 <p><strong>Parameters</strong></p>
@@ -10426,7 +10685,7 @@
 <p>Jerk constraints improve motion smoothness and reduce mechanical wear</p>
 </div>
 <h4 id="kinematicsboundary-set_jerk_upper_limit-function">set_jerk_upper_limit</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-127-1"><a id="__codelineno-127-1" name="__codelineno-127-1" href="#__codelineno-127-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_jerk_upper_limit</span><span class="p">(</span><span class="n">limits</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-132-1"><a id="__codelineno-132-1" name="__codelineno-132-1" href="#__codelineno-132-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_jerk_upper_limit</span><span class="p">(</span><span class="n">limits</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Set joint jerk upper bounds.</small></p>
 <p><strong>Parameters</strong></p>
@@ -10453,7 +10712,7 @@
 <p>Jerk constraints improve motion smoothness and reduce mechanical wear</p>
 </div>
 <h4 id="kinematicsboundary-set_lower_limit-function">set_lower_limit</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-128-1"><a id="__codelineno-128-1" name="__codelineno-128-1" href="#__codelineno-128-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_lower_limit</span><span class="p">(</span><span class="n">limits</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-133-1"><a id="__codelineno-133-1" name="__codelineno-133-1" href="#__codelineno-133-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_lower_limit</span><span class="p">(</span><span class="n">limits</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Set joint position lower bounds.</small></p>
 <p><strong>Parameters</strong></p>
@@ -10480,7 +10739,7 @@
 <p>Vector size must equal the number of joints in the chain</p>
 </div>
 <h4 id="kinematicsboundary-set_upper_limit-function">set_upper_limit</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-129-1"><a id="__codelineno-129-1" name="__codelineno-129-1" href="#__codelineno-129-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_upper_limit</span><span class="p">(</span><span class="n">limits</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-134-1"><a id="__codelineno-134-1" name="__codelineno-134-1" href="#__codelineno-134-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_upper_limit</span><span class="p">(</span><span class="n">limits</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Set joint position upper bounds.</small></p>
 <p><strong>Parameters</strong></p>
@@ -10507,7 +10766,7 @@
 <p>Vector size must equal the number of joints in the chain</p>
 </div>
 <h4 id="kinematicsboundary-set_vel_lower_limit-function">set_vel_lower_limit</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-130-1"><a id="__codelineno-130-1" name="__codelineno-130-1" href="#__codelineno-130-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_vel_lower_limit</span><span class="p">(</span><span class="n">limits</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-135-1"><a id="__codelineno-135-1" name="__codelineno-135-1" href="#__codelineno-135-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_vel_lower_limit</span><span class="p">(</span><span class="n">limits</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Set joint velocity lower bounds.</small></p>
 <p><strong>Parameters</strong></p>
@@ -10534,7 +10793,7 @@
 <p>Typically negative values for bidirectional joints</p>
 </div>
 <h4 id="kinematicsboundary-set_vel_upper_limit-function">set_vel_upper_limit</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-131-1"><a id="__codelineno-131-1" name="__codelineno-131-1" href="#__codelineno-131-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_vel_upper_limit</span><span class="p">(</span><span class="n">limits</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-136-1"><a id="__codelineno-136-1" name="__codelineno-136-1" href="#__codelineno-136-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_vel_upper_limit</span><span class="p">(</span><span class="n">limits</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Set joint velocity upper bounds.</small></p>
 <p><strong>Parameters</strong></p>
@@ -10626,7 +10885,7 @@
 <p><small>Geometric primitive configuration for Cartesian linear trajectory validation.</p>
 <p>This structure configures the collision detection geometric representation for linear end-effector trajectories in Cartesian space. It supports two primitive types: infinitesimally thin lines and swept-volume cylinders. Choosing the appropriate primitive affects collision detection conservativeness and computational cost. Cylinder primitives model the robot's actual swept volume more accurately but require more expensive geometric queries.</small></p>
 <h4 id="linetrajcheckprimitive-get_cylinder_prim_radius-function">get_cylinder_prim_radius</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-132-1"><a id="__codelineno-132-1" name="__codelineno-132-1" href="#__codelineno-132-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_cylinder_prim_radius</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-137-1"><a id="__codelineno-137-1" name="__codelineno-137-1" href="#__codelineno-137-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_cylinder_prim_radius</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span>
 </span></code></pre></div>
 <p><small>Get the cylinder primitive swept-volume radius.</small></p>
 <p><strong>Returns</strong></p>
@@ -10645,7 +10904,7 @@
 </tbody>
 </table>
 <h4 id="linetrajcheckprimitive-get_line_check_primitive_type-function">get_line_check_primitive_type</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-133-1"><a id="__codelineno-133-1" name="__codelineno-133-1" href="#__codelineno-133-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_line_check_primitive_type</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">PrimitiveType</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-138-1"><a id="__codelineno-138-1" name="__codelineno-138-1" href="#__codelineno-138-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_line_check_primitive_type</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">PrimitiveType</span>
 </span></code></pre></div>
 <p><small>Get the geometric primitive type for trajectory checking.</small></p>
 <p><strong>Returns</strong></p>
@@ -10664,7 +10923,7 @@
 </tbody>
 </table>
 <h4 id="linetrajcheckprimitive-get_line_prim_curvature-function">get_line_prim_curvature</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-134-1"><a id="__codelineno-134-1" name="__codelineno-134-1" href="#__codelineno-134-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_line_prim_curvature</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-139-1"><a id="__codelineno-139-1" name="__codelineno-139-1" href="#__codelineno-139-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_line_prim_curvature</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span>
 </span></code></pre></div>
 <p><small>Get the line primitive curvature approximation tolerance.</small></p>
 <p><strong>Returns</strong></p>
@@ -10683,12 +10942,12 @@
 </tbody>
 </table>
 <h4 id="linetrajcheckprimitive-print-function">print</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-135-1"><a id="__codelineno-135-1" name="__codelineno-135-1" href="#__codelineno-135-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">print</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-140-1"><a id="__codelineno-140-1" name="__codelineno-140-1" href="#__codelineno-140-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">print</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Print line trajectory check primitive configuration to standard output.</p>
 <p>Outputs selected primitive type and associated parameters for debugging.</small></p>
 <h4 id="linetrajcheckprimitive-set_cylinder_prim_radius-function">set_cylinder_prim_radius</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-136-1"><a id="__codelineno-136-1" name="__codelineno-136-1" href="#__codelineno-136-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_cylinder_prim_radius</span><span class="p">(</span><span class="n">radius</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-141-1"><a id="__codelineno-141-1" name="__codelineno-141-1" href="#__codelineno-141-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_cylinder_prim_radius</span><span class="p">(</span><span class="n">radius</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Set swept-volume cylinder radius for trajectory collision checking.</small></p>
 <p><strong>Parameters</strong></p>
@@ -10719,7 +10978,7 @@
 <p>Only applies when primitive type is CYLINDER</p>
 </div>
 <h4 id="linetrajcheckprimitive-set_line_check_primitive_type-function">set_line_check_primitive_type</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-137-1"><a id="__codelineno-137-1" name="__codelineno-137-1" href="#__codelineno-137-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_line_check_primitive_type</span><span class="p">(</span><span class="nb">type</span><span class="p">:</span> <span class="n">PrimitiveType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-142-1"><a id="__codelineno-142-1" name="__codelineno-142-1" href="#__codelineno-142-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_line_check_primitive_type</span><span class="p">(</span><span class="nb">type</span><span class="p">:</span> <span class="n">PrimitiveType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Set geometric primitive type for linear trajectory validation.</small></p>
 <p><strong>Parameters</strong></p>
@@ -10746,7 +11005,7 @@
 <p>CYLINDER is recommended for safety-critical applications</p>
 </div>
 <h4 id="linetrajcheckprimitive-set_line_prim_curvature-function">set_line_prim_curvature</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-138-1"><a id="__codelineno-138-1" name="__codelineno-138-1" href="#__codelineno-138-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_line_prim_curvature</span><span class="p">(</span><span class="n">curvature</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-143-1"><a id="__codelineno-143-1" name="__codelineno-143-1" href="#__codelineno-143-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_line_prim_curvature</span><span class="p">(</span><span class="n">curvature</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Set curvature approximation tolerance for line primitive.</small></p>
 <p><strong>Parameters</strong></p>
@@ -10841,7 +11100,7 @@
 <p><small>Comprehensive motion planning configuration management.</p>
 <p>MotionPlanConfig serves as a centralized configuration container for all motion planning subsystems. It aggregates sampling strategies, trajectory generation parameters, inverse kinematics solver settings, collision detection options, feasibility validation criteria, and kinematic constraint boundaries. This class provides a unified interface for configuring complex motion planning pipelines, supporting both simple manipulator planning and whole-body humanoid motion generation with multiple kinematic chains. Configuration objects are lazily initialized and managed through shared pointers to optimize memory usage and support optional feature configuration.</small></p>
 <h4 id="motionplanconfig-create_collision_check_option-function">create_collision_check_option</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-139-1"><a id="__codelineno-139-1" name="__codelineno-139-1" href="#__codelineno-139-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">create_collision_check_option</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">CollisionCheckOption</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-144-1"><a id="__codelineno-144-1" name="__codelineno-144-1" href="#__codelineno-144-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">create_collision_check_option</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">CollisionCheckOption</span>
 </span></code></pre></div>
 <p><small>Create or retrieve collision check option configuration.</p>
 <p>Lazily initializes the collision check options if they do not exist.</small></p>
@@ -10861,7 +11120,7 @@
 </tbody>
 </table>
 <h4 id="motionplanconfig-create_ik_solver_config-function">create_ik_solver_config</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-140-1"><a id="__codelineno-140-1" name="__codelineno-140-1" href="#__codelineno-140-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">create_ik_solver_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">IKSolverConfig</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-145-1"><a id="__codelineno-145-1" name="__codelineno-145-1" href="#__codelineno-145-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">create_ik_solver_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">IKSolverConfig</span>
 </span></code></pre></div>
 <p><small>Create or retrieve inverse kinematics solver configuration.</p>
 <p>Lazily initializes the IK solver configuration if it does not exist.</small></p>
@@ -10881,7 +11140,7 @@
 </tbody>
 </table>
 <h4 id="motionplanconfig-create_line_traj_check_primitive-function">create_line_traj_check_primitive</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-141-1"><a id="__codelineno-141-1" name="__codelineno-141-1" href="#__codelineno-141-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">create_line_traj_check_primitive</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">LineTrajCheckPrimitive</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-146-1"><a id="__codelineno-146-1" name="__codelineno-146-1" href="#__codelineno-146-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">create_line_traj_check_primitive</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">LineTrajCheckPrimitive</span>
 </span></code></pre></div>
 <p><small>Create or retrieve line trajectory check primitive configuration.</p>
 <p>Lazily initializes the line trajectory check primitive configuration if it does not exist.</small></p>
@@ -10901,7 +11160,7 @@
 </tbody>
 </table>
 <h4 id="motionplanconfig-create_sampler_config-function">create_sampler_config</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-142-1"><a id="__codelineno-142-1" name="__codelineno-142-1" href="#__codelineno-142-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">create_sampler_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">SamplerConfig</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-147-1"><a id="__codelineno-147-1" name="__codelineno-147-1" href="#__codelineno-147-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">create_sampler_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">SamplerConfig</span>
 </span></code></pre></div>
 <p><small>Create or retrieve sampler configuration.</p>
 <p>Lazily initializes the sampler configuration if it does not exist. Safe to call multiple times; returns the same instance after first creation.</small></p>
@@ -10921,7 +11180,7 @@
 </tbody>
 </table>
 <h4 id="motionplanconfig-create_trajectory_feasibility_check_option-function">create_trajectory_feasibility_check_option</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-143-1"><a id="__codelineno-143-1" name="__codelineno-143-1" href="#__codelineno-143-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">create_trajectory_feasibility_check_option</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">TrajectoryFeasibilityCheckOption</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-148-1"><a id="__codelineno-148-1" name="__codelineno-148-1" href="#__codelineno-148-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">create_trajectory_feasibility_check_option</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">TrajectoryFeasibilityCheckOption</span>
 </span></code></pre></div>
 <p><small>Create or retrieve trajectory feasibility check option configuration.</p>
 <p>Lazily initializes the trajectory feasibility check options if they do not exist.</small></p>
@@ -10941,7 +11200,7 @@
 </tbody>
 </table>
 <h4 id="motionplanconfig-create_trajectory_plan_config-function">create_trajectory_plan_config</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-144-1"><a id="__codelineno-144-1" name="__codelineno-144-1" href="#__codelineno-144-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">create_trajectory_plan_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">TrajectoryPlanConfig</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-149-1"><a id="__codelineno-149-1" name="__codelineno-149-1" href="#__codelineno-149-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">create_trajectory_plan_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">TrajectoryPlanConfig</span>
 </span></code></pre></div>
 <p><small>Create or retrieve trajectory planning configuration.</p>
 <p>Lazily initializes the trajectory planning configuration if it does not exist.</small></p>
@@ -10961,7 +11220,7 @@
 </tbody>
 </table>
 <h4 id="motionplanconfig-get_collision_check_option-function">get_collision_check_option</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-145-1"><a id="__codelineno-145-1" name="__codelineno-145-1" href="#__codelineno-145-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_collision_check_option</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">CollisionCheckOption</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-150-1"><a id="__codelineno-150-1" name="__codelineno-150-1" href="#__codelineno-150-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_collision_check_option</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">CollisionCheckOption</span>
 </span></code></pre></div>
 <p><small>Get collision check option configuration (may be nullptr if not initialized)</small></p>
 <p><strong>Returns</strong></p>
@@ -10984,7 +11243,7 @@
 <p>Use create_collision_check_option() to ensure a valid configuration exists</p>
 </div>
 <h4 id="motionplanconfig-get_collision_check_option_ref-function">get_collision_check_option_ref</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-146-1"><a id="__codelineno-146-1" name="__codelineno-146-1" href="#__codelineno-146-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_collision_check_option_ref</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">CollisionCheckOption</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-151-1"><a id="__codelineno-151-1" name="__codelineno-151-1" href="#__codelineno-151-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_collision_check_option_ref</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">CollisionCheckOption</span>
 </span></code></pre></div>
 <p><small>Get mutable reference to collision check option configuration.</p>
 <p>Lazily creates a new collision check option with default values if not already initialized.</small></p>
@@ -11004,7 +11263,7 @@
 </tbody>
 </table>
 <h4 id="motionplanconfig-get_feasibility_boundary-function">get_feasibility_boundary</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-147-1"><a id="__codelineno-147-1" name="__codelineno-147-1" href="#__codelineno-147-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_feasibility_boundary</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">KinematicsBoundary</span><span class="p">]</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-152-1"><a id="__codelineno-152-1" name="__codelineno-152-1" href="#__codelineno-152-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_feasibility_boundary</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">KinematicsBoundary</span><span class="p">]</span>
 </span></code></pre></div>
 <p><small>Get kinematic feasibility boundaries for all chains (mutable)</p>
 <p>Returns mutable access to the feasibility boundary configuration for in-place modification.</small></p>
@@ -11024,7 +11283,7 @@
 </tbody>
 </table>
 <h4 id="motionplanconfig-get_hard_joint_limit-function">get_hard_joint_limit</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-148-1"><a id="__codelineno-148-1" name="__codelineno-148-1" href="#__codelineno-148-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_hard_joint_limit</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">KinematicsBoundary</span><span class="p">]</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-153-1"><a id="__codelineno-153-1" name="__codelineno-153-1" href="#__codelineno-153-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_hard_joint_limit</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">KinematicsBoundary</span><span class="p">]</span>
 </span></code></pre></div>
 <p><small>Get hard joint limits (mutable)</small></p>
 <p><strong>Returns</strong></p>
@@ -11043,7 +11302,7 @@
 </tbody>
 </table>
 <h4 id="motionplanconfig-get_ik_joint_limit-function">get_ik_joint_limit</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-149-1"><a id="__codelineno-149-1" name="__codelineno-149-1" href="#__codelineno-149-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_ik_joint_limit</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">KinematicsBoundary</span><span class="p">]</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-154-1"><a id="__codelineno-154-1" name="__codelineno-154-1" href="#__codelineno-154-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_ik_joint_limit</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">KinematicsBoundary</span><span class="p">]</span>
 </span></code></pre></div>
 <p><small>Get IK phase joint limits (mutable)</small></p>
 <p><strong>Returns</strong></p>
@@ -11062,7 +11321,7 @@
 </tbody>
 </table>
 <h4 id="motionplanconfig-get_ik_solver_config-function">get_ik_solver_config</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-150-1"><a id="__codelineno-150-1" name="__codelineno-150-1" href="#__codelineno-150-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_ik_solver_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">IKSolverConfig</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-155-1"><a id="__codelineno-155-1" name="__codelineno-155-1" href="#__codelineno-155-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_ik_solver_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">IKSolverConfig</span>
 </span></code></pre></div>
 <p><small>Get inverse kinematics solver configuration (may be nullptr if not initialized)</small></p>
 <p><strong>Returns</strong></p>
@@ -11085,7 +11344,7 @@
 <p>Use create_ik_solver_config() to ensure a valid configuration exists</p>
 </div>
 <h4 id="motionplanconfig-get_ik_solver_config_ref-function">get_ik_solver_config_ref</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-151-1"><a id="__codelineno-151-1" name="__codelineno-151-1" href="#__codelineno-151-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_ik_solver_config_ref</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">IKSolverConfig</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-156-1"><a id="__codelineno-156-1" name="__codelineno-156-1" href="#__codelineno-156-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_ik_solver_config_ref</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">IKSolverConfig</span>
 </span></code></pre></div>
 <p><small>Get mutable reference to inverse kinematics solver configuration.</p>
 <p>Lazily creates a new IK solver configuration with default values if not already initialized.</small></p>
@@ -11105,7 +11364,7 @@
 </tbody>
 </table>
 <h4 id="motionplanconfig-get_line_traj_check_primitive-function">get_line_traj_check_primitive</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-152-1"><a id="__codelineno-152-1" name="__codelineno-152-1" href="#__codelineno-152-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_line_traj_check_primitive</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">LineTrajCheckPrimitive</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-157-1"><a id="__codelineno-157-1" name="__codelineno-157-1" href="#__codelineno-157-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_line_traj_check_primitive</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">LineTrajCheckPrimitive</span>
 </span></code></pre></div>
 <p><small>Get line trajectory check primitive configuration (may be nullptr if not initialized)</small></p>
 <p><strong>Returns</strong></p>
@@ -11128,7 +11387,7 @@
 <p>Use create_line_traj_check_primitive() to ensure a valid configuration exists</p>
 </div>
 <h4 id="motionplanconfig-get_line_traj_check_primitive_ref-function">get_line_traj_check_primitive_ref</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-153-1"><a id="__codelineno-153-1" name="__codelineno-153-1" href="#__codelineno-153-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_line_traj_check_primitive_ref</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">LineTrajCheckPrimitive</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-158-1"><a id="__codelineno-158-1" name="__codelineno-158-1" href="#__codelineno-158-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_line_traj_check_primitive_ref</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">LineTrajCheckPrimitive</span>
 </span></code></pre></div>
 <p><small>Get mutable reference to line trajectory check primitive configuration.</p>
 <p>Lazily creates a new line trajectory check primitive with default values if not already initialized.</small></p>
@@ -11148,7 +11407,7 @@
 </tbody>
 </table>
 <h4 id="motionplanconfig-get_revert_ik_joint_limit-function">get_revert_ik_joint_limit</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-154-1"><a id="__codelineno-154-1" name="__codelineno-154-1" href="#__codelineno-154-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_revert_ik_joint_limit</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-159-1"><a id="__codelineno-159-1" name="__codelineno-159-1" href="#__codelineno-159-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_revert_ik_joint_limit</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
 </span></code></pre></div>
 <p><small>Check if IK joint limit reversion is enabled.</small></p>
 <p><strong>Returns</strong></p>
@@ -11167,7 +11426,7 @@
 </tbody>
 </table>
 <h4 id="motionplanconfig-get_revert_ik_joint_limit_chains-function">get_revert_ik_joint_limit_chains</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-155-1"><a id="__codelineno-155-1" name="__codelineno-155-1" href="#__codelineno-155-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_revert_ik_joint_limit_chains</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-160-1"><a id="__codelineno-160-1" name="__codelineno-160-1" href="#__codelineno-160-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_revert_ik_joint_limit_chains</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
 </span></code></pre></div>
 <p><small>Get kinematic chains for selective IK joint limit reversion (mutable)</small></p>
 <p><strong>Returns</strong></p>
@@ -11186,7 +11445,7 @@
 </tbody>
 </table>
 <h4 id="motionplanconfig-get_sampler_config-function">get_sampler_config</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-156-1"><a id="__codelineno-156-1" name="__codelineno-156-1" href="#__codelineno-156-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_sampler_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">SamplerConfig</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-161-1"><a id="__codelineno-161-1" name="__codelineno-161-1" href="#__codelineno-161-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_sampler_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">SamplerConfig</span>
 </span></code></pre></div>
 <p><small>Get sampler configuration (may be nullptr if not initialized)</small></p>
 <p><strong>Returns</strong></p>
@@ -11209,7 +11468,7 @@
 <p>Use create_sampler_config() to ensure a valid configuration exists</p>
 </div>
 <h4 id="motionplanconfig-get_sampler_config_ref-function">get_sampler_config_ref</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-157-1"><a id="__codelineno-157-1" name="__codelineno-157-1" href="#__codelineno-157-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_sampler_config_ref</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">SamplerConfig</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-162-1"><a id="__codelineno-162-1" name="__codelineno-162-1" href="#__codelineno-162-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_sampler_config_ref</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">SamplerConfig</span>
 </span></code></pre></div>
 <p><small>Get mutable reference to sampler configuration.</p>
 <p>Lazily creates a new sampler configuration with default values if not already initialized. Useful for in-place modification of configuration parameters.</small></p>
@@ -11229,7 +11488,7 @@
 </tbody>
 </table>
 <h4 id="motionplanconfig-get_sampler_joint_limit-function">get_sampler_joint_limit</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-158-1"><a id="__codelineno-158-1" name="__codelineno-158-1" href="#__codelineno-158-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_sampler_joint_limit</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">KinematicsBoundary</span><span class="p">]</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-163-1"><a id="__codelineno-163-1" name="__codelineno-163-1" href="#__codelineno-163-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_sampler_joint_limit</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">KinematicsBoundary</span><span class="p">]</span>
 </span></code></pre></div>
 <p><small>Get sampling phase joint limits (mutable)</small></p>
 <p><strong>Returns</strong></p>
@@ -11248,7 +11507,7 @@
 </tbody>
 </table>
 <h4 id="motionplanconfig-get_trajectory_feasibility_check_option-function">get_trajectory_feasibility_check_option</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-159-1"><a id="__codelineno-159-1" name="__codelineno-159-1" href="#__codelineno-159-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_trajectory_feasibility_check_option</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">TrajectoryFeasibilityCheckOption</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-164-1"><a id="__codelineno-164-1" name="__codelineno-164-1" href="#__codelineno-164-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_trajectory_feasibility_check_option</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">TrajectoryFeasibilityCheckOption</span>
 </span></code></pre></div>
 <p><small>Get trajectory feasibility check option configuration (may be nullptr if not initialized)</small></p>
 <p><strong>Returns</strong></p>
@@ -11271,7 +11530,7 @@
 <p>Use create_trajectory_feasibility_check_option() to ensure a valid configuration exists</p>
 </div>
 <h4 id="motionplanconfig-get_trajectory_feasibility_check_option_ref-function">get_trajectory_feasibility_check_option_ref</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-160-1"><a id="__codelineno-160-1" name="__codelineno-160-1" href="#__codelineno-160-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_trajectory_feasibility_check_option_ref</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">TrajectoryFeasibilityCheckOption</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-165-1"><a id="__codelineno-165-1" name="__codelineno-165-1" href="#__codelineno-165-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_trajectory_feasibility_check_option_ref</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">TrajectoryFeasibilityCheckOption</span>
 </span></code></pre></div>
 <p><small>Get mutable reference to trajectory feasibility check option configuration.</p>
 <p>Lazily creates a new trajectory feasibility check option with default values if not already initialized.</small></p>
@@ -11291,7 +11550,7 @@
 </tbody>
 </table>
 <h4 id="motionplanconfig-get_trajectory_plan_config-function">get_trajectory_plan_config</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-161-1"><a id="__codelineno-161-1" name="__codelineno-161-1" href="#__codelineno-161-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_trajectory_plan_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">TrajectoryPlanConfig</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-166-1"><a id="__codelineno-166-1" name="__codelineno-166-1" href="#__codelineno-166-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_trajectory_plan_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">TrajectoryPlanConfig</span>
 </span></code></pre></div>
 <p><small>Get trajectory planning configuration (may be nullptr if not initialized)</small></p>
 <p><strong>Returns</strong></p>
@@ -11314,7 +11573,7 @@
 <p>Use create_trajectory_plan_config() to ensure a valid configuration exists</p>
 </div>
 <h4 id="motionplanconfig-get_trajectory_plan_config_ref-function">get_trajectory_plan_config_ref</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-162-1"><a id="__codelineno-162-1" name="__codelineno-162-1" href="#__codelineno-162-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_trajectory_plan_config_ref</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">TrajectoryPlanConfig</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-167-1"><a id="__codelineno-167-1" name="__codelineno-167-1" href="#__codelineno-167-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_trajectory_plan_config_ref</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">TrajectoryPlanConfig</span>
 </span></code></pre></div>
 <p><small>Get mutable reference to trajectory planning configuration.</p>
 <p>Lazily creates a new trajectory planning configuration with default values if not already initialized.</small></p>
@@ -11334,7 +11593,7 @@
 </tbody>
 </table>
 <h4 id="motionplanconfig-get_update_time-function">get_update_time</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-163-1"><a id="__codelineno-163-1" name="__codelineno-163-1" href="#__codelineno-163-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_update_time</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">int</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-168-1"><a id="__codelineno-168-1" name="__codelineno-168-1" href="#__codelineno-168-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_update_time</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">int</span>
 </span></code></pre></div>
 <p><small>Get configuration update timestamp.</small></p>
 <p><strong>Returns</strong></p>
@@ -11353,12 +11612,12 @@
 </tbody>
 </table>
 <h4 id="motionplanconfig-print-function">print</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-164-1"><a id="__codelineno-164-1" name="__codelineno-164-1" href="#__codelineno-164-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">print</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-169-1"><a id="__codelineno-169-1" name="__codelineno-169-1" href="#__codelineno-169-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">print</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Print comprehensive motion planning configuration to standard output.</p>
 <p>Outputs all sub-configuration parameters and kinematic boundaries in human-readable format. Useful for debugging, logging, and verification of configuration state.</small></p>
 <h4 id="motionplanconfig-set_collision_check_option-function">set_collision_check_option</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-165-1"><a id="__codelineno-165-1" name="__codelineno-165-1" href="#__codelineno-165-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_collision_check_option</span><span class="p">(</span><span class="n">option</span><span class="p">:</span> <span class="n">CollisionCheckOption</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-170-1"><a id="__codelineno-170-1" name="__codelineno-170-1" href="#__codelineno-170-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_collision_check_option</span><span class="p">(</span><span class="n">option</span><span class="p">:</span> <span class="n">CollisionCheckOption</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Set or replace collision check option configuration.</small></p>
 <p><strong>Parameters</strong></p>
@@ -11381,7 +11640,7 @@
 </tbody>
 </table>
 <h4 id="motionplanconfig-set_feasibility_boundary-function">set_feasibility_boundary</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-166-1"><a id="__codelineno-166-1" name="__codelineno-166-1" href="#__codelineno-166-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_feasibility_boundary</span><span class="p">(</span><span class="n">boundary</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">KinematicsBoundary</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-171-1"><a id="__codelineno-171-1" name="__codelineno-171-1" href="#__codelineno-171-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_feasibility_boundary</span><span class="p">(</span><span class="n">boundary</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">KinematicsBoundary</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Set kinematic feasibility boundaries for all chains.</small></p>
 <p><strong>Parameters</strong></p>
@@ -11408,7 +11667,7 @@
 <p>These boundaries are used for general trajectory feasibility validation</p>
 </div>
 <h4 id="motionplanconfig-set_hard_joint_limit-function">set_hard_joint_limit</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-167-1"><a id="__codelineno-167-1" name="__codelineno-167-1" href="#__codelineno-167-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_hard_joint_limit</span><span class="p">(</span><span class="n">boundary</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">KinematicsBoundary</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-172-1"><a id="__codelineno-172-1" name="__codelineno-172-1" href="#__codelineno-172-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_hard_joint_limit</span><span class="p">(</span><span class="n">boundary</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">KinematicsBoundary</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Set absolute hard joint limits (safety-critical boundaries)</small></p>
 <p><strong>Parameters</strong></p>
@@ -11435,7 +11694,7 @@
 <p>Hard limits must never be violated; typically correspond to physical joint stops</p>
 </div>
 <h4 id="motionplanconfig-set_ik_joint_limit-function">set_ik_joint_limit</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-168-1"><a id="__codelineno-168-1" name="__codelineno-168-1" href="#__codelineno-168-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_ik_joint_limit</span><span class="p">(</span><span class="n">boundary</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">KinematicsBoundary</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-173-1"><a id="__codelineno-173-1" name="__codelineno-173-1" href="#__codelineno-173-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_ik_joint_limit</span><span class="p">(</span><span class="n">boundary</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">KinematicsBoundary</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Set joint limits used during IK solving phase.</small></p>
 <p><strong>Parameters</strong></p>
@@ -11462,7 +11721,7 @@
 <p>IK limits may be tighter than hard limits to improve convergence and avoid singularities</p>
 </div>
 <h4 id="motionplanconfig-set_ik_solver_config-function">set_ik_solver_config</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-169-1"><a id="__codelineno-169-1" name="__codelineno-169-1" href="#__codelineno-169-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_ik_solver_config</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">IKSolverConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-174-1"><a id="__codelineno-174-1" name="__codelineno-174-1" href="#__codelineno-174-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_ik_solver_config</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">IKSolverConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Set or replace inverse kinematics solver configuration.</small></p>
 <p><strong>Parameters</strong></p>
@@ -11485,7 +11744,7 @@
 </tbody>
 </table>
 <h4 id="motionplanconfig-set_line_traj_check_primitive-function">set_line_traj_check_primitive</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-170-1"><a id="__codelineno-170-1" name="__codelineno-170-1" href="#__codelineno-170-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_line_traj_check_primitive</span><span class="p">(</span><span class="n">primitive</span><span class="p">:</span> <span class="n">LineTrajCheckPrimitive</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-175-1"><a id="__codelineno-175-1" name="__codelineno-175-1" href="#__codelineno-175-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_line_traj_check_primitive</span><span class="p">(</span><span class="n">primitive</span><span class="p">:</span> <span class="n">LineTrajCheckPrimitive</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Set or replace line trajectory check primitive configuration.</small></p>
 <p><strong>Parameters</strong></p>
@@ -11508,7 +11767,7 @@
 </tbody>
 </table>
 <h4 id="motionplanconfig-set_revert_ik_joint_limit-function">set_revert_ik_joint_limit</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-171-1"><a id="__codelineno-171-1" name="__codelineno-171-1" href="#__codelineno-171-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_revert_ik_joint_limit</span><span class="p">(</span><span class="n">flag</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-176-1"><a id="__codelineno-176-1" name="__codelineno-176-1" href="#__codelineno-176-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_revert_ik_joint_limit</span><span class="p">(</span><span class="n">flag</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Enable or disable IK joint limit reversion to hard limits.</small></p>
 <p><strong>Parameters</strong></p>
@@ -11535,7 +11794,7 @@
 <p>Useful for recovering from constrained configurations by temporarily relaxing IK limits</p>
 </div>
 <h4 id="motionplanconfig-set_revert_ik_joint_limit_chains-function">set_revert_ik_joint_limit_chains</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-172-1"><a id="__codelineno-172-1" name="__codelineno-172-1" href="#__codelineno-172-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_revert_ik_joint_limit_chains</span><span class="p">(</span><span class="n">chains</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-177-1"><a id="__codelineno-177-1" name="__codelineno-177-1" href="#__codelineno-177-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_revert_ik_joint_limit_chains</span><span class="p">(</span><span class="n">chains</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Set specific kinematic chains for IK joint limit reversion.</small></p>
 <p><strong>Parameters</strong></p>
@@ -11566,7 +11825,7 @@
 <p>Empty vector disables selective reversion (applies to all chains if flag is set)</p>
 </div>
 <h4 id="motionplanconfig-set_sampler_config-function">set_sampler_config</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-173-1"><a id="__codelineno-173-1" name="__codelineno-173-1" href="#__codelineno-173-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_sampler_config</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">SamplerConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-178-1"><a id="__codelineno-178-1" name="__codelineno-178-1" href="#__codelineno-178-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_sampler_config</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">SamplerConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Set or replace sampler configuration.</small></p>
 <p><strong>Parameters</strong></p>
@@ -11589,7 +11848,7 @@
 </tbody>
 </table>
 <h4 id="motionplanconfig-set_sampler_joint_limit-function">set_sampler_joint_limit</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-174-1"><a id="__codelineno-174-1" name="__codelineno-174-1" href="#__codelineno-174-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_sampler_joint_limit</span><span class="p">(</span><span class="n">boundary</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">KinematicsBoundary</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-179-1"><a id="__codelineno-179-1" name="__codelineno-179-1" href="#__codelineno-179-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_sampler_joint_limit</span><span class="p">(</span><span class="n">boundary</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">KinematicsBoundary</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Set joint limits used during sampling-based planning phase.</small></p>
 <p><strong>Parameters</strong></p>
@@ -11616,7 +11875,7 @@
 <p>Sampling limits define the valid configuration space for exploration</p>
 </div>
 <h4 id="motionplanconfig-set_trajectory_feasibility_check_option-function">set_trajectory_feasibility_check_option</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-175-1"><a id="__codelineno-175-1" name="__codelineno-175-1" href="#__codelineno-175-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_trajectory_feasibility_check_option</span><span class="p">(</span><span class="n">option</span><span class="p">:</span> <span class="n">TrajectoryFeasibilityCheckOption</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-180-1"><a id="__codelineno-180-1" name="__codelineno-180-1" href="#__codelineno-180-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_trajectory_feasibility_check_option</span><span class="p">(</span><span class="n">option</span><span class="p">:</span> <span class="n">TrajectoryFeasibilityCheckOption</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Set or replace trajectory feasibility check option configuration.</small></p>
 <p><strong>Parameters</strong></p>
@@ -11639,7 +11898,7 @@
 </tbody>
 </table>
 <h4 id="motionplanconfig-set_trajectory_plan_config-function">set_trajectory_plan_config</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-176-1"><a id="__codelineno-176-1" name="__codelineno-176-1" href="#__codelineno-176-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_trajectory_plan_config</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">TrajectoryPlanConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-181-1"><a id="__codelineno-181-1" name="__codelineno-181-1" href="#__codelineno-181-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_trajectory_plan_config</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">TrajectoryPlanConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Set or replace trajectory planning configuration.</small></p>
 <p><strong>Parameters</strong></p>
@@ -11662,7 +11921,7 @@
 </tbody>
 </table>
 <h4 id="motionplanconfig-set_update_time-function">set_update_time</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-177-1"><a id="__codelineno-177-1" name="__codelineno-177-1" href="#__codelineno-177-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_update_time</span><span class="p">(</span><span class="n">t</span><span class="p">:</span> <span class="n">SupportsInt</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-182-1"><a id="__codelineno-182-1" name="__codelineno-182-1" href="#__codelineno-182-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_update_time</span><span class="p">(</span><span class="n">t</span><span class="p">:</span> <span class="n">SupportsInt</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Set configuration update timestamp.</small></p>
 <p><strong>Parameters</strong></p>
@@ -11848,7 +12107,7 @@
 </tbody>
 </table>
 <h4 id="parameter-get_actuate_type-function">get_actuate_type</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-178-1"><a id="__codelineno-178-1" name="__codelineno-178-1" href="#__codelineno-178-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_actuate_type</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-183-1"><a id="__codelineno-183-1" name="__codelineno-183-1" href="#__codelineno-183-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_actuate_type</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span>
 </span></code></pre></div>
 <p><small>Get actuation type as string.</p>
 <p>Performs reverse lookup in g_actuate_type_map to convert enum to string key.</small></p>
@@ -11868,7 +12127,7 @@
 </tbody>
 </table>
 <h4 id="parameter-get_blocking-function">get_blocking</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-179-1"><a id="__codelineno-179-1" name="__codelineno-179-1" href="#__codelineno-179-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_blocking</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-184-1"><a id="__codelineno-184-1" name="__codelineno-184-1" href="#__codelineno-184-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_blocking</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
 </span></code></pre></div>
 <p><small>Get blocking execution mode status.</small></p>
 <p><strong>Returns</strong></p>
@@ -11887,7 +12146,7 @@
 </tbody>
 </table>
 <h4 id="parameter-get_check_collision-function">get_check_collision</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-180-1"><a id="__codelineno-180-1" name="__codelineno-180-1" href="#__codelineno-180-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_check_collision</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-185-1"><a id="__codelineno-185-1" name="__codelineno-185-1" href="#__codelineno-185-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_check_collision</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
 </span></code></pre></div>
 <p><small>Get collision checking status.</small></p>
 <p><strong>Returns</strong></p>
@@ -11906,7 +12165,7 @@
 </tbody>
 </table>
 <h4 id="parameter-get_direct_execute-function">get_direct_execute</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-181-1"><a id="__codelineno-181-1" name="__codelineno-181-1" href="#__codelineno-181-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_direct_execute</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-186-1"><a id="__codelineno-186-1" name="__codelineno-186-1" href="#__codelineno-186-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_direct_execute</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
 </span></code></pre></div>
 <p><small>Get direct execution mode status.</small></p>
 <p><strong>Returns</strong></p>
@@ -11925,7 +12184,7 @@
 </tbody>
 </table>
 <h4 id="parameter-get_reference_frame-function">get_reference_frame</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-182-1"><a id="__codelineno-182-1" name="__codelineno-182-1" href="#__codelineno-182-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_reference_frame</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-187-1"><a id="__codelineno-187-1" name="__codelineno-187-1" href="#__codelineno-187-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_reference_frame</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span>
 </span></code></pre></div>
 <p><small>Get reference frame name.</small></p>
 <p><strong>Returns</strong></p>
@@ -11944,7 +12203,7 @@
 </tbody>
 </table>
 <h4 id="parameter-get_timeout-function">get_timeout</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-183-1"><a id="__codelineno-183-1" name="__codelineno-183-1" href="#__codelineno-183-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_timeout</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-188-1"><a id="__codelineno-188-1" name="__codelineno-188-1" href="#__codelineno-188-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_timeout</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span>
 </span></code></pre></div>
 <p><small>Get motion execution timeout value.</small></p>
 <p><strong>Returns</strong></p>
@@ -11963,7 +12222,7 @@
 </tbody>
 </table>
 <h4 id="parameter-get_tool_pose-function">get_tool_pose</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-184-1"><a id="__codelineno-184-1" name="__codelineno-184-1" href="#__codelineno-184-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_tool_pose</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-189-1"><a id="__codelineno-189-1" name="__codelineno-189-1" href="#__codelineno-189-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_tool_pose</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
 </span></code></pre></div>
 <p><small>Get tool coordinate frame usage status.</small></p>
 <p><strong>Returns</strong></p>
@@ -11982,7 +12241,7 @@
 </tbody>
 </table>
 <h4 id="parameter-set_actuate-function">set_actuate</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-185-1"><a id="__codelineno-185-1" name="__codelineno-185-1" href="#__codelineno-185-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_actuate</span><span class="p">(</span><span class="n">actuate</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-190-1"><a id="__codelineno-190-1" name="__codelineno-190-1" href="#__codelineno-190-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_actuate</span><span class="p">(</span><span class="n">actuate</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Set actuation type for whole-body coordination.</small></p>
 <p><strong>Parameters</strong></p>
@@ -12009,7 +12268,7 @@
 <p>Must be a valid key in g_actuate_type_map, otherwise behavior is undefined.</p>
 </div>
 <h4 id="parameter-set_blocking-function">set_blocking</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-186-1"><a id="__codelineno-186-1" name="__codelineno-186-1" href="#__codelineno-186-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_blocking</span><span class="p">(</span><span class="n">blocking</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-191-1"><a id="__codelineno-191-1" name="__codelineno-191-1" href="#__codelineno-191-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_blocking</span><span class="p">(</span><span class="n">blocking</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Set blocking execution mode.</small></p>
 <p><strong>Parameters</strong></p>
@@ -12032,7 +12291,7 @@
 </tbody>
 </table>
 <h4 id="parameter-set_check_collision-function">set_check_collision</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-187-1"><a id="__codelineno-187-1" name="__codelineno-187-1" href="#__codelineno-187-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_check_collision</span><span class="p">(</span><span class="n">check_collision</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-192-1"><a id="__codelineno-192-1" name="__codelineno-192-1" href="#__codelineno-192-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_check_collision</span><span class="p">(</span><span class="n">check_collision</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Enable or disable collision checking.</small></p>
 <p><strong>Parameters</strong></p>
@@ -12059,7 +12318,7 @@
 <p>Disabling collision checking may result in unsafe trajectories.</p>
 </div>
 <h4 id="parameter-set_direct_execute-function">set_direct_execute</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-188-1"><a id="__codelineno-188-1" name="__codelineno-188-1" href="#__codelineno-188-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_direct_execute</span><span class="p">(</span><span class="n">direct_execute</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-193-1"><a id="__codelineno-193-1" name="__codelineno-193-1" href="#__codelineno-193-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_direct_execute</span><span class="p">(</span><span class="n">direct_execute</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Set direct execution mode.</small></p>
 <p><strong>Parameters</strong></p>
@@ -12082,7 +12341,7 @@
 </tbody>
 </table>
 <h4 id="parameter-set_move_line-function">set_move_line</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-189-1"><a id="__codelineno-189-1" name="__codelineno-189-1" href="#__codelineno-189-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_move_line</span><span class="p">(</span><span class="n">move_line</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-194-1"><a id="__codelineno-194-1" name="__codelineno-194-1" href="#__codelineno-194-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_move_line</span><span class="p">(</span><span class="n">move_line</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Set Cartesian linear motion mode.</small></p>
 <p><strong>Parameters</strong></p>
@@ -12109,7 +12368,7 @@
 <p>Linear motion provides predictable Cartesian paths but may have joint velocity discontinuities.</p>
 </div>
 <h4 id="parameter-set_reference_frame-function">set_reference_frame</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-190-1"><a id="__codelineno-190-1" name="__codelineno-190-1" href="#__codelineno-190-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_reference_frame</span><span class="p">(</span><span class="n">frame</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-195-1"><a id="__codelineno-195-1" name="__codelineno-195-1" href="#__codelineno-195-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_reference_frame</span><span class="p">(</span><span class="n">frame</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Set the reference frame for pose specifications.</small></p>
 <p><strong>Parameters</strong></p>
@@ -12136,7 +12395,7 @@
 <p>Must be a valid frame in the robot's TF tree.</p>
 </div>
 <h4 id="parameter-set_timeout-function">set_timeout</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-191-1"><a id="__codelineno-191-1" name="__codelineno-191-1" href="#__codelineno-191-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_timeout</span><span class="p">(</span><span class="n">timeout</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-196-1"><a id="__codelineno-196-1" name="__codelineno-196-1" href="#__codelineno-196-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_timeout</span><span class="p">(</span><span class="n">timeout</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Set motion execution timeout.</small></p>
 <p><strong>Parameters</strong></p>
@@ -12163,7 +12422,7 @@
 <p>Only applies when blocking mode is enabled.</p>
 </div>
 <h4 id="parameter-set_tool_pose-function">set_tool_pose</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-192-1"><a id="__codelineno-192-1" name="__codelineno-192-1" href="#__codelineno-192-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_tool_pose</span><span class="p">(</span><span class="n">tool_pose</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-197-1"><a id="__codelineno-197-1" name="__codelineno-197-1" href="#__codelineno-197-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_tool_pose</span><span class="p">(</span><span class="n">tool_pose</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Set tool coordinate frame usage.</small></p>
 <p><strong>Parameters</strong></p>
@@ -12327,7 +12586,7 @@
 <p><small>Cartesian pose target specification.</p>
 <p>Represents a target end-effector pose in Cartesian space (SE(3)). Extends RobotStates to specify pose-based motion goals for kinematic chains. Used in inverse kinematics and Cartesian trajectory planning. Pose values: position in meters, orientation as unit quaternion. Coordinate frames must exist in the robot's TF tree.</small></p>
 <h4 id="posestate-get_type-function">get_type</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-193-1"><a id="__codelineno-193-1" name="__codelineno-193-1" href="#__codelineno-193-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_type</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RobotStatesType</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-198-1"><a id="__codelineno-198-1" name="__codelineno-198-1" href="#__codelineno-198-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_type</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RobotStatesType</span>
 </span></code></pre></div>
 <p><small>Get runtime type identifier.</small></p>
 <p><strong>Returns</strong></p>
@@ -12460,7 +12719,7 @@
 </tbody>
 </table>
 <h4 id="robotstates-get_type-function">get_type</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-194-1"><a id="__codelineno-194-1" name="__codelineno-194-1" href="#__codelineno-194-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_type</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RobotStatesType</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-199-1"><a id="__codelineno-199-1" name="__codelineno-199-1" href="#__codelineno-199-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_type</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RobotStatesType</span>
 </span></code></pre></div>
 <p><small>Get the runtime type of this state object.</small></p>
 <p><strong>Returns</strong></p>
@@ -12479,7 +12738,7 @@
 </tbody>
 </table>
 <h4 id="robotstates-set_base_state-function">set_base_state</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-195-1"><a id="__codelineno-195-1" name="__codelineno-195-1" href="#__codelineno-195-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_base_state</span><span class="p">(</span><span class="n">base_pose</span><span class="p">:</span> <span class="n">Pose</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-200-1"><a id="__codelineno-200-1" name="__codelineno-200-1" href="#__codelineno-200-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_base_state</span><span class="p">(</span><span class="n">base_pose</span><span class="p">:</span> <span class="n">Pose</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Set mobile base pose.</p>
 <p>Converts Pose structure to internal base_state vector representation.</small></p>
@@ -12507,7 +12766,7 @@
 <p>Quaternion must be unit-normalized (x^2 + y^2 + z^2 + w^2 = 1).</p>
 </div>
 <h4 id="robotstates-set_whole_body_joint-function">set_whole_body_joint</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-196-1"><a id="__codelineno-196-1" name="__codelineno-196-1" href="#__codelineno-196-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_whole_body_joint</span><span class="p">(</span><span class="n">joint_positions</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-201-1"><a id="__codelineno-201-1" name="__codelineno-201-1" href="#__codelineno-201-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_whole_body_joint</span><span class="p">(</span><span class="n">joint_positions</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Set complete whole-body joint configuration.</small></p>
 <p><strong>Parameters</strong></p>
@@ -12668,7 +12927,7 @@
 <p><small>Configuration parameters for sampling-based motion planners.</p>
 <p>This structure configures sampling-based planning algorithms (e.g., RRT, RRT*). It controls state space sampling resolution, interpolation settings, path simplification, and planning termination conditions. Sampling-based planners explore the configuration space by randomly sampling states and connecting them to build a motion plan graph.</small></p>
 <h4 id="samplerconfig-get_interpolate-function">get_interpolate</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-197-1"><a id="__codelineno-197-1" name="__codelineno-197-1" href="#__codelineno-197-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_interpolate</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-202-1"><a id="__codelineno-202-1" name="__codelineno-202-1" href="#__codelineno-202-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_interpolate</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
 </span></code></pre></div>
 <p><small>Check if path interpolation is enabled.</small></p>
 <p><strong>Returns</strong></p>
@@ -12687,7 +12946,7 @@
 </tbody>
 </table>
 <h4 id="samplerconfig-get_interpolation_cnt-function">get_interpolation_cnt</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-198-1"><a id="__codelineno-198-1" name="__codelineno-198-1" href="#__codelineno-198-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_interpolation_cnt</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">int</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-203-1"><a id="__codelineno-203-1" name="__codelineno-203-1" href="#__codelineno-203-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_interpolation_cnt</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">int</span>
 </span></code></pre></div>
 <p><small>Get the number of interpolation waypoints.</small></p>
 <p><strong>Returns</strong></p>
@@ -12706,7 +12965,7 @@
 </tbody>
 </table>
 <h4 id="samplerconfig-get_max_planning_time-function">get_max_planning_time</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-199-1"><a id="__codelineno-199-1" name="__codelineno-199-1" href="#__codelineno-199-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_max_planning_time</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-204-1"><a id="__codelineno-204-1" name="__codelineno-204-1" href="#__codelineno-204-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_max_planning_time</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span>
 </span></code></pre></div>
 <p><small>Get maximum planning time budget.</small></p>
 <p><strong>Returns</strong></p>
@@ -12725,7 +12984,7 @@
 </tbody>
 </table>
 <h4 id="samplerconfig-get_max_simplification_time-function">get_max_simplification_time</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-200-1"><a id="__codelineno-200-1" name="__codelineno-200-1" href="#__codelineno-200-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_max_simplification_time</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-205-1"><a id="__codelineno-205-1" name="__codelineno-205-1" href="#__codelineno-205-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_max_simplification_time</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span>
 </span></code></pre></div>
 <p><small>Get maximum path simplification time budget.</small></p>
 <p><strong>Returns</strong></p>
@@ -12744,7 +13003,7 @@
 </tbody>
 </table>
 <h4 id="samplerconfig-get_simplify-function">get_simplify</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-201-1"><a id="__codelineno-201-1" name="__codelineno-201-1" href="#__codelineno-201-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_simplify</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-206-1"><a id="__codelineno-206-1" name="__codelineno-206-1" href="#__codelineno-206-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_simplify</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
 </span></code></pre></div>
 <p><small>Check if path simplification is enabled.</small></p>
 <p><strong>Returns</strong></p>
@@ -12763,7 +13022,7 @@
 </tbody>
 </table>
 <h4 id="samplerconfig-get_state_check_resolution-function">get_state_check_resolution</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-202-1"><a id="__codelineno-202-1" name="__codelineno-202-1" href="#__codelineno-202-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_state_check_resolution</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-207-1"><a id="__codelineno-207-1" name="__codelineno-207-1" href="#__codelineno-207-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_state_check_resolution</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span>
 </span></code></pre></div>
 <p><small>Get state comparison resolution threshold.</small></p>
 <p><strong>Returns</strong></p>
@@ -12782,7 +13041,7 @@
 </tbody>
 </table>
 <h4 id="samplerconfig-get_state_check_type-function">get_state_check_type</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-203-1"><a id="__codelineno-203-1" name="__codelineno-203-1" href="#__codelineno-203-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_state_check_type</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">StateCheckType</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-208-1"><a id="__codelineno-208-1" name="__codelineno-208-1" href="#__codelineno-208-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_state_check_type</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">StateCheckType</span>
 </span></code></pre></div>
 <p><small>Get the configured distance metric for state comparison.</small></p>
 <p><strong>Returns</strong></p>
@@ -12801,7 +13060,7 @@
 </tbody>
 </table>
 <h4 id="samplerconfig-get_termination_condition_type-function">get_termination_condition_type</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-204-1"><a id="__codelineno-204-1" name="__codelineno-204-1" href="#__codelineno-204-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_termination_condition_type</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">TerminationConditionType</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-209-1"><a id="__codelineno-209-1" name="__codelineno-209-1" href="#__codelineno-209-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_termination_condition_type</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">TerminationConditionType</span>
 </span></code></pre></div>
 <p><small>Get planning termination condition.</small></p>
 <p><strong>Returns</strong></p>
@@ -12820,12 +13079,12 @@
 </tbody>
 </table>
 <h4 id="samplerconfig-print-function">print</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-205-1"><a id="__codelineno-205-1" name="__codelineno-205-1" href="#__codelineno-205-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">print</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-210-1"><a id="__codelineno-210-1" name="__codelineno-210-1" href="#__codelineno-210-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">print</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Print sampler configuration to standard output.</p>
 <p>Outputs all configuration parameters for debugging and verification.</small></p>
 <h4 id="samplerconfig-set_interpolate-function">set_interpolate</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-206-1"><a id="__codelineno-206-1" name="__codelineno-206-1" href="#__codelineno-206-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_interpolate</span><span class="p">(</span><span class="n">enable</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-211-1"><a id="__codelineno-211-1" name="__codelineno-211-1" href="#__codelineno-211-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_interpolate</span><span class="p">(</span><span class="n">enable</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Enable or disable path interpolation between sampled states.</small></p>
 <p><strong>Parameters</strong></p>
@@ -12852,7 +13111,7 @@
 <p>Interpolation improves trajectory smoothness and collision checking accuracy</p>
 </div>
 <h4 id="samplerconfig-set_interpolation_cnt-function">set_interpolation_cnt</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-207-1"><a id="__codelineno-207-1" name="__codelineno-207-1" href="#__codelineno-207-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_interpolation_cnt</span><span class="p">(</span><span class="n">cnt</span><span class="p">:</span> <span class="n">SupportsInt</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-212-1"><a id="__codelineno-212-1" name="__codelineno-212-1" href="#__codelineno-212-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_interpolation_cnt</span><span class="p">(</span><span class="n">cnt</span><span class="p">:</span> <span class="n">SupportsInt</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Set the number of interpolation waypoints between consecutive samples.</small></p>
 <p><strong>Parameters</strong></p>
@@ -12879,7 +13138,7 @@
 <p>Higher counts improve collision detection but increase computational cost</p>
 </div>
 <h4 id="samplerconfig-set_max_planning_time-function">set_max_planning_time</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-208-1"><a id="__codelineno-208-1" name="__codelineno-208-1" href="#__codelineno-208-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_max_planning_time</span><span class="p">(</span><span class="n">time</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-213-1"><a id="__codelineno-213-1" name="__codelineno-213-1" href="#__codelineno-213-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_max_planning_time</span><span class="p">(</span><span class="n">time</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Set maximum time budget for motion planning.</small></p>
 <p><strong>Parameters</strong></p>
@@ -12906,7 +13165,7 @@
 <p>Planning may terminate earlier if exact solution is found (depends on termination condition)</p>
 </div>
 <h4 id="samplerconfig-set_max_simplification_time-function">set_max_simplification_time</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-209-1"><a id="__codelineno-209-1" name="__codelineno-209-1" href="#__codelineno-209-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_max_simplification_time</span><span class="p">(</span><span class="n">time</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-214-1"><a id="__codelineno-214-1" name="__codelineno-214-1" href="#__codelineno-214-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_max_simplification_time</span><span class="p">(</span><span class="n">time</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Set maximum time budget for path simplification.</small></p>
 <p><strong>Parameters</strong></p>
@@ -12933,7 +13192,7 @@
 <p>Longer simplification time may yield shorter, smoother paths</p>
 </div>
 <h4 id="samplerconfig-set_simplify-function">set_simplify</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-210-1"><a id="__codelineno-210-1" name="__codelineno-210-1" href="#__codelineno-210-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_simplify</span><span class="p">(</span><span class="n">enable</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-215-1"><a id="__codelineno-215-1" name="__codelineno-215-1" href="#__codelineno-215-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_simplify</span><span class="p">(</span><span class="n">enable</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Enable or disable path simplification post-processing.</small></p>
 <p><strong>Parameters</strong></p>
@@ -12960,7 +13219,7 @@
 <p>Simplification reduces waypoints and improves trajectory efficiency</p>
 </div>
 <h4 id="samplerconfig-set_state_check_resolution-function">set_state_check_resolution</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-211-1"><a id="__codelineno-211-1" name="__codelineno-211-1" href="#__codelineno-211-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_state_check_resolution</span><span class="p">(</span><span class="n">resolution</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-216-1"><a id="__codelineno-216-1" name="__codelineno-216-1" href="#__codelineno-216-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_state_check_resolution</span><span class="p">(</span><span class="n">resolution</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Set state comparison resolution threshold.</small></p>
 <p><strong>Parameters</strong></p>
@@ -12987,7 +13246,7 @@
 <p>Lower values increase planning precision but may slow down computation</p>
 </div>
 <h4 id="samplerconfig-set_state_check_type-function">set_state_check_type</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-212-1"><a id="__codelineno-212-1" name="__codelineno-212-1" href="#__codelineno-212-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_state_check_type</span><span class="p">(</span><span class="nb">type</span><span class="p">:</span> <span class="n">StateCheckType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-217-1"><a id="__codelineno-217-1" name="__codelineno-217-1" href="#__codelineno-217-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_state_check_type</span><span class="p">(</span><span class="nb">type</span><span class="p">:</span> <span class="n">StateCheckType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Set the distance metric for state comparison.</small></p>
 <p><strong>Parameters</strong></p>
@@ -13010,7 +13269,7 @@
 </tbody>
 </table>
 <h4 id="samplerconfig-set_termination_condition_type-function">set_termination_condition_type</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-213-1"><a id="__codelineno-213-1" name="__codelineno-213-1" href="#__codelineno-213-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_termination_condition_type</span><span class="p">(</span><span class="nb">type</span><span class="p">:</span> <span class="n">TerminationConditionType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-218-1"><a id="__codelineno-218-1" name="__codelineno-218-1" href="#__codelineno-218-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_termination_condition_type</span><span class="p">(</span><span class="nb">type</span><span class="p">:</span> <span class="n">TerminationConditionType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Set planning termination condition.</small></p>
 <p><strong>Parameters</strong></p>
@@ -13560,7 +13819,7 @@
 <p><small>Trajectory validation and feasibility checking configuration.</p>
 <p>This structure provides fine-grained control over which feasibility constraints are enforced during trajectory validation. It supports independent toggling of collision detection, joint limit compliance, and velocity profile feasibility. Selectively disabling checks can improve computational performance for debugging, simulation, or scenarios where certain constraints are guaranteed to be satisfied. Disabling feasibility checks may produce trajectories that are unsafe or physically unrealizable. Use with caution and only when constraints are verified through other means.</small></p>
 <h4 id="trajectoryfeasibilitycheckoption-get_disable_collision_check-function">get_disable_collision_check</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-214-1"><a id="__codelineno-214-1" name="__codelineno-214-1" href="#__codelineno-214-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_disable_collision_check</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-219-1"><a id="__codelineno-219-1" name="__codelineno-219-1" href="#__codelineno-219-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_disable_collision_check</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
 </span></code></pre></div>
 <p><small>Check if collision detection is disabled.</small></p>
 <p><strong>Returns</strong></p>
@@ -13579,7 +13838,7 @@
 </tbody>
 </table>
 <h4 id="trajectoryfeasibilitycheckoption-get_disable_joint_limit_check-function">get_disable_joint_limit_check</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-215-1"><a id="__codelineno-215-1" name="__codelineno-215-1" href="#__codelineno-215-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_disable_joint_limit_check</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-220-1"><a id="__codelineno-220-1" name="__codelineno-220-1" href="#__codelineno-220-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_disable_joint_limit_check</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
 </span></code></pre></div>
 <p><small>Check if joint limit checking is disabled.</small></p>
 <p><strong>Returns</strong></p>
@@ -13598,7 +13857,7 @@
 </tbody>
 </table>
 <h4 id="trajectoryfeasibilitycheckoption-get_disable_velocity_feasibility_check-function">get_disable_velocity_feasibility_check</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-216-1"><a id="__codelineno-216-1" name="__codelineno-216-1" href="#__codelineno-216-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_disable_velocity_feasibility_check</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-221-1"><a id="__codelineno-221-1" name="__codelineno-221-1" href="#__codelineno-221-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_disable_velocity_feasibility_check</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
 </span></code></pre></div>
 <p><small>Check if velocity feasibility checking is disabled.</small></p>
 <p><strong>Returns</strong></p>
@@ -13617,12 +13876,12 @@
 </tbody>
 </table>
 <h4 id="trajectoryfeasibilitycheckoption-print-function">print</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-217-1"><a id="__codelineno-217-1" name="__codelineno-217-1" href="#__codelineno-217-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">print</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-222-1"><a id="__codelineno-222-1" name="__codelineno-222-1" href="#__codelineno-222-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">print</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Print trajectory feasibility check configuration to standard output.</p>
 <p>Outputs enabled/disabled status for each feasibility check type.</small></p>
 <h4 id="trajectoryfeasibilitycheckoption-set_disable_collision_check-function">set_disable_collision_check</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-218-1"><a id="__codelineno-218-1" name="__codelineno-218-1" href="#__codelineno-218-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_disable_collision_check</span><span class="p">(</span><span class="n">disable</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-223-1"><a id="__codelineno-223-1" name="__codelineno-223-1" href="#__codelineno-223-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_disable_collision_check</span><span class="p">(</span><span class="n">disable</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Enable or disable collision detection during trajectory validation.</small></p>
 <p><strong>Parameters</strong></p>
@@ -13649,7 +13908,7 @@
 <p>Disabling collision checks may result in unsafe motion plans</p>
 </div>
 <h4 id="trajectoryfeasibilitycheckoption-set_disable_joint_limit_check-function">set_disable_joint_limit_check</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-219-1"><a id="__codelineno-219-1" name="__codelineno-219-1" href="#__codelineno-219-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_disable_joint_limit_check</span><span class="p">(</span><span class="n">disable</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-224-1"><a id="__codelineno-224-1" name="__codelineno-224-1" href="#__codelineno-224-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_disable_joint_limit_check</span><span class="p">(</span><span class="n">disable</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Enable or disable joint limit compliance checking.</small></p>
 <p><strong>Parameters</strong></p>
@@ -13676,7 +13935,7 @@
 <p>Disabling joint limit checks may damage hardware or violate safety constraints</p>
 </div>
 <h4 id="trajectoryfeasibilitycheckoption-set_disable_velocity_feasibility_check-function">set_disable_velocity_feasibility_check</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-220-1"><a id="__codelineno-220-1" name="__codelineno-220-1" href="#__codelineno-220-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_disable_velocity_feasibility_check</span><span class="p">(</span><span class="n">disable</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-225-1"><a id="__codelineno-225-1" name="__codelineno-225-1" href="#__codelineno-225-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_disable_velocity_feasibility_check</span><span class="p">(</span><span class="n">disable</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Enable or disable velocity profile feasibility checking.</small></p>
 <p><strong>Parameters</strong></p>
@@ -13707,7 +13966,7 @@
 <p><small>Trajectory planning and parameterization configuration.</p>
 <p>This structure configures trajectory generation parameters for converting discrete motion plans into smooth, time-parameterized trajectories. It supports both single-segment and multi-waypoint trajectory planning. Trajectory planning involves computing velocity and acceleration profiles along a geometric path while respecting kinematic constraints.</small></p>
 <h4 id="trajectoryplanconfig-get_min_move_time-function">get_min_move_time</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-221-1"><a id="__codelineno-221-1" name="__codelineno-221-1" href="#__codelineno-221-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_min_move_time</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-226-1"><a id="__codelineno-226-1" name="__codelineno-226-1" href="#__codelineno-226-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_min_move_time</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span>
 </span></code></pre></div>
 <p><small>Get minimum motion segment duration.</small></p>
 <p><strong>Returns</strong></p>
@@ -13726,7 +13985,7 @@
 </tbody>
 </table>
 <h4 id="trajectoryplanconfig-get_move_line_intermediate_point-function">get_move_line_intermediate_point</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-222-1"><a id="__codelineno-222-1" name="__codelineno-222-1" href="#__codelineno-222-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_move_line_intermediate_point</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-227-1"><a id="__codelineno-227-1" name="__codelineno-227-1" href="#__codelineno-227-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_move_line_intermediate_point</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span>
 </span></code></pre></div>
 <p><small>Get waypoint density for linear motion interpolation.</small></p>
 <p><strong>Returns</strong></p>
@@ -13745,7 +14004,7 @@
 </tbody>
 </table>
 <h4 id="trajectoryplanconfig-get_way_point_plan_expected_time-function">get_way_point_plan_expected_time</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-223-1"><a id="__codelineno-223-1" name="__codelineno-223-1" href="#__codelineno-223-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_way_point_plan_expected_time</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-228-1"><a id="__codelineno-228-1" name="__codelineno-228-1" href="#__codelineno-228-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_way_point_plan_expected_time</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span>
 </span></code></pre></div>
 <p><small>Get expected multi-waypoint trajectory duration.</small></p>
 <p><strong>Returns</strong></p>
@@ -13764,12 +14023,12 @@
 </tbody>
 </table>
 <h4 id="trajectoryplanconfig-print-function">print</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-224-1"><a id="__codelineno-224-1" name="__codelineno-224-1" href="#__codelineno-224-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">print</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-229-1"><a id="__codelineno-229-1" name="__codelineno-229-1" href="#__codelineno-229-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">print</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Print trajectory planning configuration to standard output.</p>
 <p>Outputs all configuration parameters for debugging and verification.</small></p>
 <h4 id="trajectoryplanconfig-set_min_move_time-function">set_min_move_time</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-225-1"><a id="__codelineno-225-1" name="__codelineno-225-1" href="#__codelineno-225-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_min_move_time</span><span class="p">(</span><span class="n">time</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-230-1"><a id="__codelineno-230-1" name="__codelineno-230-1" href="#__codelineno-230-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_min_move_time</span><span class="p">(</span><span class="n">time</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Set minimum duration for any motion segment.</small></p>
 <p><strong>Parameters</strong></p>
@@ -13796,7 +14055,7 @@
 <p>Non-zero values prevent excessively fast motions; 0.0 allows maximum speed within kinematic limits</p>
 </div>
 <h4 id="trajectoryplanconfig-set_move_line_intermediate_point-function">set_move_line_intermediate_point</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-226-1"><a id="__codelineno-226-1" name="__codelineno-226-1" href="#__codelineno-226-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_move_line_intermediate_point</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-231-1"><a id="__codelineno-231-1" name="__codelineno-231-1" href="#__codelineno-231-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_move_line_intermediate_point</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Set waypoint density for Cartesian linear motion interpolation.</small></p>
 <p><strong>Parameters</strong></p>
@@ -13823,7 +14082,7 @@
 <p>Higher values improve Cartesian path accuracy but increase computational cost</p>
 </div>
 <h4 id="trajectoryplanconfig-set_way_point_plan_expected_time-function">set_way_point_plan_expected_time</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-227-1"><a id="__codelineno-227-1" name="__codelineno-227-1" href="#__codelineno-227-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_way_point_plan_expected_time</span><span class="p">(</span><span class="n">time</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-232-1"><a id="__codelineno-232-1" name="__codelineno-232-1" href="#__codelineno-232-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_way_point_plan_expected_time</span><span class="p">(</span><span class="n">time</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>Set expected total duration for multi-waypoint trajectory planning.</small></p>
 <p><strong>Parameters</strong></p>
@@ -14031,7 +14290,7 @@
 </tbody>
 </table>
 <h4 id="wrench-check_motion_status-function">check_motion_status</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-228-1"><a id="__codelineno-228-1" name="__codelineno-228-1" href="#__codelineno-228-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">check_motion_status</span><span class="p">(</span><span class="n">status</span><span class="p">:</span> <span class="n">MotionStatus</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-233-1"><a id="__codelineno-233-1" name="__codelineno-233-1" href="#__codelineno-233-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">check_motion_status</span><span class="p">(</span><span class="n">status</span><span class="p">:</span> <span class="n">MotionStatus</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span>
 </span></code></pre></div>
 <p><small>Convert a MotionStatus enum value to a string.</small></p>
 <p><strong>Parameters</strong></p>
@@ -14068,16 +14327,35 @@
 </tr>
 </tbody>
 </table>
+<h4 id="wrench-create_joint_state-function">create_joint_state</h4>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-234-1"><a id="__codelineno-234-1" name="__codelineno-234-1" href="#__codelineno-234-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">create_joint_state</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">JointStates</span>
+</span></code></pre></div>
+<p><small>Create a JointStates instance.</small></p>
+<p><strong>Returns</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#jointstates-class">JointStates</a></td>
+<td>JointStates: A new JointStates instance.</td>
+</tr>
+</tbody>
+</table>
 <h4 id="wrench-create_parameter-function">create_parameter</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-229-1"><a id="__codelineno-229-1" name="__codelineno-229-1" href="#__codelineno-229-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">create_parameter</span><span class="p">(</span>
-</span><span id="__span-229-2"><a id="__codelineno-229-2" name="__codelineno-229-2" href="#__codelineno-229-2"></a>    <span class="n">direct_execute</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
-</span><span id="__span-229-3"><a id="__codelineno-229-3" name="__codelineno-229-3" href="#__codelineno-229-3"></a>    <span class="n">blocking</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
-</span><span id="__span-229-4"><a id="__codelineno-229-4" name="__codelineno-229-4" href="#__codelineno-229-4"></a>    <span class="n">timeout</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">,</span>
-</span><span id="__span-229-5"><a id="__codelineno-229-5" name="__codelineno-229-5" href="#__codelineno-229-5"></a>    <span class="n">actuate</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-</span><span id="__span-229-6"><a id="__codelineno-229-6" name="__codelineno-229-6" href="#__codelineno-229-6"></a>    <span class="n">tool_pose</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
-</span><span id="__span-229-7"><a id="__codelineno-229-7" name="__codelineno-229-7" href="#__codelineno-229-7"></a>    <span class="n">check_collision</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
-</span><span id="__span-229-8"><a id="__codelineno-229-8" name="__codelineno-229-8" href="#__codelineno-229-8"></a>    <span class="n">frame</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;base_link&#39;</span>
-</span><span id="__span-229-9"><a id="__codelineno-229-9" name="__codelineno-229-9" href="#__codelineno-229-9"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Parameter</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-235-1"><a id="__codelineno-235-1" name="__codelineno-235-1" href="#__codelineno-235-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">create_parameter</span><span class="p">(</span>
+</span><span id="__span-235-2"><a id="__codelineno-235-2" name="__codelineno-235-2" href="#__codelineno-235-2"></a>    <span class="n">direct_execute</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+</span><span id="__span-235-3"><a id="__codelineno-235-3" name="__codelineno-235-3" href="#__codelineno-235-3"></a>    <span class="n">blocking</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+</span><span id="__span-235-4"><a id="__codelineno-235-4" name="__codelineno-235-4" href="#__codelineno-235-4"></a>    <span class="n">timeout</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">,</span>
+</span><span id="__span-235-5"><a id="__codelineno-235-5" name="__codelineno-235-5" href="#__codelineno-235-5"></a>    <span class="n">actuate</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+</span><span id="__span-235-6"><a id="__codelineno-235-6" name="__codelineno-235-6" href="#__codelineno-235-6"></a>    <span class="n">tool_pose</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+</span><span id="__span-235-7"><a id="__codelineno-235-7" name="__codelineno-235-7" href="#__codelineno-235-7"></a>    <span class="n">check_collision</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+</span><span id="__span-235-8"><a id="__codelineno-235-8" name="__codelineno-235-8" href="#__codelineno-235-8"></a>    <span class="n">frame</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;base_link&#39;</span>
+</span><span id="__span-235-9"><a id="__codelineno-235-9" name="__codelineno-235-9" href="#__codelineno-235-9"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Parameter</span>
 </span></code></pre></div>
 <p><small>Create a Parameter instance.</small></p>
 <p><strong>Parameters</strong></p>
@@ -14147,6 +14425,25 @@
 <tr>
 <td><a href="#parameter-class">Parameter</a></td>
 <td>Parameter: A new Parameter instance.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="wrench-create_pose_state-function">create_pose_state</h4>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-236-1"><a id="__codelineno-236-1" name="__codelineno-236-1" href="#__codelineno-236-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">create_pose_state</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">PoseState</span>
+</span></code></pre></div>
+<p><small>Create a PoseState instance.</small></p>
+<p><strong>Returns</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#posestate-class">PoseState</a></td>
+<td>PoseState: A new PoseState instance.</td>
 </tr>
 </tbody>
 </table>

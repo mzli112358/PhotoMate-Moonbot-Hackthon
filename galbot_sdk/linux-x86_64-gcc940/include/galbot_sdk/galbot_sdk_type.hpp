@@ -663,6 +663,32 @@ struct Pose {
 };
 
 /**
+ * @brief Axis-aligned box dimensions.
+ *
+ * Describes the physical size of a box along its local x/y/z axes. Units are meters.
+ */
+struct BoxSize {
+  float length_x; /**< Length of the box along the x-axis (meters) */
+  float length_y; /**< Length of the box along the y-axis (meters) */
+  float length_z; /**< Length of the box along the z-axis (meters) */
+};
+
+/**
+ * @brief Bounding box information for navigation obstacle filtering.
+ *
+ * Used by navigation APIs to add, remove, and query box regions that should be ignored by navigation
+ * obstacle fusion, for example carried boxes that should not be treated as obstacles.
+ * `box_pose` follows the SDK Pose convention: position plus quaternion stored as x/y/z/w.
+ * `box_tag` is the SDK-side numeric identifier and is converted internally to an SDK-marked box name.
+ */
+struct BoxInfo {
+  BoxSize box_size;             /**< Box dimensions in meters along the box local x/y/z axes */
+  Pose box_pose;                /**< Box pose relative to parent_link_name, using SDK quaternion order x/y/z/w */
+  int box_tag;                  /**< SDK-side numeric box identifier */
+  std::string parent_link_name; /**< Parent link/frame name that box_pose is expressed in */
+};
+
+/**
  * @brief Actuation type enumeration
  *
  * Specifies which kinematic chains should be actuated during motion planning and execution.

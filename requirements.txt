@@ -1,9 +1,0 @@
-# Keep numpy on 1.x to avoid ABI incompatibility with some wheels.
-numpy>=1.24.4,<2.0
-scipy>=1.10.1
-
-# Open3D 0.18+ has better compatibility with recent Python/numpy 1.x.
-open3d>=0.18.0
-
-# Widely compatible baseline across Python 3.8+.
-opencv-python>=4.8.0.76

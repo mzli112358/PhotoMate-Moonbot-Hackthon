@@ -8,23 +8,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.7.2] - 2026-05-18
+
+### Added / 新增
+- Added navigation bounding-box filtering APIs (`add_bounding_box`, `remove_bounding_box`, `get_bounding_box`) so the fusion service can dynamically remove points belonging to carried boxes. / 新增导航箱子过滤接口（`add_bounding_box`、`remove_bounding_box`、`get_bounding_box`），支持 fusion 服务动态抠除搬运箱子对应的点云
+- Added attached-box collision APIs (`attach_box_to_link`, `detach_box_from_link`) so navigation can account for collisions between carried boxes and the environment. / 新增箱子挂载与解除挂载接口（`attach_box_to_link`、`detach_box_from_link`），支持导航服务识别搬运箱子与环境之间的碰撞关系
+
 ## [1.7.1] - 2026-04-29
 
 ### Added / 新增
-- Added camera interface adaptation for heavy-duty S1 robots equipped with head depth cameras. / 针对搭载头部深度相机的重载S1机器人，完善相机接口适配与支持
+- Added camera interface adaptation for heavy-duty S1 robots equipped with head depth cameras. / 针对搭载头部深度相机的重载 S1 机器人，完善相机接口适配与支持
 
 ## [1.7.0] - 2026-04-03
 
 ### Added / 新增
-- Added support for the S1 robot. / 适配重载S1机器人, 部分接口因硬件差异在S1上未支持
+- Added support for the S1 robot. / 适配重载 S1 机器人，部分接口因硬件差异暂未在 S1 上支持
 
 ### Changed / 更改
-- Python singleton initialization no longer requires calling get_instance(); e.g., GalbotRobot.get_instance() is now simply GalbotRobot(). / Python 单例初始化不再需要调用 get_instance()，例如 GalbotRobot.get_instance() 更改为 GalbotRobot()
-- C++ singleton initialization via get_instance() now requires a MachineType argument (MachineType::G1 or MachineType::S1). / C++ 单例初始化调用 get_instance() 时需传入 MachineType::G1 或 MachineType::S1
-- C++ namespace changed from galbot::sdk::g1 to galbot::sdk. / C++ 命名空间从 galbot::sdk::g1 更改为 galbot::sdk
-- type.hpp renamed to galbot_sdk_type.hpp. / type.hpp 更名为 galbot_sdk_type.hpp
-- ControllerName is now robot-specific: use G1ControllerName for G1 and S1ControllerName for S1. / ControllerName 根据机器人型号区分，G1 使用 G1ControllerName，S1 使用 S1ControllerName
-- JointGroup is now robot-specific: use G1JointGroup for G1 and S1JointGroup for S1. / JointGroup 根据机器人型号区分，G1 使用 G1JointGroup，S1 使用 S1JointGroup
+- Python singleton initialization no longer requires calling `get_instance()`; e.g., `GalbotRobot.get_instance()` is now simply `GalbotRobot()`. / Python 单例初始化不再需要调用 `get_instance()`，例如 `GalbotRobot.get_instance()` 更改为 `GalbotRobot()`
+- C++ singleton initialization via `get_instance()` now requires a `MachineType` argument (`MachineType::G1` or `MachineType::S1`). / C++ 单例初始化调用 `get_instance()` 时需传入 `MachineType::G1` 或 `MachineType::S1`
+- C++ namespace changed from `galbot::sdk::g1` to `galbot::sdk`. / C++ 命名空间从 `galbot::sdk::g1` 更改为 `galbot::sdk`
+- `type.hpp` renamed to `galbot_sdk_type.hpp`. / `type.hpp` 更名为 `galbot_sdk_type.hpp`
+- `ControllerName` is now robot-specific: use `G1ControllerName` for G1 and `S1ControllerName` for S1. / `ControllerName` 根据机器人型号区分，G1 使用 `G1ControllerName`，S1 使用 `S1ControllerName`
+- `JointGroup` is now robot-specific: use `G1JointGroup` for G1 and `S1JointGroup` for S1. / `JointGroup` 根据机器人型号区分，G1 使用 `G1JointGroup`，S1 使用 `S1JointGroup`
 
 ## [1.6.2] - 2026-03-26
 
@@ -48,6 +54,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add default value for frame_id parameter in set_base_pose function (default: odom frame), without affecting existing usage /
   set_base_pose函数frame_id参数增加默认值为odom坐标系，不影响原有调用方式
+
 ---
 
 ## [1.6.0] - 2026-03-06
@@ -57,7 +64,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Provided user log printing interface and SDK log information retrieval interface / 提供用户日志打印接口与SDK日志信息获取接口
 - Add real-time joint trajectory function, control mode management function, one-click homing, robot link query interface, and sensor calibration parameter interface. / 增加关节实时轨迹函数、控制模式管理函数、一键回零、机器人link获取、传感器标定参数接口
 - Added scenario-level sample programs / 增加情景级示例程序
----
 
 ### Changed / 更改
 - Add a duration parameter to the chassis velocity control interface (without affecting existing usage) / 底盘速度控制接口增加持续时间参数（不影响原有调用方式）
@@ -171,4 +177,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added / 新增
 - Added basic control capabilities / 增加基础控制能力
 - Added basic sensor data reception / 增加基础传感器数据接收
-

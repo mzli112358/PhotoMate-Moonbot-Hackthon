@@ -867,6 +867,35 @@ class GalbotNavigation:
                             Returns:
                                 GalbotNavigation: The navigation instance for that machine type.
         """
+    def add_bounding_box(self, box_info: dict) -> tuple:
+        """
+                            Add a bounding box so navigation can ignore the corresponding fused obstacle points.
+        
+                            Parameters:
+                                box_info (dict): Contains:
+                                    box_size: [length_x, length_y, length_z], meters.
+                                    box_pose: [x, y, z, qx, qy, qz, qw] relative to parent_link_name.
+                                    box_tag: SDK box tag, converted internally to an SDK-marked box name.
+                                    parent_link_name: Parent link for the box pose.
+        
+                            Returns:
+                                tuple: (success: bool, status_string: str)
+        """
+    def attach_box_to_link(self, box_info: dict, ignore_collision_links: collections.abc.Sequence[str] = []) -> tuple:
+        """
+                            Attach a box collision object to a robot link.
+        
+                            Parameters:
+                                box_info (dict): Contains:
+                                    box_size: [length_x, length_y, length_z], meters.
+                                    box_pose: [x, y, z, qx, qy, qz, qw] relative to parent_link_name.
+                                    box_tag: SDK box tag, converted internally to an SDK-marked box name.
+                                    parent_link_name: Parent link for the box pose.
+                                ignore_collision_links (list[str]): Robot links to ignore for collision checking.
+        
+                            Returns:
+                                tuple: (success: bool, status_string: str)
+        """
     def check_goal_arrival(self) -> bool:
         """
                             Check if the robot has successfully reached the current goal (within tolerance).
@@ -887,6 +916,26 @@ class GalbotNavigation:
         
                             Returns:
                                 bool: True if a collision-free path exists from start to goal; False otherwise.
+        """
+    def detach_box_from_link(self, box_tag: typing.SupportsInt) -> tuple:
+        """
+                            Detach a box collision object from its robot link.
+        
+                            Parameters:
+                                box_tag (int): SDK box tag to detach.
+        
+                            Returns:
+                                tuple: (success: bool, status_string: str)
+        """
+    def get_bounding_box(self) -> list:
+        """
+                            Get bounding boxes currently used by navigation obstacle filtering.
+        
+                            Parameters:
+                                None
+        
+                            Returns:
+                                list[dict]: Each dict contains box_size, box_pose, box_tag, and parent_link_name.
         """
     def get_current_pose(self) -> typing.Annotated[list[float], "FixedSize(7)"]:
         """
@@ -969,6 +1018,16 @@ class GalbotNavigation:
                                 tuple: (success: bool, status_string: str)
                                     - success: True if relocalization succeeded.
                                     - status_string: Status string (SUCCESS, FAIL, etc.).
+        """
+    def remove_bounding_box(self, box_tag: typing.SupportsInt) -> tuple:
+        """
+                            Remove a bounding box from navigation obstacle filtering.
+        
+                            Parameters:
+                                box_tag (int): SDK box tag to remove.
+        
+                            Returns:
+                                tuple: (success: bool, status_string: str)
         """
     def stop_navigation(self) -> tuple:
         """
@@ -1430,7 +1489,7 @@ class GalbotRobot:
                     Returns:
                         float: Current volume value, range 0.0 to 100.0.
         """
-    def init(self, enable_sensor_set: collections.abc.Set[SensorType] = set()) -> bool:
+    def init(self, enable_sensor_set: collections.abc.Set[SensorType] = ...) -> bool:
         """
                     Initialize the robot control system (hardware communication, middleware, sensor interfaces).
                     Only sensors in enable_sensor_set are initialized; specify only required sensors to reduce overhead.

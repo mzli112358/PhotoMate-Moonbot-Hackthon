@@ -1811,6 +1811,28 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#galbotnavigation-add_bounding_box-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        添加导航箱子
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#galbotnavigation-attach_box_to_link-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        挂载箱子到连杆
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#galbotnavigation-check_goal_arrival-function" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1826,6 +1848,28 @@
     <span class="md-ellipsis">
       
         检查路径可达性
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#galbotnavigation-detach_box_from_link-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        从连杆解除箱子
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#galbotnavigation-get_bounding_box-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        获取导航箱子
       
     </span>
   </a>
@@ -1903,6 +1947,17 @@
     <span class="md-ellipsis">
       
         重定位
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#galbotnavigation-remove_bounding_box-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        移除导航箱子
       
     </span>
   </a>
@@ -4965,10 +5020,32 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#wrench-create_joint_state-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        create_joint_state
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#wrench-create_parameter-function" class="md-nav__link">
     <span class="md-ellipsis">
       
         创建参数
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wrench-create_pose_state-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        create_pose_state
       
     </span>
   </a>
@@ -6172,7 +6249,7 @@
 </tbody>
 </table>
 <h3 id="galbotrobot-init-function">初始化</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">init</span><span class="p">(</span><span class="n">enable_sensor_set</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">SensorType</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">())</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">init</span><span class="p">(</span><span class="n">enable_sensor_set</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">SensorType</span><span class="p">]</span> <span class="o">=</span> <span class="o">...</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
 </span></code></pre></div>
 <p><small>初始化机器人控制系统。</p>
 <p>初始化机器人硬件通信、中间件和传感器接口。为了优化资源使用，只有在enable_sensor_set中指定的传感器才会被初始化并可用于数据读取。</small></p>
@@ -6190,7 +6267,7 @@
 <tr>
 <td><code>enable_sensor_set</code></td>
 <td>Set[<a href="#sensortype-enum">SensorType</a>]</td>
-<td><code>set()</code></td>
+<td><code>...</code></td>
 <td>要启用的传感器集合，如果为空，则启用默认的传感器集合，仅指定所需传感器可减少启动时间和资源占用</td>
 </tr>
 </tbody>
@@ -9380,8 +9457,92 @@
 <p class="admonition-title">Note</p>
 <p>添加新机器类型支持需要更新此类。</p>
 </div>
+<h3 id="galbotnavigation-add_bounding_box-function">添加导航箱子</h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-93-1"><a id="__codelineno-93-1" name="__codelineno-93-1" href="#__codelineno-93-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">add_bounding_box</span><span class="p">(</span><span class="n">box_info</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span>
+</span></code></pre></div>
+<p><small>添加用于导航障碍物过滤的箱子。</p>
+<p>将 SDK 定义的箱子区域发送给融合服务，使导航在处理融合障碍物点时忽略这些区域，而不是把它们当作障碍物。box_tag 是箱子的唯一标记；后续调用 remove_bounding_box() 移除该箱子时，应传入相同的 box_tag。箱子位姿相对于 parent_link_name 表示。</small></p>
+<p><strong>参数</strong></p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>默认值</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>box_info</code></td>
+<td>dict</td>
+<td>需要传参</td>
+<td>箱子信息参数，字段包括：<br>- box_size: [length_x, length_y, length_z]，箱子在局部 x/y/z 轴方向上的尺寸，单位为米。<br>- box_pose: [x, y, z, qx, qy, qz, qw]，箱子相对于 parent_link_name 的位姿。<br>- box_tag: 箱子的唯一标记，后续 remove_bounding_box() 需要使用相同的 box_tag。<br>- parent_link_name: box_pose 所在的父连杆或父坐标系名称。</td>
+</tr>
+</tbody>
+</table>
+<p><strong>返回值</strong></p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tuple</td>
+<td>操作结果：成功时返回 SUCCESS；输入格式错误时返回 INVALID_INPUT；融合服务请求失败时返回 COMM_ERR。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="galbotnavigation-attach_box_to_link-function">挂载箱子到连杆</h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-94-1"><a id="__codelineno-94-1" name="__codelineno-94-1" href="#__codelineno-94-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">attach_box_to_link</span><span class="p">(</span><span class="n">box_info</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">ignore_collision_links</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[])</span> <span class="o">-&gt;</span> <span class="nb">tuple</span>
+</span></code></pre></div>
+<p><small>将箱子碰撞物挂载到机器人连杆。</p>
+<p>该接口会把箱子作为附着碰撞物发送给 PNS。box_tag 是箱子的唯一标记；后续调用 detach_box_from_link() 解除该箱子挂载时，应传入相同的 box_tag。box_info.parent_link_name 作为 box_info.box_pose 的父连杆。</small></p>
+<p><strong>参数</strong></p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>默认值</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>box_info</code></td>
+<td>dict</td>
+<td>需要传参</td>
+<td>箱子信息参数，字段包括：<br>- box_size: [length_x, length_y, length_z]，箱子在局部 x/y/z 轴方向上的尺寸，单位为米。<br>- box_pose: [x, y, z, qx, qy, qz, qw]，箱子相对于 parent_link_name 的位姿。<br>- box_tag: 箱子的唯一标记，后续 detach_box_from_link() 需要使用相同的 box_tag。<br>- parent_link_name: box_pose 所在的父连杆或父坐标系名称。</td>
+</tr>
+<tr>
+<td><code>ignore_collision_links</code></td>
+<td>Sequence[str]</td>
+<td><code>[]</code></td>
+<td>碰撞检测时需要忽略该附着箱子的机器人连杆列表。</td>
+</tr>
+</tbody>
+</table>
+<p><strong>返回值</strong></p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tuple</td>
+<td>操作结果：成功时返回 SUCCESS；输入格式错误时返回 INVALID_INPUT；PNS 服务未就绪时返回 WAIT_INITIALIZED；PNS 请求失败时返回 COMM_ERR。</td>
+</tr>
+</tbody>
+</table>
 <h3 id="galbotnavigation-check_goal_arrival-function">检查目标到达</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-93-1"><a id="__codelineno-93-1" name="__codelineno-93-1" href="#__codelineno-93-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">check_goal_arrival</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-95-1"><a id="__codelineno-95-1" name="__codelineno-95-1" href="#__codelineno-95-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">check_goal_arrival</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
 </span></code></pre></div>
 <p><small>检查机器人是否成功达到当前目标。</p>
 <p>该方法查询导航系统以确定机器人是否已在可接受的位置和方向公差内到达目标位姿。当使用非阻塞导航模式轮询完成情况时，这特别有用。</small></p>
@@ -9413,7 +9574,7 @@
 <p>如果没有激活的导航命令，此方法返回 false。</p>
 </div>
 <h3 id="galbotnavigation-check_path_reachability-function">检查路径可达性</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-94-1"><a id="__codelineno-94-1" name="__codelineno-94-1" href="#__codelineno-94-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">check_path_reachability</span><span class="p">(</span><span class="n">goal_pose</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ArrayLike</span><span class="p">,</span> <span class="n">start_pose</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ArrayLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-96-1"><a id="__codelineno-96-1" name="__codelineno-96-1" href="#__codelineno-96-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">check_path_reachability</span><span class="p">(</span><span class="n">goal_pose</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ArrayLike</span><span class="p">,</span> <span class="n">start_pose</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ArrayLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
 </span></code></pre></div>
 <p><small>检查地图中是否存在从起点到目标的无碰撞路径。</p>
 <p>此方法查询全局路径规划器以确定指定的起始姿态和目标姿态之间是否存在有效的无碰撞路径。这对于在尝试导航之前验证目标姿态或多目标路径规划非常有用。</small></p>
@@ -9469,8 +9630,67 @@
 <p class="admonition-title">Note</p>
 <p>返回 true 并不保证成功导航。</p>
 </div>
+<h3 id="galbotnavigation-detach_box_from_link-function">从连杆解除箱子</h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-97-1"><a id="__codelineno-97-1" name="__codelineno-97-1" href="#__codelineno-97-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">detach_box_from_link</span><span class="p">(</span><span class="n">box_tag</span><span class="p">:</span> <span class="n">SupportsInt</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span>
+</span></code></pre></div>
+<p><small>从机器人连杆解除箱子碰撞物。</p>
+<p>根据 box_tag 解除对应箱子的附着碰撞物。这里的 box_tag 应与 attach_box_to_link() 挂载该箱子时使用的 box_tag 保持一致。</small></p>
+<p><strong>参数</strong></p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>默认值</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>box_tag</code></td>
+<td>SupportsInt</td>
+<td>需要传参</td>
+<td>箱子的唯一标记，应与 attach_box_to_link() 挂载该箱子时使用的 box_tag 一致。</td>
+</tr>
+</tbody>
+</table>
+<p><strong>返回值</strong></p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tuple</td>
+<td>操作结果：成功时返回 SUCCESS；PNS 服务未就绪时返回 WAIT_INITIALIZED；PNS 请求失败时返回 COMM_ERR。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="galbotnavigation-get_bounding_box-function">获取导航箱子</h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-98-1"><a id="__codelineno-98-1" name="__codelineno-98-1" href="#__codelineno-98-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_bounding_box</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span>
+</span></code></pre></div>
+<p><small>获取当前用于导航障碍物过滤的箱子。</p>
+<p>查询融合服务，返回当前的箱子信息列表。box_tag 是箱子的唯一标记。</small></p>
+<p><strong>返回值</strong></p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>list</td>
+<td>当前箱子信息列表；通信失败或没有可用箱子时返回空列表。</td>
+</tr>
+</tbody>
+</table>
 <h3 id="galbotnavigation-get_current_pose-function">获取当前姿态</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-95-1"><a id="__codelineno-95-1" name="__codelineno-95-1" href="#__codelineno-95-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_current_pose</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-99-1"><a id="__codelineno-99-1" name="__codelineno-99-1" href="#__codelineno-99-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_current_pose</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
 </span></code></pre></div>
 <p><small>获取地图坐标系中机器人底盘的当前估计位姿。</p>
 <p>该方法返回来自定位系统的最新姿态估计。位姿表示机器人的 base_link 坐标系相对于地图坐标系原点的位置和方向。</small></p>
@@ -9498,7 +9718,7 @@
 <p>该位姿表示机器人底盘接地轮廓（base footprint）的中心。</p>
 </div>
 <h3 id="galbotnavigation-get_navigation_status-function">获取导航状态</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-96-1"><a id="__codelineno-96-1" name="__codelineno-96-1" href="#__codelineno-96-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_navigation_status</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">NavigationTaskStatus</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-100-1"><a id="__codelineno-100-1" name="__codelineno-100-1" href="#__codelineno-100-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_navigation_status</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">NavigationTaskStatus</span>
 </span></code></pre></div>
 <p><small>获取当前导航任务状态。</p>
 <p>返回导航系统报告的最新任务状态（未知、正在运行、成功或失败）。在运行非阻塞导航时使用此功能可以轮询状态并在失败或超时时及时退出错误逻辑，从而避免死锁或无限期等待。</small></p>
@@ -9522,7 +9742,7 @@
 <p>在非阻塞导航中很有用：在 get_navigation_status() 上循环检查进度。</p>
 </div>
 <h3 id="galbotnavigation-init-function">初始化</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-97-1"><a id="__codelineno-97-1" name="__codelineno-97-1" href="#__codelineno-97-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">init</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-101-1"><a id="__codelineno-101-1" name="__codelineno-101-1" href="#__codelineno-101-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">init</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
 </span></code></pre></div>
 <p><small>初始化导航子系统及其依赖项。</p>
 <p>在使用任何其他导航功能之前必须调用此方法。它初始化通信通道、加载地图、启动定位模块并准备路径规划器。</small></p>
@@ -9554,7 +9774,7 @@
 <p>在成功初始化前调用导航方法将导致错误。</p>
 </div>
 <h3 id="galbotnavigation-is_localized-function">检查是否已定位</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-98-1"><a id="__codelineno-98-1" name="__codelineno-98-1" href="#__codelineno-98-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">is_localized</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-102-1"><a id="__codelineno-102-1" name="__codelineno-102-1" href="#__codelineno-102-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">is_localized</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
 </span></code></pre></div>
 <p><small>检查机器人当前是否在地图中定位。</p>
 <p>该方法查询定位系统以确定机器人是否具有足够置信度的有效姿态估计。未定位的机器人不应执行导航任务。</small></p>
@@ -9582,11 +9802,11 @@
 <p>如果返回 false，请考虑调用 relocalize() 并提供初始猜测。</p>
 </div>
 <h3 id="galbotnavigation-move_straight_to-function">直线移动到目标</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-99-1"><a id="__codelineno-99-1" name="__codelineno-99-1" href="#__codelineno-99-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">move_straight_to</span><span class="p">(</span>
-</span><span id="__span-99-2"><a id="__codelineno-99-2" name="__codelineno-99-2" href="#__codelineno-99-2"></a>    <span class="n">goal_pose</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ArrayLike</span><span class="p">,</span>
-</span><span id="__span-99-3"><a id="__codelineno-99-3" name="__codelineno-99-3" href="#__codelineno-99-3"></a>    <span class="n">is_blocking</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-</span><span id="__span-99-4"><a id="__codelineno-99-4" name="__codelineno-99-4" href="#__codelineno-99-4"></a>    <span class="n">timeout</span><span class="p">:</span> <span class="n">SupportsFloat</span> <span class="o">=</span> <span class="mi">8</span>
-</span><span id="__span-99-5"><a id="__codelineno-99-5" name="__codelineno-99-5" href="#__codelineno-99-5"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-103-1"><a id="__codelineno-103-1" name="__codelineno-103-1" href="#__codelineno-103-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">move_straight_to</span><span class="p">(</span>
+</span><span id="__span-103-2"><a id="__codelineno-103-2" name="__codelineno-103-2" href="#__codelineno-103-2"></a>    <span class="n">goal_pose</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ArrayLike</span><span class="p">,</span>
+</span><span id="__span-103-3"><a id="__codelineno-103-3" name="__codelineno-103-3" href="#__codelineno-103-3"></a>    <span class="n">is_blocking</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-103-4"><a id="__codelineno-103-4" name="__codelineno-103-4" href="#__codelineno-103-4"></a>    <span class="n">timeout</span><span class="p">:</span> <span class="n">SupportsFloat</span> <span class="o">=</span> <span class="mi">8</span>
+</span><span id="__span-103-5"><a id="__codelineno-103-5" name="__codelineno-103-5" href="#__codelineno-103-5"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span>
 </span></code></pre></div>
 <p><small>将机器人移动到里程计坐标系中的相对目标位姿。</p>
 <p>此方法命令机器人移动到相对于其在里程计 (odom) 坐标系中的当前位置指定的姿态。这对于不需要基于地图的规划的短距离、精确的运动非常有用。与navigate_to_goal()不同，此方法不执行动态障碍物检测或全局路径规划。它使用全向运动规划来直接移动到目标。</small></p>
@@ -9657,13 +9877,13 @@
 <p>长距离下里程计漂移可能影响精度。建议缩短单次移动距离或定期重定位。</p>
 </div>
 <h3 id="galbotnavigation-navigate_to_goal-function">导航到目标</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-100-1"><a id="__codelineno-100-1" name="__codelineno-100-1" href="#__codelineno-100-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">navigate_to_goal</span><span class="p">(</span>
-</span><span id="__span-100-2"><a id="__codelineno-100-2" name="__codelineno-100-2" href="#__codelineno-100-2"></a>    <span class="n">goal_pose</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ArrayLike</span><span class="p">,</span>
-</span><span id="__span-100-3"><a id="__codelineno-100-3" name="__codelineno-100-3" href="#__codelineno-100-3"></a>    <span class="n">enable_collision_check</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-</span><span id="__span-100-4"><a id="__codelineno-100-4" name="__codelineno-100-4" href="#__codelineno-100-4"></a>    <span class="n">is_blocking</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-</span><span id="__span-100-5"><a id="__codelineno-100-5" name="__codelineno-100-5" href="#__codelineno-100-5"></a>    <span class="n">timeout</span><span class="p">:</span> <span class="n">SupportsFloat</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
-</span><span id="__span-100-6"><a id="__codelineno-100-6" name="__codelineno-100-6" href="#__codelineno-100-6"></a>    <span class="n">omni_plan</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
-</span><span id="__span-100-7"><a id="__codelineno-100-7" name="__codelineno-100-7" href="#__codelineno-100-7"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-104-1"><a id="__codelineno-104-1" name="__codelineno-104-1" href="#__codelineno-104-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">navigate_to_goal</span><span class="p">(</span>
+</span><span id="__span-104-2"><a id="__codelineno-104-2" name="__codelineno-104-2" href="#__codelineno-104-2"></a>    <span class="n">goal_pose</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ArrayLike</span><span class="p">,</span>
+</span><span id="__span-104-3"><a id="__codelineno-104-3" name="__codelineno-104-3" href="#__codelineno-104-3"></a>    <span class="n">enable_collision_check</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-104-4"><a id="__codelineno-104-4" name="__codelineno-104-4" href="#__codelineno-104-4"></a>    <span class="n">is_blocking</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+</span><span id="__span-104-5"><a id="__codelineno-104-5" name="__codelineno-104-5" href="#__codelineno-104-5"></a>    <span class="n">timeout</span><span class="p">:</span> <span class="n">SupportsFloat</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
+</span><span id="__span-104-6"><a id="__codelineno-104-6" name="__codelineno-104-6" href="#__codelineno-104-6"></a>    <span class="n">omni_plan</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span id="__span-104-7"><a id="__codelineno-104-7" name="__codelineno-104-7" href="#__codelineno-104-7"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span>
 </span></code></pre></div>
 <p><small>将机器人导航至地图坐标系中的目标位姿。</p>
 <p>该方法命令移动底座使用全局路径规划器和局部轨迹控制器导航到指定的目标位姿。如果启用了碰撞检查，规划器将计算从当前姿态到目标的无碰撞路径，同时考虑静态地图障碍物和动态障碍物。</small></p>
@@ -9742,7 +9962,7 @@
 <p>长距离导航可能需要较长时间；建议使用非阻塞模式或监控进度。</p>
 </div>
 <h3 id="galbotnavigation-relocalize-function">重定位</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-101-1"><a id="__codelineno-101-1" name="__codelineno-101-1" href="#__codelineno-101-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">relocalize</span><span class="p">(</span><span class="n">init_pose</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ArrayLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-105-1"><a id="__codelineno-105-1" name="__codelineno-105-1" href="#__codelineno-105-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">relocalize</span><span class="p">(</span><span class="n">init_pose</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ArrayLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span>
 </span></code></pre></div>
 <p><small>执行重新定位以重新估计机器人在地图坐标系中的姿态。</p>
 <p>该方法重置定位滤波器并提供初始姿态估计，以帮助机器人在已知地图中重新建立其位置。当机器人失去定位或手动将机器人放置在已知位置时，这非常有用。</small></p>
@@ -9788,8 +10008,47 @@
 <p class="admonition-title">Note</p>
 <p>调用此方法后，使用 is_localized() 验证成功。</p>
 </div>
+<h3 id="galbotnavigation-remove_bounding_box-function">移除导航箱子</h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-106-1"><a id="__codelineno-106-1" name="__codelineno-106-1" href="#__codelineno-106-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">remove_bounding_box</span><span class="p">(</span><span class="n">box_tag</span><span class="p">:</span> <span class="n">SupportsInt</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span>
+</span></code></pre></div>
+<p><small>移除用于导航障碍物过滤的箱子。</p>
+<p>根据 box_tag 移除对应箱子。这里的 box_tag 应与 add_bounding_box() 添加该箱子时使用的 box_tag 保持一致。</small></p>
+<p><strong>参数</strong></p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>类型</th>
+<th>默认值</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>box_tag</code></td>
+<td>SupportsInt</td>
+<td>需要传参</td>
+<td>箱子的唯一标记，应与 add_bounding_box() 添加该箱子时使用的 box_tag 一致。</td>
+</tr>
+</tbody>
+</table>
+<p><strong>返回值</strong></p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tuple</td>
+<td>操作结果：成功时返回 SUCCESS；融合服务请求失败时返回 COMM_ERR。</td>
+</tr>
+</tbody>
+</table>
 <h3 id="galbotnavigation-stop_navigation-function">停止导航</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-102-1"><a id="__codelineno-102-1" name="__codelineno-102-1" href="#__codelineno-102-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">stop_navigation</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">tuple</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-107-1"><a id="__codelineno-107-1" name="__codelineno-107-1" href="#__codelineno-107-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">stop_navigation</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">tuple</span>
 </span></code></pre></div>
 <p><small>停止当前的导航任务并使机器人停止。</p>
 <p>此方法立即取消任何正在进行的导航命令（来自navigate_to_goal()或move_straight_to()）并命令机器人停止。机器人将根据其运动学约束减速并安全停止。</small></p>
@@ -9826,8 +10085,8 @@
 <p><small>感知模块接口；通过get_instance(MachineType)获取单例实例。</p>
 <p>G1平台专用：get_instance(MachineType::S1)会抛出std::runtime_error。</small></p>
 <h3 id="galbotperception-get_instance-function">根据机器类型获取感知模块单例实例</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-103-1"><a id="__codelineno-103-1" name="__codelineno-103-1" href="#__codelineno-103-1"></a><span class="nd">@staticmethod</span>
-</span><span id="__span-103-2"><a id="__codelineno-103-2" name="__codelineno-103-2" href="#__codelineno-103-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_instance</span><span class="p">(</span><span class="n">machine_type</span><span class="p">:</span> <span class="n">MachineType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GalbotPerception</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-108-1"><a id="__codelineno-108-1" name="__codelineno-108-1" href="#__codelineno-108-1"></a><span class="nd">@staticmethod</span>
+</span><span id="__span-108-2"><a id="__codelineno-108-2" name="__codelineno-108-2" href="#__codelineno-108-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_instance</span><span class="p">(</span><span class="n">machine_type</span><span class="p">:</span> <span class="n">MachineType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GalbotPerception</span>
 </span></code></pre></div>
 <p><small>获取Perception模块单例实例。</small></p>
 <p><strong>参数</strong></p>
@@ -9865,7 +10124,7 @@
 </tbody>
 </table>
 <h3 id="galbotperception-get_latest_result-function">获取模块的最新缓存结果</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-104-1"><a id="__codelineno-104-1" name="__codelineno-104-1" href="#__codelineno-104-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_latest_result</span><span class="p">(</span><span class="n">module</span><span class="p">:</span> <span class="n">PerceptionModule</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-109-1"><a id="__codelineno-109-1" name="__codelineno-109-1" href="#__codelineno-109-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_latest_result</span><span class="p">(</span><span class="n">module</span><span class="p">:</span> <span class="n">PerceptionModule</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span>
 </span></code></pre></div>
 <p><small>返回模块的最新缓存结果，不阻塞。</small></p>
 <p><strong>参数</strong></p>
@@ -9903,7 +10162,7 @@
 </tbody>
 </table>
 <h3 id="galbotperception-init-function">初始化感知模块并加载模型</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-105-1"><a id="__codelineno-105-1" name="__codelineno-105-1" href="#__codelineno-105-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">init</span><span class="p">(</span><span class="n">enabled_modules</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">PerceptionModule</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-110-1"><a id="__codelineno-110-1" name="__codelineno-110-1" href="#__codelineno-110-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">init</span><span class="p">(</span><span class="n">enabled_modules</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">PerceptionModule</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
 </span></code></pre></div>
 <p><small>初始化感知模块并加载指定模块的模型。</small></p>
 <p><strong>参数</strong></p>
@@ -9941,7 +10200,7 @@
 </tbody>
 </table>
 <h3 id="galbotperception-run_once-function">为指定模块运行一次推理</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-106-1"><a id="__codelineno-106-1" name="__codelineno-106-1" href="#__codelineno-106-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">run_once</span><span class="p">(</span><span class="n">module</span><span class="p">:</span> <span class="n">PerceptionModule</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-111-1"><a id="__codelineno-111-1" name="__codelineno-111-1" href="#__codelineno-111-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">run_once</span><span class="p">(</span><span class="n">module</span><span class="p">:</span> <span class="n">PerceptionModule</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
 </span></code></pre></div>
 <p><small>为指定模块运行一次推理。</small></p>
 <p><strong>参数</strong></p>
@@ -9983,7 +10242,7 @@
 <p>初始化后，等待约10秒让模型准备就绪后再调用run_once。</p>
 </div>
 <h3 id="galbotperception-wait_for_new_result-function">等待模块产生新结果或超时</h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-107-1"><a id="__codelineno-107-1" name="__codelineno-107-1" href="#__codelineno-107-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">wait_for_new_result</span><span class="p">(</span><span class="n">module</span><span class="p">:</span> <span class="n">PerceptionModule</span><span class="p">,</span> <span class="n">timeout_s</span><span class="p">:</span> <span class="n">SupportsFloat</span> <span class="o">=</span> <span class="mf">5.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-112-1"><a id="__codelineno-112-1" name="__codelineno-112-1" href="#__codelineno-112-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">wait_for_new_result</span><span class="p">(</span><span class="n">module</span><span class="p">:</span> <span class="n">PerceptionModule</span><span class="p">,</span> <span class="n">timeout_s</span><span class="p">:</span> <span class="n">SupportsFloat</span> <span class="o">=</span> <span class="mf">5.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
 </span></code></pre></div>
 <p><small>阻塞直到模块产生新结果或超时。与run_once配合使用获取最新输出。</small></p>
 <p><strong>参数</strong></p>
@@ -10068,7 +10327,7 @@
 <p><small>碰撞检测启用/禁用配置。</p>
 <p>该结构在运动规划和执行期间提供对碰撞检查的细粒度控制。它支持独立切换自碰撞检测（机器人连杆相互碰撞）和环境碰撞检测（机器人与障碍物或工作空间边界碰撞）。禁用碰撞检查可以提高计算性能，但可能会导致不安全的轨迹。在受控环境中谨慎使用。</small></p>
 <h4 id="collisioncheckoption-get_disable_env_collision_check-function">检查环境碰撞检测是否禁用</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-108-1"><a id="__codelineno-108-1" name="__codelineno-108-1" href="#__codelineno-108-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_disable_env_collision_check</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-113-1"><a id="__codelineno-113-1" name="__codelineno-113-1" href="#__codelineno-113-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_disable_env_collision_check</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
 </span></code></pre></div>
 <p><small>检查环境碰撞检测是否禁用</small></p>
 <p><strong>返回值</strong></p>
@@ -10087,7 +10346,7 @@
 </tbody>
 </table>
 <h4 id="collisioncheckoption-get_disable_self_collision_check-function">检查自碰撞检测是否禁用</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-109-1"><a id="__codelineno-109-1" name="__codelineno-109-1" href="#__codelineno-109-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_disable_self_collision_check</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-114-1"><a id="__codelineno-114-1" name="__codelineno-114-1" href="#__codelineno-114-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_disable_self_collision_check</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
 </span></code></pre></div>
 <p><small>检查自碰撞检测是否禁用</small></p>
 <p><strong>返回值</strong></p>
@@ -10106,11 +10365,11 @@
 </tbody>
 </table>
 <h4 id="collisioncheckoption-print-function">打印碰撞检测配置到标准输出</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-110-1"><a id="__codelineno-110-1" name="__codelineno-110-1" href="#__codelineno-110-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">print</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-115-1"><a id="__codelineno-115-1" name="__codelineno-115-1" href="#__codelineno-115-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">print</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>打印碰撞检测配置到标准输出</small></p>
 <h4 id="collisioncheckoption-set_disable_env_collision_check-function">启用或禁用环境碰撞检测</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-111-1"><a id="__codelineno-111-1" name="__codelineno-111-1" href="#__codelineno-111-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_disable_env_collision_check</span><span class="p">(</span><span class="n">disable</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-116-1"><a id="__codelineno-116-1" name="__codelineno-116-1" href="#__codelineno-116-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_disable_env_collision_check</span><span class="p">(</span><span class="n">disable</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置是否禁用环境碰撞检测</small></p>
 <p><strong>参数</strong></p>
@@ -10137,7 +10396,7 @@
 <p>禁用环境检查可能导致与障碍物发生碰撞。</p>
 </div>
 <h4 id="collisioncheckoption-set_disable_self_collision_check-function">启用或禁用自碰撞检测</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-112-1"><a id="__codelineno-112-1" name="__codelineno-112-1" href="#__codelineno-112-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_disable_self_collision_check</span><span class="p">(</span><span class="n">disable</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-117-1"><a id="__codelineno-117-1" name="__codelineno-117-1" href="#__codelineno-117-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_disable_self_collision_check</span><span class="p">(</span><span class="n">disable</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>true禁用自碰撞检测，false启用</small></p>
 <p><strong>参数</strong></p>
@@ -10388,11 +10647,11 @@
 </tbody>
 </table>
 <h4 id="detectionresult-clear-function">清空结果</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-113-1"><a id="__codelineno-113-1" name="__codelineno-113-1" href="#__codelineno-113-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">clear</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-118-1"><a id="__codelineno-118-1" name="__codelineno-118-1" href="#__codelineno-118-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">clear</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>清空所有存储的结果。</small></p>
 <h4 id="detectionresult-get_result_info-function">获取结果信息</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-114-1"><a id="__codelineno-114-1" name="__codelineno-114-1" href="#__codelineno-114-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_result_info</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-119-1"><a id="__codelineno-119-1" name="__codelineno-119-1" href="#__codelineno-119-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_result_info</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span>
 </span></code></pre></div>
 <p><small>获取结果摘要字符串。</small></p>
 <p><strong>返回值</strong></p>
@@ -10793,7 +11052,7 @@
 <p><small>逆运动学 (IK) 解算器配置参数。</p>
 <p>该结构配置数值逆运动学解算器，用于计算实现所需末端执行器姿态的关节配置。它支持具有可配置种子策略、收敛容差、关节限制处理和超时参数的碰撞感知 IK。IK 求解是一种迭代数值优化过程，可以受益于多次随机初始化来找到可行的无碰撞解决方案。</small></p>
 <h4 id="iksolverconfig-get_col_aware_ik_joint_limit_bias-function">获取关节限制安全裕度</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-115-1"><a id="__codelineno-115-1" name="__codelineno-115-1" href="#__codelineno-115-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_col_aware_ik_joint_limit_bias</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-120-1"><a id="__codelineno-120-1" name="__codelineno-120-1" href="#__codelineno-120-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_col_aware_ik_joint_limit_bias</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span>
 </span></code></pre></div>
 <p><small>获取碰撞感知逆运动学关节限制偏差。较大的偏差会使求解器更倾向于避开碰撞区域。</small></p>
 <p><strong>返回值</strong></p>
@@ -10812,7 +11071,7 @@
 </tbody>
 </table>
 <h4 id="iksolverconfig-get_col_aware_ik_timeout-function">获取碰撞感知IK求解器超时</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-116-1"><a id="__codelineno-116-1" name="__codelineno-116-1" href="#__codelineno-116-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_col_aware_ik_timeout</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-121-1"><a id="__codelineno-121-1" name="__codelineno-121-1" href="#__codelineno-121-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_col_aware_ik_timeout</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span>
 </span></code></pre></div>
 <p><small>获取碰撞感知逆运动学求解超时时间（秒）</small></p>
 <p><strong>返回值</strong></p>
@@ -10831,7 +11090,7 @@
 </tbody>
 </table>
 <h4 id="iksolverconfig-get_enable_collision_check_log-function">检查是否启用碰撞检查日志</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-117-1"><a id="__codelineno-117-1" name="__codelineno-117-1" href="#__codelineno-117-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_enable_collision_check_log</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-122-1"><a id="__codelineno-122-1" name="__codelineno-122-1" href="#__codelineno-122-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_enable_collision_check_log</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
 </span></code></pre></div>
 <p><small>获取是否启用碰撞检测日志输出</small></p>
 <p><strong>返回值</strong></p>
@@ -10850,7 +11109,7 @@
 </tbody>
 </table>
 <h4 id="iksolverconfig-get_rotation_eps-function">获取方向误差容差</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-118-1"><a id="__codelineno-118-1" name="__codelineno-118-1" href="#__codelineno-118-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_rotation_eps</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-123-1"><a id="__codelineno-123-1" name="__codelineno-123-1" href="#__codelineno-123-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_rotation_eps</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
 </span></code></pre></div>
 <p><small>获取旋转收敛容差（弧度）</small></p>
 <p><strong>返回值</strong></p>
@@ -10869,7 +11128,7 @@
 </tbody>
 </table>
 <h4 id="iksolverconfig-get_seed_type-function">获取IK求解器种子生成策略</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-119-1"><a id="__codelineno-119-1" name="__codelineno-119-1" href="#__codelineno-119-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_seed_type</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">SeedType</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-124-1"><a id="__codelineno-124-1" name="__codelineno-124-1" href="#__codelineno-124-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_seed_type</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">SeedType</span>
 </span></code></pre></div>
 <p><small>获取逆运动学求解种子类型</small></p>
 <p><strong>返回值</strong></p>
@@ -10888,7 +11147,7 @@
 </tbody>
 </table>
 <h4 id="iksolverconfig-get_translation_eps-function">获取笛卡尔位置误差容差</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-120-1"><a id="__codelineno-120-1" name="__codelineno-120-1" href="#__codelineno-120-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_translation_eps</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-125-1"><a id="__codelineno-125-1" name="__codelineno-125-1" href="#__codelineno-125-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_translation_eps</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
 </span></code></pre></div>
 <p><small>获取平移收敛容差（米）</small></p>
 <p><strong>返回值</strong></p>
@@ -10907,11 +11166,11 @@
 </tbody>
 </table>
 <h4 id="iksolverconfig-print-function">打印IK求解器配置到标准输出</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-121-1"><a id="__codelineno-121-1" name="__codelineno-121-1" href="#__codelineno-121-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">print</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-126-1"><a id="__codelineno-126-1" name="__codelineno-126-1" href="#__codelineno-126-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">print</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>打印逆运动学求解器配置到标准输出</small></p>
 <h4 id="iksolverconfig-set_col_aware_ik_joint_limit_bias-function">设置关节位置限制的安全裕度</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-122-1"><a id="__codelineno-122-1" name="__codelineno-122-1" href="#__codelineno-122-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_col_aware_ik_joint_limit_bias</span><span class="p">(</span><span class="n">bias</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-127-1"><a id="__codelineno-127-1" name="__codelineno-127-1" href="#__codelineno-127-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_col_aware_ik_joint_limit_bias</span><span class="p">(</span><span class="n">bias</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置碰撞感知逆运动学关节限制偏差</small></p>
 <p><strong>参数</strong></p>
@@ -10938,7 +11197,7 @@
 <p>防止 IK 求解器提议在奇点附近的配置。</p>
 </div>
 <h4 id="iksolverconfig-set_col_aware_ik_timeout-function">设置碰撞感知IK求解器超时</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-123-1"><a id="__codelineno-123-1" name="__codelineno-123-1" href="#__codelineno-123-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_col_aware_ik_timeout</span><span class="p">(</span><span class="n">timeout</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-128-1"><a id="__codelineno-128-1" name="__codelineno-128-1" href="#__codelineno-128-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_col_aware_ik_timeout</span><span class="p">(</span><span class="n">timeout</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置碰撞感知逆运动学求解超时时间（秒）</small></p>
 <p><strong>参数</strong></p>
@@ -10965,7 +11224,7 @@
 <p>较长的超时允许更多种子尝试但会延迟规划。</p>
 </div>
 <h4 id="iksolverconfig-set_enable_collision_check_log-function">启用或禁用碰撞检测日志</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-124-1"><a id="__codelineno-124-1" name="__codelineno-124-1" href="#__codelineno-124-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_enable_collision_check_log</span><span class="p">(</span><span class="n">enable</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-129-1"><a id="__codelineno-129-1" name="__codelineno-129-1" href="#__codelineno-129-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_enable_collision_check_log</span><span class="p">(</span><span class="n">enable</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置是否启用碰撞检测日志输出</small></p>
 <p><strong>参数</strong></p>
@@ -10992,7 +11251,7 @@
 <p>用于调试由于碰撞约束导致的 IK 失败。</p>
 </div>
 <h4 id="iksolverconfig-set_rotation_eps-function">设置方向误差容差</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-125-1"><a id="__codelineno-125-1" name="__codelineno-125-1" href="#__codelineno-125-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_rotation_eps</span><span class="p">(</span><span class="n">eps</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-130-1"><a id="__codelineno-130-1" name="__codelineno-130-1" href="#__codelineno-130-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_rotation_eps</span><span class="p">(</span><span class="n">eps</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置旋转收敛容差（弧度）</small></p>
 <p><strong>参数</strong></p>
@@ -11019,7 +11278,7 @@
 <p>当方向误差在此容差内时接受 IK 解。</p>
 </div>
 <h4 id="iksolverconfig-set_seed_type-function">设置种子类型</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-126-1"><a id="__codelineno-126-1" name="__codelineno-126-1" href="#__codelineno-126-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_seed_type</span><span class="p">(</span><span class="nb">type</span><span class="p">:</span> <span class="n">SeedType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-131-1"><a id="__codelineno-131-1" name="__codelineno-131-1" href="#__codelineno-131-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_seed_type</span><span class="p">(</span><span class="nb">type</span><span class="p">:</span> <span class="n">SeedType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置逆运动学求解种子类型</small></p>
 <p><strong>参数</strong></p>
@@ -11042,7 +11301,7 @@
 </tbody>
 </table>
 <h4 id="iksolverconfig-set_translation_eps-function">设置笛卡尔位置误差容差</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-127-1"><a id="__codelineno-127-1" name="__codelineno-127-1" href="#__codelineno-127-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_translation_eps</span><span class="p">(</span><span class="n">eps</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-132-1"><a id="__codelineno-132-1" name="__codelineno-132-1" href="#__codelineno-132-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_translation_eps</span><span class="p">(</span><span class="n">eps</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置平移收敛容差（米）</small></p>
 <p><strong>参数</strong></p>
@@ -11224,7 +11483,7 @@
 </tbody>
 </table>
 <h4 id="jointstates-get_type-function">获取类型</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-128-1"><a id="__codelineno-128-1" name="__codelineno-128-1" href="#__codelineno-128-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_type</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RobotStatesType</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-133-1"><a id="__codelineno-133-1" name="__codelineno-133-1" href="#__codelineno-133-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_type</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RobotStatesType</span>
 </span></code></pre></div>
 <p><small>获取状态类型，指示这是关节空间目标</small></p>
 <p><strong>返回值</strong></p>
@@ -11243,7 +11502,7 @@
 </tbody>
 </table>
 <h4 id="jointstates-set_joint-function">设置关节</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-129-1"><a id="__codelineno-129-1" name="__codelineno-129-1" href="#__codelineno-129-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_joint</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="n">SupportsInt</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="n">SupportsInt</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-134-1"><a id="__codelineno-134-1" name="__codelineno-134-1" href="#__codelineno-134-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_joint</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="n">SupportsInt</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="n">SupportsInt</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置指定索引的关节值</small></p>
 <p><strong>参数</strong></p>
@@ -11280,7 +11539,7 @@
 <p>越界访问不会返回错误；请确保索引有效。</p>
 </div>
 <h4 id="jointstates-set_joint_positions-function">设置关节位置</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-130-1"><a id="__codelineno-130-1" name="__codelineno-130-1" href="#__codelineno-130-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_joint_positions</span><span class="p">(</span><span class="n">joints</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-135-1"><a id="__codelineno-135-1" name="__codelineno-135-1" href="#__codelineno-135-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_joint_positions</span><span class="p">(</span><span class="n">joints</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置所有关节位置</small></p>
 <p><strong>参数</strong></p>
@@ -11311,7 +11570,7 @@
 <p><small>机器人运动链关节的运动边界参数。</p>
 <p>该结构定义了机器人运动链（例如，机械臂、移动底座或腿链）的运动学约束。它指定了链条中每个关节的位置、速度、加速度和加加速度限制。这些边界对于确保轨迹规划和执行过程中安全且物理上可行的运动至关重要。每个向量应包含运动链中每个关节的一个值。所有关节空间量均以弧度或每单位时间的弧度指定。</small></p>
 <h4 id="kinematicsboundary-get_acc_lower_limit-function">获取下限加速度限制</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-131-1"><a id="__codelineno-131-1" name="__codelineno-131-1" href="#__codelineno-131-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_acc_lower_limit</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-136-1"><a id="__codelineno-136-1" name="__codelineno-136-1" href="#__codelineno-136-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_acc_lower_limit</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
 </span></code></pre></div>
 <p><small>获取加速度下限（rad/s²）</small></p>
 <p><strong>返回值</strong></p>
@@ -11330,7 +11589,7 @@
 </tbody>
 </table>
 <h4 id="kinematicsboundary-get_acc_upper_limit-function">获取上限加速度限制</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-132-1"><a id="__codelineno-132-1" name="__codelineno-132-1" href="#__codelineno-132-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_acc_upper_limit</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-137-1"><a id="__codelineno-137-1" name="__codelineno-137-1" href="#__codelineno-137-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_acc_upper_limit</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
 </span></code></pre></div>
 <p><small>获取加速度上限（rad/s²）</small></p>
 <p><strong>返回值</strong></p>
@@ -11349,7 +11608,7 @@
 </tbody>
 </table>
 <h4 id="kinematicsboundary-get_chain_name-function">获取运动链名称</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-133-1"><a id="__codelineno-133-1" name="__codelineno-133-1" href="#__codelineno-133-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_chain_name</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-138-1"><a id="__codelineno-138-1" name="__codelineno-138-1" href="#__codelineno-138-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_chain_name</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span>
 </span></code></pre></div>
 <p><small>获取该边界约束所属的运动链名称</small></p>
 <p><strong>返回值</strong></p>
@@ -11368,7 +11627,7 @@
 </tbody>
 </table>
 <h4 id="kinematicsboundary-get_jerk_lower_limit-function">获取下限加加速度限制</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-134-1"><a id="__codelineno-134-1" name="__codelineno-134-1" href="#__codelineno-134-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_jerk_lower_limit</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-139-1"><a id="__codelineno-139-1" name="__codelineno-139-1" href="#__codelineno-139-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_jerk_lower_limit</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
 </span></code></pre></div>
 <p><small>获取加加速度下限（rad/s³）</small></p>
 <p><strong>返回值</strong></p>
@@ -11387,7 +11646,7 @@
 </tbody>
 </table>
 <h4 id="kinematicsboundary-get_jerk_upper_limit-function">获取上限加加速度限制</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-135-1"><a id="__codelineno-135-1" name="__codelineno-135-1" href="#__codelineno-135-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_jerk_upper_limit</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-140-1"><a id="__codelineno-140-1" name="__codelineno-140-1" href="#__codelineno-140-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_jerk_upper_limit</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
 </span></code></pre></div>
 <p><small>获取加加速度上限（rad/s³）</small></p>
 <p><strong>返回值</strong></p>
@@ -11406,7 +11665,7 @@
 </tbody>
 </table>
 <h4 id="kinematicsboundary-get_lower_limit-function">获取下限位置限制</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-136-1"><a id="__codelineno-136-1" name="__codelineno-136-1" href="#__codelineno-136-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_lower_limit</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-141-1"><a id="__codelineno-141-1" name="__codelineno-141-1" href="#__codelineno-141-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_lower_limit</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
 </span></code></pre></div>
 <p><small>获取关节位置下限（rad）</small></p>
 <p><strong>返回值</strong></p>
@@ -11425,7 +11684,7 @@
 </tbody>
 </table>
 <h4 id="kinematicsboundary-get_upper_limit-function">获取上限位置限制</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-137-1"><a id="__codelineno-137-1" name="__codelineno-137-1" href="#__codelineno-137-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_upper_limit</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-142-1"><a id="__codelineno-142-1" name="__codelineno-142-1" href="#__codelineno-142-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_upper_limit</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
 </span></code></pre></div>
 <p><small>获取关节位置上限（rad）</small></p>
 <p><strong>返回值</strong></p>
@@ -11444,7 +11703,7 @@
 </tbody>
 </table>
 <h4 id="kinematicsboundary-get_vel_lower_limit-function">获取下限速度限制</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-138-1"><a id="__codelineno-138-1" name="__codelineno-138-1" href="#__codelineno-138-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_vel_lower_limit</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-143-1"><a id="__codelineno-143-1" name="__codelineno-143-1" href="#__codelineno-143-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_vel_lower_limit</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
 </span></code></pre></div>
 <p><small>获取速度下限（rad/s）</small></p>
 <p><strong>返回值</strong></p>
@@ -11463,7 +11722,7 @@
 </tbody>
 </table>
 <h4 id="kinematicsboundary-get_vel_upper_limit-function">获取上限速度限制</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-139-1"><a id="__codelineno-139-1" name="__codelineno-139-1" href="#__codelineno-139-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_vel_upper_limit</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-144-1"><a id="__codelineno-144-1" name="__codelineno-144-1" href="#__codelineno-144-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_vel_upper_limit</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
 </span></code></pre></div>
 <p><small>获取速度上限（rad/s）</small></p>
 <p><strong>返回值</strong></p>
@@ -11482,11 +11741,11 @@
 </tbody>
 </table>
 <h4 id="kinematicsboundary-print-function">打印输出</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-140-1"><a id="__codelineno-140-1" name="__codelineno-140-1" href="#__codelineno-140-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">print</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-145-1"><a id="__codelineno-145-1" name="__codelineno-145-1" href="#__codelineno-145-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">print</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>打印运动学边界约束信息到标准输出</small></p>
 <h4 id="kinematicsboundary-set_acc_lower_limit-function">设置下限加速度限制</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-141-1"><a id="__codelineno-141-1" name="__codelineno-141-1" href="#__codelineno-141-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_acc_lower_limit</span><span class="p">(</span><span class="n">limits</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-146-1"><a id="__codelineno-146-1" name="__codelineno-146-1" href="#__codelineno-146-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_acc_lower_limit</span><span class="p">(</span><span class="n">limits</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置加速度下限</small></p>
 <p><strong>参数</strong></p>
@@ -11513,7 +11772,7 @@
 <p>用于轨迹优化和平滑约束。</p>
 </div>
 <h4 id="kinematicsboundary-set_acc_upper_limit-function">设置上限加速度限制</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-142-1"><a id="__codelineno-142-1" name="__codelineno-142-1" href="#__codelineno-142-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_acc_upper_limit</span><span class="p">(</span><span class="n">limits</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-147-1"><a id="__codelineno-147-1" name="__codelineno-147-1" href="#__codelineno-147-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_acc_upper_limit</span><span class="p">(</span><span class="n">limits</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置加速度上限</small></p>
 <p><strong>参数</strong></p>
@@ -11540,7 +11799,7 @@
 <p>用于轨迹优化和平滑约束。</p>
 </div>
 <h4 id="kinematicsboundary-set_chain_name-function">设置运动链名称</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-143-1"><a id="__codelineno-143-1" name="__codelineno-143-1" href="#__codelineno-143-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_chain_name</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-148-1"><a id="__codelineno-148-1" name="__codelineno-148-1" href="#__codelineno-148-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_chain_name</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置该边界约束所属的运动链名称</small></p>
 <p><strong>参数</strong></p>
@@ -11563,7 +11822,7 @@
 </tbody>
 </table>
 <h4 id="kinematicsboundary-set_jerk_lower_limit-function">设置下限加加速度限制</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-144-1"><a id="__codelineno-144-1" name="__codelineno-144-1" href="#__codelineno-144-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_jerk_lower_limit</span><span class="p">(</span><span class="n">limits</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-149-1"><a id="__codelineno-149-1" name="__codelineno-149-1" href="#__codelineno-149-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_jerk_lower_limit</span><span class="p">(</span><span class="n">limits</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置加加速度下限</small></p>
 <p><strong>参数</strong></p>
@@ -11590,7 +11849,7 @@
 <p>加加速度约束可提高运动平滑度并减少机械应力。</p>
 </div>
 <h4 id="kinematicsboundary-set_jerk_upper_limit-function">设置上限加加速度限制</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-145-1"><a id="__codelineno-145-1" name="__codelineno-145-1" href="#__codelineno-145-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_jerk_upper_limit</span><span class="p">(</span><span class="n">limits</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-150-1"><a id="__codelineno-150-1" name="__codelineno-150-1" href="#__codelineno-150-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_jerk_upper_limit</span><span class="p">(</span><span class="n">limits</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置加加速度上限</small></p>
 <p><strong>参数</strong></p>
@@ -11617,7 +11876,7 @@
 <p>加加速度约束可提高运动平滑度并减少机械应力。</p>
 </div>
 <h4 id="kinematicsboundary-set_lower_limit-function">设置下限位置限制</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-146-1"><a id="__codelineno-146-1" name="__codelineno-146-1" href="#__codelineno-146-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_lower_limit</span><span class="p">(</span><span class="n">limits</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-151-1"><a id="__codelineno-151-1" name="__codelineno-151-1" href="#__codelineno-151-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_lower_limit</span><span class="p">(</span><span class="n">limits</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置关节位置下限</small></p>
 <p><strong>参数</strong></p>
@@ -11644,7 +11903,7 @@
 <p>向量大小必须等于链中的关节数。</p>
 </div>
 <h4 id="kinematicsboundary-set_upper_limit-function">设置上限位置限制</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-147-1"><a id="__codelineno-147-1" name="__codelineno-147-1" href="#__codelineno-147-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_upper_limit</span><span class="p">(</span><span class="n">limits</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-152-1"><a id="__codelineno-152-1" name="__codelineno-152-1" href="#__codelineno-152-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_upper_limit</span><span class="p">(</span><span class="n">limits</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置关节位置上限</small></p>
 <p><strong>参数</strong></p>
@@ -11671,7 +11930,7 @@
 <p>向量大小必须等于链中的关节数。</p>
 </div>
 <h4 id="kinematicsboundary-set_vel_lower_limit-function">设置下限速度限制</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-148-1"><a id="__codelineno-148-1" name="__codelineno-148-1" href="#__codelineno-148-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_vel_lower_limit</span><span class="p">(</span><span class="n">limits</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-153-1"><a id="__codelineno-153-1" name="__codelineno-153-1" href="#__codelineno-153-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_vel_lower_limit</span><span class="p">(</span><span class="n">limits</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置速度下限</small></p>
 <p><strong>参数</strong></p>
@@ -11698,7 +11957,7 @@
 <p>双向关节通常为负值。</p>
 </div>
 <h4 id="kinematicsboundary-set_vel_upper_limit-function">设置上限速度限制</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-149-1"><a id="__codelineno-149-1" name="__codelineno-149-1" href="#__codelineno-149-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_vel_upper_limit</span><span class="p">(</span><span class="n">limits</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-154-1"><a id="__codelineno-154-1" name="__codelineno-154-1" href="#__codelineno-154-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_vel_upper_limit</span><span class="p">(</span><span class="n">limits</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置速度上限</small></p>
 <p><strong>参数</strong></p>
@@ -11789,7 +12048,7 @@
 <p><small>用于笛卡尔线性轨迹验证的几何基元配置。</p>
 <p>该结构配置笛卡尔空间中线性末端执行器轨迹的碰撞检测几何表示。它支持两种基本类型：无限细线和扫掠体积圆柱体。选择适当的原语会影响碰撞检测的保守性和计算成本。圆柱体基元可以更准确地对机器人的实际扫描体积进行建模，但需要更昂贵的几何查询。</small></p>
 <h4 id="linetrajcheckprimitive-get_cylinder_prim_radius-function">获取圆柱体基元半径</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-150-1"><a id="__codelineno-150-1" name="__codelineno-150-1" href="#__codelineno-150-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_cylinder_prim_radius</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-155-1"><a id="__codelineno-155-1" name="__codelineno-155-1" href="#__codelineno-155-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_cylinder_prim_radius</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span>
 </span></code></pre></div>
 <p><small>获取圆柱基元半径（米）</small></p>
 <p><strong>返回值</strong></p>
@@ -11808,7 +12067,7 @@
 </tbody>
 </table>
 <h4 id="linetrajcheckprimitive-get_line_check_primitive_type-function">获取直线检查基元类型</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-151-1"><a id="__codelineno-151-1" name="__codelineno-151-1" href="#__codelineno-151-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_line_check_primitive_type</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">PrimitiveType</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-156-1"><a id="__codelineno-156-1" name="__codelineno-156-1" href="#__codelineno-156-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_line_check_primitive_type</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">PrimitiveType</span>
 </span></code></pre></div>
 <p><small>获取直线检查基元类型</small></p>
 <p><strong>返回值</strong></p>
@@ -11827,7 +12086,7 @@
 </tbody>
 </table>
 <h4 id="linetrajcheckprimitive-get_line_prim_curvature-function">获取直线基元曲率</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-152-1"><a id="__codelineno-152-1" name="__codelineno-152-1" href="#__codelineno-152-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_line_prim_curvature</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-157-1"><a id="__codelineno-157-1" name="__codelineno-157-1" href="#__codelineno-157-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_line_prim_curvature</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span>
 </span></code></pre></div>
 <p><small>获取直线基元曲率</small></p>
 <p><strong>返回值</strong></p>
@@ -11846,11 +12105,11 @@
 </tbody>
 </table>
 <h4 id="linetrajcheckprimitive-print-function">打印输出</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-153-1"><a id="__codelineno-153-1" name="__codelineno-153-1" href="#__codelineno-153-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">print</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-158-1"><a id="__codelineno-158-1" name="__codelineno-158-1" href="#__codelineno-158-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">print</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>打印直线轨迹检查基元信息到标准输出</small></p>
 <h4 id="linetrajcheckprimitive-set_cylinder_prim_radius-function">设置圆柱体基元半径</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-154-1"><a id="__codelineno-154-1" name="__codelineno-154-1" href="#__codelineno-154-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_cylinder_prim_radius</span><span class="p">(</span><span class="n">radius</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-159-1"><a id="__codelineno-159-1" name="__codelineno-159-1" href="#__codelineno-159-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_cylinder_prim_radius</span><span class="p">(</span><span class="n">radius</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置圆柱基元半径（米）</small></p>
 <p><strong>参数</strong></p>
@@ -11881,7 +12140,7 @@
 <p>仅当基元类型为 CYLINDER 时适用。</p>
 </div>
 <h4 id="linetrajcheckprimitive-set_line_check_primitive_type-function">设置直线检查基元类型</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-155-1"><a id="__codelineno-155-1" name="__codelineno-155-1" href="#__codelineno-155-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_line_check_primitive_type</span><span class="p">(</span><span class="nb">type</span><span class="p">:</span> <span class="n">PrimitiveType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-160-1"><a id="__codelineno-160-1" name="__codelineno-160-1" href="#__codelineno-160-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_line_check_primitive_type</span><span class="p">(</span><span class="nb">type</span><span class="p">:</span> <span class="n">PrimitiveType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置直线检查基元类型</small></p>
 <p><strong>参数</strong></p>
@@ -11908,7 +12167,7 @@
 <p>推荐 CYLINDER 用于安全关键应用。</p>
 </div>
 <h4 id="linetrajcheckprimitive-set_line_prim_curvature-function">设置直线基元曲率</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-156-1"><a id="__codelineno-156-1" name="__codelineno-156-1" href="#__codelineno-156-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_line_prim_curvature</span><span class="p">(</span><span class="n">curvature</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-161-1"><a id="__codelineno-161-1" name="__codelineno-161-1" href="#__codelineno-161-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_line_prim_curvature</span><span class="p">(</span><span class="n">curvature</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置直线基元曲率</small></p>
 <p><strong>参数</strong></p>
@@ -12001,7 +12260,7 @@
 <p><small>全面的运动规划配置管理。</p>
 <p>MotionPlanConfig 充当所有运动规划子系统的集中配置容器。它聚合了采样策略、轨迹生成参数、逆运动学解算器设置、碰撞检测选项、可行性验证标准和运动学约束边界。此类提供了用于配置复杂运动规划管道的统一接口，支持简单的机械臂规划和具有多个运动链的全身人形运动生成。配置对象通过共享指针进行延迟初始化和管理，以优化内存使用并支持可选功能配置。</small></p>
 <h4 id="motionplanconfig-create_collision_check_option-function">创建碰撞检查选项</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-157-1"><a id="__codelineno-157-1" name="__codelineno-157-1" href="#__codelineno-157-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">create_collision_check_option</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">CollisionCheckOption</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-162-1"><a id="__codelineno-162-1" name="__codelineno-162-1" href="#__codelineno-162-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">create_collision_check_option</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">CollisionCheckOption</span>
 </span></code></pre></div>
 <p><small>创建碰撞检测选项并返回</small></p>
 <p><strong>返回值</strong></p>
@@ -12020,7 +12279,7 @@
 </tbody>
 </table>
 <h4 id="motionplanconfig-create_ik_solver_config-function">创建IK求解器配置</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-158-1"><a id="__codelineno-158-1" name="__codelineno-158-1" href="#__codelineno-158-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">create_ik_solver_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">IKSolverConfig</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-163-1"><a id="__codelineno-163-1" name="__codelineno-163-1" href="#__codelineno-163-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">create_ik_solver_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">IKSolverConfig</span>
 </span></code></pre></div>
 <p><small>创建逆运动学求解器配置并返回</small></p>
 <p><strong>返回值</strong></p>
@@ -12039,7 +12298,7 @@
 </tbody>
 </table>
 <h4 id="motionplanconfig-create_line_traj_check_primitive-function">创建直线轨迹检查基元</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-159-1"><a id="__codelineno-159-1" name="__codelineno-159-1" href="#__codelineno-159-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">create_line_traj_check_primitive</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">LineTrajCheckPrimitive</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-164-1"><a id="__codelineno-164-1" name="__codelineno-164-1" href="#__codelineno-164-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">create_line_traj_check_primitive</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">LineTrajCheckPrimitive</span>
 </span></code></pre></div>
 <p><small>创建直线轨迹检查基元并返回</small></p>
 <p><strong>返回值</strong></p>
@@ -12058,7 +12317,7 @@
 </tbody>
 </table>
 <h4 id="motionplanconfig-create_sampler_config-function">创建采样器配置</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-160-1"><a id="__codelineno-160-1" name="__codelineno-160-1" href="#__codelineno-160-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">create_sampler_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">SamplerConfig</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-165-1"><a id="__codelineno-165-1" name="__codelineno-165-1" href="#__codelineno-165-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">create_sampler_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">SamplerConfig</span>
 </span></code></pre></div>
 <p><small>创建采样器配置并返回</small></p>
 <p><strong>返回值</strong></p>
@@ -12077,7 +12336,7 @@
 </tbody>
 </table>
 <h4 id="motionplanconfig-create_trajectory_feasibility_check_option-function">创建轨迹可行性检查选项</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-161-1"><a id="__codelineno-161-1" name="__codelineno-161-1" href="#__codelineno-161-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">create_trajectory_feasibility_check_option</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">TrajectoryFeasibilityCheckOption</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-166-1"><a id="__codelineno-166-1" name="__codelineno-166-1" href="#__codelineno-166-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">create_trajectory_feasibility_check_option</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">TrajectoryFeasibilityCheckOption</span>
 </span></code></pre></div>
 <p><small>创建轨迹可行性检查选项并返回</small></p>
 <p><strong>返回值</strong></p>
@@ -12096,7 +12355,7 @@
 </tbody>
 </table>
 <h4 id="motionplanconfig-create_trajectory_plan_config-function">创建轨迹规划配置</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-162-1"><a id="__codelineno-162-1" name="__codelineno-162-1" href="#__codelineno-162-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">create_trajectory_plan_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">TrajectoryPlanConfig</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-167-1"><a id="__codelineno-167-1" name="__codelineno-167-1" href="#__codelineno-167-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">create_trajectory_plan_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">TrajectoryPlanConfig</span>
 </span></code></pre></div>
 <p><small>创建轨迹规划配置并返回</small></p>
 <p><strong>返回值</strong></p>
@@ -12115,7 +12374,7 @@
 </tbody>
 </table>
 <h4 id="motionplanconfig-get_collision_check_option-function">获取碰撞检查选项</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-163-1"><a id="__codelineno-163-1" name="__codelineno-163-1" href="#__codelineno-163-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_collision_check_option</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">CollisionCheckOption</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-168-1"><a id="__codelineno-168-1" name="__codelineno-168-1" href="#__codelineno-168-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_collision_check_option</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">CollisionCheckOption</span>
 </span></code></pre></div>
 <p><small>获取碰撞检测选项</small></p>
 <p><strong>返回值</strong></p>
@@ -12138,7 +12397,7 @@
 <p>使用 create_collision_check_option() 确保有效的配置。</p>
 </div>
 <h4 id="motionplanconfig-get_collision_check_option_ref-function">获取碰撞检查选项引用</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-164-1"><a id="__codelineno-164-1" name="__codelineno-164-1" href="#__codelineno-164-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_collision_check_option_ref</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">CollisionCheckOption</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-169-1"><a id="__codelineno-169-1" name="__codelineno-169-1" href="#__codelineno-169-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_collision_check_option_ref</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">CollisionCheckOption</span>
 </span></code></pre></div>
 <p><small>获取碰撞检测选项引用</small></p>
 <p><strong>返回值</strong></p>
@@ -12157,7 +12416,7 @@
 </tbody>
 </table>
 <h4 id="motionplanconfig-get_feasibility_boundary-function">获取可行性边界</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-165-1"><a id="__codelineno-165-1" name="__codelineno-165-1" href="#__codelineno-165-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_feasibility_boundary</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">KinematicsBoundary</span><span class="p">]</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-170-1"><a id="__codelineno-170-1" name="__codelineno-170-1" href="#__codelineno-170-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_feasibility_boundary</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">KinematicsBoundary</span><span class="p">]</span>
 </span></code></pre></div>
 <p><small>获取可行性边界约束</small></p>
 <p><strong>返回值</strong></p>
@@ -12176,7 +12435,7 @@
 </tbody>
 </table>
 <h4 id="motionplanconfig-get_hard_joint_limit-function">获取硬关节约束</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-166-1"><a id="__codelineno-166-1" name="__codelineno-166-1" href="#__codelineno-166-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_hard_joint_limit</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">KinematicsBoundary</span><span class="p">]</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-171-1"><a id="__codelineno-171-1" name="__codelineno-171-1" href="#__codelineno-171-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_hard_joint_limit</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">KinematicsBoundary</span><span class="p">]</span>
 </span></code></pre></div>
 <p><small>获取硬关节位置限制边界</small></p>
 <p><strong>返回值</strong></p>
@@ -12195,7 +12454,7 @@
 </tbody>
 </table>
 <h4 id="motionplanconfig-get_ik_joint_limit-function">获取IK关节约束</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-167-1"><a id="__codelineno-167-1" name="__codelineno-167-1" href="#__codelineno-167-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_ik_joint_limit</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">KinematicsBoundary</span><span class="p">]</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-172-1"><a id="__codelineno-172-1" name="__codelineno-172-1" href="#__codelineno-172-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_ik_joint_limit</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">KinematicsBoundary</span><span class="p">]</span>
 </span></code></pre></div>
 <p><small>获取逆运动学关节位置限制边界</small></p>
 <p><strong>返回值</strong></p>
@@ -12214,7 +12473,7 @@
 </tbody>
 </table>
 <h4 id="motionplanconfig-get_ik_solver_config-function">获取IK求解器配置</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-168-1"><a id="__codelineno-168-1" name="__codelineno-168-1" href="#__codelineno-168-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_ik_solver_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">IKSolverConfig</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-173-1"><a id="__codelineno-173-1" name="__codelineno-173-1" href="#__codelineno-173-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_ik_solver_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">IKSolverConfig</span>
 </span></code></pre></div>
 <p><small>获取逆运动学求解器配置</small></p>
 <p><strong>返回值</strong></p>
@@ -12237,7 +12496,7 @@
 <p>使用 create_ik_solver_config() 确保有效的配置。</p>
 </div>
 <h4 id="motionplanconfig-get_ik_solver_config_ref-function">获取IK求解器配置引用</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-169-1"><a id="__codelineno-169-1" name="__codelineno-169-1" href="#__codelineno-169-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_ik_solver_config_ref</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">IKSolverConfig</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-174-1"><a id="__codelineno-174-1" name="__codelineno-174-1" href="#__codelineno-174-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_ik_solver_config_ref</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">IKSolverConfig</span>
 </span></code></pre></div>
 <p><small>获取逆运动学求解器配置引用</small></p>
 <p><strong>返回值</strong></p>
@@ -12256,7 +12515,7 @@
 </tbody>
 </table>
 <h4 id="motionplanconfig-get_line_traj_check_primitive-function">获取直线轨迹检查基元</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-170-1"><a id="__codelineno-170-1" name="__codelineno-170-1" href="#__codelineno-170-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_line_traj_check_primitive</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">LineTrajCheckPrimitive</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-175-1"><a id="__codelineno-175-1" name="__codelineno-175-1" href="#__codelineno-175-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_line_traj_check_primitive</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">LineTrajCheckPrimitive</span>
 </span></code></pre></div>
 <p><small>获取直线轨迹检查基元</small></p>
 <p><strong>返回值</strong></p>
@@ -12279,7 +12538,7 @@
 <p>使用 create_line_traj_check_primitive() 确保有效的配置。</p>
 </div>
 <h4 id="motionplanconfig-get_line_traj_check_primitive_ref-function">获取直线轨迹检查基元引用</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-171-1"><a id="__codelineno-171-1" name="__codelineno-171-1" href="#__codelineno-171-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_line_traj_check_primitive_ref</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">LineTrajCheckPrimitive</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-176-1"><a id="__codelineno-176-1" name="__codelineno-176-1" href="#__codelineno-176-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_line_traj_check_primitive_ref</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">LineTrajCheckPrimitive</span>
 </span></code></pre></div>
 <p><small>获取直线轨迹检查基元引用</small></p>
 <p><strong>返回值</strong></p>
@@ -12298,7 +12557,7 @@
 </tbody>
 </table>
 <h4 id="motionplanconfig-get_revert_ik_joint_limit-function">获取是否恢复IK关节限制</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-172-1"><a id="__codelineno-172-1" name="__codelineno-172-1" href="#__codelineno-172-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_revert_ik_joint_limit</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-177-1"><a id="__codelineno-177-1" name="__codelineno-177-1" href="#__codelineno-177-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_revert_ik_joint_limit</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
 </span></code></pre></div>
 <p><small>获取是否恢复逆运动学关节限制</small></p>
 <p><strong>返回值</strong></p>
@@ -12317,7 +12576,7 @@
 </tbody>
 </table>
 <h4 id="motionplanconfig-get_revert_ik_joint_limit_chains-function">获取需要恢复IK关节限制的运动链</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-173-1"><a id="__codelineno-173-1" name="__codelineno-173-1" href="#__codelineno-173-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_revert_ik_joint_limit_chains</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-178-1"><a id="__codelineno-178-1" name="__codelineno-178-1" href="#__codelineno-178-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_revert_ik_joint_limit_chains</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
 </span></code></pre></div>
 <p><small>获取需要恢复逆运动学关节限制的运动链列表</small></p>
 <p><strong>返回值</strong></p>
@@ -12336,7 +12595,7 @@
 </tbody>
 </table>
 <h4 id="motionplanconfig-get_sampler_config-function">获取采样器配置</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-174-1"><a id="__codelineno-174-1" name="__codelineno-174-1" href="#__codelineno-174-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_sampler_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">SamplerConfig</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-179-1"><a id="__codelineno-179-1" name="__codelineno-179-1" href="#__codelineno-179-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_sampler_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">SamplerConfig</span>
 </span></code></pre></div>
 <p><small>获取采样器配置</small></p>
 <p><strong>返回值</strong></p>
@@ -12359,7 +12618,7 @@
 <p>使用 create_sampler_config() 确保有效的配置。</p>
 </div>
 <h4 id="motionplanconfig-get_sampler_config_ref-function">获取采样器配置引用</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-175-1"><a id="__codelineno-175-1" name="__codelineno-175-1" href="#__codelineno-175-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_sampler_config_ref</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">SamplerConfig</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-180-1"><a id="__codelineno-180-1" name="__codelineno-180-1" href="#__codelineno-180-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_sampler_config_ref</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">SamplerConfig</span>
 </span></code></pre></div>
 <p><small>获取采样器配置引用</small></p>
 <p><strong>返回值</strong></p>
@@ -12378,7 +12637,7 @@
 </tbody>
 </table>
 <h4 id="motionplanconfig-get_sampler_joint_limit-function">获取采样关节约束</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-176-1"><a id="__codelineno-176-1" name="__codelineno-176-1" href="#__codelineno-176-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_sampler_joint_limit</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">KinematicsBoundary</span><span class="p">]</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-181-1"><a id="__codelineno-181-1" name="__codelineno-181-1" href="#__codelineno-181-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_sampler_joint_limit</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">KinematicsBoundary</span><span class="p">]</span>
 </span></code></pre></div>
 <p><small>获取采样器关节位置限制边界</small></p>
 <p><strong>返回值</strong></p>
@@ -12397,7 +12656,7 @@
 </tbody>
 </table>
 <h4 id="motionplanconfig-get_trajectory_feasibility_check_option-function">获取轨迹可行性检查选项</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-177-1"><a id="__codelineno-177-1" name="__codelineno-177-1" href="#__codelineno-177-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_trajectory_feasibility_check_option</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">TrajectoryFeasibilityCheckOption</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-182-1"><a id="__codelineno-182-1" name="__codelineno-182-1" href="#__codelineno-182-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_trajectory_feasibility_check_option</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">TrajectoryFeasibilityCheckOption</span>
 </span></code></pre></div>
 <p><small>获取轨迹可行性检查选项</small></p>
 <p><strong>返回值</strong></p>
@@ -12420,7 +12679,7 @@
 <p>使用 create_trajectory_feasibility_check_option() 确保有效的配置。</p>
 </div>
 <h4 id="motionplanconfig-get_trajectory_feasibility_check_option_ref-function">获取轨迹可行性检查选项引用</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-178-1"><a id="__codelineno-178-1" name="__codelineno-178-1" href="#__codelineno-178-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_trajectory_feasibility_check_option_ref</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">TrajectoryFeasibilityCheckOption</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-183-1"><a id="__codelineno-183-1" name="__codelineno-183-1" href="#__codelineno-183-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_trajectory_feasibility_check_option_ref</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">TrajectoryFeasibilityCheckOption</span>
 </span></code></pre></div>
 <p><small>获取轨迹可行性检查选项引用</small></p>
 <p><strong>返回值</strong></p>
@@ -12439,7 +12698,7 @@
 </tbody>
 </table>
 <h4 id="motionplanconfig-get_trajectory_plan_config-function">获取轨迹规划配置</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-179-1"><a id="__codelineno-179-1" name="__codelineno-179-1" href="#__codelineno-179-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_trajectory_plan_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">TrajectoryPlanConfig</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-184-1"><a id="__codelineno-184-1" name="__codelineno-184-1" href="#__codelineno-184-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_trajectory_plan_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">TrajectoryPlanConfig</span>
 </span></code></pre></div>
 <p><small>获取轨迹规划配置</small></p>
 <p><strong>返回值</strong></p>
@@ -12462,7 +12721,7 @@
 <p>使用 create_trajectory_plan_config() 确保有效的配置。</p>
 </div>
 <h4 id="motionplanconfig-get_trajectory_plan_config_ref-function">获取轨迹规划配置引用</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-180-1"><a id="__codelineno-180-1" name="__codelineno-180-1" href="#__codelineno-180-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_trajectory_plan_config_ref</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">TrajectoryPlanConfig</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-185-1"><a id="__codelineno-185-1" name="__codelineno-185-1" href="#__codelineno-185-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_trajectory_plan_config_ref</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">TrajectoryPlanConfig</span>
 </span></code></pre></div>
 <p><small>获取轨迹规划配置引用</small></p>
 <p><strong>返回值</strong></p>
@@ -12481,7 +12740,7 @@
 </tbody>
 </table>
 <h4 id="motionplanconfig-get_update_time-function">获取更新时间</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-181-1"><a id="__codelineno-181-1" name="__codelineno-181-1" href="#__codelineno-181-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_update_time</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">int</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-186-1"><a id="__codelineno-186-1" name="__codelineno-186-1" href="#__codelineno-186-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_update_time</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">int</span>
 </span></code></pre></div>
 <p><small>获取更新时间参数</small></p>
 <p><strong>返回值</strong></p>
@@ -12500,12 +12759,12 @@
 </tbody>
 </table>
 <h4 id="motionplanconfig-print-function">打印输出</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-182-1"><a id="__codelineno-182-1" name="__codelineno-182-1" href="#__codelineno-182-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">print</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-187-1"><a id="__codelineno-187-1" name="__codelineno-187-1" href="#__codelineno-187-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">print</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>将完整的运动规划配置打印到标准输出。</p>
 <p>以人类可读格式输出所有子配置参数和运动学边界信息，便于调试、日志记录以及配置状态校验。</small></p>
 <h4 id="motionplanconfig-set_collision_check_option-function">设置碰撞检查选项</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-183-1"><a id="__codelineno-183-1" name="__codelineno-183-1" href="#__codelineno-183-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_collision_check_option</span><span class="p">(</span><span class="n">option</span><span class="p">:</span> <span class="n">CollisionCheckOption</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-188-1"><a id="__codelineno-188-1" name="__codelineno-188-1" href="#__codelineno-188-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_collision_check_option</span><span class="p">(</span><span class="n">option</span><span class="p">:</span> <span class="n">CollisionCheckOption</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置碰撞检测选项</small></p>
 <p><strong>参数</strong></p>
@@ -12528,7 +12787,7 @@
 </tbody>
 </table>
 <h4 id="motionplanconfig-set_feasibility_boundary-function">设置可行性边界</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-184-1"><a id="__codelineno-184-1" name="__codelineno-184-1" href="#__codelineno-184-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_feasibility_boundary</span><span class="p">(</span><span class="n">boundary</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">KinematicsBoundary</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-189-1"><a id="__codelineno-189-1" name="__codelineno-189-1" href="#__codelineno-189-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_feasibility_boundary</span><span class="p">(</span><span class="n">boundary</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">KinematicsBoundary</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置可行性边界约束</small></p>
 <p><strong>参数</strong></p>
@@ -12555,7 +12814,7 @@
 <p>这些边界用于一般轨迹可行性检查。</p>
 </div>
 <h4 id="motionplanconfig-set_hard_joint_limit-function">设置硬关节约束</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-185-1"><a id="__codelineno-185-1" name="__codelineno-185-1" href="#__codelineno-185-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_hard_joint_limit</span><span class="p">(</span><span class="n">boundary</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">KinematicsBoundary</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-190-1"><a id="__codelineno-190-1" name="__codelineno-190-1" href="#__codelineno-190-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_hard_joint_limit</span><span class="p">(</span><span class="n">boundary</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">KinematicsBoundary</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置硬关节位置限制边界</small></p>
 <p><strong>参数</strong></p>
@@ -12582,7 +12841,7 @@
 <p>硬限制必须永不违反；通常对应于物理极限。</p>
 </div>
 <h4 id="motionplanconfig-set_ik_joint_limit-function">设置IK关节约束</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-186-1"><a id="__codelineno-186-1" name="__codelineno-186-1" href="#__codelineno-186-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_ik_joint_limit</span><span class="p">(</span><span class="n">boundary</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">KinematicsBoundary</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-191-1"><a id="__codelineno-191-1" name="__codelineno-191-1" href="#__codelineno-191-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_ik_joint_limit</span><span class="p">(</span><span class="n">boundary</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">KinematicsBoundary</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置逆运动学关节位置限制边界</small></p>
 <p><strong>参数</strong></p>
@@ -12609,7 +12868,7 @@
 <p>IK 限制可能比硬限制更紧以改善收敛性。</p>
 </div>
 <h4 id="motionplanconfig-set_ik_solver_config-function">设置IK求解器配置</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-187-1"><a id="__codelineno-187-1" name="__codelineno-187-1" href="#__codelineno-187-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_ik_solver_config</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">IKSolverConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-192-1"><a id="__codelineno-192-1" name="__codelineno-192-1" href="#__codelineno-192-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_ik_solver_config</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">IKSolverConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置逆运动学求解器配置</small></p>
 <p><strong>参数</strong></p>
@@ -12632,7 +12891,7 @@
 </tbody>
 </table>
 <h4 id="motionplanconfig-set_line_traj_check_primitive-function">设置直线轨迹检查基元</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-188-1"><a id="__codelineno-188-1" name="__codelineno-188-1" href="#__codelineno-188-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_line_traj_check_primitive</span><span class="p">(</span><span class="n">primitive</span><span class="p">:</span> <span class="n">LineTrajCheckPrimitive</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-193-1"><a id="__codelineno-193-1" name="__codelineno-193-1" href="#__codelineno-193-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_line_traj_check_primitive</span><span class="p">(</span><span class="n">primitive</span><span class="p">:</span> <span class="n">LineTrajCheckPrimitive</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置直线轨迹检查基元</small></p>
 <p><strong>参数</strong></p>
@@ -12655,7 +12914,7 @@
 </tbody>
 </table>
 <h4 id="motionplanconfig-set_revert_ik_joint_limit-function">设置是否恢复IK关节限制</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-189-1"><a id="__codelineno-189-1" name="__codelineno-189-1" href="#__codelineno-189-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_revert_ik_joint_limit</span><span class="p">(</span><span class="n">flag</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-194-1"><a id="__codelineno-194-1" name="__codelineno-194-1" href="#__codelineno-194-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_revert_ik_joint_limit</span><span class="p">(</span><span class="n">flag</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置是否恢复逆运动学关节限制</small></p>
 <p><strong>参数</strong></p>
@@ -12682,7 +12941,7 @@
 <p>用于通过暂时恢复极端限制来从受限配置中恢复。</p>
 </div>
 <h4 id="motionplanconfig-set_revert_ik_joint_limit_chains-function">设置需要恢复IK关节限制的运动链</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-190-1"><a id="__codelineno-190-1" name="__codelineno-190-1" href="#__codelineno-190-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_revert_ik_joint_limit_chains</span><span class="p">(</span><span class="n">chains</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-195-1"><a id="__codelineno-195-1" name="__codelineno-195-1" href="#__codelineno-195-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_revert_ik_joint_limit_chains</span><span class="p">(</span><span class="n">chains</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置需要恢复逆运动学关节限制的运动链列表</small></p>
 <p><strong>参数</strong></p>
@@ -12713,7 +12972,7 @@
 <p>空向量禁用选择性恢复（适用于所有链）。</p>
 </div>
 <h4 id="motionplanconfig-set_sampler_config-function">设置采样器配置</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-191-1"><a id="__codelineno-191-1" name="__codelineno-191-1" href="#__codelineno-191-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_sampler_config</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">SamplerConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-196-1"><a id="__codelineno-196-1" name="__codelineno-196-1" href="#__codelineno-196-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_sampler_config</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">SamplerConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置采样器配置</small></p>
 <p><strong>参数</strong></p>
@@ -12736,7 +12995,7 @@
 </tbody>
 </table>
 <h4 id="motionplanconfig-set_sampler_joint_limit-function">设置采样关节约束</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-192-1"><a id="__codelineno-192-1" name="__codelineno-192-1" href="#__codelineno-192-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_sampler_joint_limit</span><span class="p">(</span><span class="n">boundary</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">KinematicsBoundary</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-197-1"><a id="__codelineno-197-1" name="__codelineno-197-1" href="#__codelineno-197-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_sampler_joint_limit</span><span class="p">(</span><span class="n">boundary</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">KinematicsBoundary</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置采样器关节位置限制边界</small></p>
 <p><strong>参数</strong></p>
@@ -12763,7 +13022,7 @@
 <p>采样限制定义了探索配置空间的有效范围。</p>
 </div>
 <h4 id="motionplanconfig-set_trajectory_feasibility_check_option-function">设置轨迹可行性检查选项</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-193-1"><a id="__codelineno-193-1" name="__codelineno-193-1" href="#__codelineno-193-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_trajectory_feasibility_check_option</span><span class="p">(</span><span class="n">option</span><span class="p">:</span> <span class="n">TrajectoryFeasibilityCheckOption</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-198-1"><a id="__codelineno-198-1" name="__codelineno-198-1" href="#__codelineno-198-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_trajectory_feasibility_check_option</span><span class="p">(</span><span class="n">option</span><span class="p">:</span> <span class="n">TrajectoryFeasibilityCheckOption</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置轨迹可行性检查选项</small></p>
 <p><strong>参数</strong></p>
@@ -12786,7 +13045,7 @@
 </tbody>
 </table>
 <h4 id="motionplanconfig-set_trajectory_plan_config-function">设置轨迹规划配置</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-194-1"><a id="__codelineno-194-1" name="__codelineno-194-1" href="#__codelineno-194-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_trajectory_plan_config</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">TrajectoryPlanConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-199-1"><a id="__codelineno-199-1" name="__codelineno-199-1" href="#__codelineno-199-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_trajectory_plan_config</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">TrajectoryPlanConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置轨迹规划配置</small></p>
 <p><strong>参数</strong></p>
@@ -12809,7 +13068,7 @@
 </tbody>
 </table>
 <h4 id="motionplanconfig-set_update_time-function">设置更新时间</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-195-1"><a id="__codelineno-195-1" name="__codelineno-195-1" href="#__codelineno-195-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_update_time</span><span class="p">(</span><span class="n">t</span><span class="p">:</span> <span class="n">SupportsInt</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-200-1"><a id="__codelineno-200-1" name="__codelineno-200-1" href="#__codelineno-200-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_update_time</span><span class="p">(</span><span class="n">t</span><span class="p">:</span> <span class="n">SupportsInt</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置更新时间参数</small></p>
 <p><strong>参数</strong></p>
@@ -12994,7 +13253,7 @@
 </tbody>
 </table>
 <h4 id="parameter-get_actuate_type-function">获取驱动类型</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-196-1"><a id="__codelineno-196-1" name="__codelineno-196-1" href="#__codelineno-196-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_actuate_type</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-201-1"><a id="__codelineno-201-1" name="__codelineno-201-1" href="#__codelineno-201-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_actuate_type</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span>
 </span></code></pre></div>
 <p><small>获取驱动类型</small></p>
 <p><strong>返回值</strong></p>
@@ -13013,7 +13272,7 @@
 </tbody>
 </table>
 <h4 id="parameter-get_blocking-function">获取是否阻塞</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-197-1"><a id="__codelineno-197-1" name="__codelineno-197-1" href="#__codelineno-197-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_blocking</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-202-1"><a id="__codelineno-202-1" name="__codelineno-202-1" href="#__codelineno-202-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_blocking</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
 </span></code></pre></div>
 <p><small>获取是否阻塞执行</small></p>
 <p><strong>返回值</strong></p>
@@ -13032,7 +13291,7 @@
 </tbody>
 </table>
 <h4 id="parameter-get_check_collision-function">获取是否检测碰撞</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-198-1"><a id="__codelineno-198-1" name="__codelineno-198-1" href="#__codelineno-198-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_check_collision</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-203-1"><a id="__codelineno-203-1" name="__codelineno-203-1" href="#__codelineno-203-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_check_collision</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
 </span></code></pre></div>
 <p><small>获取是否进行碰撞检测</small></p>
 <p><strong>返回值</strong></p>
@@ -13051,7 +13310,7 @@
 </tbody>
 </table>
 <h4 id="parameter-get_direct_execute-function">获取是否直接执行</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-199-1"><a id="__codelineno-199-1" name="__codelineno-199-1" href="#__codelineno-199-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_direct_execute</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-204-1"><a id="__codelineno-204-1" name="__codelineno-204-1" href="#__codelineno-204-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_direct_execute</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
 </span></code></pre></div>
 <p><small>获取是否直接执行</small></p>
 <p><strong>返回值</strong></p>
@@ -13070,7 +13329,7 @@
 </tbody>
 </table>
 <h4 id="parameter-get_reference_frame-function">获取参考帧</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-200-1"><a id="__codelineno-200-1" name="__codelineno-200-1" href="#__codelineno-200-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_reference_frame</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-205-1"><a id="__codelineno-205-1" name="__codelineno-205-1" href="#__codelineno-205-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_reference_frame</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span>
 </span></code></pre></div>
 <p><small>获取参考坐标系</small></p>
 <p><strong>返回值</strong></p>
@@ -13089,7 +13348,7 @@
 </tbody>
 </table>
 <h4 id="parameter-get_timeout-function">获取超时</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-201-1"><a id="__codelineno-201-1" name="__codelineno-201-1" href="#__codelineno-201-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_timeout</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-206-1"><a id="__codelineno-206-1" name="__codelineno-206-1" href="#__codelineno-206-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_timeout</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span>
 </span></code></pre></div>
 <p><small>获取超时时间（秒）</small></p>
 <p><strong>返回值</strong></p>
@@ -13108,7 +13367,7 @@
 </tbody>
 </table>
 <h4 id="parameter-get_tool_pose-function">获取工具位姿</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-202-1"><a id="__codelineno-202-1" name="__codelineno-202-1" href="#__codelineno-202-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_tool_pose</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-207-1"><a id="__codelineno-207-1" name="__codelineno-207-1" href="#__codelineno-207-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_tool_pose</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
 </span></code></pre></div>
 <p><small>获取目标工具位姿</small></p>
 <p><strong>返回值</strong></p>
@@ -13127,7 +13386,7 @@
 </tbody>
 </table>
 <h4 id="parameter-set_actuate-function">设置驱动类型</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-203-1"><a id="__codelineno-203-1" name="__codelineno-203-1" href="#__codelineno-203-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_actuate</span><span class="p">(</span><span class="n">actuate</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-208-1"><a id="__codelineno-208-1" name="__codelineno-208-1" href="#__codelineno-208-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_actuate</span><span class="p">(</span><span class="n">actuate</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置驱动类型</small></p>
 <p><strong>参数</strong></p>
@@ -13154,7 +13413,7 @@
 <p>actuate 必须为受支持的取值（"with_chain_only"、"with_torso"、"with_leg"），否则行为未定义。</p>
 </div>
 <h4 id="parameter-set_blocking-function">设置是否阻塞</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-204-1"><a id="__codelineno-204-1" name="__codelineno-204-1" href="#__codelineno-204-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_blocking</span><span class="p">(</span><span class="n">blocking</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-209-1"><a id="__codelineno-209-1" name="__codelineno-209-1" href="#__codelineno-209-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_blocking</span><span class="p">(</span><span class="n">blocking</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置是否阻塞执行</small></p>
 <p><strong>参数</strong></p>
@@ -13177,7 +13436,7 @@
 </tbody>
 </table>
 <h4 id="parameter-set_check_collision-function">设置是否检测碰撞</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-205-1"><a id="__codelineno-205-1" name="__codelineno-205-1" href="#__codelineno-205-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_check_collision</span><span class="p">(</span><span class="n">check_collision</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-210-1"><a id="__codelineno-210-1" name="__codelineno-210-1" href="#__codelineno-210-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_check_collision</span><span class="p">(</span><span class="n">check_collision</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置是否进行碰撞检测</small></p>
 <p><strong>参数</strong></p>
@@ -13204,7 +13463,7 @@
 <p>禁用碰撞检查可能会导致不安全的轨迹。</p>
 </div>
 <h4 id="parameter-set_direct_execute-function">设置是否直接执行</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-206-1"><a id="__codelineno-206-1" name="__codelineno-206-1" href="#__codelineno-206-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_direct_execute</span><span class="p">(</span><span class="n">direct_execute</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-211-1"><a id="__codelineno-211-1" name="__codelineno-211-1" href="#__codelineno-211-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_direct_execute</span><span class="p">(</span><span class="n">direct_execute</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置是否直接执行</small></p>
 <p><strong>参数</strong></p>
@@ -13227,7 +13486,7 @@
 </tbody>
 </table>
 <h4 id="parameter-set_move_line-function">设置是否移动直线</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-207-1"><a id="__codelineno-207-1" name="__codelineno-207-1" href="#__codelineno-207-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_move_line</span><span class="p">(</span><span class="n">move_line</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-212-1"><a id="__codelineno-212-1" name="__codelineno-212-1" href="#__codelineno-212-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_move_line</span><span class="p">(</span><span class="n">move_line</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置是否为直线运动</small></p>
 <p><strong>参数</strong></p>
@@ -13254,7 +13513,7 @@
 <p>直线运动提供可预测的笛卡尔路径，但可能在狭窄空间中受限制。</p>
 </div>
 <h4 id="parameter-set_reference_frame-function">设置参考帧</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-208-1"><a id="__codelineno-208-1" name="__codelineno-208-1" href="#__codelineno-208-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_reference_frame</span><span class="p">(</span><span class="n">frame</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-213-1"><a id="__codelineno-213-1" name="__codelineno-213-1" href="#__codelineno-213-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_reference_frame</span><span class="p">(</span><span class="n">frame</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置参考坐标系</small></p>
 <p><strong>参数</strong></p>
@@ -13281,7 +13540,7 @@
 <p>必须是机器人 TF 树中的有效帧。</p>
 </div>
 <h4 id="parameter-set_timeout-function">设置超时</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-209-1"><a id="__codelineno-209-1" name="__codelineno-209-1" href="#__codelineno-209-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_timeout</span><span class="p">(</span><span class="n">timeout</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-214-1"><a id="__codelineno-214-1" name="__codelineno-214-1" href="#__codelineno-214-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_timeout</span><span class="p">(</span><span class="n">timeout</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置运动执行超时时间（秒）</small></p>
 <p><strong>参数</strong></p>
@@ -13308,7 +13567,7 @@
 <p>仅在阻塞模式启用时适用。</p>
 </div>
 <h4 id="parameter-set_tool_pose-function">设置工具位姿</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-210-1"><a id="__codelineno-210-1" name="__codelineno-210-1" href="#__codelineno-210-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_tool_pose</span><span class="p">(</span><span class="n">tool_pose</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-215-1"><a id="__codelineno-215-1" name="__codelineno-215-1" href="#__codelineno-215-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_tool_pose</span><span class="p">(</span><span class="n">tool_pose</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置目标工具位姿</small></p>
 <p><strong>参数</strong></p>
@@ -13469,7 +13728,7 @@
 <h3 id="posestate-class">姿态状态</h3>
 <p><small>表示笛卡尔空间 (SE(3)) 中的目标末端执行器姿态。扩展 RobotStates 为运动链指定基于姿态的运动目标。用于逆运动学和笛卡尔轨迹规划。姿态值：以米为单位的位置，以四元数为单位的方向。坐标系必须存在于机器人的 TF 树中。</small></p>
 <h4 id="posestate-get_type-function">获取类型</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-211-1"><a id="__codelineno-211-1" name="__codelineno-211-1" href="#__codelineno-211-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_type</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RobotStatesType</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-216-1"><a id="__codelineno-216-1" name="__codelineno-216-1" href="#__codelineno-216-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_type</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RobotStatesType</span>
 </span></code></pre></div>
 <p><small>获取位姿状态类型</small></p>
 <p><strong>返回值</strong></p>
@@ -13599,7 +13858,7 @@
 </tbody>
 </table>
 <h4 id="robotstates-get_type-function">获取类型</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-212-1"><a id="__codelineno-212-1" name="__codelineno-212-1" href="#__codelineno-212-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_type</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RobotStatesType</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-217-1"><a id="__codelineno-217-1" name="__codelineno-217-1" href="#__codelineno-217-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_type</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">RobotStatesType</span>
 </span></code></pre></div>
 <p><small>获取机器人状态类型</small></p>
 <p><strong>返回值</strong></p>
@@ -13618,7 +13877,7 @@
 </tbody>
 </table>
 <h4 id="robotstates-set_base_state-function">设置基座状态</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-213-1"><a id="__codelineno-213-1" name="__codelineno-213-1" href="#__codelineno-213-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_base_state</span><span class="p">(</span><span class="n">base_pose</span><span class="p">:</span> <span class="n">Pose</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-218-1"><a id="__codelineno-218-1" name="__codelineno-218-1" href="#__codelineno-218-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_base_state</span><span class="p">(</span><span class="n">base_pose</span><span class="p">:</span> <span class="n">Pose</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置底座状态（位姿）</small></p>
 <p><strong>参数</strong></p>
@@ -13645,7 +13904,7 @@
 <p>四元数必须单位归一化（x^2 + y^2 + z^2 + w^2 = 1）。</p>
 </div>
 <h4 id="robotstates-set_whole_body_joint-function">设置全身关节</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-214-1"><a id="__codelineno-214-1" name="__codelineno-214-1" href="#__codelineno-214-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_whole_body_joint</span><span class="p">(</span><span class="n">joint_positions</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-219-1"><a id="__codelineno-219-1" name="__codelineno-219-1" href="#__codelineno-219-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_whole_body_joint</span><span class="p">(</span><span class="n">joint_positions</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置全身关节位置</small></p>
 <p><strong>参数</strong></p>
@@ -13702,7 +13961,7 @@
 <p><small>基于采样的运动规划器的配置参数。</p>
 <p>该结构配置基于采样的规划算法（例如，RRT、RRT*）。它控制状态空间采样分辨率、插值设置、路径简化和规划终止条件。基于采样的规划器通过随机采样状态并将它们连接起来构建运动计划图来探索配置空间。</small></p>
 <h4 id="samplerconfig-get_interpolate-function">获取是否插值</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-215-1"><a id="__codelineno-215-1" name="__codelineno-215-1" href="#__codelineno-215-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_interpolate</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-220-1"><a id="__codelineno-220-1" name="__codelineno-220-1" href="#__codelineno-220-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_interpolate</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
 </span></code></pre></div>
 <p><small>获取是否启用插值</small></p>
 <p><strong>返回值</strong></p>
@@ -13721,7 +13980,7 @@
 </tbody>
 </table>
 <h4 id="samplerconfig-get_interpolation_cnt-function">获取插值数量</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-216-1"><a id="__codelineno-216-1" name="__codelineno-216-1" href="#__codelineno-216-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_interpolation_cnt</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">int</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-221-1"><a id="__codelineno-221-1" name="__codelineno-221-1" href="#__codelineno-221-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_interpolation_cnt</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">int</span>
 </span></code></pre></div>
 <p><small>获取插值点数量</small></p>
 <p><strong>返回值</strong></p>
@@ -13740,7 +13999,7 @@
 </tbody>
 </table>
 <h4 id="samplerconfig-get_max_planning_time-function">获取最大规划时间</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-217-1"><a id="__codelineno-217-1" name="__codelineno-217-1" href="#__codelineno-217-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_max_planning_time</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-222-1"><a id="__codelineno-222-1" name="__codelineno-222-1" href="#__codelineno-222-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_max_planning_time</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span>
 </span></code></pre></div>
 <p><small>获取最大规划时间（秒）</small></p>
 <p><strong>返回值</strong></p>
@@ -13759,7 +14018,7 @@
 </tbody>
 </table>
 <h4 id="samplerconfig-get_max_simplification_time-function">获取最大简化时间</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-218-1"><a id="__codelineno-218-1" name="__codelineno-218-1" href="#__codelineno-218-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_max_simplification_time</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-223-1"><a id="__codelineno-223-1" name="__codelineno-223-1" href="#__codelineno-223-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_max_simplification_time</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span>
 </span></code></pre></div>
 <p><small>获取最大简化时间（秒）</small></p>
 <p><strong>返回值</strong></p>
@@ -13778,7 +14037,7 @@
 </tbody>
 </table>
 <h4 id="samplerconfig-get_simplify-function">获取是否简化</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-219-1"><a id="__codelineno-219-1" name="__codelineno-219-1" href="#__codelineno-219-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_simplify</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-224-1"><a id="__codelineno-224-1" name="__codelineno-224-1" href="#__codelineno-224-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_simplify</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
 </span></code></pre></div>
 <p><small>获取是否启用简化</small></p>
 <p><strong>返回值</strong></p>
@@ -13797,7 +14056,7 @@
 </tbody>
 </table>
 <h4 id="samplerconfig-get_state_check_resolution-function">获取状态检查分辨率</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-220-1"><a id="__codelineno-220-1" name="__codelineno-220-1" href="#__codelineno-220-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_state_check_resolution</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-225-1"><a id="__codelineno-225-1" name="__codelineno-225-1" href="#__codelineno-225-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_state_check_resolution</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span>
 </span></code></pre></div>
 <p><small>获取状态检查分辨率</small></p>
 <p><strong>返回值</strong></p>
@@ -13816,7 +14075,7 @@
 </tbody>
 </table>
 <h4 id="samplerconfig-get_state_check_type-function">获取状态检查类型</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-221-1"><a id="__codelineno-221-1" name="__codelineno-221-1" href="#__codelineno-221-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_state_check_type</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">StateCheckType</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-226-1"><a id="__codelineno-226-1" name="__codelineno-226-1" href="#__codelineno-226-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_state_check_type</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">StateCheckType</span>
 </span></code></pre></div>
 <p><small>获取状态检查类型</small></p>
 <p><strong>返回值</strong></p>
@@ -13835,7 +14094,7 @@
 </tbody>
 </table>
 <h4 id="samplerconfig-get_termination_condition_type-function">获取终止条件类型</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-222-1"><a id="__codelineno-222-1" name="__codelineno-222-1" href="#__codelineno-222-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_termination_condition_type</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">TerminationConditionType</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-227-1"><a id="__codelineno-227-1" name="__codelineno-227-1" href="#__codelineno-227-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_termination_condition_type</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">TerminationConditionType</span>
 </span></code></pre></div>
 <p><small>获取终止条件类型</small></p>
 <p><strong>返回值</strong></p>
@@ -13854,11 +14113,11 @@
 </tbody>
 </table>
 <h4 id="samplerconfig-print-function">打印输出</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-223-1"><a id="__codelineno-223-1" name="__codelineno-223-1" href="#__codelineno-223-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">print</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-228-1"><a id="__codelineno-228-1" name="__codelineno-228-1" href="#__codelineno-228-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">print</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>打印采样器配置信息到标准输出</small></p>
 <h4 id="samplerconfig-set_interpolate-function">设置是否插值</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-224-1"><a id="__codelineno-224-1" name="__codelineno-224-1" href="#__codelineno-224-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_interpolate</span><span class="p">(</span><span class="n">enable</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-229-1"><a id="__codelineno-229-1" name="__codelineno-229-1" href="#__codelineno-229-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_interpolate</span><span class="p">(</span><span class="n">enable</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置是否启用插值</small></p>
 <p><strong>参数</strong></p>
@@ -13885,7 +14144,7 @@
 <p>插值可提高轨迹平滑度和碰撞检测覆盖率。</p>
 </div>
 <h4 id="samplerconfig-set_interpolation_cnt-function">设置插值数量</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-225-1"><a id="__codelineno-225-1" name="__codelineno-225-1" href="#__codelineno-225-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_interpolation_cnt</span><span class="p">(</span><span class="n">cnt</span><span class="p">:</span> <span class="n">SupportsInt</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-230-1"><a id="__codelineno-230-1" name="__codelineno-230-1" href="#__codelineno-230-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_interpolation_cnt</span><span class="p">(</span><span class="n">cnt</span><span class="p">:</span> <span class="n">SupportsInt</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置插值点数量</small></p>
 <p><strong>参数</strong></p>
@@ -13912,7 +14171,7 @@
 <p>较高的计数可改善碰撞检测但增加计算成本。</p>
 </div>
 <h4 id="samplerconfig-set_max_planning_time-function">设置最大规划时间</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-226-1"><a id="__codelineno-226-1" name="__codelineno-226-1" href="#__codelineno-226-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_max_planning_time</span><span class="p">(</span><span class="n">time</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-231-1"><a id="__codelineno-231-1" name="__codelineno-231-1" href="#__codelineno-231-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_max_planning_time</span><span class="p">(</span><span class="n">time</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置最大规划时间（秒）</small></p>
 <p><strong>参数</strong></p>
@@ -13939,7 +14198,7 @@
 <p>如果找到精确解，规划可能提前终止（取决于终止条件）。</p>
 </div>
 <h4 id="samplerconfig-set_max_simplification_time-function">设置最大简化时间</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-227-1"><a id="__codelineno-227-1" name="__codelineno-227-1" href="#__codelineno-227-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_max_simplification_time</span><span class="p">(</span><span class="n">time</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-232-1"><a id="__codelineno-232-1" name="__codelineno-232-1" href="#__codelineno-232-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_max_simplification_time</span><span class="p">(</span><span class="n">time</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置最大简化时间（秒）</small></p>
 <p><strong>参数</strong></p>
@@ -13966,7 +14225,7 @@
 <p>较长的简化时间可能产生更短、更平滑的路径。</p>
 </div>
 <h4 id="samplerconfig-set_simplify-function">设置是否简化</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-228-1"><a id="__codelineno-228-1" name="__codelineno-228-1" href="#__codelineno-228-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_simplify</span><span class="p">(</span><span class="n">enable</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-233-1"><a id="__codelineno-233-1" name="__codelineno-233-1" href="#__codelineno-233-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_simplify</span><span class="p">(</span><span class="n">enable</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置是否启用简化</small></p>
 <p><strong>参数</strong></p>
@@ -13993,7 +14252,7 @@
 <p>简化减少路点并提高轨迹效率。</p>
 </div>
 <h4 id="samplerconfig-set_state_check_resolution-function">设置状态检查分辨率</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-229-1"><a id="__codelineno-229-1" name="__codelineno-229-1" href="#__codelineno-229-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_state_check_resolution</span><span class="p">(</span><span class="n">resolution</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-234-1"><a id="__codelineno-234-1" name="__codelineno-234-1" href="#__codelineno-234-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_state_check_resolution</span><span class="p">(</span><span class="n">resolution</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置状态检查分辨率</small></p>
 <p><strong>参数</strong></p>
@@ -14020,7 +14279,7 @@
 <p>较低的值增加规划精度但可能减慢计算速度。</p>
 </div>
 <h4 id="samplerconfig-set_state_check_type-function">设置状态检查类型</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-230-1"><a id="__codelineno-230-1" name="__codelineno-230-1" href="#__codelineno-230-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_state_check_type</span><span class="p">(</span><span class="nb">type</span><span class="p">:</span> <span class="n">StateCheckType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-235-1"><a id="__codelineno-235-1" name="__codelineno-235-1" href="#__codelineno-235-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_state_check_type</span><span class="p">(</span><span class="nb">type</span><span class="p">:</span> <span class="n">StateCheckType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置状态检查类型</small></p>
 <p><strong>参数</strong></p>
@@ -14043,7 +14302,7 @@
 </tbody>
 </table>
 <h4 id="samplerconfig-set_termination_condition_type-function">设置终止条件类型</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-231-1"><a id="__codelineno-231-1" name="__codelineno-231-1" href="#__codelineno-231-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_termination_condition_type</span><span class="p">(</span><span class="nb">type</span><span class="p">:</span> <span class="n">TerminationConditionType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-236-1"><a id="__codelineno-236-1" name="__codelineno-236-1" href="#__codelineno-236-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_termination_condition_type</span><span class="p">(</span><span class="nb">type</span><span class="p">:</span> <span class="n">TerminationConditionType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置终止条件类型</small></p>
 <p><strong>参数</strong></p>
@@ -14579,7 +14838,7 @@
 <p><small>轨迹验证和可行性检查配置。</p>
 <p>该结构提供了对在轨迹验证期间强制执行可行性约束的细粒度控制。它支持碰撞检测、关节限制合规性和速度剖面可行性的独立切换。有选择地禁用检查可以提高调试、模拟或保证满足某些约束的场景的计算性能。禁用可行性检查可能会产生不安全或物理上无法实现的轨迹。仅当通过其他方式验证约束时才应谨慎使用。</small></p>
 <h4 id="trajectoryfeasibilitycheckoption-get_disable_collision_check-function">获取是否禁用碰撞检查</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-232-1"><a id="__codelineno-232-1" name="__codelineno-232-1" href="#__codelineno-232-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_disable_collision_check</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-237-1"><a id="__codelineno-237-1" name="__codelineno-237-1" href="#__codelineno-237-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_disable_collision_check</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
 </span></code></pre></div>
 <p><small>获取是否禁用碰撞检测</small></p>
 <p><strong>返回值</strong></p>
@@ -14598,7 +14857,7 @@
 </tbody>
 </table>
 <h4 id="trajectoryfeasibilitycheckoption-get_disable_joint_limit_check-function">获取是否禁用关节限制检查</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-233-1"><a id="__codelineno-233-1" name="__codelineno-233-1" href="#__codelineno-233-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_disable_joint_limit_check</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-238-1"><a id="__codelineno-238-1" name="__codelineno-238-1" href="#__codelineno-238-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_disable_joint_limit_check</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
 </span></code></pre></div>
 <p><small>获取是否禁用关节限制检查</small></p>
 <p><strong>返回值</strong></p>
@@ -14617,7 +14876,7 @@
 </tbody>
 </table>
 <h4 id="trajectoryfeasibilitycheckoption-get_disable_velocity_feasibility_check-function">获取是否禁用速度可行性检查</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-234-1"><a id="__codelineno-234-1" name="__codelineno-234-1" href="#__codelineno-234-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_disable_velocity_feasibility_check</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-239-1"><a id="__codelineno-239-1" name="__codelineno-239-1" href="#__codelineno-239-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_disable_velocity_feasibility_check</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
 </span></code></pre></div>
 <p><small>获取是否禁用速度可行性检查</small></p>
 <p><strong>返回值</strong></p>
@@ -14636,11 +14895,11 @@
 </tbody>
 </table>
 <h4 id="trajectoryfeasibilitycheckoption-print-function">打印输出</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-235-1"><a id="__codelineno-235-1" name="__codelineno-235-1" href="#__codelineno-235-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">print</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-240-1"><a id="__codelineno-240-1" name="__codelineno-240-1" href="#__codelineno-240-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">print</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>打印轨迹可行性检查选项到标准输出</small></p>
 <h4 id="trajectoryfeasibilitycheckoption-set_disable_collision_check-function">设置是否禁用碰撞检查</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-236-1"><a id="__codelineno-236-1" name="__codelineno-236-1" href="#__codelineno-236-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_disable_collision_check</span><span class="p">(</span><span class="n">disable</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-241-1"><a id="__codelineno-241-1" name="__codelineno-241-1" href="#__codelineno-241-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_disable_collision_check</span><span class="p">(</span><span class="n">disable</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置是否禁用碰撞检测</small></p>
 <p><strong>参数</strong></p>
@@ -14667,7 +14926,7 @@
 <p>禁用碰撞检查可能导致轨迹与环境发生碰撞</p>
 </div>
 <h4 id="trajectoryfeasibilitycheckoption-set_disable_joint_limit_check-function">设置是否禁用关节限制检查</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-237-1"><a id="__codelineno-237-1" name="__codelineno-237-1" href="#__codelineno-237-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_disable_joint_limit_check</span><span class="p">(</span><span class="n">disable</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-242-1"><a id="__codelineno-242-1" name="__codelineno-242-1" href="#__codelineno-242-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_disable_joint_limit_check</span><span class="p">(</span><span class="n">disable</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置是否禁用关节限制检查</small></p>
 <p><strong>参数</strong></p>
@@ -14694,7 +14953,7 @@
 <p>禁用关节限制检查可能导致轨迹超出关节限位</p>
 </div>
 <h4 id="trajectoryfeasibilitycheckoption-set_disable_velocity_feasibility_check-function">设置是否禁用速度可行性检查</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-238-1"><a id="__codelineno-238-1" name="__codelineno-238-1" href="#__codelineno-238-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_disable_velocity_feasibility_check</span><span class="p">(</span><span class="n">disable</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-243-1"><a id="__codelineno-243-1" name="__codelineno-243-1" href="#__codelineno-243-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_disable_velocity_feasibility_check</span><span class="p">(</span><span class="n">disable</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置是否禁用速度可行性检查</small></p>
 <p><strong>参数</strong></p>
@@ -14725,7 +14984,7 @@
 <p><small>轨迹规划和参数化配置。</p>
 <p>该结构配置轨迹生成参数，用于将离散运动计划转换为平滑的时间参数化轨迹。它支持单段和多路点轨迹规划。轨迹规划涉及计算沿几何路径的速度和加速度分布，同时尊重运动学约束。</small></p>
 <h4 id="trajectoryplanconfig-get_min_move_time-function">获取最小移动时间</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-239-1"><a id="__codelineno-239-1" name="__codelineno-239-1" href="#__codelineno-239-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_min_move_time</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-244-1"><a id="__codelineno-244-1" name="__codelineno-244-1" href="#__codelineno-244-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_min_move_time</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span>
 </span></code></pre></div>
 <p><small>获取最小运动时间（秒）</small></p>
 <p><strong>返回值</strong></p>
@@ -14744,7 +15003,7 @@
 </tbody>
 </table>
 <h4 id="trajectoryplanconfig-get_move_line_intermediate_point-function">获取直线插值中间点</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-240-1"><a id="__codelineno-240-1" name="__codelineno-240-1" href="#__codelineno-240-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_move_line_intermediate_point</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-245-1"><a id="__codelineno-245-1" name="__codelineno-245-1" href="#__codelineno-245-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_move_line_intermediate_point</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span>
 </span></code></pre></div>
 <p><small>获取直线运动中间点设置</small></p>
 <p><strong>返回值</strong></p>
@@ -14763,7 +15022,7 @@
 </tbody>
 </table>
 <h4 id="trajectoryplanconfig-get_way_point_plan_expected_time-function">获取路点规划预期时间</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-241-1"><a id="__codelineno-241-1" name="__codelineno-241-1" href="#__codelineno-241-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_way_point_plan_expected_time</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-246-1"><a id="__codelineno-246-1" name="__codelineno-246-1" href="#__codelineno-246-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_way_point_plan_expected_time</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span>
 </span></code></pre></div>
 <p><small>获取路点规划期望时间</small></p>
 <p><strong>返回值</strong></p>
@@ -14782,11 +15041,11 @@
 </tbody>
 </table>
 <h4 id="trajectoryplanconfig-print-function">打印输出</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-242-1"><a id="__codelineno-242-1" name="__codelineno-242-1" href="#__codelineno-242-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">print</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-247-1"><a id="__codelineno-247-1" name="__codelineno-247-1" href="#__codelineno-247-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">print</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>打印轨迹规划配置信息到标准输出</small></p>
 <h4 id="trajectoryplanconfig-set_min_move_time-function">设置最小移动时间</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-243-1"><a id="__codelineno-243-1" name="__codelineno-243-1" href="#__codelineno-243-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_min_move_time</span><span class="p">(</span><span class="n">time</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-248-1"><a id="__codelineno-248-1" name="__codelineno-248-1" href="#__codelineno-248-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_min_move_time</span><span class="p">(</span><span class="n">time</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置最小运动时间（秒）</small></p>
 <p><strong>参数</strong></p>
@@ -14813,7 +15072,7 @@
 <p>非零值防止运动过快；0.0 允许在运动学限制内的最高速度</p>
 </div>
 <h4 id="trajectoryplanconfig-set_move_line_intermediate_point-function">设置直线插值中间点</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-244-1"><a id="__codelineno-244-1" name="__codelineno-244-1" href="#__codelineno-244-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_move_line_intermediate_point</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-249-1"><a id="__codelineno-249-1" name="__codelineno-249-1" href="#__codelineno-249-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_move_line_intermediate_point</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置直线运动中间点设置</small></p>
 <p><strong>参数</strong></p>
@@ -14840,7 +15099,7 @@
 <p>较高的值提高笛卡尔路径精度但增加计算成本。</p>
 </div>
 <h4 id="trajectoryplanconfig-set_way_point_plan_expected_time-function">设置路点规划预期时间</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-245-1"><a id="__codelineno-245-1" name="__codelineno-245-1" href="#__codelineno-245-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_way_point_plan_expected_time</span><span class="p">(</span><span class="n">time</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-250-1"><a id="__codelineno-250-1" name="__codelineno-250-1" href="#__codelineno-250-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_way_point_plan_expected_time</span><span class="p">(</span><span class="n">time</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 <p><small>设置路点规划期望时间</small></p>
 <p><strong>参数</strong></p>
@@ -15045,7 +15304,7 @@
 </tbody>
 </table>
 <h4 id="wrench-check_motion_status-function">检查运动状态</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-246-1"><a id="__codelineno-246-1" name="__codelineno-246-1" href="#__codelineno-246-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">check_motion_status</span><span class="p">(</span><span class="n">status</span><span class="p">:</span> <span class="n">MotionStatus</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-251-1"><a id="__codelineno-251-1" name="__codelineno-251-1" href="#__codelineno-251-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">check_motion_status</span><span class="p">(</span><span class="n">status</span><span class="p">:</span> <span class="n">MotionStatus</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span>
 </span></code></pre></div>
 <p><small>检查当前运动状态，验证运动是否满足约束条件。</small></p>
 <p><strong>参数</strong></p>
@@ -15082,16 +15341,35 @@
 </tr>
 </tbody>
 </table>
+<h4 id="wrench-create_joint_state-function">create_joint_state</h4>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-252-1"><a id="__codelineno-252-1" name="__codelineno-252-1" href="#__codelineno-252-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">create_joint_state</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">JointStates</span>
+</span></code></pre></div>
+<p><small>Create a JointStates instance.</small></p>
+<p><strong>返回值</strong></p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#jointstates-class">JointStates</a></td>
+<td>JointStates: A new JointStates instance.</td>
+</tr>
+</tbody>
+</table>
 <h4 id="wrench-create_parameter-function">创建参数</h4>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-247-1"><a id="__codelineno-247-1" name="__codelineno-247-1" href="#__codelineno-247-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">create_parameter</span><span class="p">(</span>
-</span><span id="__span-247-2"><a id="__codelineno-247-2" name="__codelineno-247-2" href="#__codelineno-247-2"></a>    <span class="n">direct_execute</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
-</span><span id="__span-247-3"><a id="__codelineno-247-3" name="__codelineno-247-3" href="#__codelineno-247-3"></a>    <span class="n">blocking</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
-</span><span id="__span-247-4"><a id="__codelineno-247-4" name="__codelineno-247-4" href="#__codelineno-247-4"></a>    <span class="n">timeout</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">,</span>
-</span><span id="__span-247-5"><a id="__codelineno-247-5" name="__codelineno-247-5" href="#__codelineno-247-5"></a>    <span class="n">actuate</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-</span><span id="__span-247-6"><a id="__codelineno-247-6" name="__codelineno-247-6" href="#__codelineno-247-6"></a>    <span class="n">tool_pose</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
-</span><span id="__span-247-7"><a id="__codelineno-247-7" name="__codelineno-247-7" href="#__codelineno-247-7"></a>    <span class="n">check_collision</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
-</span><span id="__span-247-8"><a id="__codelineno-247-8" name="__codelineno-247-8" href="#__codelineno-247-8"></a>    <span class="n">frame</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;base_link&#39;</span>
-</span><span id="__span-247-9"><a id="__codelineno-247-9" name="__codelineno-247-9" href="#__codelineno-247-9"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Parameter</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-253-1"><a id="__codelineno-253-1" name="__codelineno-253-1" href="#__codelineno-253-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">create_parameter</span><span class="p">(</span>
+</span><span id="__span-253-2"><a id="__codelineno-253-2" name="__codelineno-253-2" href="#__codelineno-253-2"></a>    <span class="n">direct_execute</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+</span><span id="__span-253-3"><a id="__codelineno-253-3" name="__codelineno-253-3" href="#__codelineno-253-3"></a>    <span class="n">blocking</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+</span><span id="__span-253-4"><a id="__codelineno-253-4" name="__codelineno-253-4" href="#__codelineno-253-4"></a>    <span class="n">timeout</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">,</span>
+</span><span id="__span-253-5"><a id="__codelineno-253-5" name="__codelineno-253-5" href="#__codelineno-253-5"></a>    <span class="n">actuate</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+</span><span id="__span-253-6"><a id="__codelineno-253-6" name="__codelineno-253-6" href="#__codelineno-253-6"></a>    <span class="n">tool_pose</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+</span><span id="__span-253-7"><a id="__codelineno-253-7" name="__codelineno-253-7" href="#__codelineno-253-7"></a>    <span class="n">check_collision</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+</span><span id="__span-253-8"><a id="__codelineno-253-8" name="__codelineno-253-8" href="#__codelineno-253-8"></a>    <span class="n">frame</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;base_link&#39;</span>
+</span><span id="__span-253-9"><a id="__codelineno-253-9" name="__codelineno-253-9" href="#__codelineno-253-9"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Parameter</span>
 </span></code></pre></div>
 <p><small>创建运动命令参数，设置执行方式、超时、碰撞检查等选项。</small></p>
 <p><strong>参数</strong></p>
@@ -15161,6 +15439,25 @@
 <tr>
 <td><a href="#parameter-class">Parameter</a></td>
 <td>Parameter：新的 Parameter 实例。</td>
+</tr>
+</tbody>
+</table>
+<h4 id="wrench-create_pose_state-function">create_pose_state</h4>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-254-1"><a id="__codelineno-254-1" name="__codelineno-254-1" href="#__codelineno-254-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">create_pose_state</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">PoseState</span>
+</span></code></pre></div>
+<p><small>Create a PoseState instance.</small></p>
+<p><strong>返回值</strong></p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#posestate-class">PoseState</a></td>
+<td>PoseState: A new PoseState instance.</td>
 </tr>
 </tbody>
 </table>

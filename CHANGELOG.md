@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.7.3] - 2026-06-03
+
+### Changed / 更改
+- S1 `JointGroup` now retrieves the corresponding joint group information based on the robot hardware version, improving compatibility across different S1 hardware revisions. / S1 `JointGroup` 现在会根据机器人硬件版本获取对应的关节组信息，提升不同 S1 硬件版本之间的兼容性
+
 ## [1.7.2] - 2026-05-18
 
 ### Added / 新增

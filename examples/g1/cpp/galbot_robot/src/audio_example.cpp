@@ -47,24 +47,48 @@ void printCommandHelp() {
 }
 
 
-void save_audio_data(const std::shared_ptr<AudioData>& audio_data) {
+void save_audio_to_file(const std::string& filename, const std::vector<uint8_t>& audio_data) {
+  if (audio_data.empty()) {
+    return;
+  }
+  std::ofstream outfile(filename, std::ios::app | std::ios::binary);
+  if (!outfile) {
+    std::cout << "Failed to open file for writing: " << filename << std::endl;
+    return;
+  }
+  outfile.write(reinterpret_cast<const char*>(audio_data.data()),
+                static_cast<std::streamsize>(audio_data.size()));
+}
+
+void handle_audio_data(const std::shared_ptr<AudioData>& audio_data) {
   if (audio_data == nullptr) {
-    std::cout << "audio_data is nullptr" << std::endl;
     return;
   }
 
-  // std::cout << "Mic audio timestamp_ns: " << audio_data->header.timestamp_ns << std::endl;
-  // std::cout << "frame_id is " << audio_data->header.frame_id << std::endl;
-  // std::cout << "type is " << audio_data->type << std::endl;
-  // std::cout << "format is " << audio_data->format << std::endl;
-  // std::cout << "data size is " << audio_data->data.size() << std::endl;
+  const int64_t timestamp_ns = audio_data->header.timestamp_ns;
+  (void)timestamp_ns;
 
-  if (audio_data->type == "denoise_chunk" && audio_data->format == "pcm" && audio_data->data.size() > 0)
-  {
-    // std::cout << "save audio data:" << std::endl;
-    std::ofstream outfile("denoise_audio.pcm", std::ios::app);
-    outfile.write(reinterpret_cast<char *>(audio_data->data.data()), audio_data->data.size());
-    // std::cout << "Audio saved to result_audio.pcm" << std::endl;
+  const std::string& audio_type = audio_data->type;
+  const auto data_size = audio_data->data.size();
+  (void)audio_data->format;
+
+  if (audio_type == "vad_begin") {
+    std::cout << "\n[VAD_BEGIN] Voice activity detection started" << std::endl;
+  } else if (audio_type == "vad_end") {
+    std::cout << "[VAD_END] Voice activity detection ended" << std::endl;
+  } else if (audio_type == "vad_chunk") {
+    // std::cout << "[AUDIO_CHUNK] Received " << data_size << " bytes of " << audio_format
+    //           << " audio data (timestamp_ns: " << timestamp_ns << ")" << std::endl;
+    save_audio_to_file("mic_vad.pcm", audio_data->data);
+  } else if (audio_type == "denoise_chunk") {
+    // std::cout << "[DENOISE_AUDIO] Received " << data_size << " bytes of denoised audio (timestamp_ns: "
+    //           << timestamp_ns << ")" << std::endl;
+    save_audio_to_file("mic_denoise.pcm", audio_data->data);
+  } else if (audio_type == "waken_up") {
+    std::string payload(audio_data->data.begin(), audio_data->data.end());
+    std::cout << "\n[WAKEN_UP] Wake-up event triggered: " << payload << std::endl;
+  } else {
+    std::cout << "[" << audio_type << "] Received audio data, size: " << data_size << " bytes" << std::endl;
   }
 }
 
@@ -147,6 +171,9 @@ int main(int argc, char* argv[]) {
     return -1;
   }
 
+  // Waiting for init done
+  std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+
   printCommandHelp();
 
   std::string cmd, stream_id;
@@ -168,7 +195,7 @@ int main(int argc, char* argv[]) {
       continue;
     } else if (cmd == "start_microphone_stream_input") {
       stream_id = base_instance.start_microphone_stream_input([](const std::shared_ptr<AudioData> audio_data){
-        save_audio_data(audio_data);
+        handle_audio_data(audio_data);
       });
 
       std::cout << "Start microphone stream input, stream_id: "<< stream_id << std::endl;

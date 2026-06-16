@@ -56,7 +56,7 @@ struct TableStruct_galbot_2faphropm_5fproto_2faphropm_5fcommon_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxiliaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[11]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[12]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -98,6 +98,9 @@ extern PoseTargetMsgDefaultTypeInternal _PoseTargetMsg_default_instance_;
 class RobotStatesMsg;
 class RobotStatesMsgDefaultTypeInternal;
 extern RobotStatesMsgDefaultTypeInternal _RobotStatesMsg_default_instance_;
+class RobotTargetMsg;
+class RobotTargetMsgDefaultTypeInternal;
+extern RobotTargetMsgDefaultTypeInternal _RobotTargetMsg_default_instance_;
 }  // namespace aphropm_proto
 }  // namespace galbot
 PROTOBUF_NAMESPACE_OPEN
@@ -112,6 +115,7 @@ template<> ::galbot::aphropm_proto::MotionPlanConfig* Arena::CreateMaybeMessage<
 template<> ::galbot::aphropm_proto::MotionPlanConfigResponse* Arena::CreateMaybeMessage<::galbot::aphropm_proto::MotionPlanConfigResponse>(Arena*);
 template<> ::galbot::aphropm_proto::PoseTargetMsg* Arena::CreateMaybeMessage<::galbot::aphropm_proto::PoseTargetMsg>(Arena*);
 template<> ::galbot::aphropm_proto::RobotStatesMsg* Arena::CreateMaybeMessage<::galbot::aphropm_proto::RobotStatesMsg>(Arena*);
+template<> ::galbot::aphropm_proto::RobotTargetMsg* Arena::CreateMaybeMessage<::galbot::aphropm_proto::RobotTargetMsg>(Arena*);
 PROTOBUF_NAMESPACE_CLOSE
 namespace galbot {
 namespace aphropm_proto {
@@ -460,6 +464,7 @@ class JointStatesMsg PROTOBUF_FINAL :
 
   enum : int {
     kJointStatesFieldNumber = 2,
+    kJointNamesFieldNumber = 3,
     kHeaderFieldNumber = 1,
   };
   // repeated .galbot.aphropm_proto.JointStateUnit joint_states = 2;
@@ -479,6 +484,30 @@ class JointStatesMsg PROTOBUF_FINAL :
   ::galbot::aphropm_proto::JointStateUnit* add_joint_states();
   const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::galbot::aphropm_proto::JointStateUnit >&
       joint_states() const;
+
+  // repeated string joint_names = 3;
+  int joint_names_size() const;
+  private:
+  int _internal_joint_names_size() const;
+  public:
+  void clear_joint_names();
+  const std::string& joint_names(int index) const;
+  std::string* mutable_joint_names(int index);
+  void set_joint_names(int index, const std::string& value);
+  void set_joint_names(int index, std::string&& value);
+  void set_joint_names(int index, const char* value);
+  void set_joint_names(int index, const char* value, size_t size);
+  std::string* add_joint_names();
+  void add_joint_names(const std::string& value);
+  void add_joint_names(std::string&& value);
+  void add_joint_names(const char* value);
+  void add_joint_names(const char* value, size_t size);
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>& joint_names() const;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>* mutable_joint_names();
+  private:
+  const std::string& _internal_joint_names(int index) const;
+  std::string* _internal_add_joint_names();
+  public:
 
   // .galbot.core_proto.Header header = 1;
   bool has_header() const;
@@ -506,6 +535,7 @@ class JointStatesMsg PROTOBUF_FINAL :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::galbot::aphropm_proto::JointStateUnit > joint_states_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string> joint_names_;
   ::galbot::core_proto::Header* header_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_galbot_2faphropm_5fproto_2faphropm_5fcommon_2eproto;
@@ -711,197 +741,6 @@ class ChainStatesMsg PROTOBUF_FINAL :
 };
 // -------------------------------------------------------------------
 
-class PoseTargetMsg PROTOBUF_FINAL :
-    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:galbot.aphropm_proto.PoseTargetMsg) */ {
- public:
-  inline PoseTargetMsg() : PoseTargetMsg(nullptr) {}
-  virtual ~PoseTargetMsg();
-
-  PoseTargetMsg(const PoseTargetMsg& from);
-  PoseTargetMsg(PoseTargetMsg&& from) noexcept
-    : PoseTargetMsg() {
-    *this = ::std::move(from);
-  }
-
-  inline PoseTargetMsg& operator=(const PoseTargetMsg& from) {
-    CopyFrom(from);
-    return *this;
-  }
-  inline PoseTargetMsg& operator=(PoseTargetMsg&& from) noexcept {
-    if (GetArena() == from.GetArena()) {
-      if (this != &from) InternalSwap(&from);
-    } else {
-      CopyFrom(from);
-    }
-    return *this;
-  }
-
-  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
-    return GetDescriptor();
-  }
-  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
-    return GetMetadataStatic().descriptor;
-  }
-  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
-    return GetMetadataStatic().reflection;
-  }
-  static const PoseTargetMsg& default_instance();
-
-  static inline const PoseTargetMsg* internal_default_instance() {
-    return reinterpret_cast<const PoseTargetMsg*>(
-               &_PoseTargetMsg_default_instance_);
-  }
-  static constexpr int kIndexInFileMessages =
-    4;
-
-  friend void swap(PoseTargetMsg& a, PoseTargetMsg& b) {
-    a.Swap(&b);
-  }
-  inline void Swap(PoseTargetMsg* other) {
-    if (other == this) return;
-    if (GetArena() == other->GetArena()) {
-      InternalSwap(other);
-    } else {
-      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
-    }
-  }
-  void UnsafeArenaSwap(PoseTargetMsg* other) {
-    if (other == this) return;
-    GOOGLE_DCHECK(GetArena() == other->GetArena());
-    InternalSwap(other);
-  }
-
-  // implements Message ----------------------------------------------
-
-  inline PoseTargetMsg* New() const final {
-    return CreateMaybeMessage<PoseTargetMsg>(nullptr);
-  }
-
-  PoseTargetMsg* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
-    return CreateMaybeMessage<PoseTargetMsg>(arena);
-  }
-  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
-  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
-  void CopyFrom(const PoseTargetMsg& from);
-  void MergeFrom(const PoseTargetMsg& from);
-  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
-  bool IsInitialized() const final;
-
-  size_t ByteSizeLong() const final;
-  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
-  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
-      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
-  int GetCachedSize() const final { return _cached_size_.Get(); }
-
-  private:
-  inline void SharedCtor();
-  inline void SharedDtor();
-  void SetCachedSize(int size) const final;
-  void InternalSwap(PoseTargetMsg* other);
-  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
-  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
-    return "galbot.aphropm_proto.PoseTargetMsg";
-  }
-  protected:
-  explicit PoseTargetMsg(::PROTOBUF_NAMESPACE_ID::Arena* arena);
-  private:
-  static void ArenaDtor(void* object);
-  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
-  public:
-
-  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
-  private:
-  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
-    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_galbot_2faphropm_5fproto_2faphropm_5fcommon_2eproto);
-    return ::descriptor_table_galbot_2faphropm_5fproto_2faphropm_5fcommon_2eproto.file_level_metadata[kIndexInFileMessages];
-  }
-
-  public:
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  enum : int {
-    kAssistChainsFieldNumber = 3,
-    kHeaderFieldNumber = 1,
-    kPoseStateFieldNumber = 2,
-  };
-  // repeated string assist_chains = 3;
-  int assist_chains_size() const;
-  private:
-  int _internal_assist_chains_size() const;
-  public:
-  void clear_assist_chains();
-  const std::string& assist_chains(int index) const;
-  std::string* mutable_assist_chains(int index);
-  void set_assist_chains(int index, const std::string& value);
-  void set_assist_chains(int index, std::string&& value);
-  void set_assist_chains(int index, const char* value);
-  void set_assist_chains(int index, const char* value, size_t size);
-  std::string* add_assist_chains();
-  void add_assist_chains(const std::string& value);
-  void add_assist_chains(std::string&& value);
-  void add_assist_chains(const char* value);
-  void add_assist_chains(const char* value, size_t size);
-  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>& assist_chains() const;
-  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>* mutable_assist_chains();
-  private:
-  const std::string& _internal_assist_chains(int index) const;
-  std::string* _internal_add_assist_chains();
-  public:
-
-  // .galbot.core_proto.Header header = 1;
-  bool has_header() const;
-  private:
-  bool _internal_has_header() const;
-  public:
-  void clear_header();
-  const ::galbot::core_proto::Header& header() const;
-  ::galbot::core_proto::Header* release_header();
-  ::galbot::core_proto::Header* mutable_header();
-  void set_allocated_header(::galbot::core_proto::Header* header);
-  private:
-  const ::galbot::core_proto::Header& _internal_header() const;
-  ::galbot::core_proto::Header* _internal_mutable_header();
-  public:
-  void unsafe_arena_set_allocated_header(
-      ::galbot::core_proto::Header* header);
-  ::galbot::core_proto::Header* unsafe_arena_release_header();
-
-  // .galbot.spatial_proto.FrameTriad pose_state = 2;
-  bool has_pose_state() const;
-  private:
-  bool _internal_has_pose_state() const;
-  public:
-  void clear_pose_state();
-  const ::galbot::spatial_proto::FrameTriad& pose_state() const;
-  ::galbot::spatial_proto::FrameTriad* release_pose_state();
-  ::galbot::spatial_proto::FrameTriad* mutable_pose_state();
-  void set_allocated_pose_state(::galbot::spatial_proto::FrameTriad* pose_state);
-  private:
-  const ::galbot::spatial_proto::FrameTriad& _internal_pose_state() const;
-  ::galbot::spatial_proto::FrameTriad* _internal_mutable_pose_state();
-  public:
-  void unsafe_arena_set_allocated_pose_state(
-      ::galbot::spatial_proto::FrameTriad* pose_state);
-  ::galbot::spatial_proto::FrameTriad* unsafe_arena_release_pose_state();
-
-  // @@protoc_insertion_point(class_scope:galbot.aphropm_proto.PoseTargetMsg)
- private:
-  class _Internal;
-
-  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
-  typedef void InternalArenaConstructable_;
-  typedef void DestructorSkippable_;
-  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string> assist_chains_;
-  ::galbot::core_proto::Header* header_;
-  ::galbot::spatial_proto::FrameTriad* pose_state_;
-  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
-  friend struct ::TableStruct_galbot_2faphropm_5fproto_2faphropm_5fcommon_2eproto;
-};
-// -------------------------------------------------------------------
-
 class RobotStatesMsg PROTOBUF_FINAL :
     public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:galbot.aphropm_proto.RobotStatesMsg) */ {
  public:
@@ -949,7 +788,7 @@ class RobotStatesMsg PROTOBUF_FINAL :
                &_RobotStatesMsg_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    5;
+    4;
 
   friend void swap(RobotStatesMsg& a, RobotStatesMsg& b) {
     a.Swap(&b);
@@ -1125,6 +964,420 @@ class RobotStatesMsg PROTOBUF_FINAL :
 };
 // -------------------------------------------------------------------
 
+class PoseTargetMsg PROTOBUF_FINAL :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:galbot.aphropm_proto.PoseTargetMsg) */ {
+ public:
+  inline PoseTargetMsg() : PoseTargetMsg(nullptr) {}
+  virtual ~PoseTargetMsg();
+
+  PoseTargetMsg(const PoseTargetMsg& from);
+  PoseTargetMsg(PoseTargetMsg&& from) noexcept
+    : PoseTargetMsg() {
+    *this = ::std::move(from);
+  }
+
+  inline PoseTargetMsg& operator=(const PoseTargetMsg& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline PoseTargetMsg& operator=(PoseTargetMsg&& from) noexcept {
+    if (GetArena() == from.GetArena()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const PoseTargetMsg& default_instance();
+
+  static inline const PoseTargetMsg* internal_default_instance() {
+    return reinterpret_cast<const PoseTargetMsg*>(
+               &_PoseTargetMsg_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    5;
+
+  friend void swap(PoseTargetMsg& a, PoseTargetMsg& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(PoseTargetMsg* other) {
+    if (other == this) return;
+    if (GetArena() == other->GetArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(PoseTargetMsg* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline PoseTargetMsg* New() const final {
+    return CreateMaybeMessage<PoseTargetMsg>(nullptr);
+  }
+
+  PoseTargetMsg* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<PoseTargetMsg>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const PoseTargetMsg& from);
+  void MergeFrom(const PoseTargetMsg& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(PoseTargetMsg* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "galbot.aphropm_proto.PoseTargetMsg";
+  }
+  protected:
+  explicit PoseTargetMsg(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_galbot_2faphropm_5fproto_2faphropm_5fcommon_2eproto);
+    return ::descriptor_table_galbot_2faphropm_5fproto_2faphropm_5fcommon_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kAssistChainsFieldNumber = 3,
+    kHeaderFieldNumber = 1,
+    kPoseStateFieldNumber = 2,
+    kReferenceRobotStateFieldNumber = 4,
+  };
+  // repeated string assist_chains = 3;
+  int assist_chains_size() const;
+  private:
+  int _internal_assist_chains_size() const;
+  public:
+  void clear_assist_chains();
+  const std::string& assist_chains(int index) const;
+  std::string* mutable_assist_chains(int index);
+  void set_assist_chains(int index, const std::string& value);
+  void set_assist_chains(int index, std::string&& value);
+  void set_assist_chains(int index, const char* value);
+  void set_assist_chains(int index, const char* value, size_t size);
+  std::string* add_assist_chains();
+  void add_assist_chains(const std::string& value);
+  void add_assist_chains(std::string&& value);
+  void add_assist_chains(const char* value);
+  void add_assist_chains(const char* value, size_t size);
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>& assist_chains() const;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>* mutable_assist_chains();
+  private:
+  const std::string& _internal_assist_chains(int index) const;
+  std::string* _internal_add_assist_chains();
+  public:
+
+  // .galbot.core_proto.Header header = 1;
+  bool has_header() const;
+  private:
+  bool _internal_has_header() const;
+  public:
+  void clear_header();
+  const ::galbot::core_proto::Header& header() const;
+  ::galbot::core_proto::Header* release_header();
+  ::galbot::core_proto::Header* mutable_header();
+  void set_allocated_header(::galbot::core_proto::Header* header);
+  private:
+  const ::galbot::core_proto::Header& _internal_header() const;
+  ::galbot::core_proto::Header* _internal_mutable_header();
+  public:
+  void unsafe_arena_set_allocated_header(
+      ::galbot::core_proto::Header* header);
+  ::galbot::core_proto::Header* unsafe_arena_release_header();
+
+  // .galbot.spatial_proto.FrameTriad pose_state = 2;
+  bool has_pose_state() const;
+  private:
+  bool _internal_has_pose_state() const;
+  public:
+  void clear_pose_state();
+  const ::galbot::spatial_proto::FrameTriad& pose_state() const;
+  ::galbot::spatial_proto::FrameTriad* release_pose_state();
+  ::galbot::spatial_proto::FrameTriad* mutable_pose_state();
+  void set_allocated_pose_state(::galbot::spatial_proto::FrameTriad* pose_state);
+  private:
+  const ::galbot::spatial_proto::FrameTriad& _internal_pose_state() const;
+  ::galbot::spatial_proto::FrameTriad* _internal_mutable_pose_state();
+  public:
+  void unsafe_arena_set_allocated_pose_state(
+      ::galbot::spatial_proto::FrameTriad* pose_state);
+  ::galbot::spatial_proto::FrameTriad* unsafe_arena_release_pose_state();
+
+  // .galbot.aphropm_proto.RobotStatesMsg reference_robot_state = 4;
+  bool has_reference_robot_state() const;
+  private:
+  bool _internal_has_reference_robot_state() const;
+  public:
+  void clear_reference_robot_state();
+  const ::galbot::aphropm_proto::RobotStatesMsg& reference_robot_state() const;
+  ::galbot::aphropm_proto::RobotStatesMsg* release_reference_robot_state();
+  ::galbot::aphropm_proto::RobotStatesMsg* mutable_reference_robot_state();
+  void set_allocated_reference_robot_state(::galbot::aphropm_proto::RobotStatesMsg* reference_robot_state);
+  private:
+  const ::galbot::aphropm_proto::RobotStatesMsg& _internal_reference_robot_state() const;
+  ::galbot::aphropm_proto::RobotStatesMsg* _internal_mutable_reference_robot_state();
+  public:
+  void unsafe_arena_set_allocated_reference_robot_state(
+      ::galbot::aphropm_proto::RobotStatesMsg* reference_robot_state);
+  ::galbot::aphropm_proto::RobotStatesMsg* unsafe_arena_release_reference_robot_state();
+
+  // @@protoc_insertion_point(class_scope:galbot.aphropm_proto.PoseTargetMsg)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string> assist_chains_;
+  ::galbot::core_proto::Header* header_;
+  ::galbot::spatial_proto::FrameTriad* pose_state_;
+  ::galbot::aphropm_proto::RobotStatesMsg* reference_robot_state_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_galbot_2faphropm_5fproto_2faphropm_5fcommon_2eproto;
+};
+// -------------------------------------------------------------------
+
+class RobotTargetMsg PROTOBUF_FINAL :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:galbot.aphropm_proto.RobotTargetMsg) */ {
+ public:
+  inline RobotTargetMsg() : RobotTargetMsg(nullptr) {}
+  virtual ~RobotTargetMsg();
+
+  RobotTargetMsg(const RobotTargetMsg& from);
+  RobotTargetMsg(RobotTargetMsg&& from) noexcept
+    : RobotTargetMsg() {
+    *this = ::std::move(from);
+  }
+
+  inline RobotTargetMsg& operator=(const RobotTargetMsg& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline RobotTargetMsg& operator=(RobotTargetMsg&& from) noexcept {
+    if (GetArena() == from.GetArena()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const RobotTargetMsg& default_instance();
+
+  enum TargetCase {
+    kJointTarget = 2,
+    kPoseTarget = 3,
+    TARGET_NOT_SET = 0,
+  };
+
+  static inline const RobotTargetMsg* internal_default_instance() {
+    return reinterpret_cast<const RobotTargetMsg*>(
+               &_RobotTargetMsg_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    6;
+
+  friend void swap(RobotTargetMsg& a, RobotTargetMsg& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(RobotTargetMsg* other) {
+    if (other == this) return;
+    if (GetArena() == other->GetArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(RobotTargetMsg* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline RobotTargetMsg* New() const final {
+    return CreateMaybeMessage<RobotTargetMsg>(nullptr);
+  }
+
+  RobotTargetMsg* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<RobotTargetMsg>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const RobotTargetMsg& from);
+  void MergeFrom(const RobotTargetMsg& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(RobotTargetMsg* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "galbot.aphropm_proto.RobotTargetMsg";
+  }
+  protected:
+  explicit RobotTargetMsg(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_galbot_2faphropm_5fproto_2faphropm_5fcommon_2eproto);
+    return ::descriptor_table_galbot_2faphropm_5fproto_2faphropm_5fcommon_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kHeaderFieldNumber = 1,
+    kJointTargetFieldNumber = 2,
+    kPoseTargetFieldNumber = 3,
+  };
+  // .galbot.core_proto.Header header = 1;
+  bool has_header() const;
+  private:
+  bool _internal_has_header() const;
+  public:
+  void clear_header();
+  const ::galbot::core_proto::Header& header() const;
+  ::galbot::core_proto::Header* release_header();
+  ::galbot::core_proto::Header* mutable_header();
+  void set_allocated_header(::galbot::core_proto::Header* header);
+  private:
+  const ::galbot::core_proto::Header& _internal_header() const;
+  ::galbot::core_proto::Header* _internal_mutable_header();
+  public:
+  void unsafe_arena_set_allocated_header(
+      ::galbot::core_proto::Header* header);
+  ::galbot::core_proto::Header* unsafe_arena_release_header();
+
+  // .galbot.aphropm_proto.JointStatesMsg joint_target = 2;
+  bool has_joint_target() const;
+  private:
+  bool _internal_has_joint_target() const;
+  public:
+  void clear_joint_target();
+  const ::galbot::aphropm_proto::JointStatesMsg& joint_target() const;
+  ::galbot::aphropm_proto::JointStatesMsg* release_joint_target();
+  ::galbot::aphropm_proto::JointStatesMsg* mutable_joint_target();
+  void set_allocated_joint_target(::galbot::aphropm_proto::JointStatesMsg* joint_target);
+  private:
+  const ::galbot::aphropm_proto::JointStatesMsg& _internal_joint_target() const;
+  ::galbot::aphropm_proto::JointStatesMsg* _internal_mutable_joint_target();
+  public:
+  void unsafe_arena_set_allocated_joint_target(
+      ::galbot::aphropm_proto::JointStatesMsg* joint_target);
+  ::galbot::aphropm_proto::JointStatesMsg* unsafe_arena_release_joint_target();
+
+  // .galbot.aphropm_proto.PoseTargetMsg pose_target = 3;
+  bool has_pose_target() const;
+  private:
+  bool _internal_has_pose_target() const;
+  public:
+  void clear_pose_target();
+  const ::galbot::aphropm_proto::PoseTargetMsg& pose_target() const;
+  ::galbot::aphropm_proto::PoseTargetMsg* release_pose_target();
+  ::galbot::aphropm_proto::PoseTargetMsg* mutable_pose_target();
+  void set_allocated_pose_target(::galbot::aphropm_proto::PoseTargetMsg* pose_target);
+  private:
+  const ::galbot::aphropm_proto::PoseTargetMsg& _internal_pose_target() const;
+  ::galbot::aphropm_proto::PoseTargetMsg* _internal_mutable_pose_target();
+  public:
+  void unsafe_arena_set_allocated_pose_target(
+      ::galbot::aphropm_proto::PoseTargetMsg* pose_target);
+  ::galbot::aphropm_proto::PoseTargetMsg* unsafe_arena_release_pose_target();
+
+  void clear_target();
+  TargetCase target_case() const;
+  // @@protoc_insertion_point(class_scope:galbot.aphropm_proto.RobotTargetMsg)
+ private:
+  class _Internal;
+  void set_has_joint_target();
+  void set_has_pose_target();
+
+  inline bool has_target() const;
+  inline void clear_has_target();
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::galbot::core_proto::Header* header_;
+  union TargetUnion {
+    TargetUnion() {}
+    ::galbot::aphropm_proto::JointStatesMsg* joint_target_;
+    ::galbot::aphropm_proto::PoseTargetMsg* pose_target_;
+  } target_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  ::PROTOBUF_NAMESPACE_ID::uint32 _oneof_case_[1];
+
+  friend struct ::TableStruct_galbot_2faphropm_5fproto_2faphropm_5fcommon_2eproto;
+};
+// -------------------------------------------------------------------
+
 class KinematicsBoundary PROTOBUF_FINAL :
     public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:galbot.aphropm_proto.KinematicsBoundary) */ {
  public:
@@ -1166,7 +1419,7 @@ class KinematicsBoundary PROTOBUF_FINAL :
                &_KinematicsBoundary_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    6;
+    7;
 
   friend void swap(KinematicsBoundary& a, KinematicsBoundary& b) {
     a.Swap(&b);
@@ -1489,7 +1742,7 @@ class KinematicsScales PROTOBUF_FINAL :
                &_KinematicsScales_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    7;
+    8;
 
   friend void swap(KinematicsScales& a, KinematicsScales& b) {
     a.Swap(&b);
@@ -1700,7 +1953,7 @@ class MotionPlanConfig PROTOBUF_FINAL :
                &_MotionPlanConfig_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    8;
+    9;
 
   friend void swap(MotionPlanConfig& a, MotionPlanConfig& b) {
     a.Swap(&b);
@@ -1934,7 +2187,7 @@ class GetSetMotionPlanConfigRequest PROTOBUF_FINAL :
                &_GetSetMotionPlanConfigRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    9;
+    10;
 
   friend void swap(GetSetMotionPlanConfigRequest& a, GetSetMotionPlanConfigRequest& b) {
     a.Swap(&b);
@@ -2146,7 +2399,7 @@ class MotionPlanConfigResponse PROTOBUF_FINAL :
                &_MotionPlanConfigResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    10;
+    11;
 
   friend void swap(MotionPlanConfigResponse& a, MotionPlanConfigResponse& b) {
     a.Swap(&b);
@@ -2633,6 +2886,80 @@ JointStatesMsg::joint_states() const {
   return joint_states_;
 }
 
+// repeated string joint_names = 3;
+inline int JointStatesMsg::_internal_joint_names_size() const {
+  return joint_names_.size();
+}
+inline int JointStatesMsg::joint_names_size() const {
+  return _internal_joint_names_size();
+}
+inline void JointStatesMsg::clear_joint_names() {
+  joint_names_.Clear();
+}
+inline std::string* JointStatesMsg::add_joint_names() {
+  // @@protoc_insertion_point(field_add_mutable:galbot.aphropm_proto.JointStatesMsg.joint_names)
+  return _internal_add_joint_names();
+}
+inline const std::string& JointStatesMsg::_internal_joint_names(int index) const {
+  return joint_names_.Get(index);
+}
+inline const std::string& JointStatesMsg::joint_names(int index) const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.JointStatesMsg.joint_names)
+  return _internal_joint_names(index);
+}
+inline std::string* JointStatesMsg::mutable_joint_names(int index) {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.JointStatesMsg.joint_names)
+  return joint_names_.Mutable(index);
+}
+inline void JointStatesMsg::set_joint_names(int index, const std::string& value) {
+  // @@protoc_insertion_point(field_set:galbot.aphropm_proto.JointStatesMsg.joint_names)
+  joint_names_.Mutable(index)->assign(value);
+}
+inline void JointStatesMsg::set_joint_names(int index, std::string&& value) {
+  // @@protoc_insertion_point(field_set:galbot.aphropm_proto.JointStatesMsg.joint_names)
+  joint_names_.Mutable(index)->assign(std::move(value));
+}
+inline void JointStatesMsg::set_joint_names(int index, const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  joint_names_.Mutable(index)->assign(value);
+  // @@protoc_insertion_point(field_set_char:galbot.aphropm_proto.JointStatesMsg.joint_names)
+}
+inline void JointStatesMsg::set_joint_names(int index, const char* value, size_t size) {
+  joint_names_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:galbot.aphropm_proto.JointStatesMsg.joint_names)
+}
+inline std::string* JointStatesMsg::_internal_add_joint_names() {
+  return joint_names_.Add();
+}
+inline void JointStatesMsg::add_joint_names(const std::string& value) {
+  joint_names_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add:galbot.aphropm_proto.JointStatesMsg.joint_names)
+}
+inline void JointStatesMsg::add_joint_names(std::string&& value) {
+  joint_names_.Add(std::move(value));
+  // @@protoc_insertion_point(field_add:galbot.aphropm_proto.JointStatesMsg.joint_names)
+}
+inline void JointStatesMsg::add_joint_names(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  joint_names_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add_char:galbot.aphropm_proto.JointStatesMsg.joint_names)
+}
+inline void JointStatesMsg::add_joint_names(const char* value, size_t size) {
+  joint_names_.Add()->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_add_pointer:galbot.aphropm_proto.JointStatesMsg.joint_names)
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>&
+JointStatesMsg::joint_names() const {
+  // @@protoc_insertion_point(field_list:galbot.aphropm_proto.JointStatesMsg.joint_names)
+  return joint_names_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>*
+JointStatesMsg::mutable_joint_names() {
+  // @@protoc_insertion_point(field_mutable_list:galbot.aphropm_proto.JointStatesMsg.joint_names)
+  return &joint_names_;
+}
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------
@@ -2743,238 +3070,6 @@ inline ::PROTOBUF_NAMESPACE_ID::Map< std::string, ::galbot::aphropm_proto::Joint
 ChainStatesMsg::mutable_chain_states() {
   // @@protoc_insertion_point(field_mutable_map:galbot.aphropm_proto.ChainStatesMsg.chain_states)
   return _internal_mutable_chain_states();
-}
-
-// -------------------------------------------------------------------
-
-// PoseTargetMsg
-
-// .galbot.core_proto.Header header = 1;
-inline bool PoseTargetMsg::_internal_has_header() const {
-  return this != internal_default_instance() && header_ != nullptr;
-}
-inline bool PoseTargetMsg::has_header() const {
-  return _internal_has_header();
-}
-inline const ::galbot::core_proto::Header& PoseTargetMsg::_internal_header() const {
-  const ::galbot::core_proto::Header* p = header_;
-  return p != nullptr ? *p : reinterpret_cast<const ::galbot::core_proto::Header&>(
-      ::galbot::core_proto::_Header_default_instance_);
-}
-inline const ::galbot::core_proto::Header& PoseTargetMsg::header() const {
-  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.PoseTargetMsg.header)
-  return _internal_header();
-}
-inline void PoseTargetMsg::unsafe_arena_set_allocated_header(
-    ::galbot::core_proto::Header* header) {
-  if (GetArena() == nullptr) {
-    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(header_);
-  }
-  header_ = header;
-  if (header) {
-    
-  } else {
-    
-  }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:galbot.aphropm_proto.PoseTargetMsg.header)
-}
-inline ::galbot::core_proto::Header* PoseTargetMsg::release_header() {
-  
-  ::galbot::core_proto::Header* temp = header_;
-  header_ = nullptr;
-  if (GetArena() != nullptr) {
-    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
-  }
-  return temp;
-}
-inline ::galbot::core_proto::Header* PoseTargetMsg::unsafe_arena_release_header() {
-  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.PoseTargetMsg.header)
-  
-  ::galbot::core_proto::Header* temp = header_;
-  header_ = nullptr;
-  return temp;
-}
-inline ::galbot::core_proto::Header* PoseTargetMsg::_internal_mutable_header() {
-  
-  if (header_ == nullptr) {
-    auto* p = CreateMaybeMessage<::galbot::core_proto::Header>(GetArena());
-    header_ = p;
-  }
-  return header_;
-}
-inline ::galbot::core_proto::Header* PoseTargetMsg::mutable_header() {
-  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.PoseTargetMsg.header)
-  return _internal_mutable_header();
-}
-inline void PoseTargetMsg::set_allocated_header(::galbot::core_proto::Header* header) {
-  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArena();
-  if (message_arena == nullptr) {
-    delete reinterpret_cast< ::PROTOBUF_NAMESPACE_ID::MessageLite*>(header_);
-  }
-  if (header) {
-    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
-      reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(header)->GetArena();
-    if (message_arena != submessage_arena) {
-      header = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
-          message_arena, header, submessage_arena);
-    }
-    
-  } else {
-    
-  }
-  header_ = header;
-  // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.PoseTargetMsg.header)
-}
-
-// .galbot.spatial_proto.FrameTriad pose_state = 2;
-inline bool PoseTargetMsg::_internal_has_pose_state() const {
-  return this != internal_default_instance() && pose_state_ != nullptr;
-}
-inline bool PoseTargetMsg::has_pose_state() const {
-  return _internal_has_pose_state();
-}
-inline const ::galbot::spatial_proto::FrameTriad& PoseTargetMsg::_internal_pose_state() const {
-  const ::galbot::spatial_proto::FrameTriad* p = pose_state_;
-  return p != nullptr ? *p : reinterpret_cast<const ::galbot::spatial_proto::FrameTriad&>(
-      ::galbot::spatial_proto::_FrameTriad_default_instance_);
-}
-inline const ::galbot::spatial_proto::FrameTriad& PoseTargetMsg::pose_state() const {
-  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.PoseTargetMsg.pose_state)
-  return _internal_pose_state();
-}
-inline void PoseTargetMsg::unsafe_arena_set_allocated_pose_state(
-    ::galbot::spatial_proto::FrameTriad* pose_state) {
-  if (GetArena() == nullptr) {
-    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(pose_state_);
-  }
-  pose_state_ = pose_state;
-  if (pose_state) {
-    
-  } else {
-    
-  }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:galbot.aphropm_proto.PoseTargetMsg.pose_state)
-}
-inline ::galbot::spatial_proto::FrameTriad* PoseTargetMsg::release_pose_state() {
-  
-  ::galbot::spatial_proto::FrameTriad* temp = pose_state_;
-  pose_state_ = nullptr;
-  if (GetArena() != nullptr) {
-    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
-  }
-  return temp;
-}
-inline ::galbot::spatial_proto::FrameTriad* PoseTargetMsg::unsafe_arena_release_pose_state() {
-  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.PoseTargetMsg.pose_state)
-  
-  ::galbot::spatial_proto::FrameTriad* temp = pose_state_;
-  pose_state_ = nullptr;
-  return temp;
-}
-inline ::galbot::spatial_proto::FrameTriad* PoseTargetMsg::_internal_mutable_pose_state() {
-  
-  if (pose_state_ == nullptr) {
-    auto* p = CreateMaybeMessage<::galbot::spatial_proto::FrameTriad>(GetArena());
-    pose_state_ = p;
-  }
-  return pose_state_;
-}
-inline ::galbot::spatial_proto::FrameTriad* PoseTargetMsg::mutable_pose_state() {
-  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.PoseTargetMsg.pose_state)
-  return _internal_mutable_pose_state();
-}
-inline void PoseTargetMsg::set_allocated_pose_state(::galbot::spatial_proto::FrameTriad* pose_state) {
-  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArena();
-  if (message_arena == nullptr) {
-    delete reinterpret_cast< ::PROTOBUF_NAMESPACE_ID::MessageLite*>(pose_state_);
-  }
-  if (pose_state) {
-    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
-      reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(pose_state)->GetArena();
-    if (message_arena != submessage_arena) {
-      pose_state = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
-          message_arena, pose_state, submessage_arena);
-    }
-    
-  } else {
-    
-  }
-  pose_state_ = pose_state;
-  // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.PoseTargetMsg.pose_state)
-}
-
-// repeated string assist_chains = 3;
-inline int PoseTargetMsg::_internal_assist_chains_size() const {
-  return assist_chains_.size();
-}
-inline int PoseTargetMsg::assist_chains_size() const {
-  return _internal_assist_chains_size();
-}
-inline void PoseTargetMsg::clear_assist_chains() {
-  assist_chains_.Clear();
-}
-inline std::string* PoseTargetMsg::add_assist_chains() {
-  // @@protoc_insertion_point(field_add_mutable:galbot.aphropm_proto.PoseTargetMsg.assist_chains)
-  return _internal_add_assist_chains();
-}
-inline const std::string& PoseTargetMsg::_internal_assist_chains(int index) const {
-  return assist_chains_.Get(index);
-}
-inline const std::string& PoseTargetMsg::assist_chains(int index) const {
-  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.PoseTargetMsg.assist_chains)
-  return _internal_assist_chains(index);
-}
-inline std::string* PoseTargetMsg::mutable_assist_chains(int index) {
-  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.PoseTargetMsg.assist_chains)
-  return assist_chains_.Mutable(index);
-}
-inline void PoseTargetMsg::set_assist_chains(int index, const std::string& value) {
-  // @@protoc_insertion_point(field_set:galbot.aphropm_proto.PoseTargetMsg.assist_chains)
-  assist_chains_.Mutable(index)->assign(value);
-}
-inline void PoseTargetMsg::set_assist_chains(int index, std::string&& value) {
-  // @@protoc_insertion_point(field_set:galbot.aphropm_proto.PoseTargetMsg.assist_chains)
-  assist_chains_.Mutable(index)->assign(std::move(value));
-}
-inline void PoseTargetMsg::set_assist_chains(int index, const char* value) {
-  GOOGLE_DCHECK(value != nullptr);
-  assist_chains_.Mutable(index)->assign(value);
-  // @@protoc_insertion_point(field_set_char:galbot.aphropm_proto.PoseTargetMsg.assist_chains)
-}
-inline void PoseTargetMsg::set_assist_chains(int index, const char* value, size_t size) {
-  assist_chains_.Mutable(index)->assign(
-    reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_set_pointer:galbot.aphropm_proto.PoseTargetMsg.assist_chains)
-}
-inline std::string* PoseTargetMsg::_internal_add_assist_chains() {
-  return assist_chains_.Add();
-}
-inline void PoseTargetMsg::add_assist_chains(const std::string& value) {
-  assist_chains_.Add()->assign(value);
-  // @@protoc_insertion_point(field_add:galbot.aphropm_proto.PoseTargetMsg.assist_chains)
-}
-inline void PoseTargetMsg::add_assist_chains(std::string&& value) {
-  assist_chains_.Add(std::move(value));
-  // @@protoc_insertion_point(field_add:galbot.aphropm_proto.PoseTargetMsg.assist_chains)
-}
-inline void PoseTargetMsg::add_assist_chains(const char* value) {
-  GOOGLE_DCHECK(value != nullptr);
-  assist_chains_.Add()->assign(value);
-  // @@protoc_insertion_point(field_add_char:galbot.aphropm_proto.PoseTargetMsg.assist_chains)
-}
-inline void PoseTargetMsg::add_assist_chains(const char* value, size_t size) {
-  assist_chains_.Add()->assign(reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_add_pointer:galbot.aphropm_proto.PoseTargetMsg.assist_chains)
-}
-inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>&
-PoseTargetMsg::assist_chains() const {
-  // @@protoc_insertion_point(field_list:galbot.aphropm_proto.PoseTargetMsg.assist_chains)
-  return assist_chains_;
-}
-inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>*
-PoseTargetMsg::mutable_assist_chains() {
-  // @@protoc_insertion_point(field_mutable_list:galbot.aphropm_proto.PoseTargetMsg.assist_chains)
-  return &assist_chains_;
 }
 
 // -------------------------------------------------------------------
@@ -3289,6 +3384,557 @@ inline void RobotStatesMsg::clear_has_body_type() {
 }
 inline RobotStatesMsg::BodyTypeCase RobotStatesMsg::body_type_case() const {
   return RobotStatesMsg::BodyTypeCase(_oneof_case_[0]);
+}
+// -------------------------------------------------------------------
+
+// PoseTargetMsg
+
+// .galbot.core_proto.Header header = 1;
+inline bool PoseTargetMsg::_internal_has_header() const {
+  return this != internal_default_instance() && header_ != nullptr;
+}
+inline bool PoseTargetMsg::has_header() const {
+  return _internal_has_header();
+}
+inline const ::galbot::core_proto::Header& PoseTargetMsg::_internal_header() const {
+  const ::galbot::core_proto::Header* p = header_;
+  return p != nullptr ? *p : reinterpret_cast<const ::galbot::core_proto::Header&>(
+      ::galbot::core_proto::_Header_default_instance_);
+}
+inline const ::galbot::core_proto::Header& PoseTargetMsg::header() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.PoseTargetMsg.header)
+  return _internal_header();
+}
+inline void PoseTargetMsg::unsafe_arena_set_allocated_header(
+    ::galbot::core_proto::Header* header) {
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(header_);
+  }
+  header_ = header;
+  if (header) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:galbot.aphropm_proto.PoseTargetMsg.header)
+}
+inline ::galbot::core_proto::Header* PoseTargetMsg::release_header() {
+  
+  ::galbot::core_proto::Header* temp = header_;
+  header_ = nullptr;
+  if (GetArena() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+  return temp;
+}
+inline ::galbot::core_proto::Header* PoseTargetMsg::unsafe_arena_release_header() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.PoseTargetMsg.header)
+  
+  ::galbot::core_proto::Header* temp = header_;
+  header_ = nullptr;
+  return temp;
+}
+inline ::galbot::core_proto::Header* PoseTargetMsg::_internal_mutable_header() {
+  
+  if (header_ == nullptr) {
+    auto* p = CreateMaybeMessage<::galbot::core_proto::Header>(GetArena());
+    header_ = p;
+  }
+  return header_;
+}
+inline ::galbot::core_proto::Header* PoseTargetMsg::mutable_header() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.PoseTargetMsg.header)
+  return _internal_mutable_header();
+}
+inline void PoseTargetMsg::set_allocated_header(::galbot::core_proto::Header* header) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArena();
+  if (message_arena == nullptr) {
+    delete reinterpret_cast< ::PROTOBUF_NAMESPACE_ID::MessageLite*>(header_);
+  }
+  if (header) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+      reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(header)->GetArena();
+    if (message_arena != submessage_arena) {
+      header = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, header, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  header_ = header;
+  // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.PoseTargetMsg.header)
+}
+
+// .galbot.spatial_proto.FrameTriad pose_state = 2;
+inline bool PoseTargetMsg::_internal_has_pose_state() const {
+  return this != internal_default_instance() && pose_state_ != nullptr;
+}
+inline bool PoseTargetMsg::has_pose_state() const {
+  return _internal_has_pose_state();
+}
+inline const ::galbot::spatial_proto::FrameTriad& PoseTargetMsg::_internal_pose_state() const {
+  const ::galbot::spatial_proto::FrameTriad* p = pose_state_;
+  return p != nullptr ? *p : reinterpret_cast<const ::galbot::spatial_proto::FrameTriad&>(
+      ::galbot::spatial_proto::_FrameTriad_default_instance_);
+}
+inline const ::galbot::spatial_proto::FrameTriad& PoseTargetMsg::pose_state() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.PoseTargetMsg.pose_state)
+  return _internal_pose_state();
+}
+inline void PoseTargetMsg::unsafe_arena_set_allocated_pose_state(
+    ::galbot::spatial_proto::FrameTriad* pose_state) {
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(pose_state_);
+  }
+  pose_state_ = pose_state;
+  if (pose_state) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:galbot.aphropm_proto.PoseTargetMsg.pose_state)
+}
+inline ::galbot::spatial_proto::FrameTriad* PoseTargetMsg::release_pose_state() {
+  
+  ::galbot::spatial_proto::FrameTriad* temp = pose_state_;
+  pose_state_ = nullptr;
+  if (GetArena() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+  return temp;
+}
+inline ::galbot::spatial_proto::FrameTriad* PoseTargetMsg::unsafe_arena_release_pose_state() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.PoseTargetMsg.pose_state)
+  
+  ::galbot::spatial_proto::FrameTriad* temp = pose_state_;
+  pose_state_ = nullptr;
+  return temp;
+}
+inline ::galbot::spatial_proto::FrameTriad* PoseTargetMsg::_internal_mutable_pose_state() {
+  
+  if (pose_state_ == nullptr) {
+    auto* p = CreateMaybeMessage<::galbot::spatial_proto::FrameTriad>(GetArena());
+    pose_state_ = p;
+  }
+  return pose_state_;
+}
+inline ::galbot::spatial_proto::FrameTriad* PoseTargetMsg::mutable_pose_state() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.PoseTargetMsg.pose_state)
+  return _internal_mutable_pose_state();
+}
+inline void PoseTargetMsg::set_allocated_pose_state(::galbot::spatial_proto::FrameTriad* pose_state) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArena();
+  if (message_arena == nullptr) {
+    delete reinterpret_cast< ::PROTOBUF_NAMESPACE_ID::MessageLite*>(pose_state_);
+  }
+  if (pose_state) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+      reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(pose_state)->GetArena();
+    if (message_arena != submessage_arena) {
+      pose_state = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, pose_state, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  pose_state_ = pose_state;
+  // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.PoseTargetMsg.pose_state)
+}
+
+// repeated string assist_chains = 3;
+inline int PoseTargetMsg::_internal_assist_chains_size() const {
+  return assist_chains_.size();
+}
+inline int PoseTargetMsg::assist_chains_size() const {
+  return _internal_assist_chains_size();
+}
+inline void PoseTargetMsg::clear_assist_chains() {
+  assist_chains_.Clear();
+}
+inline std::string* PoseTargetMsg::add_assist_chains() {
+  // @@protoc_insertion_point(field_add_mutable:galbot.aphropm_proto.PoseTargetMsg.assist_chains)
+  return _internal_add_assist_chains();
+}
+inline const std::string& PoseTargetMsg::_internal_assist_chains(int index) const {
+  return assist_chains_.Get(index);
+}
+inline const std::string& PoseTargetMsg::assist_chains(int index) const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.PoseTargetMsg.assist_chains)
+  return _internal_assist_chains(index);
+}
+inline std::string* PoseTargetMsg::mutable_assist_chains(int index) {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.PoseTargetMsg.assist_chains)
+  return assist_chains_.Mutable(index);
+}
+inline void PoseTargetMsg::set_assist_chains(int index, const std::string& value) {
+  // @@protoc_insertion_point(field_set:galbot.aphropm_proto.PoseTargetMsg.assist_chains)
+  assist_chains_.Mutable(index)->assign(value);
+}
+inline void PoseTargetMsg::set_assist_chains(int index, std::string&& value) {
+  // @@protoc_insertion_point(field_set:galbot.aphropm_proto.PoseTargetMsg.assist_chains)
+  assist_chains_.Mutable(index)->assign(std::move(value));
+}
+inline void PoseTargetMsg::set_assist_chains(int index, const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  assist_chains_.Mutable(index)->assign(value);
+  // @@protoc_insertion_point(field_set_char:galbot.aphropm_proto.PoseTargetMsg.assist_chains)
+}
+inline void PoseTargetMsg::set_assist_chains(int index, const char* value, size_t size) {
+  assist_chains_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:galbot.aphropm_proto.PoseTargetMsg.assist_chains)
+}
+inline std::string* PoseTargetMsg::_internal_add_assist_chains() {
+  return assist_chains_.Add();
+}
+inline void PoseTargetMsg::add_assist_chains(const std::string& value) {
+  assist_chains_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add:galbot.aphropm_proto.PoseTargetMsg.assist_chains)
+}
+inline void PoseTargetMsg::add_assist_chains(std::string&& value) {
+  assist_chains_.Add(std::move(value));
+  // @@protoc_insertion_point(field_add:galbot.aphropm_proto.PoseTargetMsg.assist_chains)
+}
+inline void PoseTargetMsg::add_assist_chains(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  assist_chains_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add_char:galbot.aphropm_proto.PoseTargetMsg.assist_chains)
+}
+inline void PoseTargetMsg::add_assist_chains(const char* value, size_t size) {
+  assist_chains_.Add()->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_add_pointer:galbot.aphropm_proto.PoseTargetMsg.assist_chains)
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>&
+PoseTargetMsg::assist_chains() const {
+  // @@protoc_insertion_point(field_list:galbot.aphropm_proto.PoseTargetMsg.assist_chains)
+  return assist_chains_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>*
+PoseTargetMsg::mutable_assist_chains() {
+  // @@protoc_insertion_point(field_mutable_list:galbot.aphropm_proto.PoseTargetMsg.assist_chains)
+  return &assist_chains_;
+}
+
+// .galbot.aphropm_proto.RobotStatesMsg reference_robot_state = 4;
+inline bool PoseTargetMsg::_internal_has_reference_robot_state() const {
+  return this != internal_default_instance() && reference_robot_state_ != nullptr;
+}
+inline bool PoseTargetMsg::has_reference_robot_state() const {
+  return _internal_has_reference_robot_state();
+}
+inline void PoseTargetMsg::clear_reference_robot_state() {
+  if (GetArena() == nullptr && reference_robot_state_ != nullptr) {
+    delete reference_robot_state_;
+  }
+  reference_robot_state_ = nullptr;
+}
+inline const ::galbot::aphropm_proto::RobotStatesMsg& PoseTargetMsg::_internal_reference_robot_state() const {
+  const ::galbot::aphropm_proto::RobotStatesMsg* p = reference_robot_state_;
+  return p != nullptr ? *p : reinterpret_cast<const ::galbot::aphropm_proto::RobotStatesMsg&>(
+      ::galbot::aphropm_proto::_RobotStatesMsg_default_instance_);
+}
+inline const ::galbot::aphropm_proto::RobotStatesMsg& PoseTargetMsg::reference_robot_state() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.PoseTargetMsg.reference_robot_state)
+  return _internal_reference_robot_state();
+}
+inline void PoseTargetMsg::unsafe_arena_set_allocated_reference_robot_state(
+    ::galbot::aphropm_proto::RobotStatesMsg* reference_robot_state) {
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(reference_robot_state_);
+  }
+  reference_robot_state_ = reference_robot_state;
+  if (reference_robot_state) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:galbot.aphropm_proto.PoseTargetMsg.reference_robot_state)
+}
+inline ::galbot::aphropm_proto::RobotStatesMsg* PoseTargetMsg::release_reference_robot_state() {
+  
+  ::galbot::aphropm_proto::RobotStatesMsg* temp = reference_robot_state_;
+  reference_robot_state_ = nullptr;
+  if (GetArena() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+  return temp;
+}
+inline ::galbot::aphropm_proto::RobotStatesMsg* PoseTargetMsg::unsafe_arena_release_reference_robot_state() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.PoseTargetMsg.reference_robot_state)
+  
+  ::galbot::aphropm_proto::RobotStatesMsg* temp = reference_robot_state_;
+  reference_robot_state_ = nullptr;
+  return temp;
+}
+inline ::galbot::aphropm_proto::RobotStatesMsg* PoseTargetMsg::_internal_mutable_reference_robot_state() {
+  
+  if (reference_robot_state_ == nullptr) {
+    auto* p = CreateMaybeMessage<::galbot::aphropm_proto::RobotStatesMsg>(GetArena());
+    reference_robot_state_ = p;
+  }
+  return reference_robot_state_;
+}
+inline ::galbot::aphropm_proto::RobotStatesMsg* PoseTargetMsg::mutable_reference_robot_state() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.PoseTargetMsg.reference_robot_state)
+  return _internal_mutable_reference_robot_state();
+}
+inline void PoseTargetMsg::set_allocated_reference_robot_state(::galbot::aphropm_proto::RobotStatesMsg* reference_robot_state) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArena();
+  if (message_arena == nullptr) {
+    delete reference_robot_state_;
+  }
+  if (reference_robot_state) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+      ::PROTOBUF_NAMESPACE_ID::Arena::GetArena(reference_robot_state);
+    if (message_arena != submessage_arena) {
+      reference_robot_state = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, reference_robot_state, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  reference_robot_state_ = reference_robot_state;
+  // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.PoseTargetMsg.reference_robot_state)
+}
+
+// -------------------------------------------------------------------
+
+// RobotTargetMsg
+
+// .galbot.core_proto.Header header = 1;
+inline bool RobotTargetMsg::_internal_has_header() const {
+  return this != internal_default_instance() && header_ != nullptr;
+}
+inline bool RobotTargetMsg::has_header() const {
+  return _internal_has_header();
+}
+inline const ::galbot::core_proto::Header& RobotTargetMsg::_internal_header() const {
+  const ::galbot::core_proto::Header* p = header_;
+  return p != nullptr ? *p : reinterpret_cast<const ::galbot::core_proto::Header&>(
+      ::galbot::core_proto::_Header_default_instance_);
+}
+inline const ::galbot::core_proto::Header& RobotTargetMsg::header() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.RobotTargetMsg.header)
+  return _internal_header();
+}
+inline void RobotTargetMsg::unsafe_arena_set_allocated_header(
+    ::galbot::core_proto::Header* header) {
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(header_);
+  }
+  header_ = header;
+  if (header) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:galbot.aphropm_proto.RobotTargetMsg.header)
+}
+inline ::galbot::core_proto::Header* RobotTargetMsg::release_header() {
+  
+  ::galbot::core_proto::Header* temp = header_;
+  header_ = nullptr;
+  if (GetArena() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+  return temp;
+}
+inline ::galbot::core_proto::Header* RobotTargetMsg::unsafe_arena_release_header() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.RobotTargetMsg.header)
+  
+  ::galbot::core_proto::Header* temp = header_;
+  header_ = nullptr;
+  return temp;
+}
+inline ::galbot::core_proto::Header* RobotTargetMsg::_internal_mutable_header() {
+  
+  if (header_ == nullptr) {
+    auto* p = CreateMaybeMessage<::galbot::core_proto::Header>(GetArena());
+    header_ = p;
+  }
+  return header_;
+}
+inline ::galbot::core_proto::Header* RobotTargetMsg::mutable_header() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.RobotTargetMsg.header)
+  return _internal_mutable_header();
+}
+inline void RobotTargetMsg::set_allocated_header(::galbot::core_proto::Header* header) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArena();
+  if (message_arena == nullptr) {
+    delete reinterpret_cast< ::PROTOBUF_NAMESPACE_ID::MessageLite*>(header_);
+  }
+  if (header) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+      reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(header)->GetArena();
+    if (message_arena != submessage_arena) {
+      header = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, header, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  header_ = header;
+  // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.RobotTargetMsg.header)
+}
+
+// .galbot.aphropm_proto.JointStatesMsg joint_target = 2;
+inline bool RobotTargetMsg::_internal_has_joint_target() const {
+  return target_case() == kJointTarget;
+}
+inline bool RobotTargetMsg::has_joint_target() const {
+  return _internal_has_joint_target();
+}
+inline void RobotTargetMsg::set_has_joint_target() {
+  _oneof_case_[0] = kJointTarget;
+}
+inline void RobotTargetMsg::clear_joint_target() {
+  if (_internal_has_joint_target()) {
+    if (GetArena() == nullptr) {
+      delete target_.joint_target_;
+    }
+    clear_has_target();
+  }
+}
+inline ::galbot::aphropm_proto::JointStatesMsg* RobotTargetMsg::release_joint_target() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.RobotTargetMsg.joint_target)
+  if (_internal_has_joint_target()) {
+    clear_has_target();
+      ::galbot::aphropm_proto::JointStatesMsg* temp = target_.joint_target_;
+    if (GetArena() != nullptr) {
+      temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+    }
+    target_.joint_target_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::galbot::aphropm_proto::JointStatesMsg& RobotTargetMsg::_internal_joint_target() const {
+  return _internal_has_joint_target()
+      ? *target_.joint_target_
+      : reinterpret_cast< ::galbot::aphropm_proto::JointStatesMsg&>(::galbot::aphropm_proto::_JointStatesMsg_default_instance_);
+}
+inline const ::galbot::aphropm_proto::JointStatesMsg& RobotTargetMsg::joint_target() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.RobotTargetMsg.joint_target)
+  return _internal_joint_target();
+}
+inline ::galbot::aphropm_proto::JointStatesMsg* RobotTargetMsg::unsafe_arena_release_joint_target() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:galbot.aphropm_proto.RobotTargetMsg.joint_target)
+  if (_internal_has_joint_target()) {
+    clear_has_target();
+    ::galbot::aphropm_proto::JointStatesMsg* temp = target_.joint_target_;
+    target_.joint_target_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void RobotTargetMsg::unsafe_arena_set_allocated_joint_target(::galbot::aphropm_proto::JointStatesMsg* joint_target) {
+  clear_target();
+  if (joint_target) {
+    set_has_joint_target();
+    target_.joint_target_ = joint_target;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:galbot.aphropm_proto.RobotTargetMsg.joint_target)
+}
+inline ::galbot::aphropm_proto::JointStatesMsg* RobotTargetMsg::_internal_mutable_joint_target() {
+  if (!_internal_has_joint_target()) {
+    clear_target();
+    set_has_joint_target();
+    target_.joint_target_ = CreateMaybeMessage< ::galbot::aphropm_proto::JointStatesMsg >(GetArena());
+  }
+  return target_.joint_target_;
+}
+inline ::galbot::aphropm_proto::JointStatesMsg* RobotTargetMsg::mutable_joint_target() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.RobotTargetMsg.joint_target)
+  return _internal_mutable_joint_target();
+}
+
+// .galbot.aphropm_proto.PoseTargetMsg pose_target = 3;
+inline bool RobotTargetMsg::_internal_has_pose_target() const {
+  return target_case() == kPoseTarget;
+}
+inline bool RobotTargetMsg::has_pose_target() const {
+  return _internal_has_pose_target();
+}
+inline void RobotTargetMsg::set_has_pose_target() {
+  _oneof_case_[0] = kPoseTarget;
+}
+inline void RobotTargetMsg::clear_pose_target() {
+  if (_internal_has_pose_target()) {
+    if (GetArena() == nullptr) {
+      delete target_.pose_target_;
+    }
+    clear_has_target();
+  }
+}
+inline ::galbot::aphropm_proto::PoseTargetMsg* RobotTargetMsg::release_pose_target() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.RobotTargetMsg.pose_target)
+  if (_internal_has_pose_target()) {
+    clear_has_target();
+      ::galbot::aphropm_proto::PoseTargetMsg* temp = target_.pose_target_;
+    if (GetArena() != nullptr) {
+      temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+    }
+    target_.pose_target_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::galbot::aphropm_proto::PoseTargetMsg& RobotTargetMsg::_internal_pose_target() const {
+  return _internal_has_pose_target()
+      ? *target_.pose_target_
+      : reinterpret_cast< ::galbot::aphropm_proto::PoseTargetMsg&>(::galbot::aphropm_proto::_PoseTargetMsg_default_instance_);
+}
+inline const ::galbot::aphropm_proto::PoseTargetMsg& RobotTargetMsg::pose_target() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.RobotTargetMsg.pose_target)
+  return _internal_pose_target();
+}
+inline ::galbot::aphropm_proto::PoseTargetMsg* RobotTargetMsg::unsafe_arena_release_pose_target() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:galbot.aphropm_proto.RobotTargetMsg.pose_target)
+  if (_internal_has_pose_target()) {
+    clear_has_target();
+    ::galbot::aphropm_proto::PoseTargetMsg* temp = target_.pose_target_;
+    target_.pose_target_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void RobotTargetMsg::unsafe_arena_set_allocated_pose_target(::galbot::aphropm_proto::PoseTargetMsg* pose_target) {
+  clear_target();
+  if (pose_target) {
+    set_has_pose_target();
+    target_.pose_target_ = pose_target;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:galbot.aphropm_proto.RobotTargetMsg.pose_target)
+}
+inline ::galbot::aphropm_proto::PoseTargetMsg* RobotTargetMsg::_internal_mutable_pose_target() {
+  if (!_internal_has_pose_target()) {
+    clear_target();
+    set_has_pose_target();
+    target_.pose_target_ = CreateMaybeMessage< ::galbot::aphropm_proto::PoseTargetMsg >(GetArena());
+  }
+  return target_.pose_target_;
+}
+inline ::galbot::aphropm_proto::PoseTargetMsg* RobotTargetMsg::mutable_pose_target() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.RobotTargetMsg.pose_target)
+  return _internal_mutable_pose_target();
+}
+
+inline bool RobotTargetMsg::has_target() const {
+  return target_case() != TARGET_NOT_SET;
+}
+inline void RobotTargetMsg::clear_has_target() {
+  _oneof_case_[0] = TARGET_NOT_SET;
+}
+inline RobotTargetMsg::TargetCase RobotTargetMsg::target_case() const {
+  return RobotTargetMsg::TargetCase(_oneof_case_[0]);
 }
 // -------------------------------------------------------------------
 
@@ -5420,6 +6066,8 @@ inline void MotionPlanConfigResponse::set_allocated_common_str(std::string* comm
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

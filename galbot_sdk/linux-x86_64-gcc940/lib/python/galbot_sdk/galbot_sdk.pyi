@@ -6,17 +6,17 @@ import collections.abc
 import numpy
 import numpy.typing
 import typing
-__all__: list[str] = ['AudioData', 'COMM_DISCONNECTED', 'CYLINDER', 'CollisionCheckOption', 'ControlStatus', 'DATA_FETCH_FAILED', 'DepthData', 'DetectionAndSegmentationResult', 'DetectionResult', 'DexHandType', 'DexhandState', 'EUCLIDEAN_DISTANCE', 'EffortInfo', 'Error', 'ErrorInfo', 'FAILED', 'FAULT', 'FOUNDATION_STEREO', 'ForceData', 'FrameTriad', 'G1ControllerName', 'G1JointGroup', 'GalbotMotion', 'GalbotNavigation', 'GalbotOneFoxtrotSensor', 'GalbotPerception', 'GalbotRobot', 'GripperState', 'GroupCommand', 'Header', 'IKSolverConfig', 'INIT_FAILED', 'INVALID_INPUT', 'IN_PROGRESS', 'ImuData', 'JOINT', 'JointCommand', 'JointState', 'JointStateMessage', 'JointStates', 'KinematicsBoundary', 'LIGHT_STEREO', 'LINE', 'LidarData', 'LineTrajCheckPrimitive', 'LogLevel', 'MachineType', 'MotionPlanConfig', 'MotionStatus', 'NavigationTaskStatus', 'OdomData', 'POSE', 'PUBLISH_FAIL', 'Parameter', 'PerceptionModule', 'Point', 'PointField', 'PointFieldDataType', 'Pose', 'PoseState', 'PrimitiveType', 'Quaternion', 'RADIAN_DISTANCE', 'RANDOM_PROGRESSIVE_SEED', 'RANDOM_SEED', 'ROBOT_STATES', 'RUNNING', 'RgbData', 'RobotStates', 'RobotStatesType', 'S1ControllerName', 'S1JointGroup', 'STATUS_NUM', 'STOPPED_UNREACHED', 'SUCCESS', 'SUCTION_ACTION_STATE', 'SamplerConfig', 'SeedType', 'SensorType', 'SingoriXTarget', 'StateCheckType', 'SuctionCupState', 'TARGET_DATA_DEFAULT', 'TARGET_DATA_FRAME_POSE', 'TARGET_DATA_FRAME_TWIST', 'TARGET_DATA_FRAME_WRENCH', 'TARGET_DATA_JOINT_ACCELERATION', 'TARGET_DATA_JOINT_EFFORT', 'TARGET_DATA_JOINT_POSITION', 'TARGET_DATA_JOINT_VELOCITY', 'TARGET_DATA_NONE', 'TARGET_TYPE_APPEND', 'TARGET_TYPE_CLEAR', 'TARGET_TYPE_DEFAULT', 'TARGET_TYPE_NONE', 'TARGET_TYPE_OVERRIDE', 'TARGET_TYPE_PREPENDNOW', 'TARGET_TYPE_PROVERRIDE', 'TARGET_TYPE_TOUCH', 'TIMEOUT', 'TIMEOUT_AND_EXACT_SOLUTION', 'TargetConfig', 'TargetGroupTrajectory', 'TargetSampling', 'TargetTaskTrajectory', 'TaskCommand', 'TerminationConditionType', 'Timestamp', 'Trajectory', 'TrajectoryControlStatus', 'TrajectoryFeasibilityCheckOption', 'TrajectoryPlanConfig', 'TrajectoryPoint', 'Twist', 'UNKNOWN', 'UNSUPPORTED_FUNCRION', 'USER_DEFINED_SEED', 'UltrasonicData', 'UltrasonicType', 'Vector3', 'WBCException', 'Wrench', 'check_motion_status', 'create_joint_state', 'create_parameter', 'create_pose_state']
+__all__: list[str] = ['AudioData', 'CLOSE_TO_OBSTACLE', 'COLLISION', 'COMM_DISCONNECTED', 'CYLINDER', 'CollisionCheckOption', 'ControlStatus', 'DATA_FETCH_FAILED', 'DepthData', 'DetectionAndSegmentationResult', 'DetectionResult', 'DexHandType', 'DexhandState', 'EUCLIDEAN_DISTANCE', 'EffortInfo', 'Error', 'ErrorInfo', 'FAILED', 'FAULT', 'FOUNDATION_STEREO', 'ForceData', 'FrameTriad', 'G1ControllerName', 'G1JointGroup', 'GalbotMotion', 'GalbotNavigation', 'GalbotOneFoxtrotSensor', 'GalbotPerception', 'GalbotRobot', 'GripperState', 'GroupCommand', 'Header', 'IKSolverConfig', 'INIT_FAILED', 'INTERRUPTED', 'INVALID_INPUT', 'IN_PROGRESS', 'ImuData', 'JOINT', 'JointCommand', 'JointState', 'JointStateMessage', 'JointStates', 'KinematicsBoundary', 'LIGHT_STEREO', 'LINE', 'LidarData', 'LineTrajCheckPrimitive', 'LogLevel', 'MachineType', 'MotionPlanConfig', 'MotionStatus', 'NavigationTaskSnapshot', 'NavigationTaskStatus', 'OCCUPIED', 'OdomData', 'POSE', 'PUBLISH_FAIL', 'Parameter', 'PerceptionModule', 'Point', 'Point2d', 'PointField', 'PointFieldDataType', 'Pose', 'Pose2d', 'PoseState', 'PrimitiveType', 'Quaternion', 'RADIAN_DISTANCE', 'RANDOM_PROGRESSIVE_SEED', 'RANDOM_SEED', 'ROBOT_STATES', 'RUNNING', 'RgbData', 'RobotStates', 'RobotStatesType', 'S1ControllerName', 'S1JointGroup', 'STATUS_NUM', 'STOPPED_UNREACHED', 'SUCCESS', 'SUCTION_ACTION_STATE', 'SamplerConfig', 'SeedType', 'SensorType', 'SingoriXTarget', 'StateCheckType', 'SuctionCupState', 'SyncedObservation', 'TARGET_DATA_DEFAULT', 'TARGET_DATA_FRAME_POSE', 'TARGET_DATA_FRAME_TWIST', 'TARGET_DATA_FRAME_WRENCH', 'TARGET_DATA_JOINT_ACCELERATION', 'TARGET_DATA_JOINT_EFFORT', 'TARGET_DATA_JOINT_POSITION', 'TARGET_DATA_JOINT_VELOCITY', 'TARGET_DATA_NONE', 'TARGET_TYPE_APPEND', 'TARGET_TYPE_CLEAR', 'TARGET_TYPE_DEFAULT', 'TARGET_TYPE_NONE', 'TARGET_TYPE_OVERRIDE', 'TARGET_TYPE_PREPENDNOW', 'TARGET_TYPE_PROVERRIDE', 'TARGET_TYPE_TOUCH', 'TIMEOUT', 'TIMEOUT_AND_EXACT_SOLUTION', 'TargetConfig', 'TargetGroupTrajectory', 'TargetSampling', 'TargetTaskTrajectory', 'TaskCommand', 'TaskHandle', 'TerminationConditionType', 'Timestamp', 'Trajectory', 'TrajectoryControlStatus', 'TrajectoryFeasibilityCheckOption', 'TrajectoryPlanConfig', 'TrajectoryPoint', 'Twist', 'UNKNOWN', 'UNSUPPORTED_FUNCRION', 'USER_DEFINED_SEED', 'UltrasonicData', 'UltrasonicType', 'Vector3', 'WBCException', 'Waypoint', 'WaypointParams', 'Wrench', 'check_motion_status', 'create_joint_state', 'create_parameter', 'create_pose_state']
 class AudioData:
     """
-    Audio stream data
+    Audio stream data from microphone input callbacks
     """
     def __init__(self) -> None:
         ...
     @property
     def data(self) -> list[int]:
         """
-        Binary data packet - for pcm format: 2560 bytes per 80ms, for json: text length or empty
+        Binary payload; interpretation depends on format: pcm — 2560 bytes per 80 ms chunk; json — UTF-8 text length varies or empty for markers
         """
     @data.setter
     def data(self, arg0: collections.abc.Sequence[typing.SupportsInt]) -> None:
@@ -24,7 +24,7 @@ class AudioData:
     @property
     def format(self) -> str:
         """
-        Audio format: 'pcm' (16000Hz 16-bit mono) or 'json' (UTF-8 text)
+        Audio format: 'pcm' (16000 Hz, 16-bit, mono) or 'json' (UTF-8 encoded JSON text)
         """
     @format.setter
     def format(self, arg0: str) -> None:
@@ -32,7 +32,7 @@ class AudioData:
     @property
     def header(self) -> Header:
         """
-        Message header with timestamp and frame ID
+        Message header: timestamp_ns (data acquisition time in ns since epoch), frame_id (stream or source frame identifier)
         """
     @header.setter
     def header(self, arg0: Header) -> None:
@@ -40,7 +40,7 @@ class AudioData:
     @property
     def type(self) -> str:
         """
-        Audio type identifier: 'waken_up' (wake-up event), 'denoise_chunk' (denoised audio), 'vad_begin' (VAD start), 'vad_chunk' (VAD audio), 'vad_end' (VAD end)
+        Audio type identifier. Possible values: 'waken_up' (wake-up event, format json, data is JSON string), 'denoise_chunk' (denoised audio, format pcm, data is PCM binary), 'vad_begin' (VAD start marker, data empty), 'vad_chunk' (VAD audio, format pcm, data is PCM binary), 'vad_end' (VAD end marker, data empty)
         """
     @type.setter
     def type(self, arg0: str) -> None:
@@ -126,13 +126,10 @@ class DepthData:
     def __init__(self) -> None:
         ...
     @property
-    def data(self) -> list[int]:
+    def data(self) -> bytes:
         """
         Compressed depth data
         """
-    @data.setter
-    def data(self, arg0: collections.abc.Sequence[typing.SupportsInt]) -> None:
-        ...
     @property
     def depth_scale(self) -> int:
         """
@@ -980,6 +977,11 @@ class GalbotMotion:
     def set_end_effector_pose(self, target_pose: collections.abc.Sequence[typing.SupportsFloat], end_effector_frame: str, reference_frame: str = 'base_link', reference_robot_states: RobotStates = None, enable_collision_check: bool = True, is_blocking: bool = True, timeout: typing.SupportsFloat = -1.0, params: Parameter = ...) -> MotionStatus:
         """
                             Set the pose of a specified end-effector frame.
+        
+                            The robot executes the motion regardless of is_blocking. When is_blocking is True,
+                            this call waits until execution completes or times out. When is_blocking is False,
+                            this call returns immediately after starting a background task that waits for
+                            execution completion.
                                 
                             Parameters:
                                 target_pose (Pose): The target pose.
@@ -987,12 +989,20 @@ class GalbotMotion:
                                 reference_frame (str, optional): The name of the reference frame. Defaults to "base_link".
                                 reference_robot_states (RobotStates, optional): The reference robot states. Defaults to nullptr.
                                 enable_collision_check (bool, optional): Whether to enable collision checking. Defaults to true.
-                                is_blocking (bool, optional): Whether to block until the motion is completed. Defaults to true.
-                                timeout (float, optional): The maximum time to wait for the motion to complete. Defaults to -1.0.
+                                is_blocking (bool, optional): Whether this API waits for execution completion.
+                                    False still starts robot motion and returns immediately. Defaults to true.
+                                timeout (float, optional): Maximum time in seconds for the SDK to wait for motion
+                                    completion. If negative, params.timeout_second is used. In non-blocking mode,
+                                    the timeout is applied inside the background task. Defaults to -1.0.
                                 params (dict, optional): Additional parameters for the motion planning. Defaults to default_param.
+        
+                            Note:
+                                Motion speed parameters are configured under
+                                /data/galbot/config/default/service_motion_plan/traj_plan.
                                 
                             Returns:
-                                bool: True if the motion planning is successful, False otherwise.
+                                MotionStatus: SUCCESS if execution completed in blocking mode, or if background execution
+                                    started in non-blocking mode; otherwise an error status.
         """
     def set_motion_plan_config(self, config: MotionPlanConfig) -> MotionStatus:
         """
@@ -1012,6 +1022,35 @@ class GalbotNavigation:
                                 machine_type: MachineType enum (e.g. MachineType.G1 / MachineType.S1)
                             Returns:
                                 GalbotNavigation: The navigation instance for that machine type.
+        """
+    def add_bounding_box(self, box_info: dict) -> tuple:
+        """
+                            Add a bounding box so navigation can ignore the corresponding fused obstacle points.
+        
+                            Parameters:
+                                box_info (dict): Contains:
+                                    box_size: [length_x, length_y, length_z], meters.
+                                    box_pose: [x, y, z, qx, qy, qz, qw] relative to parent_link_name.
+                                    box_tag: SDK box tag, converted internally to an SDK-marked box name.
+                                    parent_link_name: Parent link for the box pose.
+        
+                            Returns:
+                                tuple: (success: bool, status_string: str)
+        """
+    def attach_box_to_link(self, box_info: dict, ignore_collision_links: collections.abc.Sequence[str] = []) -> tuple:
+        """
+                            Attach a box collision object to a robot link.
+        
+                            Parameters:
+                                box_info (dict): Contains:
+                                    box_size: [length_x, length_y, length_z], meters.
+                                    box_pose: [x, y, z, qx, qy, qz, qw] relative to parent_link_name.
+                                    box_tag: SDK box tag, converted internally to an SDK-marked box name.
+                                    parent_link_name: Parent link for the box pose.
+                                ignore_collision_links (list[str]): Robot links to ignore for collision checking.
+        
+                            Returns:
+                                tuple: (success: bool, status_string: str)
         """
     def check_goal_arrival(self) -> bool:
         """
@@ -1034,6 +1073,36 @@ class GalbotNavigation:
                             Returns:
                                 bool: True if a collision-free path exists from start to goal; False otherwise.
         """
+    def detach_box_from_link(self, box_tag: typing.SupportsInt) -> tuple:
+        """
+                            Detach a box collision object from its robot link.
+        
+                            Parameters:
+                                box_tag (int): SDK box tag to detach.
+        
+                            Returns:
+                                tuple: (success: bool, status_string: str)
+        """
+    def dump_navigation_configs(self) -> tuple:
+        """
+                            Dump navigation dynamic configuration through SDK logs.
+        
+                            Parameters:
+                                None
+        
+                            Returns:
+                                tuple: (success: bool, status_string: str)
+        """
+    def get_bounding_box(self) -> list:
+        """
+                            Get bounding boxes currently used by navigation obstacle filtering.
+        
+                            Parameters:
+                                None
+        
+                            Returns:
+                                list[dict]: Each dict contains box_size, box_pose, box_tag, and parent_link_name.
+        """
     def get_current_pose(self) -> typing.Annotated[list[float], "FixedSize(7)"]:
         """
                             Get the current estimated pose of the robot chassis in the map frame.
@@ -1046,13 +1115,27 @@ class GalbotNavigation:
         """
     def get_navigation_status(self) -> NavigationTaskStatus:
         """
-                            Get the current navigation task state (UNKNOWN, RUNNING, SUCCESS, FAILED).
+                            Get the latest navigation task state.
+        
+                            This API is useful when monitoring a navigation task in
+                            non-blocking mode.
         
                             Parameters:
                                 None
         
+        	                    Returns:
+        	                        NavigationTaskStatus: Current task state for non-blocking navigation polling.
+        """
+    def get_navigation_target_status(self, task_id: str) -> NavigationTaskSnapshot:
+        """
+                            Query the status of an asynchronous navigation task.
+        
+                            Parameters:
+                                task_id (str): Task identifier returned by the corresponding
+                                navigation API.
+        
                             Returns:
-                                NavigationTaskStatus: Current task state for non-blocking navigation polling.
+                                NavigationTaskSnapshot: Latest known state for the requested task.
         """
     def init(self) -> bool:
         """
@@ -1083,26 +1166,95 @@ class GalbotNavigation:
                                 is_blocking (bool): If True, blocks until motion is complete or timeout; default True.
                                 timeout (float): Maximum wait time in seconds for blocking mode; default 8.0.
         
-                            Returns:
-                                tuple: (success: bool, status_string: str)
-                                    - success: True if motion succeeded.
-                                    - status_string: Status string.
+        	                    Returns:
+        	                        tuple: (success: bool, status_string: str)
+        	                            - success: True if motion succeeded.
+        	                            - status_string: Status string.
         """
-    def navigate_to_goal(self, goal_pose: typing.Annotated[numpy.typing.ArrayLike, numpy.float64], enable_collision_check: bool = True, is_blocking: bool = False, timeout: typing.SupportsFloat = 8, omni_plan: bool = True) -> tuple:
+    def navigate_along_trajectory(self, waypoints: collections.abc.Sequence[Pose], frame_id: str = 'map', speed_ratio: typing.SupportsFloat = 1.0, enable_collision_check: bool = True) -> TaskHandle:
+        """
+                            Submit a trajectory navigation task using ordered 3D poses.
+        
+                            This API treats the input poses as a trajectory reference. The
+                            planner may smooth and optimize the path, so intermediate poses
+                            are not guaranteed to be reached exactly. Only the final pose is
+                            guaranteed as the navigation goal.
+        
+                            Parameters:
+                                waypoints (list[Pose]): Ordered pose waypoints.
+                                frame_id (str): Reference frame, typically "map" or "base_link".
+                                speed_ratio (float): Velocity scaling factor.
+                                enable_collision_check (bool): Whether to enable collision checking.
+        
+                            Returns:
+                                TaskHandle: Submitted task id, request result, and message.
+        """
+    def navigate_through_waypoints(self, waypoints: collections.abc.Sequence[Waypoint], frame_id: str = 'map', enable_collision_check: bool = True) -> TaskHandle:
+        """
+                            Submit a multi-waypoint navigation task.
+        
+                            This API sends multiple waypoints in one request and executes
+                            them in the order provided by the caller.
+        
+                            Parameters:
+                                waypoints (list[Waypoint]): Ordered waypoint targets.
+                                frame_id (str): Reference frame, typically "map" or "base_link".
+                                enable_collision_check (bool): Whether to enable collision checking.
+        
+                            Returns:
+                                TaskHandle: Submitted task id, request result, and message.
+        """
+    def navigate_to_goal(self, goal_pose: typing.Annotated[numpy.typing.ArrayLike, numpy.float64], enable_collision_check: bool = True, is_blocking: bool = False, timeout: typing.SupportsFloat = 8, omni_plan: bool = False) -> tuple:
         """
                             Navigate the robot to a target goal pose in the map frame.
         
                             Parameters:
                                 goal_pose (array): Target goal pose [x, y, z, qx, qy, qz, qw], map frame (meters, quaternion).
                                 enable_collision_check (bool): If True, enables dynamic obstacle detection and avoidance; default True.
+                                is_blocking (bool): If True, monitor navigation in the current thread; if False, start a background monitor thread and return after command acceptance; default False.
+                                timeout (float): SDK-side navigation monitor timeout in seconds; used by both blocking and non-blocking modes. If timeout expires before navigation stops, SDK calls stop_navigation automatically; default 8.0.
+                                omni_plan (bool): If True, omnidirectional motion planning; if False, differential drive; default False.
+        
+        	                    Returns:
+        	                        tuple: (success: bool, status_string: str)
+        	                            - success: True if navigation succeeded.
+        	                            - status_string: Status string (SUCCESS, FAIL, TIMEOUT, etc.).
+        """
+    def navigate_to_goal_v2(self, goal_pose: typing.Annotated[numpy.typing.ArrayLike, numpy.float64], max_vel: typing.Annotated[numpy.typing.ArrayLike, numpy.float64], pose_frame: str = 'map', enable_collision_check: bool = True, is_blocking: bool = False, timeout: typing.SupportsFloat = 5.0, omni_plan: bool = False) -> tuple:
+        """
+                            Navigate the robot to a target goal pose using navigation v2.
+        
+                            Parameters:
+                                goal_pose (array): Target pose [x, y, z, qx, qy, qz, qw] in pose_frame.
+                                max_vel (array): Maximum velocity [vx, vy, vyaw].
+                                pose_frame (str): Reference frame, "map" or "base_link"; default "map".
+                                enable_collision_check (bool): Enable v2 collision checking fields; default True.
                                 is_blocking (bool): If True, blocks until goal is reached or timeout; default False.
-                                timeout (float): Maximum wait time in seconds for blocking mode; default 8.0.
-                                omni_plan (bool): If True, omnidirectional motion planning; if False, differential drive; default True.
+                                timeout (float): Navigation runtime timeout sent to the PNS service; negative means no motion time limit; default 5.0.
+                                omni_plan (bool): If True, omnidirectional motion planning; if False, heading-based planning; default False.
         
                             Returns:
                                 tuple: (success: bool, status_string: str)
                                     - success: True if navigation succeeded.
                                     - status_string: Status string (SUCCESS, FAIL, TIMEOUT, etc.).
+        """
+    def navigate_with_velocity(self, vx: typing.SupportsFloat, vy: typing.SupportsFloat, vyaw: typing.SupportsFloat, duration_s: typing.SupportsFloat = 3.0, enable_collision_check: bool = True) -> tuple:
+        """
+                            Navigate with a velocity command using navigation v2.
+        
+                            Parameters:
+                                vx (float): Linear velocity in x direction.
+                                vy (float): Linear velocity in y direction.
+                                vyaw (float): Angular velocity around z axis.
+                                duration_s (float): Command duration in seconds. Must be greater than 0.0; default 3.0.
+                                enable_collision_check (bool): Enable runtime collision checking; default True.
+        
+                            Returns:
+                                tuple: (success: bool, status_string: str)
+        
+                            Warning:
+                                This API is non-blocking. It returns after the velocity command is accepted,
+                                not after the command duration has completed.
         """
     def relocalize(self, init_pose: typing.Annotated[numpy.typing.ArrayLike, numpy.float64]) -> tuple:
         """
@@ -1115,6 +1267,81 @@ class GalbotNavigation:
                                 tuple: (success: bool, status_string: str)
                                     - success: True if relocalization succeeded.
                                     - status_string: Status string (SUCCESS, FAIL, etc.).
+        """
+    def remove_bounding_box(self, box_tag: typing.SupportsInt) -> tuple:
+        """
+                            Remove a bounding box from navigation obstacle filtering.
+        
+                            Parameters:
+                                box_tag (int): SDK box tag to remove.
+        
+                            Returns:
+                                tuple: (success: bool, status_string: str)
+        """
+    def set_navigation_arrival_threshold(self, threshold: typing.Annotated[numpy.typing.ArrayLike, numpy.float64]) -> tuple:
+        """
+                            Set navigation arrival threshold.
+        
+                            Parameters:
+                                threshold (array): [x_error, y_error, yaw_error].
+        
+                            Returns:
+                                tuple: (success: bool, status_string: str)
+        """
+    def set_navigation_kinematics_limits(self, vel_limit: typing.Annotated[numpy.typing.ArrayLike, numpy.float64], acc_limit: typing.Annotated[numpy.typing.ArrayLike, numpy.float64], jerk_limit: typing.Annotated[numpy.typing.ArrayLike, numpy.float64]) -> tuple:
+        """
+                            Set navigation velocity, acceleration, and jerk limits.
+        
+                            Parameters:
+                                vel_limit (array): [vx_limit, vy_limit, vyaw_limit].
+                                acc_limit (array): [ax_limit, ay_limit, ayaw_limit].
+                                jerk_limit (array): [jx_limit, jy_limit, jyaw_limit].
+        
+                            Returns:
+                                tuple: (success: bool, status_string: str)
+        """
+    def set_navigation_target(self, target: Pose, frame: str = 'map', speed_ratio: typing.SupportsFloat = 1.0, enable_collision_check: bool = True) -> TaskHandle:
+        """
+                            Submit a dynamic navigation target asynchronously.
+        
+                            This API is designed for targets that may change over time, such
+                            as dynamic tracking or remote control. When a new target is
+                            submitted, the previous target may be preempted and the
+                            navigation system will re-plan toward the latest target.
+        
+                            To keep the navigation stable, do not call this API at a very
+                            high rate. Frequent updates may cause planning jitter and reduce
+                            motion smoothness.
+        
+                            Parameters:
+                                target (Pose): Target pose [x, y, z, qx, qy, qz, qw].
+                                frame (str): Target frame identifier, supported values: "map", "base_link".
+                                speed_ratio (float): Velocity scaling factor in (0, 1.0].
+                                enable_collision_check (bool): Whether to enable collision checking and avoidance.
+        
+                            Returns:
+                                TaskHandle: Submitted task id, request result, and message.
+        """
+    def set_navigation_timeout(self, timeout_s: typing.SupportsFloat) -> tuple:
+        """
+                            Set navigation timeout.
+        
+                            Parameters:
+                                timeout_s (float): Navigation timeout in seconds. A value less than or equal to 0 disables
+                                    the navigation motion time limit.
+        
+                            Returns:
+                                tuple: (success: bool, status_string: str)
+        """
+    def set_navigation_velocity_limit(self, vel_limit: typing.Annotated[numpy.typing.ArrayLike, numpy.float64]) -> tuple:
+        """
+                            Set navigation velocity limit.
+        
+                            Parameters:
+                                vel_limit (array): [vx_limit, vy_limit, vyaw_limit].
+        
+                            Returns:
+                                tuple: (success: bool, status_string: str)
         """
     def stop_navigation(self) -> tuple:
         """
@@ -1478,7 +1705,9 @@ class GalbotRobot:
                         Return order:
                         - **joint_names specified**: Returns in the exact order of joint_names.
                         - **Only joint_groups specified**: Returns in the order groups are defined.
-                        - **Both empty**: Returns body joints in order: chassis, head, left_arm, right_arm, leg.
+                        - **Both empty** (machine-dependent body-joint order):
+                          - G1: chassis, head, left_arm, right_arm, leg
+                          - S1: torso, head, left_arm, right_arm
         """
     def get_joint_states(self, joint_groups: collections.abc.Sequence[str] = [], joint_names: collections.abc.Sequence[str] = []) -> list[JointState]:
         """
@@ -1495,7 +1724,9 @@ class GalbotRobot:
                         Return order:
                         - **joint_names specified**: Returns in the exact order of joint_names.
                         - **Only joint_groups specified**: Returns in the order groups are defined.
-                        - **Both empty**: Returns body joints in order: chassis, head, left_arm, right_arm, leg.
+                        - **Both empty** (machine-dependent body-joint order):
+                          - G1: chassis, head, left_arm, right_arm, leg
+                          - S1: torso, head, left_arm, right_arm
         """
     def get_lidar_data(self, sensor_id: SensorType) -> dict:
         """
@@ -1573,6 +1804,21 @@ class GalbotRobot:
                     Returns:
                         SuctionCupState: Suction cup state information.
         """
+    def get_synced_observation(self, cameras: collections.abc.Sequence[SensorType], with_joint_state: bool = True) -> SyncedObservation:
+        """
+                    Get timestamp-synchronized observation as a typed SyncedObservation object.
+        
+                    Parameters:
+                        cameras (list[SensorType]): Cameras to synchronize. First item is anchor.
+                        with_joint_state (bool): Whether to include nearest-neighbor joint state.
+        
+                    Returns:
+                        SyncedObservation | None:
+                            - rgb_data_map: dict[SensorType, RgbData]
+                            - depth_data_map: dict[SensorType, DepthData]
+                            - joint_state: JointStateMessage | None
+                        Returns None on failure.
+        """
     def get_transform(self, target_frame: str, source_frame: str, timestamp_ns: typing.SupportsInt = 0, timeout_ms: typing.SupportsInt = 100) -> tuple:
         """
                     Query coordinate frame transform (TF).
@@ -1617,7 +1863,7 @@ class GalbotRobot:
                     Returns:
                         dict: Pose vectors [x, y, z, qx, qy, qz, qw] per key, or empty lists if unavailable.
         """
-    def init(self, enable_sensor_set: collections.abc.Set[SensorType] = ...) -> bool:
+    def init(self, enable_sensor_set: collections.abc.Set[SensorType] = ..., enable_sync_mode: bool = False) -> bool:
         """
                     Initialize the robot control system (hardware communication, middleware, sensor interfaces).
                     Only sensors in enable_sensor_set are initialized; specify only required sensors to reduce overhead.
@@ -1627,6 +1873,7 @@ class GalbotRobot:
         
                     Parameters:
                         enable_sensor_set (set[SensorType]): Set of sensors to enable. Empty set uses default sensors.
+                        enable_sync_mode (bool): Enable internal sync buffers for timestamp-aligned observation APIs.
         
                     Returns:
                         bool: True if initialization succeeded; False otherwise.
@@ -1786,7 +2033,7 @@ class GalbotRobot:
                     Returns:
                         ControlStatus: Command execution/sending result.
         """
-    def set_end_effector_command(self, poses: collections.abc.Sequence[collections.abc.Sequence[typing.SupportsFloat]], end_effector_frames: collections.abc.Sequence[str], reference_frames: collections.abc.Sequence[str] = [], time_from_start_s: typing.SupportsFloat = 0.0) -> ControlStatus:
+    def set_end_effector_command(self, poses: collections.abc.Sequence[collections.abc.Sequence[typing.SupportsFloat]], end_effector_frames: collections.abc.Sequence[str], reference_frames: collections.abc.Sequence[str] = []) -> ControlStatus:
         """
                     Set WBC end-effector pose commands.
         
@@ -1797,40 +2044,40 @@ class GalbotRobot:
                         reference_frames (List[str], optional): Reference frame per pose. Omit or pass [] to use
                             ``"world"`` for every pose. Otherwise length must match ``poses``. Common values:
                             ``"world"`` (default)
-                        time_from_start_s (float): Time from trajectory start in seconds (optional, default: 0.0).
         
                     Returns:
                         ControlStatus: Command publishing result.
         """
-    def set_gripper_command(self, end_effector: str, width_m: typing.SupportsFloat, velocity_mps: typing.SupportsFloat = 0.03, effort: typing.SupportsFloat = 30, is_blocking: bool = True) -> ControlStatus:
+    def set_gripper_command(self, end_effector: str, width_m: typing.SupportsFloat, velocity_mps: typing.SupportsFloat = 0.03, effort: typing.SupportsFloat = 5, is_blocking: bool = True) -> ControlStatus:
         """
                     Set gripper command.
               
                     Parameters:
                         end_effector (str): Gripper name, e.g. "left_gripper" or "right_gripper".
-                        width_m (float): Target gripper width in meters.
-                        velocity_mps (float): Gripper motion speed in m/s (optional, default: 0.03).
-                        effort (float): Gripper effort in Nm (optional, default: 30).
+                        width_m (float): Target gripper width in meters. G1 gripper width range is 0 to 0.12 m. S1 long-stroke gripper
+                        width range is 0 to 0.11 m. S1 short-stroke gripper width range is 0 to 0.076 m.
+                        velocity_mps (float): Gripper motion speed in m/s (optional, default: 0.03). The value range is greater than 0 and 
+                        less than or equal to 0.2 m/s.
+                        effort (float): Gripper effort in Nm (optional, default: 5). The value range is greater than 0 and 
+                        less than or equal to 100.
                         is_blocking (bool): Whether to block until action completes (optional, default: True).
                     
                     Returns:
                         ControlStatus: Command execution/sending result.
         """
-    def set_joint_commands(self, joint_commands: collections.abc.Sequence[JointCommand], joint_groups: collections.abc.Sequence[str] = [], joint_names: collections.abc.Sequence[str] = [], time_from_start_s: typing.SupportsFloat = 10.0) -> ControlStatus:
+    def set_joint_commands(self, joint_commands: collections.abc.Sequence[JointCommand], joint_groups: collections.abc.Sequence[str] = [], joint_names: collections.abc.Sequence[str] = [], time_from_start_s: typing.SupportsFloat = 0.0) -> ControlStatus:
         """
                     Set joint commands.
                     This interface is suitable for high-frequency control usage
                     For standard joints (legs, head, arms, etc.), only the position field in each JointCommand will be effective;
                     other fields such as velocity, current/effort, are ignored.
                     For gripper joints, the position field represents gripper width and both velocity and effort fields are supported and effective.
-                    Gripper motion uses whichever is slower between the specified velocity and `time_from_start_s`. Therefore, when setting the gripper velocity,
-                    `time_from_start_s` can be set to 0 (fastest arrival), and the gripper will be controlled directly by the specified velocity.
         
                     Parameters:
                         joint_commands (List[JointCommand]): List of joint commands to control.
                         joint_groups (List[str]): Joint groups to control. Must not be empty if `joint_names` is also empty.
                         joint_names (List[str]): Specific joint names, takes priority over `joint_groups`. Must not be empty if `joint_groups` is also empty.
-                        time_from_start_s (float): Time in seconds from the start of the motion to execute the command (optional, default: 10.0).
+                        time_from_start_s (float): Execution will begin after time_start_s seconds.(optional, default: 0.0).
         
                     Returns:
                         ControlStatus: Result of command execution.
@@ -1912,11 +2159,21 @@ class GalbotRobot:
         
                     Parameters:
                         callback (callable): Audio data callback function with signature: void(dict audio_data).
-                                            The audio_data dict contains:
-                                            - 'header': Message header with timestamp and frame information
-                                            - 'type': Audio data type ('waken_up', 'denoise_chunk', 'vad_begin', 'vad_chunk', 'vad_end')
-                                            - 'format': Audio format ('pcm', 'json')
-                                            - 'data': Audio binary data (bytes)
+                                            The audio_data dict fields (see AudioData):
+                                            - 'header' (dict): Message header.
+                                                - 'timestamp_ns' (int): Data acquisition timestamp (nanoseconds since epoch).
+                                                - 'frame_id' (str): Stream or source frame identifier.
+                                            - 'type' (str): Audio data type identifier. Possible values:
+                                                - 'waken_up': Wake-up event; format is 'json'; data is a UTF-8 JSON string.
+                                                - 'denoise_chunk': Denoised audio chunk; format is 'pcm'; data is PCM binary.
+                                                - 'vad_begin': VAD start marker; data is empty.
+                                                - 'vad_chunk': Audio during VAD; format is 'pcm'; data is PCM binary.
+                                                - 'vad_end': VAD end marker; data is empty.
+                                            - 'format' (str): How to interpret 'data':
+                                                - 'pcm': 16000 Hz, 16-bit, mono PCM.
+                                                - 'json': UTF-8 encoded JSON text.
+                                            - 'data' (bytes): Binary payload. For 'pcm', each 80 ms chunk is 2560 bytes;
+                                              for 'json', length varies or may be empty for marker-only messages.
                         chunk_size (int): Audio data chunk size in bytes, default value 2560. Dynamic configuration not supported yet
                         use_raw_audio (bool): Whether to use raw audio, default false. Dynamic configuration not supported yet.
                     
@@ -2233,6 +2490,7 @@ class JointCommand:
     def velocity(self, arg0: typing.SupportsFloat) -> None:
         ...
 class JointState:
+    joint_name: str
     def __init__(self) -> None:
         ...
     @property
@@ -2258,6 +2516,12 @@ class JointState:
         ...
     @position.setter
     def position(self, arg0: typing.SupportsFloat) -> None:
+        ...
+    @property
+    def timestamp_ns(self) -> int:
+        ...
+    @timestamp_ns.setter
+    def timestamp_ns(self, arg0: typing.SupportsInt) -> None:
         ...
     @property
     def velocity(self) -> float:
@@ -2672,6 +2936,14 @@ class MotionStatus:
     @property
     def value(self) -> int:
         ...
+class NavigationTaskSnapshot:
+    msg: str
+    status: NavigationTaskStatus
+    task_id: str
+    def __init__(self) -> None:
+        ...
+    def __repr__(self) -> str:
+        ...
 class NavigationTaskStatus:
     """
     Members:
@@ -2683,12 +2955,24 @@ class NavigationTaskStatus:
       SUCCESS
     
       FAILED
+    
+      INTERRUPTED
+    
+      OCCUPIED
+    
+      COLLISION
+    
+      CLOSE_TO_OBSTACLE
     """
+    CLOSE_TO_OBSTACLE: typing.ClassVar[NavigationTaskStatus]  # value = <NavigationTaskStatus.CLOSE_TO_OBSTACLE: 7>
+    COLLISION: typing.ClassVar[NavigationTaskStatus]  # value = <NavigationTaskStatus.COLLISION: 6>
     FAILED: typing.ClassVar[NavigationTaskStatus]  # value = <NavigationTaskStatus.FAILED: 3>
+    INTERRUPTED: typing.ClassVar[NavigationTaskStatus]  # value = <NavigationTaskStatus.INTERRUPTED: 4>
+    OCCUPIED: typing.ClassVar[NavigationTaskStatus]  # value = <NavigationTaskStatus.OCCUPIED: 5>
     RUNNING: typing.ClassVar[NavigationTaskStatus]  # value = <NavigationTaskStatus.RUNNING: 1>
     SUCCESS: typing.ClassVar[NavigationTaskStatus]  # value = <NavigationTaskStatus.SUCCESS: 2>
     UNKNOWN: typing.ClassVar[NavigationTaskStatus]  # value = <NavigationTaskStatus.UNKNOWN: 0>
-    __members__: typing.ClassVar[dict[str, NavigationTaskStatus]]  # value = {'UNKNOWN': <NavigationTaskStatus.UNKNOWN: 0>, 'RUNNING': <NavigationTaskStatus.RUNNING: 1>, 'SUCCESS': <NavigationTaskStatus.SUCCESS: 2>, 'FAILED': <NavigationTaskStatus.FAILED: 3>}
+    __members__: typing.ClassVar[dict[str, NavigationTaskStatus]]  # value = {'UNKNOWN': <NavigationTaskStatus.UNKNOWN: 0>, 'RUNNING': <NavigationTaskStatus.RUNNING: 1>, 'SUCCESS': <NavigationTaskStatus.SUCCESS: 2>, 'FAILED': <NavigationTaskStatus.FAILED: 3>, 'INTERRUPTED': <NavigationTaskStatus.INTERRUPTED: 4>, 'OCCUPIED': <NavigationTaskStatus.OCCUPIED: 5>, 'COLLISION': <NavigationTaskStatus.COLLISION: 6>, 'CLOSE_TO_OBSTACLE': <NavigationTaskStatus.CLOSE_TO_OBSTACLE: 7>}
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -2912,6 +3196,25 @@ class Point:
     @z.setter
     def z(self, arg0: typing.SupportsFloat) -> None:
         ...
+class Point2d:
+     
+    def __init__(self) -> None:
+        ...
+     
+    def __init__(self, x: typing.SupportsFloat = 0.0, y: typing.SupportsFloat = 0.0) -> None:
+        ...
+    @property
+    def x(self) -> float:
+        ...
+    @x.setter
+    def x(self, arg0: typing.SupportsFloat) -> None:
+        ...
+    @property
+    def y(self) -> float:
+        ...
+    @y.setter
+    def y(self, arg0: typing.SupportsFloat) -> None:
+        ...
 class PointField:
     """
     Point cloud field description information
@@ -3020,6 +3323,23 @@ class Pose:
      
     def __init__(self, vec: collections.abc.Sequence[typing.SupportsFloat]) -> None:
         ...
+class Pose2d:
+    position: Point2d
+     
+    def __init__(self) -> None:
+        ...
+     
+    def __init__(self, vec: collections.abc.Sequence[typing.SupportsFloat]) -> None:
+        ...
+     
+    def __init__(self, x: typing.SupportsFloat = 0.0, y: typing.SupportsFloat = 0.0, theta: typing.SupportsFloat = 0.0) -> None:
+        ...
+    @property
+    def theta(self) -> float:
+        ...
+    @theta.setter
+    def theta(self, arg0: typing.SupportsFloat) -> None:
+        ...
 class PoseState(RobotStates):
     frame_id: str
     pose: Pose
@@ -3103,13 +3423,10 @@ class RgbData:
     def __init__(self) -> None:
         ...
     @property
-    def data(self) -> list[int]:
+    def data(self) -> bytes:
         """
         Compressed binary data
         """
-    @data.setter
-    def data(self, arg0: collections.abc.Sequence[typing.SupportsInt]) -> None:
-        ...
     @property
     def format(self) -> str:
         """
@@ -3353,9 +3670,13 @@ class SensorType:
     
       BASE_ULTRASONIC : Base ultrasonic sensor
     
+      CHASSIS_IMU : Chassis LiDAR IMU
+    
       BASE_LIDAR : Base LiDAR
     
       TORSO_IMU : Torso IMU
+    
+      LIDAR_IMU : LiDAR IMU
     
       LEFT_FRONT_SURROUND_CAMERA : Left front surround color camera
     
@@ -3374,13 +3695,11 @@ class SensorType:
       HEAD_IMU : Head LiDAR IMU
     
       BACK_IMU : Back LiDAR IMU
-    
-      CHASSIS_IMU : Chassis LiDAR IMU
     """
     BACK_IMU: typing.ClassVar[SensorType]  # value = <SensorType.BACK_IMU: 11>
     BACK_LIDAR: typing.ClassVar[SensorType]  # value = <SensorType.BACK_LIDAR: 8>
     BASE_LIDAR: typing.ClassVar[SensorType]  # value = <SensorType.BASE_LIDAR: 6>
-    BASE_ULTRASONIC: typing.ClassVar[SensorType]  # value = <SensorType.BASE_ULTRASONIC: 14>
+    BASE_ULTRASONIC: typing.ClassVar[SensorType]  # value = <SensorType.BASE_ULTRASONIC: 15>
     CHASSIS_IMU: typing.ClassVar[SensorType]  # value = <SensorType.CHASSIS_IMU: 12>
     CHASSIS_LIDAR: typing.ClassVar[SensorType]  # value = <SensorType.CHASSIS_LIDAR: 9>
     HEAD_IMU: typing.ClassVar[SensorType]  # value = <SensorType.HEAD_IMU: 10>
@@ -3389,14 +3708,15 @@ class SensorType:
     HEAD_RIGHT_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.HEAD_RIGHT_CAMERA: 1>
     LEFT_ARM_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.LEFT_ARM_CAMERA: 2>
     LEFT_ARM_DEPTH_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.LEFT_ARM_DEPTH_CAMERA: 4>
-    LEFT_FRONT_SURROUND_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.LEFT_FRONT_SURROUND_CAMERA: 15>
-    LEFT_REAR_SURROUND_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.LEFT_REAR_SURROUND_CAMERA: 17>
+    LEFT_FRONT_SURROUND_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.LEFT_FRONT_SURROUND_CAMERA: 16>
+    LEFT_REAR_SURROUND_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.LEFT_REAR_SURROUND_CAMERA: 18>
+    LIDAR_IMU: typing.ClassVar[SensorType]  # value = <SensorType.LIDAR_IMU: 14>
     RIGHT_ARM_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.RIGHT_ARM_CAMERA: 3>
     RIGHT_ARM_DEPTH_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.RIGHT_ARM_DEPTH_CAMERA: 5>
-    RIGHT_FRONT_SURROUND_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.RIGHT_FRONT_SURROUND_CAMERA: 16>
-    RIGHT_REAR_SURROUND_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.RIGHT_REAR_SURROUND_CAMERA: 18>
+    RIGHT_FRONT_SURROUND_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.RIGHT_FRONT_SURROUND_CAMERA: 17>
+    RIGHT_REAR_SURROUND_CAMERA: typing.ClassVar[SensorType]  # value = <SensorType.RIGHT_REAR_SURROUND_CAMERA: 19>
     TORSO_IMU: typing.ClassVar[SensorType]  # value = <SensorType.TORSO_IMU: 13>
-    __members__: typing.ClassVar[dict[str, SensorType]]  # value = {'HEAD_LEFT_CAMERA': <SensorType.HEAD_LEFT_CAMERA: 0>, 'HEAD_RIGHT_CAMERA': <SensorType.HEAD_RIGHT_CAMERA: 1>, 'LEFT_ARM_CAMERA': <SensorType.LEFT_ARM_CAMERA: 2>, 'RIGHT_ARM_CAMERA': <SensorType.RIGHT_ARM_CAMERA: 3>, 'LEFT_ARM_DEPTH_CAMERA': <SensorType.LEFT_ARM_DEPTH_CAMERA: 4>, 'RIGHT_ARM_DEPTH_CAMERA': <SensorType.RIGHT_ARM_DEPTH_CAMERA: 5>, 'BASE_ULTRASONIC': <SensorType.BASE_ULTRASONIC: 14>, 'BASE_LIDAR': <SensorType.BASE_LIDAR: 6>, 'TORSO_IMU': <SensorType.TORSO_IMU: 13>, 'LEFT_FRONT_SURROUND_CAMERA': <SensorType.LEFT_FRONT_SURROUND_CAMERA: 15>, 'RIGHT_FRONT_SURROUND_CAMERA': <SensorType.RIGHT_FRONT_SURROUND_CAMERA: 16>, 'LEFT_REAR_SURROUND_CAMERA': <SensorType.LEFT_REAR_SURROUND_CAMERA: 17>, 'RIGHT_REAR_SURROUND_CAMERA': <SensorType.RIGHT_REAR_SURROUND_CAMERA: 18>, 'HEAD_LIDAR': <SensorType.HEAD_LIDAR: 7>, 'BACK_LIDAR': <SensorType.BACK_LIDAR: 8>, 'CHASSIS_LIDAR': <SensorType.CHASSIS_LIDAR: 9>, 'HEAD_IMU': <SensorType.HEAD_IMU: 10>, 'BACK_IMU': <SensorType.BACK_IMU: 11>, 'CHASSIS_IMU': <SensorType.CHASSIS_IMU: 12>}
+    __members__: typing.ClassVar[dict[str, SensorType]]  # value = {'HEAD_LEFT_CAMERA': <SensorType.HEAD_LEFT_CAMERA: 0>, 'HEAD_RIGHT_CAMERA': <SensorType.HEAD_RIGHT_CAMERA: 1>, 'LEFT_ARM_CAMERA': <SensorType.LEFT_ARM_CAMERA: 2>, 'RIGHT_ARM_CAMERA': <SensorType.RIGHT_ARM_CAMERA: 3>, 'LEFT_ARM_DEPTH_CAMERA': <SensorType.LEFT_ARM_DEPTH_CAMERA: 4>, 'RIGHT_ARM_DEPTH_CAMERA': <SensorType.RIGHT_ARM_DEPTH_CAMERA: 5>, 'BASE_ULTRASONIC': <SensorType.BASE_ULTRASONIC: 15>, 'CHASSIS_IMU': <SensorType.CHASSIS_IMU: 12>, 'BASE_LIDAR': <SensorType.BASE_LIDAR: 6>, 'TORSO_IMU': <SensorType.TORSO_IMU: 13>, 'LIDAR_IMU': <SensorType.LIDAR_IMU: 14>, 'LEFT_FRONT_SURROUND_CAMERA': <SensorType.LEFT_FRONT_SURROUND_CAMERA: 16>, 'RIGHT_FRONT_SURROUND_CAMERA': <SensorType.RIGHT_FRONT_SURROUND_CAMERA: 17>, 'LEFT_REAR_SURROUND_CAMERA': <SensorType.LEFT_REAR_SURROUND_CAMERA: 18>, 'RIGHT_REAR_SURROUND_CAMERA': <SensorType.RIGHT_REAR_SURROUND_CAMERA: 19>, 'HEAD_LIDAR': <SensorType.HEAD_LIDAR: 7>, 'BACK_LIDAR': <SensorType.BACK_LIDAR: 8>, 'CHASSIS_LIDAR': <SensorType.CHASSIS_LIDAR: 9>, 'HEAD_IMU': <SensorType.HEAD_IMU: 10>, 'BACK_IMU': <SensorType.BACK_IMU: 11>}
     def __eq__(self, other: typing.Any) -> bool:
         ...
     def __getstate__(self) -> int:
@@ -3527,6 +3847,36 @@ class SuctionCupState:
         """
     @timestamp_ns.setter
     def timestamp_ns(self, arg0: typing.SupportsInt) -> None:
+        ...
+class SyncedObservation:
+    """
+    Synchronized multi-sensor observation payload
+    """
+    def __init__(self) -> None:
+        ...
+    @property
+    def depth_data_map(self) -> dict[SensorType, DepthData]:
+        """
+        Timestamp-aligned depth frames
+        """
+    @depth_data_map.setter
+    def depth_data_map(self, arg0: collections.abc.Mapping[SensorType, DepthData]) -> None:
+        ...
+    @property
+    def joint_state(self) -> JointStateMessage:
+        """
+        Nearest-neighbor joint sample for anchor timestamp (JointStateMessage | None)
+        """
+    @joint_state.setter
+    def joint_state(self, arg0: JointStateMessage) -> None:
+        ...
+    @property
+    def rgb_data_map(self) -> dict[SensorType, RgbData]:
+        """
+        Timestamp-aligned RGB frames
+        """
+    @rgb_data_map.setter
+    def rgb_data_map(self, arg0: collections.abc.Mapping[SensorType, RgbData]) -> None:
         ...
 class TargetConfig:
     """
@@ -3737,6 +4087,14 @@ class TaskCommand:
         """
     @time_from_start_s.setter
     def time_from_start_s(self, arg0: typing.SupportsFloat) -> None:
+        ...
+class TaskHandle:
+    msg: str
+    request_sent: bool
+    task_id: str
+    def __init__(self) -> None:
+        ...
+    def __repr__(self) -> str:
         ...
 class TerminationConditionType:
     """
@@ -4063,6 +4421,50 @@ class Vector3:
         ...
 class WBCException(Exception):
     pass
+class Waypoint:
+    params: WaypointParams
+    pose: Pose
+    def __init__(self, pose: Pose, params: WaypointParams = ...) -> None:
+        ...
+class WaypointParams:
+    def __init__(self) -> None:
+        ...
+    @property
+    def acceleration_scale(self) -> float:
+        ...
+    @acceleration_scale.setter
+    def acceleration_scale(self, arg0: typing.SupportsFloat) -> None:
+        ...
+    @property
+    def arrival_orientation_threshold(self) -> float:
+        ...
+    @arrival_orientation_threshold.setter
+    def arrival_orientation_threshold(self, arg0: typing.SupportsFloat) -> None:
+        ...
+    @property
+    def arrival_position_threshold_x(self) -> float:
+        ...
+    @arrival_position_threshold_x.setter
+    def arrival_position_threshold_x(self, arg0: typing.SupportsFloat) -> None:
+        ...
+    @property
+    def arrival_position_threshold_y(self) -> float:
+        ...
+    @arrival_position_threshold_y.setter
+    def arrival_position_threshold_y(self, arg0: typing.SupportsFloat) -> None:
+        ...
+    @property
+    def jerk_scale(self) -> float:
+        ...
+    @jerk_scale.setter
+    def jerk_scale(self, arg0: typing.SupportsFloat) -> None:
+        ...
+    @property
+    def velocity_scale(self) -> float:
+        ...
+    @velocity_scale.setter
+    def velocity_scale(self, arg0: typing.SupportsFloat) -> None:
+        ...
 class Wrench:
     """
     Six-dimensional wrench command
@@ -4138,6 +4540,8 @@ def create_pose_state() -> PoseState:
                         Returns:
                             PoseState: A new PoseState instance.
     """
+CLOSE_TO_OBSTACLE: NavigationTaskStatus  # value = <NavigationTaskStatus.CLOSE_TO_OBSTACLE: 7>
+COLLISION: NavigationTaskStatus  # value = <NavigationTaskStatus.COLLISION: 6>
 COMM_DISCONNECTED: MotionStatus  # value = <MotionStatus.COMM_DISCONNECTED: 9>
 CYLINDER: PrimitiveType  # value = <PrimitiveType.CYLINDER: 1>
 DATA_FETCH_FAILED: MotionStatus  # value = <MotionStatus.DATA_FETCH_FAILED: 7>
@@ -4146,11 +4550,13 @@ FAILED: NavigationTaskStatus  # value = <NavigationTaskStatus.FAILED: 3>
 FAULT: MotionStatus  # value = <MotionStatus.FAULT: 2>
 FOUNDATION_STEREO: PerceptionModule  # value = <PerceptionModule.FOUNDATION_STEREO: 0>
 INIT_FAILED: MotionStatus  # value = <MotionStatus.INIT_FAILED: 4>
+INTERRUPTED: NavigationTaskStatus  # value = <NavigationTaskStatus.INTERRUPTED: 4>
 INVALID_INPUT: MotionStatus  # value = <MotionStatus.INVALID_INPUT: 3>
 IN_PROGRESS: MotionStatus  # value = <MotionStatus.IN_PROGRESS: 5>
 JOINT: RobotStatesType  # value = <RobotStatesType.JOINT: 1>
 LIGHT_STEREO: PerceptionModule  # value = <PerceptionModule.LIGHT_STEREO: 1>
 LINE: PrimitiveType  # value = <PrimitiveType.LINE: 0>
+OCCUPIED: NavigationTaskStatus  # value = <NavigationTaskStatus.OCCUPIED: 5>
 POSE: RobotStatesType  # value = <RobotStatesType.POSE: 0>
 PUBLISH_FAIL: MotionStatus  # value = <MotionStatus.PUBLISH_FAIL: 8>
 RADIAN_DISTANCE: StateCheckType  # value = <StateCheckType.RADIAN_DISTANCE: 1>

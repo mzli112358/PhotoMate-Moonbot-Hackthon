@@ -3,11 +3,13 @@ from galbot_sdk.g1 import GalbotRobot
 
 def print_joint_states(joint_states):
     """
-    joint_state_vec: List of JointState; each object has position, velocity, acceleration, effort, current
+    joint_state_vec: List of JointState; each object has
+    joint_name, position, velocity, acceleration, effort, current
     """
     for js in joint_states:
-        print(f" : position = {js.position} , velocity = {js.velocity} "
-            f", acceleration = {js.acceleration} , effort = {js.effort} , current = {js.current}")
+        print(f" : joint_name = {js.joint_name} , position = {js.position} , velocity = {js.velocity} "
+            f", acceleration = {js.acceleration} , effort = {js.effort} , current = {js.current}"
+            f", timestamp_ns = {js.timestamp_ns}")
 
 # Get and initialize the GalbotRobot singleton
 robot = GalbotRobot()

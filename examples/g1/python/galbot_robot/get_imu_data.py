@@ -38,6 +38,9 @@ def print_imu_data(imu_data: dict):
 
 # Get and initialize the GalbotRobot singleton
 robot = GalbotRobot()
+# - SensorType::TORSO_IMU: torso IMU
+# - SensorType::LIDAR_IMU: lidar IMU
+# - SensorType::CHASSIS_IMU: Chassis lidar IMU
 robot.init({SensorType.TORSO_IMU})
 
 # Program started, waiting for data

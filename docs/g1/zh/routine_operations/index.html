@@ -1184,6 +1184,7 @@
 <hr />
 <h2 id="-">地图引擎 - 建图与定位</h2>
 <p>地图引擎是导航功能的核心基础。地图引擎不是可选附加功能，<strong>而是导航功能的前置必须步骤</strong>。在使用导航功能前，必须完成建图并确保定位正常运行。未正确完成建图和定位将导致导航功能无法正常工作。</p>
+<p>当机器人开启定位导航服务时（机器人工作模式可能默认开启导航服务），必须先完成建图。新的机器人首次使用前需要进行建图操作，否则定位服务无法正常启动，机器人可能进入异常模式。</p>
 <hr />
 <h3 id="_2">建图流程</h3>
 <p>建图是导航的前提条件。在开始使用导航功能前，必须先完成环境地图的构建。</p>
@@ -1227,6 +1228,13 @@
 </span></code></pre></div>
 <p>启动工具后，输入数字 <code>1</code>，然后按 Enter 回车选择保存地图功能。地图默认保存路径为 <code>/var/maps/room1102</code>，如下图所示：</p>
 <p><img alt="保存地图" src="/image/savepic.jpg" /></p>
+<p>保存地图后，地图目录下必须存在 <code>global_cloud_cleaned.pcd</code>，供后续定位使用。</p>
+<ul>
+<li>如果已经完成点云后处理，请确保清理后的地图文件命名为 <code>global_cloud_cleaned.pcd</code></li>
+<li>如果暂时不做杂点擦除，请在地图目录下执行以下命令：</li>
+</ul>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>cp<span class="w"> </span>global_cloud.pcd<span class="w"> </span>global_cloud_cleaned.pcd
+</span></code></pre></div>
 <h4 id="4">4. 编辑地图 (可选)</h4>
 <p>本步骤用于优化地图质量，提高导航精度和安全性。</p>
 <div class="admonition info">
@@ -1237,7 +1245,7 @@
 </ul>
 </div>
 <h5 id="41">4.1 擦除地图杂点 (可选)</h5>
-<p>需要检查机器人活动区域内（地表至高度 2.5 米内）的杂点。地面点不影响导航，主要需要检查和擦除的是空中漂浮的杂点。</p>
+<p>推荐进行本步骤。地图中通常可能存在少量杂点，擦除后可以提高导航成功率。尤其当房间中存在镜面、毛玻璃等材质物体时，点云地图中更容易出现杂点，建议使用 CloudCompare 软件进行后处理。</p>
 <p><strong>准备工作</strong>：下载 CloudCompare 软件</p>
 <p>下载链接：<a href="https://www.cloudcompare.org/release/index.html">https://www.cloudcompare.org/release/index.html</a></p>
 <p>如图所示：</p>
@@ -1279,8 +1287,8 @@
 <li>保存清理后的地图：</li>
 <li>选择 Edit → Merge 合并两部分点云</li>
 <li>选择 File → Save 保存点云</li>
-<li>命名为 <code>global_cloud_cleand</code></li>
-<li>移动擦除后的地图 <code>global_cloud_cleand.pcd</code> 到地图文件夹 <code>/var/maps/room1102/</code></li>
+<li>必须命名为 <code>global_cloud_cleaned.pcd</code></li>
+<li>移动擦除后的地图 <code>global_cloud_cleaned.pcd</code> 到地图文件夹 <code>/var/maps/room1102/</code></li>
 </ol>
 <p><img alt="opensource4" src="/image/opensource4.jpg" /></p>
 <h5 id="42-osm">4.2 编辑 OSM 文件 (可选)</h5>
@@ -1303,7 +1311,7 @@
 </ol>
 <p><img alt="osm2" src="/image/osm2.jpg" /></p>
 <p><strong>安装 JOSM</strong>（如未安装）：</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>josm
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>josm
 </span></code></pre></div>
 <p>安装完成后，终端输入 <code>josm</code> 打开软件。</p>
 <p><strong>绘制电子围栏步骤</strong>：</p>
@@ -1328,7 +1336,7 @@
 </div>
 <p>为节省计算资源，地图更新功能默认关闭。可以手动开启更新开关并由人工操作保存更新后的地图：</p>
 <p><strong>步骤 1</strong>：在定位良好的情况下（当前评分大于 0.9）打开地图更新开关</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>vim<span class="w"> </span>/data/galbot/config/mes/manager.config
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>vim<span class="w"> </span>/data/galbot/config/mes/manager.config
 </span></code></pre></div>
 <p>将 <code>manager_update_map=0</code> 改为 <code>manager_update_map=1</code></p>
 <p><strong>步骤 2</strong>：原地重启定位，在评分恢复正常后（当前评分大于 0.9），执行 <code>engine_tools</code> 选择开始更新地图</p>
@@ -1351,11 +1359,11 @@
 <p><img alt="cur" src="/image/cur.jpg" /></p>
 <h4 id="2_1">2. 启动定位 (必选)</h4>
 <p>启动定位服务：</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>/data/galbot/bin/localization_server
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>/data/galbot/bin/localization_server
 </span></code></pre></div>
 <h4 id="3_1">3. 查看定位状态 (必选)</h4>
 <p>查看定位状态：</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>tail<span class="w"> </span>-f<span class="w"> </span>/userdata/log/localization_server/localization_server.INFO
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>tail<span class="w"> </span>-f<span class="w"> </span>/userdata/log/localization_server/localization_server.INFO
 </span></code></pre></div>
 <p><img alt="state" src="/image/state.jpg" /></p>
 <p>如果分数低于 0.75 或者没有分数和位姿发布，请将机器推至建图起点位姿，下发一次初始位姿（使用 <code>engine_tools</code> 输入数字 2，Enter 回车发送一次初始位姿），如图所示：</p>

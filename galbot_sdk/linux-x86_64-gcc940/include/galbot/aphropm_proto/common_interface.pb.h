@@ -50,7 +50,7 @@ struct TableStruct_galbot_2faphropm_5fproto_2fcommon_5finterface_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxiliaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[25]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[27]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -89,6 +89,12 @@ extern DataResponseDefaultTypeInternal _DataResponse_default_instance_;
 class GetDataRequest;
 class GetDataRequestDefaultTypeInternal;
 extern GetDataRequestDefaultTypeInternal _GetDataRequest_default_instance_;
+class GetIKSolverList;
+class GetIKSolverListDefaultTypeInternal;
+extern GetIKSolverListDefaultTypeInternal _GetIKSolverList_default_instance_;
+class IKSolverList;
+class IKSolverListDefaultTypeInternal;
+extern IKSolverListDefaultTypeInternal _IKSolverList_default_instance_;
 class LinkList;
 class LinkListDefaultTypeInternal;
 extern LinkListDefaultTypeInternal _LinkList_default_instance_;
@@ -147,6 +153,8 @@ template<> ::galbot::aphropm_proto::CollisionPairSettingRequest* Arena::CreateMa
 template<> ::galbot::aphropm_proto::CommonRequest* Arena::CreateMaybeMessage<::galbot::aphropm_proto::CommonRequest>(Arena*);
 template<> ::galbot::aphropm_proto::DataResponse* Arena::CreateMaybeMessage<::galbot::aphropm_proto::DataResponse>(Arena*);
 template<> ::galbot::aphropm_proto::GetDataRequest* Arena::CreateMaybeMessage<::galbot::aphropm_proto::GetDataRequest>(Arena*);
+template<> ::galbot::aphropm_proto::GetIKSolverList* Arena::CreateMaybeMessage<::galbot::aphropm_proto::GetIKSolverList>(Arena*);
+template<> ::galbot::aphropm_proto::IKSolverList* Arena::CreateMaybeMessage<::galbot::aphropm_proto::IKSolverList>(Arena*);
 template<> ::galbot::aphropm_proto::LinkList* Arena::CreateMaybeMessage<::galbot::aphropm_proto::LinkList>(Arena*);
 template<> ::galbot::aphropm_proto::ObjectInfo* Arena::CreateMaybeMessage<::galbot::aphropm_proto::ObjectInfo>(Arena*);
 template<> ::galbot::aphropm_proto::ToolInfo* Arena::CreateMaybeMessage<::galbot::aphropm_proto::ToolInfo>(Arena*);
@@ -173,12 +181,14 @@ enum GetDataRequest_DataType : int {
   GetDataRequest_DataType_ChainList = 3,
   GetDataRequest_DataType_LinkList = 4,
   GetDataRequest_DataType_ChainPropList = 5,
+  GetDataRequest_DataType_GetIKSolverList = 6,
+  GetDataRequest_DataType_GetAllIKSolverList = 7,
   GetDataRequest_DataType_GetDataRequest_DataType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::min(),
   GetDataRequest_DataType_GetDataRequest_DataType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::max()
 };
 bool GetDataRequest_DataType_IsValid(int value);
 constexpr GetDataRequest_DataType GetDataRequest_DataType_DataType_MIN = GetDataRequest_DataType_AttachToolInfo;
-constexpr GetDataRequest_DataType GetDataRequest_DataType_DataType_MAX = GetDataRequest_DataType_ChainPropList;
+constexpr GetDataRequest_DataType GetDataRequest_DataType_DataType_MAX = GetDataRequest_DataType_GetAllIKSolverList;
 constexpr int GetDataRequest_DataType_DataType_ARRAYSIZE = GetDataRequest_DataType_DataType_MAX + 1;
 
 const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* GetDataRequest_DataType_descriptor();
@@ -3380,6 +3390,7 @@ class CommonRequest PROTOBUF_FINAL :
   // accessors -------------------------------------------------------
 
   enum : int {
+    kCommonStrFieldNumber = 300,
     kAttachToolFieldNumber = 13,
     kDetachToolFieldNumber = 14,
     kBuildCollisionObjectFieldNumber = 10,
@@ -3387,6 +3398,22 @@ class CommonRequest PROTOBUF_FINAL :
     kRemoveCollisionObjectFieldNumber = 12,
     kCollisionPairSettingFieldNumber = 15,
   };
+  // string common_str = 300;
+  void clear_common_str();
+  const std::string& common_str() const;
+  void set_common_str(const std::string& value);
+  void set_common_str(std::string&& value);
+  void set_common_str(const char* value);
+  void set_common_str(const char* value, size_t size);
+  std::string* mutable_common_str();
+  std::string* release_common_str();
+  void set_allocated_common_str(std::string* common_str);
+  private:
+  const std::string& _internal_common_str() const;
+  void _internal_set_common_str(const std::string& value);
+  std::string* _internal_mutable_common_str();
+  public:
+
   // .galbot.aphropm_proto.attachToolRequest attach_tool = 13;
   bool has_attach_tool() const;
   private:
@@ -3523,6 +3550,7 @@ class CommonRequest PROTOBUF_FINAL :
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr common_str_;
   union ToolRequestUnion {
     ToolRequestUnion() {}
     ::galbot::aphropm_proto::attachToolRequest* attach_tool_;
@@ -3541,6 +3569,157 @@ class CommonRequest PROTOBUF_FINAL :
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   ::PROTOBUF_NAMESPACE_ID::uint32 _oneof_case_[3];
 
+  friend struct ::TableStruct_galbot_2faphropm_5fproto_2fcommon_5finterface_2eproto;
+};
+// -------------------------------------------------------------------
+
+class GetIKSolverList PROTOBUF_FINAL :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:galbot.aphropm_proto.GetIKSolverList) */ {
+ public:
+  inline GetIKSolverList() : GetIKSolverList(nullptr) {}
+  virtual ~GetIKSolverList();
+
+  GetIKSolverList(const GetIKSolverList& from);
+  GetIKSolverList(GetIKSolverList&& from) noexcept
+    : GetIKSolverList() {
+    *this = ::std::move(from);
+  }
+
+  inline GetIKSolverList& operator=(const GetIKSolverList& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline GetIKSolverList& operator=(GetIKSolverList&& from) noexcept {
+    if (GetArena() == from.GetArena()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const GetIKSolverList& default_instance();
+
+  static inline const GetIKSolverList* internal_default_instance() {
+    return reinterpret_cast<const GetIKSolverList*>(
+               &_GetIKSolverList_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    19;
+
+  friend void swap(GetIKSolverList& a, GetIKSolverList& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(GetIKSolverList* other) {
+    if (other == this) return;
+    if (GetArena() == other->GetArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(GetIKSolverList* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline GetIKSolverList* New() const final {
+    return CreateMaybeMessage<GetIKSolverList>(nullptr);
+  }
+
+  GetIKSolverList* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<GetIKSolverList>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const GetIKSolverList& from);
+  void MergeFrom(const GetIKSolverList& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(GetIKSolverList* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "galbot.aphropm_proto.GetIKSolverList";
+  }
+  protected:
+  explicit GetIKSolverList(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_galbot_2faphropm_5fproto_2fcommon_5finterface_2eproto);
+    return ::descriptor_table_galbot_2faphropm_5fproto_2fcommon_5finterface_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kChainGroupNamesFieldNumber = 1,
+  };
+  // repeated string chain_group_names = 1;
+  int chain_group_names_size() const;
+  private:
+  int _internal_chain_group_names_size() const;
+  public:
+  void clear_chain_group_names();
+  const std::string& chain_group_names(int index) const;
+  std::string* mutable_chain_group_names(int index);
+  void set_chain_group_names(int index, const std::string& value);
+  void set_chain_group_names(int index, std::string&& value);
+  void set_chain_group_names(int index, const char* value);
+  void set_chain_group_names(int index, const char* value, size_t size);
+  std::string* add_chain_group_names();
+  void add_chain_group_names(const std::string& value);
+  void add_chain_group_names(std::string&& value);
+  void add_chain_group_names(const char* value);
+  void add_chain_group_names(const char* value, size_t size);
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>& chain_group_names() const;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>* mutable_chain_group_names();
+  private:
+  const std::string& _internal_chain_group_names(int index) const;
+  std::string* _internal_add_chain_group_names();
+  public:
+
+  // @@protoc_insertion_point(class_scope:galbot.aphropm_proto.GetIKSolverList)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string> chain_group_names_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_galbot_2faphropm_5fproto_2fcommon_5finterface_2eproto;
 };
 // -------------------------------------------------------------------
@@ -3586,7 +3765,7 @@ class GetDataRequest PROTOBUF_FINAL :
                &_GetDataRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    19;
+    20;
 
   friend void swap(GetDataRequest& a, GetDataRequest& b) {
     a.Swap(&b);
@@ -3667,6 +3846,10 @@ class GetDataRequest PROTOBUF_FINAL :
     GetDataRequest_DataType_LinkList;
   static constexpr DataType ChainPropList =
     GetDataRequest_DataType_ChainPropList;
+  static constexpr DataType GetIKSolverList =
+    GetDataRequest_DataType_GetIKSolverList;
+  static constexpr DataType GetAllIKSolverList =
+    GetDataRequest_DataType_GetAllIKSolverList;
   static inline bool DataType_IsValid(int value) {
     return GetDataRequest_DataType_IsValid(value);
   }
@@ -3696,6 +3879,7 @@ class GetDataRequest PROTOBUF_FINAL :
 
   enum : int {
     kTaskIdFieldNumber = 1,
+    kGetIkSolverListFieldNumber = 3,
     kDataTypeFieldNumber = 2,
   };
   // string task_id = 1;
@@ -3714,6 +3898,24 @@ class GetDataRequest PROTOBUF_FINAL :
   std::string* _internal_mutable_task_id();
   public:
 
+  // .galbot.aphropm_proto.GetIKSolverList get_ik_solver_list = 3;
+  bool has_get_ik_solver_list() const;
+  private:
+  bool _internal_has_get_ik_solver_list() const;
+  public:
+  void clear_get_ik_solver_list();
+  const ::galbot::aphropm_proto::GetIKSolverList& get_ik_solver_list() const;
+  ::galbot::aphropm_proto::GetIKSolverList* release_get_ik_solver_list();
+  ::galbot::aphropm_proto::GetIKSolverList* mutable_get_ik_solver_list();
+  void set_allocated_get_ik_solver_list(::galbot::aphropm_proto::GetIKSolverList* get_ik_solver_list);
+  private:
+  const ::galbot::aphropm_proto::GetIKSolverList& _internal_get_ik_solver_list() const;
+  ::galbot::aphropm_proto::GetIKSolverList* _internal_mutable_get_ik_solver_list();
+  public:
+  void unsafe_arena_set_allocated_get_ik_solver_list(
+      ::galbot::aphropm_proto::GetIKSolverList* get_ik_solver_list);
+  ::galbot::aphropm_proto::GetIKSolverList* unsafe_arena_release_get_ik_solver_list();
+
   // .galbot.aphropm_proto.GetDataRequest.DataType data_type = 2;
   void clear_data_type();
   ::galbot::aphropm_proto::GetDataRequest_DataType data_type() const;
@@ -3731,6 +3933,7 @@ class GetDataRequest PROTOBUF_FINAL :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr task_id_;
+  ::galbot::aphropm_proto::GetIKSolverList* get_ik_solver_list_;
   int data_type_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_galbot_2faphropm_5fproto_2fcommon_5finterface_2eproto;
@@ -3778,7 +3981,7 @@ class ToolInfo PROTOBUF_FINAL :
                &_ToolInfo_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    20;
+    21;
 
   friend void swap(ToolInfo& a, ToolInfo& b) {
     a.Swap(&b);
@@ -3939,7 +4142,7 @@ class AttachToolInfo PROTOBUF_FINAL :
                &_AttachToolInfo_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    21;
+    22;
 
   friend void swap(AttachToolInfo& a, AttachToolInfo& b) {
     a.Swap(&b);
@@ -4084,7 +4287,7 @@ class ObjectInfo PROTOBUF_FINAL :
                &_ObjectInfo_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    22;
+    23;
 
   friend void swap(ObjectInfo& a, ObjectInfo& b) {
     a.Swap(&b);
@@ -4249,7 +4452,7 @@ class AttachObjectOnRobot PROTOBUF_FINAL :
                &_AttachObjectOnRobot_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    23;
+    24;
 
   friend void swap(AttachObjectOnRobot& a, AttachObjectOnRobot& b) {
     a.Swap(&b);
@@ -4353,6 +4556,151 @@ class AttachObjectOnRobot PROTOBUF_FINAL :
 };
 // -------------------------------------------------------------------
 
+class IKSolverList PROTOBUF_FINAL :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:galbot.aphropm_proto.IKSolverList) */ {
+ public:
+  inline IKSolverList() : IKSolverList(nullptr) {}
+  virtual ~IKSolverList();
+
+  IKSolverList(const IKSolverList& from);
+  IKSolverList(IKSolverList&& from) noexcept
+    : IKSolverList() {
+    *this = ::std::move(from);
+  }
+
+  inline IKSolverList& operator=(const IKSolverList& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline IKSolverList& operator=(IKSolverList&& from) noexcept {
+    if (GetArena() == from.GetArena()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const IKSolverList& default_instance();
+
+  static inline const IKSolverList* internal_default_instance() {
+    return reinterpret_cast<const IKSolverList*>(
+               &_IKSolverList_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    25;
+
+  friend void swap(IKSolverList& a, IKSolverList& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(IKSolverList* other) {
+    if (other == this) return;
+    if (GetArena() == other->GetArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(IKSolverList* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline IKSolverList* New() const final {
+    return CreateMaybeMessage<IKSolverList>(nullptr);
+  }
+
+  IKSolverList* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<IKSolverList>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const IKSolverList& from);
+  void MergeFrom(const IKSolverList& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(IKSolverList* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "galbot.aphropm_proto.IKSolverList";
+  }
+  protected:
+  explicit IKSolverList(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_galbot_2faphropm_5fproto_2fcommon_5finterface_2eproto);
+    return ::descriptor_table_galbot_2faphropm_5fproto_2fcommon_5finterface_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kIkSolversFieldNumber = 1,
+  };
+  // repeated .galbot.aphropm_proto.IKSolverInfo ik_solvers = 1;
+  int ik_solvers_size() const;
+  private:
+  int _internal_ik_solvers_size() const;
+  public:
+  void clear_ik_solvers();
+  ::galbot::aphropm_proto::IKSolverInfo* mutable_ik_solvers(int index);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::galbot::aphropm_proto::IKSolverInfo >*
+      mutable_ik_solvers();
+  private:
+  const ::galbot::aphropm_proto::IKSolverInfo& _internal_ik_solvers(int index) const;
+  ::galbot::aphropm_proto::IKSolverInfo* _internal_add_ik_solvers();
+  public:
+  const ::galbot::aphropm_proto::IKSolverInfo& ik_solvers(int index) const;
+  ::galbot::aphropm_proto::IKSolverInfo* add_ik_solvers();
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::galbot::aphropm_proto::IKSolverInfo >&
+      ik_solvers() const;
+
+  // @@protoc_insertion_point(class_scope:galbot.aphropm_proto.IKSolverList)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::galbot::aphropm_proto::IKSolverInfo > ik_solvers_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_galbot_2faphropm_5fproto_2fcommon_5finterface_2eproto;
+};
+// -------------------------------------------------------------------
+
 class DataResponse PROTOBUF_FINAL :
     public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:galbot.aphropm_proto.DataResponse) */ {
  public:
@@ -4396,6 +4744,7 @@ class DataResponse PROTOBUF_FINAL :
     kChainList = 13,
     kLinkList = 14,
     kChainPropList = 15,
+    kIkSolverList = 16,
     DATA_TYPE_NOT_SET = 0,
   };
 
@@ -4404,7 +4753,7 @@ class DataResponse PROTOBUF_FINAL :
                &_DataResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    24;
+    26;
 
   friend void swap(DataResponse& a, DataResponse& b) {
     a.Swap(&b);
@@ -4484,6 +4833,7 @@ class DataResponse PROTOBUF_FINAL :
     kChainListFieldNumber = 13,
     kLinkListFieldNumber = 14,
     kChainPropListFieldNumber = 15,
+    kIkSolverListFieldNumber = 16,
   };
   // string task_id = 1;
   void clear_task_id();
@@ -4634,6 +4984,24 @@ class DataResponse PROTOBUF_FINAL :
       ::galbot::aphropm_proto::ChainPropList* chain_prop_list);
   ::galbot::aphropm_proto::ChainPropList* unsafe_arena_release_chain_prop_list();
 
+  // .galbot.aphropm_proto.IKSolverList ik_solver_list = 16;
+  bool has_ik_solver_list() const;
+  private:
+  bool _internal_has_ik_solver_list() const;
+  public:
+  void clear_ik_solver_list();
+  const ::galbot::aphropm_proto::IKSolverList& ik_solver_list() const;
+  ::galbot::aphropm_proto::IKSolverList* release_ik_solver_list();
+  ::galbot::aphropm_proto::IKSolverList* mutable_ik_solver_list();
+  void set_allocated_ik_solver_list(::galbot::aphropm_proto::IKSolverList* ik_solver_list);
+  private:
+  const ::galbot::aphropm_proto::IKSolverList& _internal_ik_solver_list() const;
+  ::galbot::aphropm_proto::IKSolverList* _internal_mutable_ik_solver_list();
+  public:
+  void unsafe_arena_set_allocated_ik_solver_list(
+      ::galbot::aphropm_proto::IKSolverList* ik_solver_list);
+  ::galbot::aphropm_proto::IKSolverList* unsafe_arena_release_ik_solver_list();
+
   void clear_data_type();
   DataTypeCase data_type_case() const;
   // @@protoc_insertion_point(class_scope:galbot.aphropm_proto.DataResponse)
@@ -4645,6 +5013,7 @@ class DataResponse PROTOBUF_FINAL :
   void set_has_chain_list();
   void set_has_link_list();
   void set_has_chain_prop_list();
+  void set_has_ik_solver_list();
 
   inline bool has_data_type() const;
   inline void clear_has_data_type();
@@ -4663,6 +5032,7 @@ class DataResponse PROTOBUF_FINAL :
     ::galbot::aphropm_proto::ChainList* chain_list_;
     ::galbot::aphropm_proto::LinkList* link_list_;
     ::galbot::aphropm_proto::ChainPropList* chain_prop_list_;
+    ::galbot::aphropm_proto::IKSolverList* ik_solver_list_;
   } data_type_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   ::PROTOBUF_NAMESPACE_ID::uint32 _oneof_case_[1];
@@ -7634,6 +8004,67 @@ inline ::galbot::aphropm_proto::CollisionPairSettingRequest* CommonRequest::muta
   return _internal_mutable_collision_pair_setting();
 }
 
+// string common_str = 300;
+inline void CommonRequest::clear_common_str() {
+  common_str_.ClearToEmpty();
+}
+inline const std::string& CommonRequest::common_str() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.CommonRequest.common_str)
+  return _internal_common_str();
+}
+inline void CommonRequest::set_common_str(const std::string& value) {
+  _internal_set_common_str(value);
+  // @@protoc_insertion_point(field_set:galbot.aphropm_proto.CommonRequest.common_str)
+}
+inline std::string* CommonRequest::mutable_common_str() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.CommonRequest.common_str)
+  return _internal_mutable_common_str();
+}
+inline const std::string& CommonRequest::_internal_common_str() const {
+  return common_str_.Get();
+}
+inline void CommonRequest::_internal_set_common_str(const std::string& value) {
+  
+  common_str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArena());
+}
+inline void CommonRequest::set_common_str(std::string&& value) {
+  
+  common_str_.Set(
+    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::move(value), GetArena());
+  // @@protoc_insertion_point(field_set_rvalue:galbot.aphropm_proto.CommonRequest.common_str)
+}
+inline void CommonRequest::set_common_str(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  common_str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(value), GetArena());
+  // @@protoc_insertion_point(field_set_char:galbot.aphropm_proto.CommonRequest.common_str)
+}
+inline void CommonRequest::set_common_str(const char* value,
+    size_t size) {
+  
+  common_str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(
+      reinterpret_cast<const char*>(value), size), GetArena());
+  // @@protoc_insertion_point(field_set_pointer:galbot.aphropm_proto.CommonRequest.common_str)
+}
+inline std::string* CommonRequest::_internal_mutable_common_str() {
+  
+  return common_str_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArena());
+}
+inline std::string* CommonRequest::release_common_str() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.CommonRequest.common_str)
+  return common_str_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline void CommonRequest::set_allocated_common_str(std::string* common_str) {
+  if (common_str != nullptr) {
+    
+  } else {
+    
+  }
+  common_str_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), common_str,
+      GetArena());
+  // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.CommonRequest.common_str)
+}
+
 inline bool CommonRequest::has_ToolRequest() const {
   return ToolRequest_case() != TOOLREQUEST_NOT_SET;
 }
@@ -7661,6 +8092,84 @@ inline CommonRequest::CollisionRequestCase CommonRequest::CollisionRequest_case(
 inline CommonRequest::CollisionPairRequestCase CommonRequest::CollisionPairRequest_case() const {
   return CommonRequest::CollisionPairRequestCase(_oneof_case_[2]);
 }
+// -------------------------------------------------------------------
+
+// GetIKSolverList
+
+// repeated string chain_group_names = 1;
+inline int GetIKSolverList::_internal_chain_group_names_size() const {
+  return chain_group_names_.size();
+}
+inline int GetIKSolverList::chain_group_names_size() const {
+  return _internal_chain_group_names_size();
+}
+inline void GetIKSolverList::clear_chain_group_names() {
+  chain_group_names_.Clear();
+}
+inline std::string* GetIKSolverList::add_chain_group_names() {
+  // @@protoc_insertion_point(field_add_mutable:galbot.aphropm_proto.GetIKSolverList.chain_group_names)
+  return _internal_add_chain_group_names();
+}
+inline const std::string& GetIKSolverList::_internal_chain_group_names(int index) const {
+  return chain_group_names_.Get(index);
+}
+inline const std::string& GetIKSolverList::chain_group_names(int index) const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.GetIKSolverList.chain_group_names)
+  return _internal_chain_group_names(index);
+}
+inline std::string* GetIKSolverList::mutable_chain_group_names(int index) {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.GetIKSolverList.chain_group_names)
+  return chain_group_names_.Mutable(index);
+}
+inline void GetIKSolverList::set_chain_group_names(int index, const std::string& value) {
+  // @@protoc_insertion_point(field_set:galbot.aphropm_proto.GetIKSolverList.chain_group_names)
+  chain_group_names_.Mutable(index)->assign(value);
+}
+inline void GetIKSolverList::set_chain_group_names(int index, std::string&& value) {
+  // @@protoc_insertion_point(field_set:galbot.aphropm_proto.GetIKSolverList.chain_group_names)
+  chain_group_names_.Mutable(index)->assign(std::move(value));
+}
+inline void GetIKSolverList::set_chain_group_names(int index, const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  chain_group_names_.Mutable(index)->assign(value);
+  // @@protoc_insertion_point(field_set_char:galbot.aphropm_proto.GetIKSolverList.chain_group_names)
+}
+inline void GetIKSolverList::set_chain_group_names(int index, const char* value, size_t size) {
+  chain_group_names_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:galbot.aphropm_proto.GetIKSolverList.chain_group_names)
+}
+inline std::string* GetIKSolverList::_internal_add_chain_group_names() {
+  return chain_group_names_.Add();
+}
+inline void GetIKSolverList::add_chain_group_names(const std::string& value) {
+  chain_group_names_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add:galbot.aphropm_proto.GetIKSolverList.chain_group_names)
+}
+inline void GetIKSolverList::add_chain_group_names(std::string&& value) {
+  chain_group_names_.Add(std::move(value));
+  // @@protoc_insertion_point(field_add:galbot.aphropm_proto.GetIKSolverList.chain_group_names)
+}
+inline void GetIKSolverList::add_chain_group_names(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  chain_group_names_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add_char:galbot.aphropm_proto.GetIKSolverList.chain_group_names)
+}
+inline void GetIKSolverList::add_chain_group_names(const char* value, size_t size) {
+  chain_group_names_.Add()->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_add_pointer:galbot.aphropm_proto.GetIKSolverList.chain_group_names)
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>&
+GetIKSolverList::chain_group_names() const {
+  // @@protoc_insertion_point(field_list:galbot.aphropm_proto.GetIKSolverList.chain_group_names)
+  return chain_group_names_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>*
+GetIKSolverList::mutable_chain_group_names() {
+  // @@protoc_insertion_point(field_mutable_list:galbot.aphropm_proto.GetIKSolverList.chain_group_names)
+  return &chain_group_names_;
+}
+
 // -------------------------------------------------------------------
 
 // GetDataRequest
@@ -7744,6 +8253,89 @@ inline void GetDataRequest::_internal_set_data_type(::galbot::aphropm_proto::Get
 inline void GetDataRequest::set_data_type(::galbot::aphropm_proto::GetDataRequest_DataType value) {
   _internal_set_data_type(value);
   // @@protoc_insertion_point(field_set:galbot.aphropm_proto.GetDataRequest.data_type)
+}
+
+// .galbot.aphropm_proto.GetIKSolverList get_ik_solver_list = 3;
+inline bool GetDataRequest::_internal_has_get_ik_solver_list() const {
+  return this != internal_default_instance() && get_ik_solver_list_ != nullptr;
+}
+inline bool GetDataRequest::has_get_ik_solver_list() const {
+  return _internal_has_get_ik_solver_list();
+}
+inline void GetDataRequest::clear_get_ik_solver_list() {
+  if (GetArena() == nullptr && get_ik_solver_list_ != nullptr) {
+    delete get_ik_solver_list_;
+  }
+  get_ik_solver_list_ = nullptr;
+}
+inline const ::galbot::aphropm_proto::GetIKSolverList& GetDataRequest::_internal_get_ik_solver_list() const {
+  const ::galbot::aphropm_proto::GetIKSolverList* p = get_ik_solver_list_;
+  return p != nullptr ? *p : reinterpret_cast<const ::galbot::aphropm_proto::GetIKSolverList&>(
+      ::galbot::aphropm_proto::_GetIKSolverList_default_instance_);
+}
+inline const ::galbot::aphropm_proto::GetIKSolverList& GetDataRequest::get_ik_solver_list() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.GetDataRequest.get_ik_solver_list)
+  return _internal_get_ik_solver_list();
+}
+inline void GetDataRequest::unsafe_arena_set_allocated_get_ik_solver_list(
+    ::galbot::aphropm_proto::GetIKSolverList* get_ik_solver_list) {
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(get_ik_solver_list_);
+  }
+  get_ik_solver_list_ = get_ik_solver_list;
+  if (get_ik_solver_list) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:galbot.aphropm_proto.GetDataRequest.get_ik_solver_list)
+}
+inline ::galbot::aphropm_proto::GetIKSolverList* GetDataRequest::release_get_ik_solver_list() {
+  
+  ::galbot::aphropm_proto::GetIKSolverList* temp = get_ik_solver_list_;
+  get_ik_solver_list_ = nullptr;
+  if (GetArena() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+  return temp;
+}
+inline ::galbot::aphropm_proto::GetIKSolverList* GetDataRequest::unsafe_arena_release_get_ik_solver_list() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.GetDataRequest.get_ik_solver_list)
+  
+  ::galbot::aphropm_proto::GetIKSolverList* temp = get_ik_solver_list_;
+  get_ik_solver_list_ = nullptr;
+  return temp;
+}
+inline ::galbot::aphropm_proto::GetIKSolverList* GetDataRequest::_internal_mutable_get_ik_solver_list() {
+  
+  if (get_ik_solver_list_ == nullptr) {
+    auto* p = CreateMaybeMessage<::galbot::aphropm_proto::GetIKSolverList>(GetArena());
+    get_ik_solver_list_ = p;
+  }
+  return get_ik_solver_list_;
+}
+inline ::galbot::aphropm_proto::GetIKSolverList* GetDataRequest::mutable_get_ik_solver_list() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.GetDataRequest.get_ik_solver_list)
+  return _internal_mutable_get_ik_solver_list();
+}
+inline void GetDataRequest::set_allocated_get_ik_solver_list(::galbot::aphropm_proto::GetIKSolverList* get_ik_solver_list) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArena();
+  if (message_arena == nullptr) {
+    delete get_ik_solver_list_;
+  }
+  if (get_ik_solver_list) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+      ::PROTOBUF_NAMESPACE_ID::Arena::GetArena(get_ik_solver_list);
+    if (message_arena != submessage_arena) {
+      get_ik_solver_list = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, get_ik_solver_list, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  get_ik_solver_list_ = get_ik_solver_list;
+  // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.GetDataRequest.get_ik_solver_list)
 }
 
 // -------------------------------------------------------------------
@@ -8114,6 +8706,46 @@ inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::galbot::aphropm_proto:
 AttachObjectOnRobot::objects() const {
   // @@protoc_insertion_point(field_list:galbot.aphropm_proto.AttachObjectOnRobot.objects)
   return objects_;
+}
+
+// -------------------------------------------------------------------
+
+// IKSolverList
+
+// repeated .galbot.aphropm_proto.IKSolverInfo ik_solvers = 1;
+inline int IKSolverList::_internal_ik_solvers_size() const {
+  return ik_solvers_.size();
+}
+inline int IKSolverList::ik_solvers_size() const {
+  return _internal_ik_solvers_size();
+}
+inline ::galbot::aphropm_proto::IKSolverInfo* IKSolverList::mutable_ik_solvers(int index) {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.IKSolverList.ik_solvers)
+  return ik_solvers_.Mutable(index);
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::galbot::aphropm_proto::IKSolverInfo >*
+IKSolverList::mutable_ik_solvers() {
+  // @@protoc_insertion_point(field_mutable_list:galbot.aphropm_proto.IKSolverList.ik_solvers)
+  return &ik_solvers_;
+}
+inline const ::galbot::aphropm_proto::IKSolverInfo& IKSolverList::_internal_ik_solvers(int index) const {
+  return ik_solvers_.Get(index);
+}
+inline const ::galbot::aphropm_proto::IKSolverInfo& IKSolverList::ik_solvers(int index) const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.IKSolverList.ik_solvers)
+  return _internal_ik_solvers(index);
+}
+inline ::galbot::aphropm_proto::IKSolverInfo* IKSolverList::_internal_add_ik_solvers() {
+  return ik_solvers_.Add();
+}
+inline ::galbot::aphropm_proto::IKSolverInfo* IKSolverList::add_ik_solvers() {
+  // @@protoc_insertion_point(field_add:galbot.aphropm_proto.IKSolverList.ik_solvers)
+  return _internal_add_ik_solvers();
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::galbot::aphropm_proto::IKSolverInfo >&
+IKSolverList::ik_solvers() const {
+  // @@protoc_insertion_point(field_list:galbot.aphropm_proto.IKSolverList.ik_solvers)
+  return ik_solvers_;
 }
 
 // -------------------------------------------------------------------
@@ -8700,6 +9332,79 @@ inline ::galbot::aphropm_proto::ChainPropList* DataResponse::mutable_chain_prop_
   return _internal_mutable_chain_prop_list();
 }
 
+// .galbot.aphropm_proto.IKSolverList ik_solver_list = 16;
+inline bool DataResponse::_internal_has_ik_solver_list() const {
+  return data_type_case() == kIkSolverList;
+}
+inline bool DataResponse::has_ik_solver_list() const {
+  return _internal_has_ik_solver_list();
+}
+inline void DataResponse::set_has_ik_solver_list() {
+  _oneof_case_[0] = kIkSolverList;
+}
+inline void DataResponse::clear_ik_solver_list() {
+  if (_internal_has_ik_solver_list()) {
+    if (GetArena() == nullptr) {
+      delete data_type_.ik_solver_list_;
+    }
+    clear_has_data_type();
+  }
+}
+inline ::galbot::aphropm_proto::IKSolverList* DataResponse::release_ik_solver_list() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.DataResponse.ik_solver_list)
+  if (_internal_has_ik_solver_list()) {
+    clear_has_data_type();
+      ::galbot::aphropm_proto::IKSolverList* temp = data_type_.ik_solver_list_;
+    if (GetArena() != nullptr) {
+      temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+    }
+    data_type_.ik_solver_list_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::galbot::aphropm_proto::IKSolverList& DataResponse::_internal_ik_solver_list() const {
+  return _internal_has_ik_solver_list()
+      ? *data_type_.ik_solver_list_
+      : reinterpret_cast< ::galbot::aphropm_proto::IKSolverList&>(::galbot::aphropm_proto::_IKSolverList_default_instance_);
+}
+inline const ::galbot::aphropm_proto::IKSolverList& DataResponse::ik_solver_list() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.DataResponse.ik_solver_list)
+  return _internal_ik_solver_list();
+}
+inline ::galbot::aphropm_proto::IKSolverList* DataResponse::unsafe_arena_release_ik_solver_list() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:galbot.aphropm_proto.DataResponse.ik_solver_list)
+  if (_internal_has_ik_solver_list()) {
+    clear_has_data_type();
+    ::galbot::aphropm_proto::IKSolverList* temp = data_type_.ik_solver_list_;
+    data_type_.ik_solver_list_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void DataResponse::unsafe_arena_set_allocated_ik_solver_list(::galbot::aphropm_proto::IKSolverList* ik_solver_list) {
+  clear_data_type();
+  if (ik_solver_list) {
+    set_has_ik_solver_list();
+    data_type_.ik_solver_list_ = ik_solver_list;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:galbot.aphropm_proto.DataResponse.ik_solver_list)
+}
+inline ::galbot::aphropm_proto::IKSolverList* DataResponse::_internal_mutable_ik_solver_list() {
+  if (!_internal_has_ik_solver_list()) {
+    clear_data_type();
+    set_has_ik_solver_list();
+    data_type_.ik_solver_list_ = CreateMaybeMessage< ::galbot::aphropm_proto::IKSolverList >(GetArena());
+  }
+  return data_type_.ik_solver_list_;
+}
+inline ::galbot::aphropm_proto::IKSolverList* DataResponse::mutable_ik_solver_list() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.DataResponse.ik_solver_list)
+  return _internal_mutable_ik_solver_list();
+}
+
 inline bool DataResponse::has_data_type() const {
   return data_type_case() != DATA_TYPE_NOT_SET;
 }
@@ -8712,6 +9417,10 @@ inline DataResponse::DataTypeCase DataResponse::data_type_case() const {
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

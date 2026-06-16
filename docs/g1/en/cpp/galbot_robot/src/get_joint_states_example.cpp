@@ -11,11 +11,13 @@ using namespace galbot::sdk;
 void print_joint_states(const std::vector<JointState>& joint_states) {
     for (const auto& states : joint_states) {
         std::cout << "--- Joint State ---" << std::endl;
+        std::cout << "Joint Name:   " << states.joint_name   << std::endl;
         std::cout << "Position:     " << states.position     << " rad" << std::endl;
         std::cout << "Velocity:     " << states.velocity     << " rad/s" << std::endl;
         std::cout << "Acceleration: " << states.acceleration << " rad/s^2" << std::endl;
         std::cout << "Effort:       " << states.effort       << " Nm" << std::endl;
         std::cout << "Current:      " << states.current      << " A" << std::endl;
+        std::cout << "Timestamp:    " << states.timestamp_ns << " ns" << std::endl;
         std::cout << "------------------" << std::endl;
     }
 }

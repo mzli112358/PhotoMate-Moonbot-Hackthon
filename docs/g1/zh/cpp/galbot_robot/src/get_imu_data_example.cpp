@@ -48,6 +48,9 @@ int main() {
     std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
     // Get IMU data
+    // - SensorType::TORSO_IMU: torso IMU
+    // - SensorType::LIDAR_IMU: lidar IMU
+    // - SensorType::CHASSIS_IMU: Chassis lidar IMU
     std::shared_ptr<ImuData> imu_data = robot.get_imu_data(SensorType::TORSO_IMU);
     if (imu_data) {
         std::cout << "IMU data retrieved successfully!" << std::endl;

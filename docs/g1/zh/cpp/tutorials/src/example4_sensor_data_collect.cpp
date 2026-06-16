@@ -135,9 +135,25 @@ std::vector<Point3D> depth_rgb_to_pointcloud(
     std::cout << "depth_scale: " << depth_scale << std::endl;
     
     points.reserve(depth_img->rows * depth_img->cols);
+
+    /** Handle different depth image types */
+    int depth_type = depth_img->type();
     for (int v = 0; v < depth_img->rows; ++v) {
         for (int u = 0; u < depth_img->cols; ++u) {
-            float depth = depth_img->at<float>(v, u) * depth_scale;
+            float depth = 0.0f;
+
+            if (depth_type == CV_16UC1) {
+                /** 16-bit unsigned single channel */
+                uint16_t raw_depth = depth_img->at<uint16_t>(v, u);
+                depth = static_cast<float>(raw_depth) * depth_scale;
+            } else if (depth_type == CV_32F) {
+                /** 32-bit float single channel */
+                depth = depth_img->at<float>(v, u) * depth_scale;
+            } else {
+                std::cerr << "Error: unsupported depth image type: " << depth_type << std::endl;
+                return points;
+            }
+
             if (depth <= 0.0f) continue;
             float x = (u - cx) * depth / fx;
             float y = (v - cy) * depth / fy;

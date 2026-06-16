@@ -242,6 +242,8 @@ class NaviPlanOption PROTOBUF_FINAL :
     kUseDynPlanFieldNumber = 17,
     kUseLineSearchFieldNumber = 18,
     kUseStartOrientationFieldNumber = 19,
+    kUseGlobalMapPlanFieldNumber = 20,
+    kUseWaypointPlanFieldNumber = 21,
     kCheckVaildFieldNumber = 51,
     kDirFieldNumber = 10,
   };
@@ -441,6 +443,42 @@ class NaviPlanOption PROTOBUF_FINAL :
       PROTOBUF_NAMESPACE_ID::BoolValue* use_start_orientation);
   PROTOBUF_NAMESPACE_ID::BoolValue* unsafe_arena_release_use_start_orientation();
 
+  // .google.protobuf.BoolValue use_global_map_plan = 20;
+  bool has_use_global_map_plan() const;
+  private:
+  bool _internal_has_use_global_map_plan() const;
+  public:
+  void clear_use_global_map_plan();
+  const PROTOBUF_NAMESPACE_ID::BoolValue& use_global_map_plan() const;
+  PROTOBUF_NAMESPACE_ID::BoolValue* release_use_global_map_plan();
+  PROTOBUF_NAMESPACE_ID::BoolValue* mutable_use_global_map_plan();
+  void set_allocated_use_global_map_plan(PROTOBUF_NAMESPACE_ID::BoolValue* use_global_map_plan);
+  private:
+  const PROTOBUF_NAMESPACE_ID::BoolValue& _internal_use_global_map_plan() const;
+  PROTOBUF_NAMESPACE_ID::BoolValue* _internal_mutable_use_global_map_plan();
+  public:
+  void unsafe_arena_set_allocated_use_global_map_plan(
+      PROTOBUF_NAMESPACE_ID::BoolValue* use_global_map_plan);
+  PROTOBUF_NAMESPACE_ID::BoolValue* unsafe_arena_release_use_global_map_plan();
+
+  // .google.protobuf.BoolValue use_waypoint_plan = 21;
+  bool has_use_waypoint_plan() const;
+  private:
+  bool _internal_has_use_waypoint_plan() const;
+  public:
+  void clear_use_waypoint_plan();
+  const PROTOBUF_NAMESPACE_ID::BoolValue& use_waypoint_plan() const;
+  PROTOBUF_NAMESPACE_ID::BoolValue* release_use_waypoint_plan();
+  PROTOBUF_NAMESPACE_ID::BoolValue* mutable_use_waypoint_plan();
+  void set_allocated_use_waypoint_plan(PROTOBUF_NAMESPACE_ID::BoolValue* use_waypoint_plan);
+  private:
+  const PROTOBUF_NAMESPACE_ID::BoolValue& _internal_use_waypoint_plan() const;
+  PROTOBUF_NAMESPACE_ID::BoolValue* _internal_mutable_use_waypoint_plan();
+  public:
+  void unsafe_arena_set_allocated_use_waypoint_plan(
+      PROTOBUF_NAMESPACE_ID::BoolValue* use_waypoint_plan);
+  PROTOBUF_NAMESPACE_ID::BoolValue* unsafe_arena_release_use_waypoint_plan();
+
   // .google.protobuf.BoolValue check_vaild = 51;
   bool has_check_vaild() const;
   private:
@@ -486,6 +524,8 @@ class NaviPlanOption PROTOBUF_FINAL :
   PROTOBUF_NAMESPACE_ID::BoolValue* use_dyn_plan_;
   PROTOBUF_NAMESPACE_ID::BoolValue* use_line_search_;
   PROTOBUF_NAMESPACE_ID::BoolValue* use_start_orientation_;
+  PROTOBUF_NAMESPACE_ID::BoolValue* use_global_map_plan_;
+  PROTOBUF_NAMESPACE_ID::BoolValue* use_waypoint_plan_;
   PROTOBUF_NAMESPACE_ID::BoolValue* check_vaild_;
   int dir_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
@@ -1775,6 +1815,7 @@ class NavigationPlanRequest PROTOBUF_FINAL :
     kTaskIdFieldNumber = 2,
     kCommonStrFieldNumber = 3,
     kHeaderFieldNumber = 1,
+    kTimeoutSecFieldNumber = 100,
     kNaviTaskRequestFieldNumber = 201,
   };
   // string task_id = 2;
@@ -1827,6 +1868,24 @@ class NavigationPlanRequest PROTOBUF_FINAL :
       ::galbot::core_proto::Header* header);
   ::galbot::core_proto::Header* unsafe_arena_release_header();
 
+  // .google.protobuf.DoubleValue timeout_sec = 100;
+  bool has_timeout_sec() const;
+  private:
+  bool _internal_has_timeout_sec() const;
+  public:
+  void clear_timeout_sec();
+  const PROTOBUF_NAMESPACE_ID::DoubleValue& timeout_sec() const;
+  PROTOBUF_NAMESPACE_ID::DoubleValue* release_timeout_sec();
+  PROTOBUF_NAMESPACE_ID::DoubleValue* mutable_timeout_sec();
+  void set_allocated_timeout_sec(PROTOBUF_NAMESPACE_ID::DoubleValue* timeout_sec);
+  private:
+  const PROTOBUF_NAMESPACE_ID::DoubleValue& _internal_timeout_sec() const;
+  PROTOBUF_NAMESPACE_ID::DoubleValue* _internal_mutable_timeout_sec();
+  public:
+  void unsafe_arena_set_allocated_timeout_sec(
+      PROTOBUF_NAMESPACE_ID::DoubleValue* timeout_sec);
+  PROTOBUF_NAMESPACE_ID::DoubleValue* unsafe_arena_release_timeout_sec();
+
   // .galbot.aphropm_proto.NavigationTaskRequest navi_task_request = 201;
   bool has_navi_task_request() const;
   private:
@@ -1861,6 +1920,7 @@ class NavigationPlanRequest PROTOBUF_FINAL :
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr task_id_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr common_str_;
   ::galbot::core_proto::Header* header_;
+  PROTOBUF_NAMESPACE_ID::DoubleValue* timeout_sec_;
   union RequestTypeUnion {
     RequestTypeUnion() {}
     ::galbot::aphropm_proto::NavigationTaskRequest* navi_task_request_;
@@ -2669,6 +2729,160 @@ inline void NaviPlanOption::set_allocated_use_start_orientation(PROTOBUF_NAMESPA
   }
   use_start_orientation_ = use_start_orientation;
   // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.NaviPlanOption.use_start_orientation)
+}
+
+// .google.protobuf.BoolValue use_global_map_plan = 20;
+inline bool NaviPlanOption::_internal_has_use_global_map_plan() const {
+  return this != internal_default_instance() && use_global_map_plan_ != nullptr;
+}
+inline bool NaviPlanOption::has_use_global_map_plan() const {
+  return _internal_has_use_global_map_plan();
+}
+inline const PROTOBUF_NAMESPACE_ID::BoolValue& NaviPlanOption::_internal_use_global_map_plan() const {
+  const PROTOBUF_NAMESPACE_ID::BoolValue* p = use_global_map_plan_;
+  return p != nullptr ? *p : reinterpret_cast<const PROTOBUF_NAMESPACE_ID::BoolValue&>(
+      PROTOBUF_NAMESPACE_ID::_BoolValue_default_instance_);
+}
+inline const PROTOBUF_NAMESPACE_ID::BoolValue& NaviPlanOption::use_global_map_plan() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.NaviPlanOption.use_global_map_plan)
+  return _internal_use_global_map_plan();
+}
+inline void NaviPlanOption::unsafe_arena_set_allocated_use_global_map_plan(
+    PROTOBUF_NAMESPACE_ID::BoolValue* use_global_map_plan) {
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(use_global_map_plan_);
+  }
+  use_global_map_plan_ = use_global_map_plan;
+  if (use_global_map_plan) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:galbot.aphropm_proto.NaviPlanOption.use_global_map_plan)
+}
+inline PROTOBUF_NAMESPACE_ID::BoolValue* NaviPlanOption::release_use_global_map_plan() {
+  
+  PROTOBUF_NAMESPACE_ID::BoolValue* temp = use_global_map_plan_;
+  use_global_map_plan_ = nullptr;
+  if (GetArena() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+  return temp;
+}
+inline PROTOBUF_NAMESPACE_ID::BoolValue* NaviPlanOption::unsafe_arena_release_use_global_map_plan() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.NaviPlanOption.use_global_map_plan)
+  
+  PROTOBUF_NAMESPACE_ID::BoolValue* temp = use_global_map_plan_;
+  use_global_map_plan_ = nullptr;
+  return temp;
+}
+inline PROTOBUF_NAMESPACE_ID::BoolValue* NaviPlanOption::_internal_mutable_use_global_map_plan() {
+  
+  if (use_global_map_plan_ == nullptr) {
+    auto* p = CreateMaybeMessage<PROTOBUF_NAMESPACE_ID::BoolValue>(GetArena());
+    use_global_map_plan_ = p;
+  }
+  return use_global_map_plan_;
+}
+inline PROTOBUF_NAMESPACE_ID::BoolValue* NaviPlanOption::mutable_use_global_map_plan() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.NaviPlanOption.use_global_map_plan)
+  return _internal_mutable_use_global_map_plan();
+}
+inline void NaviPlanOption::set_allocated_use_global_map_plan(PROTOBUF_NAMESPACE_ID::BoolValue* use_global_map_plan) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArena();
+  if (message_arena == nullptr) {
+    delete reinterpret_cast< ::PROTOBUF_NAMESPACE_ID::MessageLite*>(use_global_map_plan_);
+  }
+  if (use_global_map_plan) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+      reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(use_global_map_plan)->GetArena();
+    if (message_arena != submessage_arena) {
+      use_global_map_plan = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, use_global_map_plan, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  use_global_map_plan_ = use_global_map_plan;
+  // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.NaviPlanOption.use_global_map_plan)
+}
+
+// .google.protobuf.BoolValue use_waypoint_plan = 21;
+inline bool NaviPlanOption::_internal_has_use_waypoint_plan() const {
+  return this != internal_default_instance() && use_waypoint_plan_ != nullptr;
+}
+inline bool NaviPlanOption::has_use_waypoint_plan() const {
+  return _internal_has_use_waypoint_plan();
+}
+inline const PROTOBUF_NAMESPACE_ID::BoolValue& NaviPlanOption::_internal_use_waypoint_plan() const {
+  const PROTOBUF_NAMESPACE_ID::BoolValue* p = use_waypoint_plan_;
+  return p != nullptr ? *p : reinterpret_cast<const PROTOBUF_NAMESPACE_ID::BoolValue&>(
+      PROTOBUF_NAMESPACE_ID::_BoolValue_default_instance_);
+}
+inline const PROTOBUF_NAMESPACE_ID::BoolValue& NaviPlanOption::use_waypoint_plan() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.NaviPlanOption.use_waypoint_plan)
+  return _internal_use_waypoint_plan();
+}
+inline void NaviPlanOption::unsafe_arena_set_allocated_use_waypoint_plan(
+    PROTOBUF_NAMESPACE_ID::BoolValue* use_waypoint_plan) {
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(use_waypoint_plan_);
+  }
+  use_waypoint_plan_ = use_waypoint_plan;
+  if (use_waypoint_plan) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:galbot.aphropm_proto.NaviPlanOption.use_waypoint_plan)
+}
+inline PROTOBUF_NAMESPACE_ID::BoolValue* NaviPlanOption::release_use_waypoint_plan() {
+  
+  PROTOBUF_NAMESPACE_ID::BoolValue* temp = use_waypoint_plan_;
+  use_waypoint_plan_ = nullptr;
+  if (GetArena() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+  return temp;
+}
+inline PROTOBUF_NAMESPACE_ID::BoolValue* NaviPlanOption::unsafe_arena_release_use_waypoint_plan() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.NaviPlanOption.use_waypoint_plan)
+  
+  PROTOBUF_NAMESPACE_ID::BoolValue* temp = use_waypoint_plan_;
+  use_waypoint_plan_ = nullptr;
+  return temp;
+}
+inline PROTOBUF_NAMESPACE_ID::BoolValue* NaviPlanOption::_internal_mutable_use_waypoint_plan() {
+  
+  if (use_waypoint_plan_ == nullptr) {
+    auto* p = CreateMaybeMessage<PROTOBUF_NAMESPACE_ID::BoolValue>(GetArena());
+    use_waypoint_plan_ = p;
+  }
+  return use_waypoint_plan_;
+}
+inline PROTOBUF_NAMESPACE_ID::BoolValue* NaviPlanOption::mutable_use_waypoint_plan() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.NaviPlanOption.use_waypoint_plan)
+  return _internal_mutable_use_waypoint_plan();
+}
+inline void NaviPlanOption::set_allocated_use_waypoint_plan(PROTOBUF_NAMESPACE_ID::BoolValue* use_waypoint_plan) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArena();
+  if (message_arena == nullptr) {
+    delete reinterpret_cast< ::PROTOBUF_NAMESPACE_ID::MessageLite*>(use_waypoint_plan_);
+  }
+  if (use_waypoint_plan) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+      reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(use_waypoint_plan)->GetArena();
+    if (message_arena != submessage_arena) {
+      use_waypoint_plan = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, use_waypoint_plan, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  use_waypoint_plan_ = use_waypoint_plan;
+  // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.NaviPlanOption.use_waypoint_plan)
 }
 
 // .google.protobuf.BoolValue check_vaild = 51;
@@ -5461,6 +5675,83 @@ inline void NavigationPlanRequest::set_allocated_common_str(std::string* common_
   common_str_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), common_str,
       GetArena());
   // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.NavigationPlanRequest.common_str)
+}
+
+// .google.protobuf.DoubleValue timeout_sec = 100;
+inline bool NavigationPlanRequest::_internal_has_timeout_sec() const {
+  return this != internal_default_instance() && timeout_sec_ != nullptr;
+}
+inline bool NavigationPlanRequest::has_timeout_sec() const {
+  return _internal_has_timeout_sec();
+}
+inline const PROTOBUF_NAMESPACE_ID::DoubleValue& NavigationPlanRequest::_internal_timeout_sec() const {
+  const PROTOBUF_NAMESPACE_ID::DoubleValue* p = timeout_sec_;
+  return p != nullptr ? *p : reinterpret_cast<const PROTOBUF_NAMESPACE_ID::DoubleValue&>(
+      PROTOBUF_NAMESPACE_ID::_DoubleValue_default_instance_);
+}
+inline const PROTOBUF_NAMESPACE_ID::DoubleValue& NavigationPlanRequest::timeout_sec() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.NavigationPlanRequest.timeout_sec)
+  return _internal_timeout_sec();
+}
+inline void NavigationPlanRequest::unsafe_arena_set_allocated_timeout_sec(
+    PROTOBUF_NAMESPACE_ID::DoubleValue* timeout_sec) {
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(timeout_sec_);
+  }
+  timeout_sec_ = timeout_sec;
+  if (timeout_sec) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:galbot.aphropm_proto.NavigationPlanRequest.timeout_sec)
+}
+inline PROTOBUF_NAMESPACE_ID::DoubleValue* NavigationPlanRequest::release_timeout_sec() {
+  
+  PROTOBUF_NAMESPACE_ID::DoubleValue* temp = timeout_sec_;
+  timeout_sec_ = nullptr;
+  if (GetArena() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+  return temp;
+}
+inline PROTOBUF_NAMESPACE_ID::DoubleValue* NavigationPlanRequest::unsafe_arena_release_timeout_sec() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.NavigationPlanRequest.timeout_sec)
+  
+  PROTOBUF_NAMESPACE_ID::DoubleValue* temp = timeout_sec_;
+  timeout_sec_ = nullptr;
+  return temp;
+}
+inline PROTOBUF_NAMESPACE_ID::DoubleValue* NavigationPlanRequest::_internal_mutable_timeout_sec() {
+  
+  if (timeout_sec_ == nullptr) {
+    auto* p = CreateMaybeMessage<PROTOBUF_NAMESPACE_ID::DoubleValue>(GetArena());
+    timeout_sec_ = p;
+  }
+  return timeout_sec_;
+}
+inline PROTOBUF_NAMESPACE_ID::DoubleValue* NavigationPlanRequest::mutable_timeout_sec() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.NavigationPlanRequest.timeout_sec)
+  return _internal_mutable_timeout_sec();
+}
+inline void NavigationPlanRequest::set_allocated_timeout_sec(PROTOBUF_NAMESPACE_ID::DoubleValue* timeout_sec) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArena();
+  if (message_arena == nullptr) {
+    delete reinterpret_cast< ::PROTOBUF_NAMESPACE_ID::MessageLite*>(timeout_sec_);
+  }
+  if (timeout_sec) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+      reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(timeout_sec)->GetArena();
+    if (message_arena != submessage_arena) {
+      timeout_sec = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, timeout_sec, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  timeout_sec_ = timeout_sec;
+  // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.NavigationPlanRequest.timeout_sec)
 }
 
 // .galbot.aphropm_proto.NavigationTaskRequest navi_task_request = 201;

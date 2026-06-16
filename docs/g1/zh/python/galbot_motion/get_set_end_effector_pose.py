@@ -80,6 +80,7 @@ except Exception as e:
 
 end_effector_frame="left_arm"
 reference_frame = "base_link"
+motion_timeout = 10.0
 try:
     status = motion.set_end_effector_pose(
         target_pose=chain_pose_baselink[end_effector_frame],
@@ -87,12 +88,13 @@ try:
         reference_frame=reference_frame,
         enable_collision_check=False,
         is_blocking=False,
-        timeout=5.0,
+        timeout=motion_timeout,
         params=custom_param
     )
     printStatus(status)
     assert status == gm.MotionStatus.SUCCESS, "Set end-effector pose failed"
     print(f"✅ End-effector pose set succeeded: status={status}")
+    time.sleep(motion_timeout + 1.0)
 except Exception as e:
     print(f"❌ End-effector pose setting exception: {e}")
 

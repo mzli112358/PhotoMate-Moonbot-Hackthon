@@ -746,8 +746,8 @@ virtual std::tuple<MotionStatus, std::vector<std::vector<double>>> get_jacobian_
    * @brief Command end-effector to move to target Cartesian pose.
    *
    * High-level interface for Cartesian motion commands. Internally performs IK, plans trajectory,
-   * and optionally executes the motion. Supports both blocking (wait for completion) and
-   * non-blocking (return immediately) modes.
+   * and executes the motion. The `is_blocking` flag only controls whether this API waits for
+   * completion or returns after starting a background execution task.
    *
    * @param target_pose              Target Cartesian pose: [x, y, z, qx, qy, qz, qw] (meters, quaternion)
    * @param end_effector_frame       Kinematic chain identifier (e.g., "left_arm", "right_arm")
@@ -756,20 +756,24 @@ virtual std::tuple<MotionStatus, std::vector<std::vector<double>>> get_jacobian_
    *                                 **Warning:** For direct execution, typically leave as nullptr to avoid
    *                                 conflicts between seed and actual robot state.
    * @param enable_collision_check   If true, only executes collision-free trajectories
-   * @param is_blocking              If true, blocks until motion completes or times out; if false, returns immediately
-   * @param timeout                  Blocking timeout (seconds). If < 0 and is_blocking=true, uses
-   *                                 params->timeout_second
+   * @param is_blocking              If true, waits until motion completes or times out. If false, the robot still
+   *                                 executes the motion, while this API returns immediately after starting a
+   *                                 background task that waits for execution completion.
+   * @param timeout                  Maximum time in seconds for the SDK to wait for motion completion.
+   *                                 If < 0, uses params->timeout_second. In non-blocking mode, this
+   *                                 timeout is applied inside the background task.
    * @param params                   Motion planning parameters (linear motion, actuation type, etc.)
    *
    * @return MotionStatus:
-   *         - SUCCESS: Motion completed successfully (blocking) or command sent (non-blocking)
+   *         - SUCCESS: Motion completed successfully (blocking) or background execution started (non-blocking)
    *         - TIMEOUT: Motion exceeded timeout duration
    *         - INVALID_INPUT: Invalid pose or parameters
    *         - FAULT: Planning or execution failure
    *
    * @note Motion type (linear/joint-space) controlled by params->move_line flag.
+   * @note Motion speed parameters are configured under `/data/galbot/config/default/service_motion_plan/traj_plan`.
    * @note For direct execution (params->is_direct_execute=true), avoid passing reference_robot_states.
-   * @warning Blocking calls will halt execution until motion completes; use with caution in real-time contexts.
+   * @warning Non-blocking mode does not cancel or skip robot motion; it only makes this API return immediately.
    */
   virtual MotionStatus set_end_effector_pose(const std::vector<double>& target_pose, const std::string& end_effector_frame,
                                              const std::string& reference_frame = "base_link",

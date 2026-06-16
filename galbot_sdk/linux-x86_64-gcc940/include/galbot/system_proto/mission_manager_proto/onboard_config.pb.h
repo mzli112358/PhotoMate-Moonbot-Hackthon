@@ -47,7 +47,7 @@ struct TableStruct_galbot_2fsystem_5fproto_2fmission_5fmanager_5fproto_2fonboard
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxiliaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[1]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[4]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -60,11 +60,23 @@ namespace mission_manager_proto {
 class OnboardConfig;
 class OnboardConfigDefaultTypeInternal;
 extern OnboardConfigDefaultTypeInternal _OnboardConfig_default_instance_;
+class OnboardConfig_OrinSysState;
+class OnboardConfig_OrinSysStateDefaultTypeInternal;
+extern OnboardConfig_OrinSysStateDefaultTypeInternal _OnboardConfig_OrinSysState_default_instance_;
+class OnboardConfig_ServiceState;
+class OnboardConfig_ServiceStateDefaultTypeInternal;
+extern OnboardConfig_ServiceStateDefaultTypeInternal _OnboardConfig_ServiceState_default_instance_;
+class OnboardConfig_XcuSysState;
+class OnboardConfig_XcuSysStateDefaultTypeInternal;
+extern OnboardConfig_XcuSysStateDefaultTypeInternal _OnboardConfig_XcuSysState_default_instance_;
 }  // namespace mission_manager_proto
 }  // namespace system_proto
 }  // namespace galbot
 PROTOBUF_NAMESPACE_OPEN
 template<> ::galbot::system_proto::mission_manager_proto::OnboardConfig* Arena::CreateMaybeMessage<::galbot::system_proto::mission_manager_proto::OnboardConfig>(Arena*);
+template<> ::galbot::system_proto::mission_manager_proto::OnboardConfig_OrinSysState* Arena::CreateMaybeMessage<::galbot::system_proto::mission_manager_proto::OnboardConfig_OrinSysState>(Arena*);
+template<> ::galbot::system_proto::mission_manager_proto::OnboardConfig_ServiceState* Arena::CreateMaybeMessage<::galbot::system_proto::mission_manager_proto::OnboardConfig_ServiceState>(Arena*);
+template<> ::galbot::system_proto::mission_manager_proto::OnboardConfig_XcuSysState* Arena::CreateMaybeMessage<::galbot::system_proto::mission_manager_proto::OnboardConfig_XcuSysState>(Arena*);
 PROTOBUF_NAMESPACE_CLOSE
 namespace galbot {
 namespace system_proto {
@@ -97,7 +109,586 @@ inline bool OnboardConfig_RobotType_Parse(
   return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<OnboardConfig_RobotType>(
     OnboardConfig_RobotType_descriptor(), name, value);
 }
+enum OnboardConfig_ServiceStatus : int {
+  OnboardConfig_ServiceStatus_SERVICE_STATUS_UNKNOWN = 0,
+  OnboardConfig_ServiceStatus_SERVICE_STATUS_RUNNING = 1,
+  OnboardConfig_ServiceStatus_OnboardConfig_ServiceStatus_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::min(),
+  OnboardConfig_ServiceStatus_OnboardConfig_ServiceStatus_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::max()
+};
+bool OnboardConfig_ServiceStatus_IsValid(int value);
+constexpr OnboardConfig_ServiceStatus OnboardConfig_ServiceStatus_ServiceStatus_MIN = OnboardConfig_ServiceStatus_SERVICE_STATUS_UNKNOWN;
+constexpr OnboardConfig_ServiceStatus OnboardConfig_ServiceStatus_ServiceStatus_MAX = OnboardConfig_ServiceStatus_SERVICE_STATUS_RUNNING;
+constexpr int OnboardConfig_ServiceStatus_ServiceStatus_ARRAYSIZE = OnboardConfig_ServiceStatus_ServiceStatus_MAX + 1;
+
+const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* OnboardConfig_ServiceStatus_descriptor();
+template<typename T>
+inline const std::string& OnboardConfig_ServiceStatus_Name(T enum_t_value) {
+  static_assert(::std::is_same<T, OnboardConfig_ServiceStatus>::value ||
+    ::std::is_integral<T>::value,
+    "Incorrect type passed to function OnboardConfig_ServiceStatus_Name.");
+  return ::PROTOBUF_NAMESPACE_ID::internal::NameOfEnum(
+    OnboardConfig_ServiceStatus_descriptor(), enum_t_value);
+}
+inline bool OnboardConfig_ServiceStatus_Parse(
+    ::PROTOBUF_NAMESPACE_ID::ConstStringParam name, OnboardConfig_ServiceStatus* value) {
+  return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<OnboardConfig_ServiceStatus>(
+    OnboardConfig_ServiceStatus_descriptor(), name, value);
+}
 // ===================================================================
+
+class OnboardConfig_OrinSysState PROTOBUF_FINAL :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:galbot.system_proto.mission_manager_proto.OnboardConfig.OrinSysState) */ {
+ public:
+  inline OnboardConfig_OrinSysState() : OnboardConfig_OrinSysState(nullptr) {}
+  virtual ~OnboardConfig_OrinSysState();
+
+  OnboardConfig_OrinSysState(const OnboardConfig_OrinSysState& from);
+  OnboardConfig_OrinSysState(OnboardConfig_OrinSysState&& from) noexcept
+    : OnboardConfig_OrinSysState() {
+    *this = ::std::move(from);
+  }
+
+  inline OnboardConfig_OrinSysState& operator=(const OnboardConfig_OrinSysState& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline OnboardConfig_OrinSysState& operator=(OnboardConfig_OrinSysState&& from) noexcept {
+    if (GetArena() == from.GetArena()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const OnboardConfig_OrinSysState& default_instance();
+
+  static inline const OnboardConfig_OrinSysState* internal_default_instance() {
+    return reinterpret_cast<const OnboardConfig_OrinSysState*>(
+               &_OnboardConfig_OrinSysState_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    0;
+
+  friend void swap(OnboardConfig_OrinSysState& a, OnboardConfig_OrinSysState& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(OnboardConfig_OrinSysState* other) {
+    if (other == this) return;
+    if (GetArena() == other->GetArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(OnboardConfig_OrinSysState* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline OnboardConfig_OrinSysState* New() const final {
+    return CreateMaybeMessage<OnboardConfig_OrinSysState>(nullptr);
+  }
+
+  OnboardConfig_OrinSysState* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<OnboardConfig_OrinSysState>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const OnboardConfig_OrinSysState& from);
+  void MergeFrom(const OnboardConfig_OrinSysState& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(OnboardConfig_OrinSysState* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "galbot.system_proto.mission_manager_proto.OnboardConfig.OrinSysState";
+  }
+  protected:
+  explicit OnboardConfig_OrinSysState(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_galbot_2fsystem_5fproto_2fmission_5fmanager_5fproto_2fonboard_5fconfig_2eproto);
+    return ::descriptor_table_galbot_2fsystem_5fproto_2fmission_5fmanager_5fproto_2fonboard_5fconfig_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kSystemModeFieldNumber = 7,
+    kCpuUsageFieldNumber = 1,
+    kGpuUsageFieldNumber = 2,
+    kMemoryUsedKbFieldNumber = 3,
+    kMemoryTotalKbFieldNumber = 4,
+    kMemoryUsageFieldNumber = 5,
+    kCpuTemperatureFieldNumber = 6,
+  };
+  // string system_mode = 7;
+  void clear_system_mode();
+  const std::string& system_mode() const;
+  void set_system_mode(const std::string& value);
+  void set_system_mode(std::string&& value);
+  void set_system_mode(const char* value);
+  void set_system_mode(const char* value, size_t size);
+  std::string* mutable_system_mode();
+  std::string* release_system_mode();
+  void set_allocated_system_mode(std::string* system_mode);
+  private:
+  const std::string& _internal_system_mode() const;
+  void _internal_set_system_mode(const std::string& value);
+  std::string* _internal_mutable_system_mode();
+  public:
+
+  // double cpu_usage = 1;
+  void clear_cpu_usage();
+  double cpu_usage() const;
+  void set_cpu_usage(double value);
+  private:
+  double _internal_cpu_usage() const;
+  void _internal_set_cpu_usage(double value);
+  public:
+
+  // double gpu_usage = 2;
+  void clear_gpu_usage();
+  double gpu_usage() const;
+  void set_gpu_usage(double value);
+  private:
+  double _internal_gpu_usage() const;
+  void _internal_set_gpu_usage(double value);
+  public:
+
+  // uint64 memory_used_kb = 3;
+  void clear_memory_used_kb();
+  ::PROTOBUF_NAMESPACE_ID::uint64 memory_used_kb() const;
+  void set_memory_used_kb(::PROTOBUF_NAMESPACE_ID::uint64 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::uint64 _internal_memory_used_kb() const;
+  void _internal_set_memory_used_kb(::PROTOBUF_NAMESPACE_ID::uint64 value);
+  public:
+
+  // uint64 memory_total_kb = 4;
+  void clear_memory_total_kb();
+  ::PROTOBUF_NAMESPACE_ID::uint64 memory_total_kb() const;
+  void set_memory_total_kb(::PROTOBUF_NAMESPACE_ID::uint64 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::uint64 _internal_memory_total_kb() const;
+  void _internal_set_memory_total_kb(::PROTOBUF_NAMESPACE_ID::uint64 value);
+  public:
+
+  // double memory_usage = 5;
+  void clear_memory_usage();
+  double memory_usage() const;
+  void set_memory_usage(double value);
+  private:
+  double _internal_memory_usage() const;
+  void _internal_set_memory_usage(double value);
+  public:
+
+  // double cpu_temperature = 6;
+  void clear_cpu_temperature();
+  double cpu_temperature() const;
+  void set_cpu_temperature(double value);
+  private:
+  double _internal_cpu_temperature() const;
+  void _internal_set_cpu_temperature(double value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:galbot.system_proto.mission_manager_proto.OnboardConfig.OrinSysState)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr system_mode_;
+  double cpu_usage_;
+  double gpu_usage_;
+  ::PROTOBUF_NAMESPACE_ID::uint64 memory_used_kb_;
+  ::PROTOBUF_NAMESPACE_ID::uint64 memory_total_kb_;
+  double memory_usage_;
+  double cpu_temperature_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_galbot_2fsystem_5fproto_2fmission_5fmanager_5fproto_2fonboard_5fconfig_2eproto;
+};
+// -------------------------------------------------------------------
+
+class OnboardConfig_XcuSysState PROTOBUF_FINAL :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:galbot.system_proto.mission_manager_proto.OnboardConfig.XcuSysState) */ {
+ public:
+  inline OnboardConfig_XcuSysState() : OnboardConfig_XcuSysState(nullptr) {}
+  virtual ~OnboardConfig_XcuSysState();
+
+  OnboardConfig_XcuSysState(const OnboardConfig_XcuSysState& from);
+  OnboardConfig_XcuSysState(OnboardConfig_XcuSysState&& from) noexcept
+    : OnboardConfig_XcuSysState() {
+    *this = ::std::move(from);
+  }
+
+  inline OnboardConfig_XcuSysState& operator=(const OnboardConfig_XcuSysState& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline OnboardConfig_XcuSysState& operator=(OnboardConfig_XcuSysState&& from) noexcept {
+    if (GetArena() == from.GetArena()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const OnboardConfig_XcuSysState& default_instance();
+
+  static inline const OnboardConfig_XcuSysState* internal_default_instance() {
+    return reinterpret_cast<const OnboardConfig_XcuSysState*>(
+               &_OnboardConfig_XcuSysState_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    1;
+
+  friend void swap(OnboardConfig_XcuSysState& a, OnboardConfig_XcuSysState& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(OnboardConfig_XcuSysState* other) {
+    if (other == this) return;
+    if (GetArena() == other->GetArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(OnboardConfig_XcuSysState* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline OnboardConfig_XcuSysState* New() const final {
+    return CreateMaybeMessage<OnboardConfig_XcuSysState>(nullptr);
+  }
+
+  OnboardConfig_XcuSysState* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<OnboardConfig_XcuSysState>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const OnboardConfig_XcuSysState& from);
+  void MergeFrom(const OnboardConfig_XcuSysState& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(OnboardConfig_XcuSysState* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "galbot.system_proto.mission_manager_proto.OnboardConfig.XcuSysState";
+  }
+  protected:
+  explicit OnboardConfig_XcuSysState(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_galbot_2fsystem_5fproto_2fmission_5fmanager_5fproto_2fonboard_5fconfig_2eproto);
+    return ::descriptor_table_galbot_2fsystem_5fproto_2fmission_5fmanager_5fproto_2fonboard_5fconfig_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kCpuUsageFieldNumber = 1,
+    kMemoryUsedKbFieldNumber = 2,
+    kMemoryTotalKbFieldNumber = 3,
+    kMemoryUsageFieldNumber = 4,
+    kControlFrequencyFieldNumber = 5,
+    kControlLatencyFieldNumber = 6,
+  };
+  // double cpu_usage = 1;
+  void clear_cpu_usage();
+  double cpu_usage() const;
+  void set_cpu_usage(double value);
+  private:
+  double _internal_cpu_usage() const;
+  void _internal_set_cpu_usage(double value);
+  public:
+
+  // uint64 memory_used_kb = 2;
+  void clear_memory_used_kb();
+  ::PROTOBUF_NAMESPACE_ID::uint64 memory_used_kb() const;
+  void set_memory_used_kb(::PROTOBUF_NAMESPACE_ID::uint64 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::uint64 _internal_memory_used_kb() const;
+  void _internal_set_memory_used_kb(::PROTOBUF_NAMESPACE_ID::uint64 value);
+  public:
+
+  // uint64 memory_total_kb = 3;
+  void clear_memory_total_kb();
+  ::PROTOBUF_NAMESPACE_ID::uint64 memory_total_kb() const;
+  void set_memory_total_kb(::PROTOBUF_NAMESPACE_ID::uint64 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::uint64 _internal_memory_total_kb() const;
+  void _internal_set_memory_total_kb(::PROTOBUF_NAMESPACE_ID::uint64 value);
+  public:
+
+  // double memory_usage = 4;
+  void clear_memory_usage();
+  double memory_usage() const;
+  void set_memory_usage(double value);
+  private:
+  double _internal_memory_usage() const;
+  void _internal_set_memory_usage(double value);
+  public:
+
+  // double control_frequency = 5;
+  void clear_control_frequency();
+  double control_frequency() const;
+  void set_control_frequency(double value);
+  private:
+  double _internal_control_frequency() const;
+  void _internal_set_control_frequency(double value);
+  public:
+
+  // double control_latency = 6;
+  void clear_control_latency();
+  double control_latency() const;
+  void set_control_latency(double value);
+  private:
+  double _internal_control_latency() const;
+  void _internal_set_control_latency(double value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:galbot.system_proto.mission_manager_proto.OnboardConfig.XcuSysState)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  double cpu_usage_;
+  ::PROTOBUF_NAMESPACE_ID::uint64 memory_used_kb_;
+  ::PROTOBUF_NAMESPACE_ID::uint64 memory_total_kb_;
+  double memory_usage_;
+  double control_frequency_;
+  double control_latency_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_galbot_2fsystem_5fproto_2fmission_5fmanager_5fproto_2fonboard_5fconfig_2eproto;
+};
+// -------------------------------------------------------------------
+
+class OnboardConfig_ServiceState PROTOBUF_FINAL :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:galbot.system_proto.mission_manager_proto.OnboardConfig.ServiceState) */ {
+ public:
+  inline OnboardConfig_ServiceState() : OnboardConfig_ServiceState(nullptr) {}
+  virtual ~OnboardConfig_ServiceState();
+
+  OnboardConfig_ServiceState(const OnboardConfig_ServiceState& from);
+  OnboardConfig_ServiceState(OnboardConfig_ServiceState&& from) noexcept
+    : OnboardConfig_ServiceState() {
+    *this = ::std::move(from);
+  }
+
+  inline OnboardConfig_ServiceState& operator=(const OnboardConfig_ServiceState& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline OnboardConfig_ServiceState& operator=(OnboardConfig_ServiceState&& from) noexcept {
+    if (GetArena() == from.GetArena()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const OnboardConfig_ServiceState& default_instance();
+
+  static inline const OnboardConfig_ServiceState* internal_default_instance() {
+    return reinterpret_cast<const OnboardConfig_ServiceState*>(
+               &_OnboardConfig_ServiceState_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    2;
+
+  friend void swap(OnboardConfig_ServiceState& a, OnboardConfig_ServiceState& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(OnboardConfig_ServiceState* other) {
+    if (other == this) return;
+    if (GetArena() == other->GetArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(OnboardConfig_ServiceState* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline OnboardConfig_ServiceState* New() const final {
+    return CreateMaybeMessage<OnboardConfig_ServiceState>(nullptr);
+  }
+
+  OnboardConfig_ServiceState* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<OnboardConfig_ServiceState>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const OnboardConfig_ServiceState& from);
+  void MergeFrom(const OnboardConfig_ServiceState& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(OnboardConfig_ServiceState* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "galbot.system_proto.mission_manager_proto.OnboardConfig.ServiceState";
+  }
+  protected:
+  explicit OnboardConfig_ServiceState(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_galbot_2fsystem_5fproto_2fmission_5fmanager_5fproto_2fonboard_5fconfig_2eproto);
+    return ::descriptor_table_galbot_2fsystem_5fproto_2fmission_5fmanager_5fproto_2fonboard_5fconfig_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kNameFieldNumber = 1,
+    kStatusFieldNumber = 2,
+  };
+  // string name = 1;
+  void clear_name();
+  const std::string& name() const;
+  void set_name(const std::string& value);
+  void set_name(std::string&& value);
+  void set_name(const char* value);
+  void set_name(const char* value, size_t size);
+  std::string* mutable_name();
+  std::string* release_name();
+  void set_allocated_name(std::string* name);
+  private:
+  const std::string& _internal_name() const;
+  void _internal_set_name(const std::string& value);
+  std::string* _internal_mutable_name();
+  public:
+
+  // .galbot.system_proto.mission_manager_proto.OnboardConfig.ServiceStatus status = 2;
+  void clear_status();
+  ::galbot::system_proto::mission_manager_proto::OnboardConfig_ServiceStatus status() const;
+  void set_status(::galbot::system_proto::mission_manager_proto::OnboardConfig_ServiceStatus value);
+  private:
+  ::galbot::system_proto::mission_manager_proto::OnboardConfig_ServiceStatus _internal_status() const;
+  void _internal_set_status(::galbot::system_proto::mission_manager_proto::OnboardConfig_ServiceStatus value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:galbot.system_proto.mission_manager_proto.OnboardConfig.ServiceState)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr name_;
+  int status_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_galbot_2fsystem_5fproto_2fmission_5fmanager_5fproto_2fonboard_5fconfig_2eproto;
+};
+// -------------------------------------------------------------------
 
 class OnboardConfig PROTOBUF_FINAL :
     public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:galbot.system_proto.mission_manager_proto.OnboardConfig) */ {
@@ -140,7 +731,7 @@ class OnboardConfig PROTOBUF_FINAL :
                &_OnboardConfig_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    0;
+    3;
 
   friend void swap(OnboardConfig& a, OnboardConfig& b) {
     a.Swap(&b);
@@ -208,6 +799,10 @@ class OnboardConfig PROTOBUF_FINAL :
 
   // nested types ----------------------------------------------------
 
+  typedef OnboardConfig_OrinSysState OrinSysState;
+  typedef OnboardConfig_XcuSysState XcuSysState;
+  typedef OnboardConfig_ServiceState ServiceState;
+
   typedef OnboardConfig_RobotType RobotType;
   static constexpr RobotType UNKNOWN_ROBOT_TYPE =
     OnboardConfig_RobotType_UNKNOWN_ROBOT_TYPE;
@@ -242,15 +837,68 @@ class OnboardConfig PROTOBUF_FINAL :
     return OnboardConfig_RobotType_Parse(name, value);
   }
 
+  typedef OnboardConfig_ServiceStatus ServiceStatus;
+  static constexpr ServiceStatus SERVICE_STATUS_UNKNOWN =
+    OnboardConfig_ServiceStatus_SERVICE_STATUS_UNKNOWN;
+  static constexpr ServiceStatus SERVICE_STATUS_RUNNING =
+    OnboardConfig_ServiceStatus_SERVICE_STATUS_RUNNING;
+  static inline bool ServiceStatus_IsValid(int value) {
+    return OnboardConfig_ServiceStatus_IsValid(value);
+  }
+  static constexpr ServiceStatus ServiceStatus_MIN =
+    OnboardConfig_ServiceStatus_ServiceStatus_MIN;
+  static constexpr ServiceStatus ServiceStatus_MAX =
+    OnboardConfig_ServiceStatus_ServiceStatus_MAX;
+  static constexpr int ServiceStatus_ARRAYSIZE =
+    OnboardConfig_ServiceStatus_ServiceStatus_ARRAYSIZE;
+  static inline const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor*
+  ServiceStatus_descriptor() {
+    return OnboardConfig_ServiceStatus_descriptor();
+  }
+  template<typename T>
+  static inline const std::string& ServiceStatus_Name(T enum_t_value) {
+    static_assert(::std::is_same<T, ServiceStatus>::value ||
+      ::std::is_integral<T>::value,
+      "Incorrect type passed to function ServiceStatus_Name.");
+    return OnboardConfig_ServiceStatus_Name(enum_t_value);
+  }
+  static inline bool ServiceStatus_Parse(::PROTOBUF_NAMESPACE_ID::ConstStringParam name,
+      ServiceStatus* value) {
+    return OnboardConfig_ServiceStatus_Parse(name, value);
+  }
+
   // accessors -------------------------------------------------------
 
   enum : int {
+    kServiceStatesFieldNumber = 10,
     kRobotSerialNumberFieldNumber = 1,
     kRobotNameFieldNumber = 2,
     kRobotHardwareVersionFieldNumber = 4,
     kMainlineVersionFieldNumber = 5,
+    kCurModeFieldNumber = 7,
+    kOrinSysStateFieldNumber = 8,
+    kXcuSysStateFieldNumber = 9,
     kRobotTypeFieldNumber = 3,
+    kEmergencyStopFieldNumber = 6,
   };
+  // repeated .galbot.system_proto.mission_manager_proto.OnboardConfig.ServiceState service_states = 10;
+  int service_states_size() const;
+  private:
+  int _internal_service_states_size() const;
+  public:
+  void clear_service_states();
+  ::galbot::system_proto::mission_manager_proto::OnboardConfig_ServiceState* mutable_service_states(int index);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::galbot::system_proto::mission_manager_proto::OnboardConfig_ServiceState >*
+      mutable_service_states();
+  private:
+  const ::galbot::system_proto::mission_manager_proto::OnboardConfig_ServiceState& _internal_service_states(int index) const;
+  ::galbot::system_proto::mission_manager_proto::OnboardConfig_ServiceState* _internal_add_service_states();
+  public:
+  const ::galbot::system_proto::mission_manager_proto::OnboardConfig_ServiceState& service_states(int index) const;
+  ::galbot::system_proto::mission_manager_proto::OnboardConfig_ServiceState* add_service_states();
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::galbot::system_proto::mission_manager_proto::OnboardConfig_ServiceState >&
+      service_states() const;
+
   // string robot_serial_number = 1;
   void clear_robot_serial_number();
   const std::string& robot_serial_number() const;
@@ -315,6 +963,58 @@ class OnboardConfig PROTOBUF_FINAL :
   std::string* _internal_mutable_mainline_version();
   public:
 
+  // string cur_mode = 7;
+  void clear_cur_mode();
+  const std::string& cur_mode() const;
+  void set_cur_mode(const std::string& value);
+  void set_cur_mode(std::string&& value);
+  void set_cur_mode(const char* value);
+  void set_cur_mode(const char* value, size_t size);
+  std::string* mutable_cur_mode();
+  std::string* release_cur_mode();
+  void set_allocated_cur_mode(std::string* cur_mode);
+  private:
+  const std::string& _internal_cur_mode() const;
+  void _internal_set_cur_mode(const std::string& value);
+  std::string* _internal_mutable_cur_mode();
+  public:
+
+  // .galbot.system_proto.mission_manager_proto.OnboardConfig.OrinSysState orin_sys_state = 8;
+  bool has_orin_sys_state() const;
+  private:
+  bool _internal_has_orin_sys_state() const;
+  public:
+  void clear_orin_sys_state();
+  const ::galbot::system_proto::mission_manager_proto::OnboardConfig_OrinSysState& orin_sys_state() const;
+  ::galbot::system_proto::mission_manager_proto::OnboardConfig_OrinSysState* release_orin_sys_state();
+  ::galbot::system_proto::mission_manager_proto::OnboardConfig_OrinSysState* mutable_orin_sys_state();
+  void set_allocated_orin_sys_state(::galbot::system_proto::mission_manager_proto::OnboardConfig_OrinSysState* orin_sys_state);
+  private:
+  const ::galbot::system_proto::mission_manager_proto::OnboardConfig_OrinSysState& _internal_orin_sys_state() const;
+  ::galbot::system_proto::mission_manager_proto::OnboardConfig_OrinSysState* _internal_mutable_orin_sys_state();
+  public:
+  void unsafe_arena_set_allocated_orin_sys_state(
+      ::galbot::system_proto::mission_manager_proto::OnboardConfig_OrinSysState* orin_sys_state);
+  ::galbot::system_proto::mission_manager_proto::OnboardConfig_OrinSysState* unsafe_arena_release_orin_sys_state();
+
+  // .galbot.system_proto.mission_manager_proto.OnboardConfig.XcuSysState xcu_sys_state = 9;
+  bool has_xcu_sys_state() const;
+  private:
+  bool _internal_has_xcu_sys_state() const;
+  public:
+  void clear_xcu_sys_state();
+  const ::galbot::system_proto::mission_manager_proto::OnboardConfig_XcuSysState& xcu_sys_state() const;
+  ::galbot::system_proto::mission_manager_proto::OnboardConfig_XcuSysState* release_xcu_sys_state();
+  ::galbot::system_proto::mission_manager_proto::OnboardConfig_XcuSysState* mutable_xcu_sys_state();
+  void set_allocated_xcu_sys_state(::galbot::system_proto::mission_manager_proto::OnboardConfig_XcuSysState* xcu_sys_state);
+  private:
+  const ::galbot::system_proto::mission_manager_proto::OnboardConfig_XcuSysState& _internal_xcu_sys_state() const;
+  ::galbot::system_proto::mission_manager_proto::OnboardConfig_XcuSysState* _internal_mutable_xcu_sys_state();
+  public:
+  void unsafe_arena_set_allocated_xcu_sys_state(
+      ::galbot::system_proto::mission_manager_proto::OnboardConfig_XcuSysState* xcu_sys_state);
+  ::galbot::system_proto::mission_manager_proto::OnboardConfig_XcuSysState* unsafe_arena_release_xcu_sys_state();
+
   // .galbot.system_proto.mission_manager_proto.OnboardConfig.RobotType robot_type = 3;
   void clear_robot_type();
   ::galbot::system_proto::mission_manager_proto::OnboardConfig_RobotType robot_type() const;
@@ -324,6 +1024,15 @@ class OnboardConfig PROTOBUF_FINAL :
   void _internal_set_robot_type(::galbot::system_proto::mission_manager_proto::OnboardConfig_RobotType value);
   public:
 
+  // bool emergency_stop = 6;
+  void clear_emergency_stop();
+  bool emergency_stop() const;
+  void set_emergency_stop(bool value);
+  private:
+  bool _internal_emergency_stop() const;
+  void _internal_set_emergency_stop(bool value);
+  public:
+
   // @@protoc_insertion_point(class_scope:galbot.system_proto.mission_manager_proto.OnboardConfig)
  private:
   class _Internal;
@@ -331,11 +1040,16 @@ class OnboardConfig PROTOBUF_FINAL :
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::galbot::system_proto::mission_manager_proto::OnboardConfig_ServiceState > service_states_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr robot_serial_number_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr robot_name_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr robot_hardware_version_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr mainline_version_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr cur_mode_;
+  ::galbot::system_proto::mission_manager_proto::OnboardConfig_OrinSysState* orin_sys_state_;
+  ::galbot::system_proto::mission_manager_proto::OnboardConfig_XcuSysState* xcu_sys_state_;
   int robot_type_;
+  bool emergency_stop_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_galbot_2fsystem_5fproto_2fmission_5fmanager_5fproto_2fonboard_5fconfig_2eproto;
 };
@@ -348,6 +1062,400 @@ class OnboardConfig PROTOBUF_FINAL :
   #pragma GCC diagnostic push
   #pragma GCC diagnostic ignored "-Wstrict-aliasing"
 #endif  // __GNUC__
+// OnboardConfig_OrinSysState
+
+// double cpu_usage = 1;
+inline void OnboardConfig_OrinSysState::clear_cpu_usage() {
+  cpu_usage_ = 0;
+}
+inline double OnboardConfig_OrinSysState::_internal_cpu_usage() const {
+  return cpu_usage_;
+}
+inline double OnboardConfig_OrinSysState::cpu_usage() const {
+  // @@protoc_insertion_point(field_get:galbot.system_proto.mission_manager_proto.OnboardConfig.OrinSysState.cpu_usage)
+  return _internal_cpu_usage();
+}
+inline void OnboardConfig_OrinSysState::_internal_set_cpu_usage(double value) {
+  
+  cpu_usage_ = value;
+}
+inline void OnboardConfig_OrinSysState::set_cpu_usage(double value) {
+  _internal_set_cpu_usage(value);
+  // @@protoc_insertion_point(field_set:galbot.system_proto.mission_manager_proto.OnboardConfig.OrinSysState.cpu_usage)
+}
+
+// double gpu_usage = 2;
+inline void OnboardConfig_OrinSysState::clear_gpu_usage() {
+  gpu_usage_ = 0;
+}
+inline double OnboardConfig_OrinSysState::_internal_gpu_usage() const {
+  return gpu_usage_;
+}
+inline double OnboardConfig_OrinSysState::gpu_usage() const {
+  // @@protoc_insertion_point(field_get:galbot.system_proto.mission_manager_proto.OnboardConfig.OrinSysState.gpu_usage)
+  return _internal_gpu_usage();
+}
+inline void OnboardConfig_OrinSysState::_internal_set_gpu_usage(double value) {
+  
+  gpu_usage_ = value;
+}
+inline void OnboardConfig_OrinSysState::set_gpu_usage(double value) {
+  _internal_set_gpu_usage(value);
+  // @@protoc_insertion_point(field_set:galbot.system_proto.mission_manager_proto.OnboardConfig.OrinSysState.gpu_usage)
+}
+
+// uint64 memory_used_kb = 3;
+inline void OnboardConfig_OrinSysState::clear_memory_used_kb() {
+  memory_used_kb_ = PROTOBUF_ULONGLONG(0);
+}
+inline ::PROTOBUF_NAMESPACE_ID::uint64 OnboardConfig_OrinSysState::_internal_memory_used_kb() const {
+  return memory_used_kb_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::uint64 OnboardConfig_OrinSysState::memory_used_kb() const {
+  // @@protoc_insertion_point(field_get:galbot.system_proto.mission_manager_proto.OnboardConfig.OrinSysState.memory_used_kb)
+  return _internal_memory_used_kb();
+}
+inline void OnboardConfig_OrinSysState::_internal_set_memory_used_kb(::PROTOBUF_NAMESPACE_ID::uint64 value) {
+  
+  memory_used_kb_ = value;
+}
+inline void OnboardConfig_OrinSysState::set_memory_used_kb(::PROTOBUF_NAMESPACE_ID::uint64 value) {
+  _internal_set_memory_used_kb(value);
+  // @@protoc_insertion_point(field_set:galbot.system_proto.mission_manager_proto.OnboardConfig.OrinSysState.memory_used_kb)
+}
+
+// uint64 memory_total_kb = 4;
+inline void OnboardConfig_OrinSysState::clear_memory_total_kb() {
+  memory_total_kb_ = PROTOBUF_ULONGLONG(0);
+}
+inline ::PROTOBUF_NAMESPACE_ID::uint64 OnboardConfig_OrinSysState::_internal_memory_total_kb() const {
+  return memory_total_kb_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::uint64 OnboardConfig_OrinSysState::memory_total_kb() const {
+  // @@protoc_insertion_point(field_get:galbot.system_proto.mission_manager_proto.OnboardConfig.OrinSysState.memory_total_kb)
+  return _internal_memory_total_kb();
+}
+inline void OnboardConfig_OrinSysState::_internal_set_memory_total_kb(::PROTOBUF_NAMESPACE_ID::uint64 value) {
+  
+  memory_total_kb_ = value;
+}
+inline void OnboardConfig_OrinSysState::set_memory_total_kb(::PROTOBUF_NAMESPACE_ID::uint64 value) {
+  _internal_set_memory_total_kb(value);
+  // @@protoc_insertion_point(field_set:galbot.system_proto.mission_manager_proto.OnboardConfig.OrinSysState.memory_total_kb)
+}
+
+// double memory_usage = 5;
+inline void OnboardConfig_OrinSysState::clear_memory_usage() {
+  memory_usage_ = 0;
+}
+inline double OnboardConfig_OrinSysState::_internal_memory_usage() const {
+  return memory_usage_;
+}
+inline double OnboardConfig_OrinSysState::memory_usage() const {
+  // @@protoc_insertion_point(field_get:galbot.system_proto.mission_manager_proto.OnboardConfig.OrinSysState.memory_usage)
+  return _internal_memory_usage();
+}
+inline void OnboardConfig_OrinSysState::_internal_set_memory_usage(double value) {
+  
+  memory_usage_ = value;
+}
+inline void OnboardConfig_OrinSysState::set_memory_usage(double value) {
+  _internal_set_memory_usage(value);
+  // @@protoc_insertion_point(field_set:galbot.system_proto.mission_manager_proto.OnboardConfig.OrinSysState.memory_usage)
+}
+
+// double cpu_temperature = 6;
+inline void OnboardConfig_OrinSysState::clear_cpu_temperature() {
+  cpu_temperature_ = 0;
+}
+inline double OnboardConfig_OrinSysState::_internal_cpu_temperature() const {
+  return cpu_temperature_;
+}
+inline double OnboardConfig_OrinSysState::cpu_temperature() const {
+  // @@protoc_insertion_point(field_get:galbot.system_proto.mission_manager_proto.OnboardConfig.OrinSysState.cpu_temperature)
+  return _internal_cpu_temperature();
+}
+inline void OnboardConfig_OrinSysState::_internal_set_cpu_temperature(double value) {
+  
+  cpu_temperature_ = value;
+}
+inline void OnboardConfig_OrinSysState::set_cpu_temperature(double value) {
+  _internal_set_cpu_temperature(value);
+  // @@protoc_insertion_point(field_set:galbot.system_proto.mission_manager_proto.OnboardConfig.OrinSysState.cpu_temperature)
+}
+
+// string system_mode = 7;
+inline void OnboardConfig_OrinSysState::clear_system_mode() {
+  system_mode_.ClearToEmpty();
+}
+inline const std::string& OnboardConfig_OrinSysState::system_mode() const {
+  // @@protoc_insertion_point(field_get:galbot.system_proto.mission_manager_proto.OnboardConfig.OrinSysState.system_mode)
+  return _internal_system_mode();
+}
+inline void OnboardConfig_OrinSysState::set_system_mode(const std::string& value) {
+  _internal_set_system_mode(value);
+  // @@protoc_insertion_point(field_set:galbot.system_proto.mission_manager_proto.OnboardConfig.OrinSysState.system_mode)
+}
+inline std::string* OnboardConfig_OrinSysState::mutable_system_mode() {
+  // @@protoc_insertion_point(field_mutable:galbot.system_proto.mission_manager_proto.OnboardConfig.OrinSysState.system_mode)
+  return _internal_mutable_system_mode();
+}
+inline const std::string& OnboardConfig_OrinSysState::_internal_system_mode() const {
+  return system_mode_.Get();
+}
+inline void OnboardConfig_OrinSysState::_internal_set_system_mode(const std::string& value) {
+  
+  system_mode_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArena());
+}
+inline void OnboardConfig_OrinSysState::set_system_mode(std::string&& value) {
+  
+  system_mode_.Set(
+    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::move(value), GetArena());
+  // @@protoc_insertion_point(field_set_rvalue:galbot.system_proto.mission_manager_proto.OnboardConfig.OrinSysState.system_mode)
+}
+inline void OnboardConfig_OrinSysState::set_system_mode(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  system_mode_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(value), GetArena());
+  // @@protoc_insertion_point(field_set_char:galbot.system_proto.mission_manager_proto.OnboardConfig.OrinSysState.system_mode)
+}
+inline void OnboardConfig_OrinSysState::set_system_mode(const char* value,
+    size_t size) {
+  
+  system_mode_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(
+      reinterpret_cast<const char*>(value), size), GetArena());
+  // @@protoc_insertion_point(field_set_pointer:galbot.system_proto.mission_manager_proto.OnboardConfig.OrinSysState.system_mode)
+}
+inline std::string* OnboardConfig_OrinSysState::_internal_mutable_system_mode() {
+  
+  return system_mode_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArena());
+}
+inline std::string* OnboardConfig_OrinSysState::release_system_mode() {
+  // @@protoc_insertion_point(field_release:galbot.system_proto.mission_manager_proto.OnboardConfig.OrinSysState.system_mode)
+  return system_mode_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline void OnboardConfig_OrinSysState::set_allocated_system_mode(std::string* system_mode) {
+  if (system_mode != nullptr) {
+    
+  } else {
+    
+  }
+  system_mode_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), system_mode,
+      GetArena());
+  // @@protoc_insertion_point(field_set_allocated:galbot.system_proto.mission_manager_proto.OnboardConfig.OrinSysState.system_mode)
+}
+
+// -------------------------------------------------------------------
+
+// OnboardConfig_XcuSysState
+
+// double cpu_usage = 1;
+inline void OnboardConfig_XcuSysState::clear_cpu_usage() {
+  cpu_usage_ = 0;
+}
+inline double OnboardConfig_XcuSysState::_internal_cpu_usage() const {
+  return cpu_usage_;
+}
+inline double OnboardConfig_XcuSysState::cpu_usage() const {
+  // @@protoc_insertion_point(field_get:galbot.system_proto.mission_manager_proto.OnboardConfig.XcuSysState.cpu_usage)
+  return _internal_cpu_usage();
+}
+inline void OnboardConfig_XcuSysState::_internal_set_cpu_usage(double value) {
+  
+  cpu_usage_ = value;
+}
+inline void OnboardConfig_XcuSysState::set_cpu_usage(double value) {
+  _internal_set_cpu_usage(value);
+  // @@protoc_insertion_point(field_set:galbot.system_proto.mission_manager_proto.OnboardConfig.XcuSysState.cpu_usage)
+}
+
+// uint64 memory_used_kb = 2;
+inline void OnboardConfig_XcuSysState::clear_memory_used_kb() {
+  memory_used_kb_ = PROTOBUF_ULONGLONG(0);
+}
+inline ::PROTOBUF_NAMESPACE_ID::uint64 OnboardConfig_XcuSysState::_internal_memory_used_kb() const {
+  return memory_used_kb_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::uint64 OnboardConfig_XcuSysState::memory_used_kb() const {
+  // @@protoc_insertion_point(field_get:galbot.system_proto.mission_manager_proto.OnboardConfig.XcuSysState.memory_used_kb)
+  return _internal_memory_used_kb();
+}
+inline void OnboardConfig_XcuSysState::_internal_set_memory_used_kb(::PROTOBUF_NAMESPACE_ID::uint64 value) {
+  
+  memory_used_kb_ = value;
+}
+inline void OnboardConfig_XcuSysState::set_memory_used_kb(::PROTOBUF_NAMESPACE_ID::uint64 value) {
+  _internal_set_memory_used_kb(value);
+  // @@protoc_insertion_point(field_set:galbot.system_proto.mission_manager_proto.OnboardConfig.XcuSysState.memory_used_kb)
+}
+
+// uint64 memory_total_kb = 3;
+inline void OnboardConfig_XcuSysState::clear_memory_total_kb() {
+  memory_total_kb_ = PROTOBUF_ULONGLONG(0);
+}
+inline ::PROTOBUF_NAMESPACE_ID::uint64 OnboardConfig_XcuSysState::_internal_memory_total_kb() const {
+  return memory_total_kb_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::uint64 OnboardConfig_XcuSysState::memory_total_kb() const {
+  // @@protoc_insertion_point(field_get:galbot.system_proto.mission_manager_proto.OnboardConfig.XcuSysState.memory_total_kb)
+  return _internal_memory_total_kb();
+}
+inline void OnboardConfig_XcuSysState::_internal_set_memory_total_kb(::PROTOBUF_NAMESPACE_ID::uint64 value) {
+  
+  memory_total_kb_ = value;
+}
+inline void OnboardConfig_XcuSysState::set_memory_total_kb(::PROTOBUF_NAMESPACE_ID::uint64 value) {
+  _internal_set_memory_total_kb(value);
+  // @@protoc_insertion_point(field_set:galbot.system_proto.mission_manager_proto.OnboardConfig.XcuSysState.memory_total_kb)
+}
+
+// double memory_usage = 4;
+inline void OnboardConfig_XcuSysState::clear_memory_usage() {
+  memory_usage_ = 0;
+}
+inline double OnboardConfig_XcuSysState::_internal_memory_usage() const {
+  return memory_usage_;
+}
+inline double OnboardConfig_XcuSysState::memory_usage() const {
+  // @@protoc_insertion_point(field_get:galbot.system_proto.mission_manager_proto.OnboardConfig.XcuSysState.memory_usage)
+  return _internal_memory_usage();
+}
+inline void OnboardConfig_XcuSysState::_internal_set_memory_usage(double value) {
+  
+  memory_usage_ = value;
+}
+inline void OnboardConfig_XcuSysState::set_memory_usage(double value) {
+  _internal_set_memory_usage(value);
+  // @@protoc_insertion_point(field_set:galbot.system_proto.mission_manager_proto.OnboardConfig.XcuSysState.memory_usage)
+}
+
+// double control_frequency = 5;
+inline void OnboardConfig_XcuSysState::clear_control_frequency() {
+  control_frequency_ = 0;
+}
+inline double OnboardConfig_XcuSysState::_internal_control_frequency() const {
+  return control_frequency_;
+}
+inline double OnboardConfig_XcuSysState::control_frequency() const {
+  // @@protoc_insertion_point(field_get:galbot.system_proto.mission_manager_proto.OnboardConfig.XcuSysState.control_frequency)
+  return _internal_control_frequency();
+}
+inline void OnboardConfig_XcuSysState::_internal_set_control_frequency(double value) {
+  
+  control_frequency_ = value;
+}
+inline void OnboardConfig_XcuSysState::set_control_frequency(double value) {
+  _internal_set_control_frequency(value);
+  // @@protoc_insertion_point(field_set:galbot.system_proto.mission_manager_proto.OnboardConfig.XcuSysState.control_frequency)
+}
+
+// double control_latency = 6;
+inline void OnboardConfig_XcuSysState::clear_control_latency() {
+  control_latency_ = 0;
+}
+inline double OnboardConfig_XcuSysState::_internal_control_latency() const {
+  return control_latency_;
+}
+inline double OnboardConfig_XcuSysState::control_latency() const {
+  // @@protoc_insertion_point(field_get:galbot.system_proto.mission_manager_proto.OnboardConfig.XcuSysState.control_latency)
+  return _internal_control_latency();
+}
+inline void OnboardConfig_XcuSysState::_internal_set_control_latency(double value) {
+  
+  control_latency_ = value;
+}
+inline void OnboardConfig_XcuSysState::set_control_latency(double value) {
+  _internal_set_control_latency(value);
+  // @@protoc_insertion_point(field_set:galbot.system_proto.mission_manager_proto.OnboardConfig.XcuSysState.control_latency)
+}
+
+// -------------------------------------------------------------------
+
+// OnboardConfig_ServiceState
+
+// string name = 1;
+inline void OnboardConfig_ServiceState::clear_name() {
+  name_.ClearToEmpty();
+}
+inline const std::string& OnboardConfig_ServiceState::name() const {
+  // @@protoc_insertion_point(field_get:galbot.system_proto.mission_manager_proto.OnboardConfig.ServiceState.name)
+  return _internal_name();
+}
+inline void OnboardConfig_ServiceState::set_name(const std::string& value) {
+  _internal_set_name(value);
+  // @@protoc_insertion_point(field_set:galbot.system_proto.mission_manager_proto.OnboardConfig.ServiceState.name)
+}
+inline std::string* OnboardConfig_ServiceState::mutable_name() {
+  // @@protoc_insertion_point(field_mutable:galbot.system_proto.mission_manager_proto.OnboardConfig.ServiceState.name)
+  return _internal_mutable_name();
+}
+inline const std::string& OnboardConfig_ServiceState::_internal_name() const {
+  return name_.Get();
+}
+inline void OnboardConfig_ServiceState::_internal_set_name(const std::string& value) {
+  
+  name_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArena());
+}
+inline void OnboardConfig_ServiceState::set_name(std::string&& value) {
+  
+  name_.Set(
+    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::move(value), GetArena());
+  // @@protoc_insertion_point(field_set_rvalue:galbot.system_proto.mission_manager_proto.OnboardConfig.ServiceState.name)
+}
+inline void OnboardConfig_ServiceState::set_name(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  name_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(value), GetArena());
+  // @@protoc_insertion_point(field_set_char:galbot.system_proto.mission_manager_proto.OnboardConfig.ServiceState.name)
+}
+inline void OnboardConfig_ServiceState::set_name(const char* value,
+    size_t size) {
+  
+  name_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(
+      reinterpret_cast<const char*>(value), size), GetArena());
+  // @@protoc_insertion_point(field_set_pointer:galbot.system_proto.mission_manager_proto.OnboardConfig.ServiceState.name)
+}
+inline std::string* OnboardConfig_ServiceState::_internal_mutable_name() {
+  
+  return name_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArena());
+}
+inline std::string* OnboardConfig_ServiceState::release_name() {
+  // @@protoc_insertion_point(field_release:galbot.system_proto.mission_manager_proto.OnboardConfig.ServiceState.name)
+  return name_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline void OnboardConfig_ServiceState::set_allocated_name(std::string* name) {
+  if (name != nullptr) {
+    
+  } else {
+    
+  }
+  name_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), name,
+      GetArena());
+  // @@protoc_insertion_point(field_set_allocated:galbot.system_proto.mission_manager_proto.OnboardConfig.ServiceState.name)
+}
+
+// .galbot.system_proto.mission_manager_proto.OnboardConfig.ServiceStatus status = 2;
+inline void OnboardConfig_ServiceState::clear_status() {
+  status_ = 0;
+}
+inline ::galbot::system_proto::mission_manager_proto::OnboardConfig_ServiceStatus OnboardConfig_ServiceState::_internal_status() const {
+  return static_cast< ::galbot::system_proto::mission_manager_proto::OnboardConfig_ServiceStatus >(status_);
+}
+inline ::galbot::system_proto::mission_manager_proto::OnboardConfig_ServiceStatus OnboardConfig_ServiceState::status() const {
+  // @@protoc_insertion_point(field_get:galbot.system_proto.mission_manager_proto.OnboardConfig.ServiceState.status)
+  return _internal_status();
+}
+inline void OnboardConfig_ServiceState::_internal_set_status(::galbot::system_proto::mission_manager_proto::OnboardConfig_ServiceStatus value) {
+  
+  status_ = value;
+}
+inline void OnboardConfig_ServiceState::set_status(::galbot::system_proto::mission_manager_proto::OnboardConfig_ServiceStatus value) {
+  _internal_set_status(value);
+  // @@protoc_insertion_point(field_set:galbot.system_proto.mission_manager_proto.OnboardConfig.ServiceState.status)
+}
+
+// -------------------------------------------------------------------
+
 // OnboardConfig
 
 // string robot_serial_number = 1;
@@ -614,9 +1722,301 @@ inline void OnboardConfig::set_allocated_mainline_version(std::string* mainline_
   // @@protoc_insertion_point(field_set_allocated:galbot.system_proto.mission_manager_proto.OnboardConfig.mainline_version)
 }
 
+// bool emergency_stop = 6;
+inline void OnboardConfig::clear_emergency_stop() {
+  emergency_stop_ = false;
+}
+inline bool OnboardConfig::_internal_emergency_stop() const {
+  return emergency_stop_;
+}
+inline bool OnboardConfig::emergency_stop() const {
+  // @@protoc_insertion_point(field_get:galbot.system_proto.mission_manager_proto.OnboardConfig.emergency_stop)
+  return _internal_emergency_stop();
+}
+inline void OnboardConfig::_internal_set_emergency_stop(bool value) {
+  
+  emergency_stop_ = value;
+}
+inline void OnboardConfig::set_emergency_stop(bool value) {
+  _internal_set_emergency_stop(value);
+  // @@protoc_insertion_point(field_set:galbot.system_proto.mission_manager_proto.OnboardConfig.emergency_stop)
+}
+
+// string cur_mode = 7;
+inline void OnboardConfig::clear_cur_mode() {
+  cur_mode_.ClearToEmpty();
+}
+inline const std::string& OnboardConfig::cur_mode() const {
+  // @@protoc_insertion_point(field_get:galbot.system_proto.mission_manager_proto.OnboardConfig.cur_mode)
+  return _internal_cur_mode();
+}
+inline void OnboardConfig::set_cur_mode(const std::string& value) {
+  _internal_set_cur_mode(value);
+  // @@protoc_insertion_point(field_set:galbot.system_proto.mission_manager_proto.OnboardConfig.cur_mode)
+}
+inline std::string* OnboardConfig::mutable_cur_mode() {
+  // @@protoc_insertion_point(field_mutable:galbot.system_proto.mission_manager_proto.OnboardConfig.cur_mode)
+  return _internal_mutable_cur_mode();
+}
+inline const std::string& OnboardConfig::_internal_cur_mode() const {
+  return cur_mode_.Get();
+}
+inline void OnboardConfig::_internal_set_cur_mode(const std::string& value) {
+  
+  cur_mode_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArena());
+}
+inline void OnboardConfig::set_cur_mode(std::string&& value) {
+  
+  cur_mode_.Set(
+    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::move(value), GetArena());
+  // @@protoc_insertion_point(field_set_rvalue:galbot.system_proto.mission_manager_proto.OnboardConfig.cur_mode)
+}
+inline void OnboardConfig::set_cur_mode(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  cur_mode_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(value), GetArena());
+  // @@protoc_insertion_point(field_set_char:galbot.system_proto.mission_manager_proto.OnboardConfig.cur_mode)
+}
+inline void OnboardConfig::set_cur_mode(const char* value,
+    size_t size) {
+  
+  cur_mode_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(
+      reinterpret_cast<const char*>(value), size), GetArena());
+  // @@protoc_insertion_point(field_set_pointer:galbot.system_proto.mission_manager_proto.OnboardConfig.cur_mode)
+}
+inline std::string* OnboardConfig::_internal_mutable_cur_mode() {
+  
+  return cur_mode_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArena());
+}
+inline std::string* OnboardConfig::release_cur_mode() {
+  // @@protoc_insertion_point(field_release:galbot.system_proto.mission_manager_proto.OnboardConfig.cur_mode)
+  return cur_mode_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline void OnboardConfig::set_allocated_cur_mode(std::string* cur_mode) {
+  if (cur_mode != nullptr) {
+    
+  } else {
+    
+  }
+  cur_mode_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), cur_mode,
+      GetArena());
+  // @@protoc_insertion_point(field_set_allocated:galbot.system_proto.mission_manager_proto.OnboardConfig.cur_mode)
+}
+
+// .galbot.system_proto.mission_manager_proto.OnboardConfig.OrinSysState orin_sys_state = 8;
+inline bool OnboardConfig::_internal_has_orin_sys_state() const {
+  return this != internal_default_instance() && orin_sys_state_ != nullptr;
+}
+inline bool OnboardConfig::has_orin_sys_state() const {
+  return _internal_has_orin_sys_state();
+}
+inline void OnboardConfig::clear_orin_sys_state() {
+  if (GetArena() == nullptr && orin_sys_state_ != nullptr) {
+    delete orin_sys_state_;
+  }
+  orin_sys_state_ = nullptr;
+}
+inline const ::galbot::system_proto::mission_manager_proto::OnboardConfig_OrinSysState& OnboardConfig::_internal_orin_sys_state() const {
+  const ::galbot::system_proto::mission_manager_proto::OnboardConfig_OrinSysState* p = orin_sys_state_;
+  return p != nullptr ? *p : reinterpret_cast<const ::galbot::system_proto::mission_manager_proto::OnboardConfig_OrinSysState&>(
+      ::galbot::system_proto::mission_manager_proto::_OnboardConfig_OrinSysState_default_instance_);
+}
+inline const ::galbot::system_proto::mission_manager_proto::OnboardConfig_OrinSysState& OnboardConfig::orin_sys_state() const {
+  // @@protoc_insertion_point(field_get:galbot.system_proto.mission_manager_proto.OnboardConfig.orin_sys_state)
+  return _internal_orin_sys_state();
+}
+inline void OnboardConfig::unsafe_arena_set_allocated_orin_sys_state(
+    ::galbot::system_proto::mission_manager_proto::OnboardConfig_OrinSysState* orin_sys_state) {
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(orin_sys_state_);
+  }
+  orin_sys_state_ = orin_sys_state;
+  if (orin_sys_state) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:galbot.system_proto.mission_manager_proto.OnboardConfig.orin_sys_state)
+}
+inline ::galbot::system_proto::mission_manager_proto::OnboardConfig_OrinSysState* OnboardConfig::release_orin_sys_state() {
+  
+  ::galbot::system_proto::mission_manager_proto::OnboardConfig_OrinSysState* temp = orin_sys_state_;
+  orin_sys_state_ = nullptr;
+  if (GetArena() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+  return temp;
+}
+inline ::galbot::system_proto::mission_manager_proto::OnboardConfig_OrinSysState* OnboardConfig::unsafe_arena_release_orin_sys_state() {
+  // @@protoc_insertion_point(field_release:galbot.system_proto.mission_manager_proto.OnboardConfig.orin_sys_state)
+  
+  ::galbot::system_proto::mission_manager_proto::OnboardConfig_OrinSysState* temp = orin_sys_state_;
+  orin_sys_state_ = nullptr;
+  return temp;
+}
+inline ::galbot::system_proto::mission_manager_proto::OnboardConfig_OrinSysState* OnboardConfig::_internal_mutable_orin_sys_state() {
+  
+  if (orin_sys_state_ == nullptr) {
+    auto* p = CreateMaybeMessage<::galbot::system_proto::mission_manager_proto::OnboardConfig_OrinSysState>(GetArena());
+    orin_sys_state_ = p;
+  }
+  return orin_sys_state_;
+}
+inline ::galbot::system_proto::mission_manager_proto::OnboardConfig_OrinSysState* OnboardConfig::mutable_orin_sys_state() {
+  // @@protoc_insertion_point(field_mutable:galbot.system_proto.mission_manager_proto.OnboardConfig.orin_sys_state)
+  return _internal_mutable_orin_sys_state();
+}
+inline void OnboardConfig::set_allocated_orin_sys_state(::galbot::system_proto::mission_manager_proto::OnboardConfig_OrinSysState* orin_sys_state) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArena();
+  if (message_arena == nullptr) {
+    delete orin_sys_state_;
+  }
+  if (orin_sys_state) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+      ::PROTOBUF_NAMESPACE_ID::Arena::GetArena(orin_sys_state);
+    if (message_arena != submessage_arena) {
+      orin_sys_state = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, orin_sys_state, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  orin_sys_state_ = orin_sys_state;
+  // @@protoc_insertion_point(field_set_allocated:galbot.system_proto.mission_manager_proto.OnboardConfig.orin_sys_state)
+}
+
+// .galbot.system_proto.mission_manager_proto.OnboardConfig.XcuSysState xcu_sys_state = 9;
+inline bool OnboardConfig::_internal_has_xcu_sys_state() const {
+  return this != internal_default_instance() && xcu_sys_state_ != nullptr;
+}
+inline bool OnboardConfig::has_xcu_sys_state() const {
+  return _internal_has_xcu_sys_state();
+}
+inline void OnboardConfig::clear_xcu_sys_state() {
+  if (GetArena() == nullptr && xcu_sys_state_ != nullptr) {
+    delete xcu_sys_state_;
+  }
+  xcu_sys_state_ = nullptr;
+}
+inline const ::galbot::system_proto::mission_manager_proto::OnboardConfig_XcuSysState& OnboardConfig::_internal_xcu_sys_state() const {
+  const ::galbot::system_proto::mission_manager_proto::OnboardConfig_XcuSysState* p = xcu_sys_state_;
+  return p != nullptr ? *p : reinterpret_cast<const ::galbot::system_proto::mission_manager_proto::OnboardConfig_XcuSysState&>(
+      ::galbot::system_proto::mission_manager_proto::_OnboardConfig_XcuSysState_default_instance_);
+}
+inline const ::galbot::system_proto::mission_manager_proto::OnboardConfig_XcuSysState& OnboardConfig::xcu_sys_state() const {
+  // @@protoc_insertion_point(field_get:galbot.system_proto.mission_manager_proto.OnboardConfig.xcu_sys_state)
+  return _internal_xcu_sys_state();
+}
+inline void OnboardConfig::unsafe_arena_set_allocated_xcu_sys_state(
+    ::galbot::system_proto::mission_manager_proto::OnboardConfig_XcuSysState* xcu_sys_state) {
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(xcu_sys_state_);
+  }
+  xcu_sys_state_ = xcu_sys_state;
+  if (xcu_sys_state) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:galbot.system_proto.mission_manager_proto.OnboardConfig.xcu_sys_state)
+}
+inline ::galbot::system_proto::mission_manager_proto::OnboardConfig_XcuSysState* OnboardConfig::release_xcu_sys_state() {
+  
+  ::galbot::system_proto::mission_manager_proto::OnboardConfig_XcuSysState* temp = xcu_sys_state_;
+  xcu_sys_state_ = nullptr;
+  if (GetArena() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+  return temp;
+}
+inline ::galbot::system_proto::mission_manager_proto::OnboardConfig_XcuSysState* OnboardConfig::unsafe_arena_release_xcu_sys_state() {
+  // @@protoc_insertion_point(field_release:galbot.system_proto.mission_manager_proto.OnboardConfig.xcu_sys_state)
+  
+  ::galbot::system_proto::mission_manager_proto::OnboardConfig_XcuSysState* temp = xcu_sys_state_;
+  xcu_sys_state_ = nullptr;
+  return temp;
+}
+inline ::galbot::system_proto::mission_manager_proto::OnboardConfig_XcuSysState* OnboardConfig::_internal_mutable_xcu_sys_state() {
+  
+  if (xcu_sys_state_ == nullptr) {
+    auto* p = CreateMaybeMessage<::galbot::system_proto::mission_manager_proto::OnboardConfig_XcuSysState>(GetArena());
+    xcu_sys_state_ = p;
+  }
+  return xcu_sys_state_;
+}
+inline ::galbot::system_proto::mission_manager_proto::OnboardConfig_XcuSysState* OnboardConfig::mutable_xcu_sys_state() {
+  // @@protoc_insertion_point(field_mutable:galbot.system_proto.mission_manager_proto.OnboardConfig.xcu_sys_state)
+  return _internal_mutable_xcu_sys_state();
+}
+inline void OnboardConfig::set_allocated_xcu_sys_state(::galbot::system_proto::mission_manager_proto::OnboardConfig_XcuSysState* xcu_sys_state) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArena();
+  if (message_arena == nullptr) {
+    delete xcu_sys_state_;
+  }
+  if (xcu_sys_state) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+      ::PROTOBUF_NAMESPACE_ID::Arena::GetArena(xcu_sys_state);
+    if (message_arena != submessage_arena) {
+      xcu_sys_state = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, xcu_sys_state, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  xcu_sys_state_ = xcu_sys_state;
+  // @@protoc_insertion_point(field_set_allocated:galbot.system_proto.mission_manager_proto.OnboardConfig.xcu_sys_state)
+}
+
+// repeated .galbot.system_proto.mission_manager_proto.OnboardConfig.ServiceState service_states = 10;
+inline int OnboardConfig::_internal_service_states_size() const {
+  return service_states_.size();
+}
+inline int OnboardConfig::service_states_size() const {
+  return _internal_service_states_size();
+}
+inline void OnboardConfig::clear_service_states() {
+  service_states_.Clear();
+}
+inline ::galbot::system_proto::mission_manager_proto::OnboardConfig_ServiceState* OnboardConfig::mutable_service_states(int index) {
+  // @@protoc_insertion_point(field_mutable:galbot.system_proto.mission_manager_proto.OnboardConfig.service_states)
+  return service_states_.Mutable(index);
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::galbot::system_proto::mission_manager_proto::OnboardConfig_ServiceState >*
+OnboardConfig::mutable_service_states() {
+  // @@protoc_insertion_point(field_mutable_list:galbot.system_proto.mission_manager_proto.OnboardConfig.service_states)
+  return &service_states_;
+}
+inline const ::galbot::system_proto::mission_manager_proto::OnboardConfig_ServiceState& OnboardConfig::_internal_service_states(int index) const {
+  return service_states_.Get(index);
+}
+inline const ::galbot::system_proto::mission_manager_proto::OnboardConfig_ServiceState& OnboardConfig::service_states(int index) const {
+  // @@protoc_insertion_point(field_get:galbot.system_proto.mission_manager_proto.OnboardConfig.service_states)
+  return _internal_service_states(index);
+}
+inline ::galbot::system_proto::mission_manager_proto::OnboardConfig_ServiceState* OnboardConfig::_internal_add_service_states() {
+  return service_states_.Add();
+}
+inline ::galbot::system_proto::mission_manager_proto::OnboardConfig_ServiceState* OnboardConfig::add_service_states() {
+  // @@protoc_insertion_point(field_add:galbot.system_proto.mission_manager_proto.OnboardConfig.service_states)
+  return _internal_add_service_states();
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::galbot::system_proto::mission_manager_proto::OnboardConfig_ServiceState >&
+OnboardConfig::service_states() const {
+  // @@protoc_insertion_point(field_list:galbot.system_proto.mission_manager_proto.OnboardConfig.service_states)
+  return service_states_;
+}
+
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 
 // @@protoc_insertion_point(namespace_scope)
 
@@ -630,6 +2030,11 @@ template <> struct is_proto_enum< ::galbot::system_proto::mission_manager_proto:
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::galbot::system_proto::mission_manager_proto::OnboardConfig_RobotType>() {
   return ::galbot::system_proto::mission_manager_proto::OnboardConfig_RobotType_descriptor();
+}
+template <> struct is_proto_enum< ::galbot::system_proto::mission_manager_proto::OnboardConfig_ServiceStatus> : ::std::true_type {};
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::galbot::system_proto::mission_manager_proto::OnboardConfig_ServiceStatus>() {
+  return ::galbot::system_proto::mission_manager_proto::OnboardConfig_ServiceStatus_descriptor();
 }
 
 PROTOBUF_NAMESPACE_CLOSE

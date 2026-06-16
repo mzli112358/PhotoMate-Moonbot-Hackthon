@@ -31,6 +31,7 @@
 
 #pragma once
 
+#include <array>
 #include "galbot_sdk_type.hpp"
 
 /**
@@ -182,15 +183,18 @@ class GalbotNavigation {
    *                               map obstacles are considered. Default: true.
    * @param is_blocking Execution mode flag. Default: false.
    *                    - false (non-blocking): Returns immediately after sending the
-   *                      navigation command. The return status indicates whether the
-   *                      command was successfully sent, not whether the goal was reached.
+   *                      navigation command and starts an SDK-side monitor thread. The
+   *                      return status indicates command acceptance, not whether the
+   *                      goal was reached.
    *                    - true (blocking): Blocks until the goal is reached, navigation
-   *                      fails, or timeout occurs. The return status reflects the final
-   *                      navigation outcome.
-   * @param timeout Maximum wait time in seconds for blocking mode. Default: 8.0 seconds.
-   *                Only relevant when is_blocking is true. If the goal is not reached
-   *                within this time, the method returns with a timeout status.
-   * @param omni_plan Motion planning mode flag. Default: true.
+   *                      fails, or timeout occurs in the current thread. The return status
+   *                      reflects the final navigation outcome.
+   * @param timeout SDK-side navigation monitor timeout in seconds. Default: 8.0 seconds.
+   *                In blocking mode, the current thread monitors this timeout. In
+   *                non-blocking mode, a background monitor thread uses this timeout. If
+   *                the goal is not reached before timeout and navigation has not already
+   *                stopped, the SDK automatically calls stop_navigation.
+   * @param omni_plan Motion planning mode flag. Default: false.
    *                  - true: Enables omnidirectional motion planning (holonomic drive),
    *                    allowing the robot to move in any direction and rotate independently.
    *                  - false: Uses differential drive planning with kinematic constraints.
@@ -200,15 +204,141 @@ class GalbotNavigation {
    *         - In blocking mode: Final navigation outcome (success, failure, timeout)
    *
    * @note The robot must be localized (is_localized() returns true) before calling this method.
-   * @note For blocking mode, the calling thread will be blocked until completion or timeout.
-   * @note The actual navigation time may exceed the timeout value in blocking mode before
-   *       the method returns.
+   * @note The navigation request communication timeout is fixed internally and is separate
+   *       from the SDK-side navigation monitor timeout.
+   * @note In both blocking and non-blocking modes, timeout is used by SDK-side monitoring.
    *
    * @warning In non-blocking mode, monitor navigation progress separately to detect
    *          completion or failures.
    */
   virtual NavigationStatus navigate_to_goal(const Pose& goal_pose, bool enable_collision_check = true,
-                                            bool is_blocking = false, float timeout = 8, bool omni_plan = true) = 0;
+                                            bool is_blocking = false, float timeout = 8, bool omni_plan = false) = 0;
+
+  /**
+   * @brief Submit a dynamic navigation target asynchronously.
+   *
+   * This API is designed for targets that may change over time, such as dynamic
+   * tracking or remote control. When a new target is submitted, the previous
+   * target may be preempted and the navigation system will re-plan toward the
+   * latest target.
+   *
+   * To keep the navigation stable, do not call this API at a very high rate.
+   * Frequent updates may cause planning jitter and reduce motion smoothness.
+   *
+   * @param target Target pose expressed as Pose (x, y, z, qx, qy, qz, qw).
+   * @param frame Target frame identifier. Supported values: "map", "base_link".
+   * @param speed_ratio Velocity scaling factor in (0, 1.0].
+   * @param enable_collision_check Whether to enable collision checking and avoidance.
+   *
+   * @return TaskHandle containing the submitted task id, request result, and message.
+   */
+  virtual TaskHandle set_navigation_target(const Pose& target, const std::string& frame = "map",
+                                           float speed_ratio = 1.0, bool enable_collision_check = true) = 0;
+
+  /**
+   * @brief Query the status of an asynchronous navigation task.
+   *
+   * Use this API to check the latest state of a task submitted by an asynchronous
+   * navigation interface.
+   *
+   * @param task_id Task identifier returned by the corresponding navigation API.
+   * @return NavigationTaskSnapshot containing the latest known state for the requested task.
+   */
+  virtual NavigationTaskSnapshot get_navigation_target_status(const std::string& task_id) = 0;
+
+  /**
+   * @brief Submit a multi-waypoint navigation task.
+   *
+   * This API sends multiple waypoints in one request and executes them in order.
+   *
+   * @param waypoints Ordered waypoint targets to follow.
+   * @param frame_id Reference frame for the waypoint poses. Supported values:
+   *                 "map", "base_link".
+   * @param enable_collision_check Whether to enable collision checking and avoidance.
+   *
+   * @return TaskHandle containing the submitted task id, request result, and message.
+   */
+  virtual TaskHandle navigate_through_waypoints(const std::vector<Waypoint>& waypoints,
+                                                 const std::string& frame_id = "map",
+                                                 bool enable_collision_check = true) = 0;
+
+  /**
+   * @brief Submit a trajectory navigation task using ordered 3D poses.
+   *
+   * This API uses the input poses as a trajectory reference. Intermediate poses
+   * are not guaranteed to be reached exactly; only the final pose is guaranteed
+   * as the navigation goal.
+   *
+   * @param waypoints Ordered pose waypoints that define the trajectory.
+   * @param frame_id Reference frame for the waypoint poses. Supported values:
+   *                 "map", "base_link".
+   * @param speed_ratio Velocity scaling factor in (0, 1.0].
+   * @param enable_collision_check Whether to enable collision checking and avoidance.
+   *
+   * @return TaskHandle containing the submitted task id, request result, and message.
+   */
+  virtual TaskHandle navigate_along_trajectory(const std::vector<Pose>& waypoints, const std::string& frame_id = "map",
+                                               float speed_ratio = 1.0, bool enable_collision_check = true) = 0;
+
+  /**
+   * @brief Navigate the robot to a target goal pose using the navigation v2 interface.
+   *
+   * This method sends a navigation v2 planning request to the PNS service. It supports
+   * global and local target frames through pose_frame, and applies navigation velocity
+   * and runtime timeout configurations before sending the goal request.
+   *
+   * @param goal_pose Target goal pose: position (x, y, z) in meters and orientation as
+   *                  unit quaternion (x, y, z, w), interpreted in pose_frame.
+   * @param max_vel Maximum navigation velocity limit [vx, vy, vyaw]. Each element must be
+   *                in range [0.05, 1.5]. Linear velocity components are in meters per second
+   *                and yaw velocity is in radians per second. Values below 0.05 may be too
+   *                small to drive the base reliably.
+   * @param pose_frame Reference frame of goal_pose. Only "map" and "base_link" are valid.
+   *                   Default: "map".
+   *                   - "map": global target pose in the map frame.
+   *                   - "base_link": local target pose relative to the robot base.
+   * @param enable_collision_check If true, enables the closest matching v2 collision
+   *                               checking fields for planning and runtime execution.
+   *                               Default: true.
+   * @param is_blocking Execution mode flag. Default: false.
+   *                    - false (non-blocking): Returns immediately after sending the
+   *                      navigation command and starts an SDK-side monitor thread.
+   *                      The return status indicates command acceptance.
+   *                    - true (blocking): Blocks until the goal is reached, navigation
+   *                      fails, is interrupted, or the SDK-side monitor timeout occurs.
+   *                      The return status reflects the final navigation outcome.
+   * @param timeout Navigation runtime timeout in seconds. Default: 5.0 seconds.
+   *                This value is sent to the PNS service through set_navigation_timeout().
+   *                A negative value disables the navigation motion time limit. SDK-side
+   *                monitoring uses timeout + 5.0 seconds when timeout is non-negative;
+   *                for negative timeout, SDK-side monitoring waits until a terminal task
+   *                status is reported.
+   * @param omni_plan Motion planning mode flag. Default: false.
+   *                  - true: Enables omnidirectional motion planning.
+   *                  - false: Uses heading-based planning.
+   *
+   * @return NavigationStatus indicating the result:
+   *         - In non-blocking mode: Command acceptance status
+   *         - In blocking mode: Final navigation outcome. SUCCESS and INTERRUPTED are
+   *           reported as NavigationStatus::SUCCESS, FAILED is reported as
+   *           NavigationStatus::FAIL, and SDK monitor timeout is reported as
+   *           NavigationStatus::TIMEOUT.
+   *
+   * @note This method uses the navigation v2 topic and protocol.
+   * @note pose_frame currently supports "map" for global goals and "base_link" for
+   *       local goals.
+   *
+   * @warning This method may change navigation control parameters that also affect
+   *          base control behavior, such as velocity limits and navigation timeout. If
+   *          the application needs independent low-level base control afterward, set the
+   *          base control parameters again to override the navigation configuration.
+   * @warning In non-blocking mode, monitor navigation progress separately to detect
+   *          completion or failures.
+   */
+  virtual NavigationStatus navigate_to_goal_v2(const Pose& goal_pose, const std::array<double, 3>& max_vel,
+                                              const std::string& pose_frame = "map",
+                                              bool enable_collision_check = true, bool is_blocking = false,
+                                              float timeout = 5.0f, bool omni_plan = false) = 0;
 
   /**
    * @brief Move the robot to a relative target pose in the odometry frame.
@@ -248,6 +378,32 @@ class GalbotNavigation {
   virtual NavigationStatus move_straight_to(const Pose& goal_pose, bool is_blocking = true, float timeout = 8) = 0;
 
   /**
+   * @brief Navigate the robot with a velocity command using the navigation v2 interface.
+   *
+   * This method sends a velocity-based navigation command. The command contains planar
+   * base velocity components and a duration; execution duration is handled by the
+   * navigation service.
+   *
+   * @param vx Linear velocity along the x axis in meters per second.
+   * @param vy Linear velocity along the y axis in meters per second.
+   * @param vyaw Angular velocity around the z axis in radians per second.
+   * @param duration_s Command duration in seconds. Must be greater than 0.0. Default: 3.0 seconds.
+   * @param enable_collision_check If true, enables runtime collision checking through
+   *                               the closest matching v2 collision field. Default: true.
+   *
+   * @return NavigationStatus indicating whether the velocity command was successfully
+   *         accepted by the navigation service.
+   *
+   * @note This method uses the navigation v2 topic and protocol.
+   * @note enable_collision_check is a runtime collision checking flag and is not a
+   *       complete obstacle-avoidance policy switch.
+   *
+   * @warning This method is non-blocking. It returns after the velocity command is
+   *          accepted, not after the velocity duration has completed.
+   */
+  virtual NavigationStatus navigate_with_velocity(double vx, double vy, double vyaw, double duration_s = 3.0, bool enable_collision_check = true) = 0;
+
+  /**
    * @brief Stop the current navigation task and bring the robot to a halt.
    *
    * This method immediately cancels any ongoing navigation command (from either
@@ -264,6 +420,74 @@ class GalbotNavigation {
    * @note The robot will attempt to stop smoothly following its acceleration limits.
    */
   virtual NavigationStatus stop_navigation() = 0;
+
+  /**
+   * @brief Add a bounding box for navigation obstacle filtering.
+   *
+   * Sends SDK-defined box regions to the fusion service so navigation can ignore
+   * the corresponding fused obstacle points instead of treating the boxes as obstacles.
+   * Each box is identified by `box_tag` and attached relative to `parent_link_name`.
+   *
+   * @param box_info Box size, pose, tag, and parent link information.
+   * @return NavigationStatus::SUCCESS if the box was accepted by fusion;
+   *         NavigationStatus::INVALID_INPUT for malformed box information;
+   *         NavigationStatus::COMM_ERR if the fusion service request failed.
+   */
+  virtual NavigationStatus add_bounding_box(const BoxInfo& box_info) = 0;
+
+  /**
+   * @brief Remove a bounding box from navigation obstacle filtering.
+   *
+   * Removes an SDK-created box by its `box_tag`. The tag is converted to the
+   * same SDK-marked box name used by add_bounding_box().
+   *
+   * @param box_tag SDK box tag to remove.
+   * @return NavigationStatus::SUCCESS if the box was removed by fusion;
+   *         NavigationStatus::COMM_ERR if the fusion service request failed.
+   */
+  virtual NavigationStatus remove_bounding_box(int box_tag) = 0;
+
+  /**
+   * @brief Get bounding boxes currently used by navigation obstacle filtering.
+   *
+   * Queries the fusion service and converts returned SDK-marked box names back
+   * to `box_tag` values when possible.
+   *
+   * @return Vector of current bounding box information. Returns an empty vector
+   *         if communication fails or no boxes are available.
+   */
+  virtual std::vector<BoxInfo> get_bounding_box() = 0;
+
+  /**
+   * @brief Attach a box collision object to a robot link.
+   *
+   * Sends the box as an attached collision object to PNS. The box object name is
+   * generated from `box_tag`, and `box_info.parent_link_name` is used as the
+   * parent link for `box_info.box_pose`.
+   *
+   * @param box_info Box size, pose, tag, and parent link information.
+   * @param ignore_collision_links Robot links to ignore for collision checking
+   *        against this attached box.
+   * @return NavigationStatus::SUCCESS if the box was attached;
+   *         NavigationStatus::INVALID_INPUT for malformed box information;
+   *         NavigationStatus::WAIT_INITIALIZED if the PNS service is not ready;
+   *         NavigationStatus::COMM_ERR if the PNS request failed.
+   */
+  virtual NavigationStatus attach_box_to_link(
+      const BoxInfo& box_info, const std::vector<std::string>& ignore_collision_links = {}) = 0;
+
+  /**
+   * @brief Detach a box collision object from its robot link.
+   *
+   * Removes the attached collision object whose SDK object name is generated
+   * from `box_tag`.
+   *
+   * @param box_tag SDK box tag to detach.
+   * @return NavigationStatus::SUCCESS if the box was detached;
+   *         NavigationStatus::WAIT_INITIALIZED if the PNS service is not ready;
+   *         NavigationStatus::COMM_ERR if the PNS request failed.
+   */
+  virtual NavigationStatus detach_box_from_link(int box_tag) = 0;
 
   /**
    * @brief Check if a collision-free path exists from start to goal in the map.
@@ -313,18 +537,119 @@ class GalbotNavigation {
   /**
    * @brief Get the current navigation task state.
    *
-   * Returns the most recent task state reported by the navigation system
-   * (UNKNOWN, RUNNING, SUCCESS, or FAILED). Use this when running non-blocking
-   * navigation to poll for state and exit error logic in time on FAILED or
-   * timeout, avoiding deadlock or indefinite wait.
+   * Returns the latest task state reported by the navigation system. This API
+   * is useful when monitoring a navigation task in non-blocking mode.
    *
-   * @return NavigationTaskStatus Current task state. UNKNOWN if no status yet;
-   *         RUNNING while navigating; SUCCESS or FAILED when task has finished.
+   * @return NavigationTaskStatus Current task state. UNKNOWN if no status has
+   *         been reported yet; RUNNING while the task is executing; terminal
+   *         states when the task has finished.
    *
    * @note Useful in non-blocking navigation: loop on get_navigation_status()
-   *       and break on SUCCESS, FAILED, or after a timeout.
+   *       and break on terminal states or after a timeout.
    */
   virtual NavigationTaskStatus get_navigation_status() = 0;
+
+  /**
+   * @brief Set the navigation velocity limit.
+   *
+   * This method updates the navigation velocity limit through the PNS dynamic
+   * configuration interface.
+   *
+   * @param vel_limit Maximum navigation velocity limit [vx, vy, vyaw]. Each element must be
+   *                  in range [0.05, 1.5]. Linear velocity components are in meters per second
+   *                  and yaw velocity is in radians per second. Values below 0.05 may be too
+   *                  small to drive the base reliably.
+   *
+   * @return NavigationStatus indicating whether the configuration request was accepted.
+   *
+   * @note This configuration is intended to be set before starting a navigation task.
+   *
+   * @warning This method may change navigation control parameters that also affect
+   *          base control behavior. If the application needs independent low-level
+   *          base control afterward, set the base control parameters again to override
+   *          the navigation configuration.
+   */
+  virtual NavigationStatus set_navigation_velocity_limit(const std::array<double, 3>& vel_limit) = 0;
+
+  /**
+   * @brief Set the navigation kinematic limits.
+   *
+   * This method updates navigation velocity, acceleration, and jerk limits through the
+   * PNS dynamic configuration interface.
+   *
+   * @param vel_limit Maximum velocity limit [vx, vy, vyaw]. Each element must be in range
+   *                  [0.05, 1.5]. Linear velocity components are in meters per second and
+   *                  yaw velocity is in radians per second. Values below 0.05 may be too
+   *                  small to drive the base reliably.
+   * @param acc_limit Maximum acceleration limit [ax, ay, ayaw]. Each element must be in
+   *                  range [0.05, 7.5]. Linear acceleration components are in meters per
+   *                  second squared and yaw acceleration is in radians per second squared.
+   *                  Values below 0.05 may be too small to drive the base reliably.
+   * @param jerk_limit Maximum jerk limit [jx, jy, jyaw]. Each element must be in range
+   *                   [0.05, 37.5]. Linear jerk components are in meters per second cubed
+   *                   and yaw jerk is in radians per second cubed. Values below 0.05 may be
+   *                   too small to drive the base reliably.
+   *
+   * @return NavigationStatus indicating whether the configuration request was accepted.
+   *
+   * @note This configuration is intended to be set before starting a navigation task.
+   *
+   * @warning This method may change navigation control parameters that also affect
+   *          base control behavior. If the application needs independent low-level
+   *          base control afterward, set the base control parameters again to override
+   *          the navigation configuration.
+   */
+  virtual NavigationStatus set_navigation_kinematics_limits(const std::array<double, 3>& vel_limit,
+                                                           const std::array<double, 3>& acc_limit,
+                                                           const std::array<double, 3>& jerk_limit) = 0;
+
+  /**
+   * @brief Set the navigation timeout configuration.
+   *
+   * This method updates the navigation timeout through the PNS dynamic configuration
+   * interface. It is useful as a safety guard for tasks that should not run indefinitely.
+   *
+   * @param timeout_s Navigation timeout in seconds. A value less than or equal to 0 disables
+   *                  the navigation motion time limit.
+   *
+   * @return NavigationStatus indicating whether the configuration request was accepted.
+   *
+   * @note The exact service-side meaning of this timeout is defined by the PNS
+   *       navigation service.
+   */
+  virtual NavigationStatus set_navigation_timeout(double timeout_s) = 0;
+
+  /**
+   * @brief Set the navigation arrival threshold.
+   *
+   * This method updates the position and yaw tolerances used by navigation planning
+   * and control to determine whether a target has been reached.
+   *
+   * @param threshold Arrival threshold [x_error, y_error, yaw_error]. Each element must be
+   *                  in range [0.03, 2.0]. Position errors are in meters and yaw error is
+   *                  in radians. The minimum supported precision is 0.03 m or rad.
+   *
+   * @return NavigationStatus indicating whether the configuration request was accepted.
+   *
+   * @note Different task types may require different arrival precision. Configure this
+   *       value before starting the corresponding navigation task.
+   */
+  virtual NavigationStatus set_navigation_arrival_threshold(const std::array<double, 3>& threshold) = 0;
+
+
+  /**
+   * @brief Dump navigation dynamic configuration for debugging.
+   *
+   * This method queries commonly used navigation configuration keys and prints the
+   * response through the SDK logger. It is intended for diagnostics and debugging.
+   *
+   * @return NavigationStatus indicating whether all debug query requests were accepted.
+   *
+   * @note The output format depends on the PNS service response and may be JSON or
+   *       protobuf text format.
+   */
+  virtual NavigationStatus dump_navigation_configs() = 0;
+
 };
 
 }  // namespace sdk

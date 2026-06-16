@@ -36,8 +36,11 @@
 #include <google/protobuf/generated_enum_reflection.h>
 #include <google/protobuf/unknown_field_set.h>
 #include "galbot/aphropm_proto/common_def.pb.h"
+#include "galbot/aphropm_proto/aphropm_common.pb.h"
 #include "galbot/aphropm_proto/common_planner_config.pb.h"
 #include "galbot/aphropm_proto/common_interface.pb.h"
+#include "galbot/core_proto/header.pb.h"
+#include "galbot/spatial_proto/frame.pb.h"
 #include "galbot/core_proto/math.pb.h"
 #include "galbot/spatial_proto/pose.pb.h"
 #include <google/protobuf/wrappers.pb.h>
@@ -56,7 +59,7 @@ struct TableStruct_galbot_2faphropm_5fproto_2fmps_5finterface_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxiliaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[31]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[45]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -65,12 +68,24 @@ struct TableStruct_galbot_2faphropm_5fproto_2fmps_5finterface_2eproto {
 extern const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_galbot_2faphropm_5fproto_2fmps_5finterface_2eproto;
 namespace galbot {
 namespace aphropm_proto {
+class CheckCollisionReq;
+class CheckCollisionReqDefaultTypeInternal;
+extern CheckCollisionReqDefaultTypeInternal _CheckCollisionReq_default_instance_;
 class CheckCollisionRequest;
 class CheckCollisionRequestDefaultTypeInternal;
 extern CheckCollisionRequestDefaultTypeInternal _CheckCollisionRequest_default_instance_;
+class CheckCollisionRes;
+class CheckCollisionResDefaultTypeInternal;
+extern CheckCollisionResDefaultTypeInternal _CheckCollisionRes_default_instance_;
+class CombinePlanReq;
+class CombinePlanReqDefaultTypeInternal;
+extern CombinePlanReqDefaultTypeInternal _CombinePlanReq_default_instance_;
 class ConfigSettingRequest;
 class ConfigSettingRequestDefaultTypeInternal;
 extern ConfigSettingRequestDefaultTypeInternal _ConfigSettingRequest_default_instance_;
+class ForwardKinematicReq;
+class ForwardKinematicReqDefaultTypeInternal;
+extern ForwardKinematicReqDefaultTypeInternal _ForwardKinematicReq_default_instance_;
 class ForwardKinematicRequest;
 class ForwardKinematicRequestDefaultTypeInternal;
 extern ForwardKinematicRequestDefaultTypeInternal _ForwardKinematicRequest_default_instance_;
@@ -80,6 +95,9 @@ extern ForwardKinematicResultDefaultTypeInternal _ForwardKinematicResult_default
 class ForwardKinematicResult_FkResultEntry_DoNotUse;
 class ForwardKinematicResult_FkResultEntry_DoNotUseDefaultTypeInternal;
 extern ForwardKinematicResult_FkResultEntry_DoNotUseDefaultTypeInternal _ForwardKinematicResult_FkResultEntry_DoNotUse_default_instance_;
+class InverseKinematicReq;
+class InverseKinematicReqDefaultTypeInternal;
+extern InverseKinematicReqDefaultTypeInternal _InverseKinematicReq_default_instance_;
 class InverseKinematicRequest;
 class InverseKinematicRequestDefaultTypeInternal;
 extern InverseKinematicRequestDefaultTypeInternal _InverseKinematicRequest_default_instance_;
@@ -89,6 +107,9 @@ extern InverseKinematicResultDefaultTypeInternal _InverseKinematicResult_default
 class InverseKinematicResult_IkResultEntry_DoNotUse;
 class InverseKinematicResult_IkResultEntry_DoNotUseDefaultTypeInternal;
 extern InverseKinematicResult_IkResultEntry_DoNotUseDefaultTypeInternal _InverseKinematicResult_IkResultEntry_DoNotUse_default_instance_;
+class JacobianReqMsg;
+class JacobianReqMsgDefaultTypeInternal;
+extern JacobianReqMsgDefaultTypeInternal _JacobianReqMsg_default_instance_;
 class JacobianRequest;
 class JacobianRequestDefaultTypeInternal;
 extern JacobianRequestDefaultTypeInternal _JacobianRequest_default_instance_;
@@ -104,21 +125,42 @@ extern KinematicRequestDefaultTypeInternal _KinematicRequest_default_instance_;
 class KinematicResponse;
 class KinematicResponseDefaultTypeInternal;
 extern KinematicResponseDefaultTypeInternal _KinematicResponse_default_instance_;
+class KinematicResponse_FkResultEntry_DoNotUse;
+class KinematicResponse_FkResultEntry_DoNotUseDefaultTypeInternal;
+extern KinematicResponse_FkResultEntry_DoNotUseDefaultTypeInternal _KinematicResponse_FkResultEntry_DoNotUse_default_instance_;
+class KinematicResponse_IkResultEntry_DoNotUse;
+class KinematicResponse_IkResultEntry_DoNotUseDefaultTypeInternal;
+extern KinematicResponse_IkResultEntry_DoNotUseDefaultTypeInternal _KinematicResponse_IkResultEntry_DoNotUse_default_instance_;
 class MotionPlanOptions;
 class MotionPlanOptionsDefaultTypeInternal;
 extern MotionPlanOptionsDefaultTypeInternal _MotionPlanOptions_default_instance_;
+class MotionPlanReq;
+class MotionPlanReqDefaultTypeInternal;
+extern MotionPlanReqDefaultTypeInternal _MotionPlanReq_default_instance_;
 class MotionPlanRequest;
 class MotionPlanRequestDefaultTypeInternal;
 extern MotionPlanRequestDefaultTypeInternal _MotionPlanRequest_default_instance_;
 class MotionPlanServerRequest;
 class MotionPlanServerRequestDefaultTypeInternal;
 extern MotionPlanServerRequestDefaultTypeInternal _MotionPlanServerRequest_default_instance_;
+class MotionPlanTarget;
+class MotionPlanTargetDefaultTypeInternal;
+extern MotionPlanTargetDefaultTypeInternal _MotionPlanTarget_default_instance_;
+class MotionPlanTarget_ChainTargetsEntry_DoNotUse;
+class MotionPlanTarget_ChainTargetsEntry_DoNotUseDefaultTypeInternal;
+extern MotionPlanTarget_ChainTargetsEntry_DoNotUseDefaultTypeInternal _MotionPlanTarget_ChainTargetsEntry_DoNotUse_default_instance_;
+class MoveLineReq;
+class MoveLineReqDefaultTypeInternal;
+extern MoveLineReqDefaultTypeInternal _MoveLineReq_default_instance_;
 class MoveLineRequest;
 class MoveLineRequestDefaultTypeInternal;
 extern MoveLineRequestDefaultTypeInternal _MoveLineRequest_default_instance_;
 class MulPointTrajPlanRequest;
 class MulPointTrajPlanRequestDefaultTypeInternal;
 extern MulPointTrajPlanRequestDefaultTypeInternal _MulPointTrajPlanRequest_default_instance_;
+class SigPlanReq;
+class SigPlanReqDefaultTypeInternal;
+extern SigPlanReqDefaultTypeInternal _SigPlanReq_default_instance_;
 class SigPointTrajPlanRequest;
 class SigPointTrajPlanRequestDefaultTypeInternal;
 extern SigPointTrajPlanRequestDefaultTypeInternal _SigPointTrajPlanRequest_default_instance_;
@@ -128,6 +170,9 @@ extern SingleChainCombinePlanRequestDefaultTypeInternal _SingleChainCombinePlanR
 class SingleChainPlanGoal;
 class SingleChainPlanGoalDefaultTypeInternal;
 extern SingleChainPlanGoalDefaultTypeInternal _SingleChainPlanGoal_default_instance_;
+class TrajPlanReq;
+class TrajPlanReqDefaultTypeInternal;
+extern TrajPlanReqDefaultTypeInternal _TrajPlanReq_default_instance_;
 class setCollisionCheckOption;
 class setCollisionCheckOptionDefaultTypeInternal;
 extern setCollisionCheckOptionDefaultTypeInternal _setCollisionCheckOption_default_instance_;
@@ -161,27 +206,41 @@ extern setTrajValidCheckOptionDefaultTypeInternal _setTrajValidCheckOption_defau
 }  // namespace aphropm_proto
 }  // namespace galbot
 PROTOBUF_NAMESPACE_OPEN
+template<> ::galbot::aphropm_proto::CheckCollisionReq* Arena::CreateMaybeMessage<::galbot::aphropm_proto::CheckCollisionReq>(Arena*);
 template<> ::galbot::aphropm_proto::CheckCollisionRequest* Arena::CreateMaybeMessage<::galbot::aphropm_proto::CheckCollisionRequest>(Arena*);
+template<> ::galbot::aphropm_proto::CheckCollisionRes* Arena::CreateMaybeMessage<::galbot::aphropm_proto::CheckCollisionRes>(Arena*);
+template<> ::galbot::aphropm_proto::CombinePlanReq* Arena::CreateMaybeMessage<::galbot::aphropm_proto::CombinePlanReq>(Arena*);
 template<> ::galbot::aphropm_proto::ConfigSettingRequest* Arena::CreateMaybeMessage<::galbot::aphropm_proto::ConfigSettingRequest>(Arena*);
+template<> ::galbot::aphropm_proto::ForwardKinematicReq* Arena::CreateMaybeMessage<::galbot::aphropm_proto::ForwardKinematicReq>(Arena*);
 template<> ::galbot::aphropm_proto::ForwardKinematicRequest* Arena::CreateMaybeMessage<::galbot::aphropm_proto::ForwardKinematicRequest>(Arena*);
 template<> ::galbot::aphropm_proto::ForwardKinematicResult* Arena::CreateMaybeMessage<::galbot::aphropm_proto::ForwardKinematicResult>(Arena*);
 template<> ::galbot::aphropm_proto::ForwardKinematicResult_FkResultEntry_DoNotUse* Arena::CreateMaybeMessage<::galbot::aphropm_proto::ForwardKinematicResult_FkResultEntry_DoNotUse>(Arena*);
+template<> ::galbot::aphropm_proto::InverseKinematicReq* Arena::CreateMaybeMessage<::galbot::aphropm_proto::InverseKinematicReq>(Arena*);
 template<> ::galbot::aphropm_proto::InverseKinematicRequest* Arena::CreateMaybeMessage<::galbot::aphropm_proto::InverseKinematicRequest>(Arena*);
 template<> ::galbot::aphropm_proto::InverseKinematicResult* Arena::CreateMaybeMessage<::galbot::aphropm_proto::InverseKinematicResult>(Arena*);
 template<> ::galbot::aphropm_proto::InverseKinematicResult_IkResultEntry_DoNotUse* Arena::CreateMaybeMessage<::galbot::aphropm_proto::InverseKinematicResult_IkResultEntry_DoNotUse>(Arena*);
+template<> ::galbot::aphropm_proto::JacobianReqMsg* Arena::CreateMaybeMessage<::galbot::aphropm_proto::JacobianReqMsg>(Arena*);
 template<> ::galbot::aphropm_proto::JacobianRequest* Arena::CreateMaybeMessage<::galbot::aphropm_proto::JacobianRequest>(Arena*);
 template<> ::galbot::aphropm_proto::JacobianResult* Arena::CreateMaybeMessage<::galbot::aphropm_proto::JacobianResult>(Arena*);
 template<> ::galbot::aphropm_proto::JacobianResult_JacobianResultEntry_DoNotUse* Arena::CreateMaybeMessage<::galbot::aphropm_proto::JacobianResult_JacobianResultEntry_DoNotUse>(Arena*);
 template<> ::galbot::aphropm_proto::KinematicRequest* Arena::CreateMaybeMessage<::galbot::aphropm_proto::KinematicRequest>(Arena*);
 template<> ::galbot::aphropm_proto::KinematicResponse* Arena::CreateMaybeMessage<::galbot::aphropm_proto::KinematicResponse>(Arena*);
+template<> ::galbot::aphropm_proto::KinematicResponse_FkResultEntry_DoNotUse* Arena::CreateMaybeMessage<::galbot::aphropm_proto::KinematicResponse_FkResultEntry_DoNotUse>(Arena*);
+template<> ::galbot::aphropm_proto::KinematicResponse_IkResultEntry_DoNotUse* Arena::CreateMaybeMessage<::galbot::aphropm_proto::KinematicResponse_IkResultEntry_DoNotUse>(Arena*);
 template<> ::galbot::aphropm_proto::MotionPlanOptions* Arena::CreateMaybeMessage<::galbot::aphropm_proto::MotionPlanOptions>(Arena*);
+template<> ::galbot::aphropm_proto::MotionPlanReq* Arena::CreateMaybeMessage<::galbot::aphropm_proto::MotionPlanReq>(Arena*);
 template<> ::galbot::aphropm_proto::MotionPlanRequest* Arena::CreateMaybeMessage<::galbot::aphropm_proto::MotionPlanRequest>(Arena*);
 template<> ::galbot::aphropm_proto::MotionPlanServerRequest* Arena::CreateMaybeMessage<::galbot::aphropm_proto::MotionPlanServerRequest>(Arena*);
+template<> ::galbot::aphropm_proto::MotionPlanTarget* Arena::CreateMaybeMessage<::galbot::aphropm_proto::MotionPlanTarget>(Arena*);
+template<> ::galbot::aphropm_proto::MotionPlanTarget_ChainTargetsEntry_DoNotUse* Arena::CreateMaybeMessage<::galbot::aphropm_proto::MotionPlanTarget_ChainTargetsEntry_DoNotUse>(Arena*);
+template<> ::galbot::aphropm_proto::MoveLineReq* Arena::CreateMaybeMessage<::galbot::aphropm_proto::MoveLineReq>(Arena*);
 template<> ::galbot::aphropm_proto::MoveLineRequest* Arena::CreateMaybeMessage<::galbot::aphropm_proto::MoveLineRequest>(Arena*);
 template<> ::galbot::aphropm_proto::MulPointTrajPlanRequest* Arena::CreateMaybeMessage<::galbot::aphropm_proto::MulPointTrajPlanRequest>(Arena*);
+template<> ::galbot::aphropm_proto::SigPlanReq* Arena::CreateMaybeMessage<::galbot::aphropm_proto::SigPlanReq>(Arena*);
 template<> ::galbot::aphropm_proto::SigPointTrajPlanRequest* Arena::CreateMaybeMessage<::galbot::aphropm_proto::SigPointTrajPlanRequest>(Arena*);
 template<> ::galbot::aphropm_proto::SingleChainCombinePlanRequest* Arena::CreateMaybeMessage<::galbot::aphropm_proto::SingleChainCombinePlanRequest>(Arena*);
 template<> ::galbot::aphropm_proto::SingleChainPlanGoal* Arena::CreateMaybeMessage<::galbot::aphropm_proto::SingleChainPlanGoal>(Arena*);
+template<> ::galbot::aphropm_proto::TrajPlanReq* Arena::CreateMaybeMessage<::galbot::aphropm_proto::TrajPlanReq>(Arena*);
 template<> ::galbot::aphropm_proto::setCollisionCheckOption* Arena::CreateMaybeMessage<::galbot::aphropm_proto::setCollisionCheckOption>(Arena*);
 template<> ::galbot::aphropm_proto::setFeasibilityBoundRequest* Arena::CreateMaybeMessage<::galbot::aphropm_proto::setFeasibilityBoundRequest>(Arena*);
 template<> ::galbot::aphropm_proto::setIKConfigRequest* Arena::CreateMaybeMessage<::galbot::aphropm_proto::setIKConfigRequest>(Arena*);
@@ -246,6 +305,32 @@ inline bool SingleChainPlanGoal_PlanType_Parse(
     ::PROTOBUF_NAMESPACE_ID::ConstStringParam name, SingleChainPlanGoal_PlanType* value) {
   return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<SingleChainPlanGoal_PlanType>(
     SingleChainPlanGoal_PlanType_descriptor(), name, value);
+}
+enum SigPlanReq_PlanType : int {
+  SigPlanReq_PlanType_TRAJ_PLAN = 0,
+  SigPlanReq_PlanType_MOTION_PLAN = 1,
+  SigPlanReq_PlanType_MOVE_LINE = 2,
+  SigPlanReq_PlanType_SigPlanReq_PlanType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::min(),
+  SigPlanReq_PlanType_SigPlanReq_PlanType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::max()
+};
+bool SigPlanReq_PlanType_IsValid(int value);
+constexpr SigPlanReq_PlanType SigPlanReq_PlanType_PlanType_MIN = SigPlanReq_PlanType_TRAJ_PLAN;
+constexpr SigPlanReq_PlanType SigPlanReq_PlanType_PlanType_MAX = SigPlanReq_PlanType_MOVE_LINE;
+constexpr int SigPlanReq_PlanType_PlanType_ARRAYSIZE = SigPlanReq_PlanType_PlanType_MAX + 1;
+
+const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* SigPlanReq_PlanType_descriptor();
+template<typename T>
+inline const std::string& SigPlanReq_PlanType_Name(T enum_t_value) {
+  static_assert(::std::is_same<T, SigPlanReq_PlanType>::value ||
+    ::std::is_integral<T>::value,
+    "Incorrect type passed to function SigPlanReq_PlanType_Name.");
+  return ::PROTOBUF_NAMESPACE_ID::internal::NameOfEnum(
+    SigPlanReq_PlanType_descriptor(), enum_t_value);
+}
+inline bool SigPlanReq_PlanType_Parse(
+    ::PROTOBUF_NAMESPACE_ID::ConstStringParam name, SigPlanReq_PlanType* value) {
+  return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<SigPlanReq_PlanType>(
+    SigPlanReq_PlanType_descriptor(), name, value);
 }
 // ===================================================================
 
@@ -361,6 +446,7 @@ class MotionPlanOptions PROTOBUF_FINAL :
   // accessors -------------------------------------------------------
 
   enum : int {
+    kCommonStrFieldNumber = 300,
     kIsTrajPlanFieldNumber = 1,
     kIsReinitPlannerFieldNumber = 2,
     kIsCheckTrajValidityFieldNumber = 3,
@@ -369,6 +455,22 @@ class MotionPlanOptions PROTOBUF_FINAL :
     kIsPathSearchFieldNumber = 6,
     kIsTrajPlanAfterOptimFieldNumber = 7,
   };
+  // string common_str = 300;
+  void clear_common_str();
+  const std::string& common_str() const;
+  void set_common_str(const std::string& value);
+  void set_common_str(std::string&& value);
+  void set_common_str(const char* value);
+  void set_common_str(const char* value, size_t size);
+  std::string* mutable_common_str();
+  std::string* release_common_str();
+  void set_allocated_common_str(std::string* common_str);
+  private:
+  const std::string& _internal_common_str() const;
+  void _internal_set_common_str(const std::string& value);
+  std::string* _internal_mutable_common_str();
+  public:
+
   // .google.protobuf.BoolValue is_traj_plan = 1;
   bool has_is_traj_plan() const;
   private:
@@ -502,6 +604,7 @@ class MotionPlanOptions PROTOBUF_FINAL :
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr common_str_;
   PROTOBUF_NAMESPACE_ID::BoolValue* is_traj_plan_;
   PROTOBUF_NAMESPACE_ID::BoolValue* is_reinit_planner_;
   PROTOBUF_NAMESPACE_ID::BoolValue* is_check_traj_validity_;
@@ -3071,6 +3174,7 @@ class ConfigSettingRequest PROTOBUF_FINAL :
   // accessors -------------------------------------------------------
 
   enum : int {
+    kCommonStrFieldNumber = 300,
     kSetPlannerConfigFieldNumber = 1,
     kSetTrajPlannerPropFieldNumber = 2,
     kSetIkConfigFieldNumber = 3,
@@ -3081,8 +3185,25 @@ class ConfigSettingRequest PROTOBUF_FINAL :
     kSetLineCheckPrimitiveFieldNumber = 9,
     kSetSamplePlannerLimitFieldNumber = 10,
     kSetSingorixTargetTypeFieldNumber = 11,
+    kRefreshSamplerLimitFieldNumber = 12,
     kRefreshIkSoftLimitFieldNumber = 5,
   };
+  // string common_str = 300;
+  void clear_common_str();
+  const std::string& common_str() const;
+  void set_common_str(const std::string& value);
+  void set_common_str(std::string&& value);
+  void set_common_str(const char* value);
+  void set_common_str(const char* value, size_t size);
+  std::string* mutable_common_str();
+  std::string* release_common_str();
+  void set_allocated_common_str(std::string* common_str);
+  private:
+  const std::string& _internal_common_str() const;
+  void _internal_set_common_str(const std::string& value);
+  std::string* _internal_mutable_common_str();
+  public:
+
   // .galbot.aphropm_proto.setPlannerConfigRequest set_planner_config = 1;
   bool has_set_planner_config() const;
   private:
@@ -3263,6 +3384,24 @@ class ConfigSettingRequest PROTOBUF_FINAL :
       ::galbot::aphropm_proto::setSingorixTargetTypeRequest* set_singorix_target_type);
   ::galbot::aphropm_proto::setSingorixTargetTypeRequest* unsafe_arena_release_set_singorix_target_type();
 
+  // .google.protobuf.BoolValue refresh_sampler_limit = 12;
+  bool has_refresh_sampler_limit() const;
+  private:
+  bool _internal_has_refresh_sampler_limit() const;
+  public:
+  void clear_refresh_sampler_limit();
+  const PROTOBUF_NAMESPACE_ID::BoolValue& refresh_sampler_limit() const;
+  PROTOBUF_NAMESPACE_ID::BoolValue* release_refresh_sampler_limit();
+  PROTOBUF_NAMESPACE_ID::BoolValue* mutable_refresh_sampler_limit();
+  void set_allocated_refresh_sampler_limit(PROTOBUF_NAMESPACE_ID::BoolValue* refresh_sampler_limit);
+  private:
+  const PROTOBUF_NAMESPACE_ID::BoolValue& _internal_refresh_sampler_limit() const;
+  PROTOBUF_NAMESPACE_ID::BoolValue* _internal_mutable_refresh_sampler_limit();
+  public:
+  void unsafe_arena_set_allocated_refresh_sampler_limit(
+      PROTOBUF_NAMESPACE_ID::BoolValue* refresh_sampler_limit);
+  PROTOBUF_NAMESPACE_ID::BoolValue* unsafe_arena_release_refresh_sampler_limit();
+
   // bool refresh_ik_soft_limit = 5;
   void clear_refresh_ik_soft_limit();
   bool refresh_ik_soft_limit() const;
@@ -3279,6 +3418,7 @@ class ConfigSettingRequest PROTOBUF_FINAL :
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr common_str_;
   ::galbot::aphropm_proto::setPlannerConfigRequest* set_planner_config_;
   ::galbot::aphropm_proto::setTrajPlannerPropRequest* set_traj_planner_prop_;
   ::galbot::aphropm_proto::setIKConfigRequest* set_ik_config_;
@@ -3289,6 +3429,7 @@ class ConfigSettingRequest PROTOBUF_FINAL :
   ::galbot::aphropm_proto::setLineTrajCheckPrimitive* set_line_check_primitive_;
   ::galbot::aphropm_proto::setSamplePlannerLimitRequest* set_sample_planner_limit_;
   ::galbot::aphropm_proto::setSingorixTargetTypeRequest* set_singorix_target_type_;
+  PROTOBUF_NAMESPACE_ID::BoolValue* refresh_sampler_limit_;
   bool refresh_ik_soft_limit_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_galbot_2faphropm_5fproto_2fmps_5finterface_2eproto;
@@ -4349,6 +4490,1281 @@ class SingleChainCombinePlanRequest PROTOBUF_FINAL :
 };
 // -------------------------------------------------------------------
 
+class MotionPlanTarget_ChainTargetsEntry_DoNotUse : public ::PROTOBUF_NAMESPACE_ID::internal::MapEntry<MotionPlanTarget_ChainTargetsEntry_DoNotUse, 
+    std::string, ::galbot::aphropm_proto::RobotTargetMsg,
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::TYPE_STRING,
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::TYPE_MESSAGE> {
+public:
+  typedef ::PROTOBUF_NAMESPACE_ID::internal::MapEntry<MotionPlanTarget_ChainTargetsEntry_DoNotUse, 
+    std::string, ::galbot::aphropm_proto::RobotTargetMsg,
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::TYPE_STRING,
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::TYPE_MESSAGE> SuperType;
+  MotionPlanTarget_ChainTargetsEntry_DoNotUse();
+  explicit MotionPlanTarget_ChainTargetsEntry_DoNotUse(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  void MergeFrom(const MotionPlanTarget_ChainTargetsEntry_DoNotUse& other);
+  static const MotionPlanTarget_ChainTargetsEntry_DoNotUse* internal_default_instance() { return reinterpret_cast<const MotionPlanTarget_ChainTargetsEntry_DoNotUse*>(&_MotionPlanTarget_ChainTargetsEntry_DoNotUse_default_instance_); }
+  static bool ValidateKey(std::string* s) {
+    return ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(s->data(), static_cast<int>(s->size()), ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::PARSE, "galbot.aphropm_proto.MotionPlanTarget.ChainTargetsEntry.key");
+ }
+  static bool ValidateValue(void*) { return true; }
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& other) final;
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_galbot_2faphropm_5fproto_2fmps_5finterface_2eproto);
+    return ::descriptor_table_galbot_2faphropm_5fproto_2fmps_5finterface_2eproto.file_level_metadata[21];
+  }
+
+  public:
+};
+
+// -------------------------------------------------------------------
+
+class MotionPlanTarget PROTOBUF_FINAL :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:galbot.aphropm_proto.MotionPlanTarget) */ {
+ public:
+  inline MotionPlanTarget() : MotionPlanTarget(nullptr) {}
+  virtual ~MotionPlanTarget();
+
+  MotionPlanTarget(const MotionPlanTarget& from);
+  MotionPlanTarget(MotionPlanTarget&& from) noexcept
+    : MotionPlanTarget() {
+    *this = ::std::move(from);
+  }
+
+  inline MotionPlanTarget& operator=(const MotionPlanTarget& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline MotionPlanTarget& operator=(MotionPlanTarget&& from) noexcept {
+    if (GetArena() == from.GetArena()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const MotionPlanTarget& default_instance();
+
+  static inline const MotionPlanTarget* internal_default_instance() {
+    return reinterpret_cast<const MotionPlanTarget*>(
+               &_MotionPlanTarget_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    22;
+
+  friend void swap(MotionPlanTarget& a, MotionPlanTarget& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(MotionPlanTarget* other) {
+    if (other == this) return;
+    if (GetArena() == other->GetArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(MotionPlanTarget* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline MotionPlanTarget* New() const final {
+    return CreateMaybeMessage<MotionPlanTarget>(nullptr);
+  }
+
+  MotionPlanTarget* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<MotionPlanTarget>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const MotionPlanTarget& from);
+  void MergeFrom(const MotionPlanTarget& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(MotionPlanTarget* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "galbot.aphropm_proto.MotionPlanTarget";
+  }
+  protected:
+  explicit MotionPlanTarget(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_galbot_2faphropm_5fproto_2fmps_5finterface_2eproto);
+    return ::descriptor_table_galbot_2faphropm_5fproto_2fmps_5finterface_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kChainTargetsFieldNumber = 2,
+    kCommonStrFieldNumber = 300,
+    kHeaderFieldNumber = 1,
+  };
+  // map<string, .galbot.aphropm_proto.RobotTargetMsg> chain_targets = 2;
+  int chain_targets_size() const;
+  private:
+  int _internal_chain_targets_size() const;
+  public:
+  void clear_chain_targets();
+  private:
+  const ::PROTOBUF_NAMESPACE_ID::Map< std::string, ::galbot::aphropm_proto::RobotTargetMsg >&
+      _internal_chain_targets() const;
+  ::PROTOBUF_NAMESPACE_ID::Map< std::string, ::galbot::aphropm_proto::RobotTargetMsg >*
+      _internal_mutable_chain_targets();
+  public:
+  const ::PROTOBUF_NAMESPACE_ID::Map< std::string, ::galbot::aphropm_proto::RobotTargetMsg >&
+      chain_targets() const;
+  ::PROTOBUF_NAMESPACE_ID::Map< std::string, ::galbot::aphropm_proto::RobotTargetMsg >*
+      mutable_chain_targets();
+
+  // string common_str = 300;
+  void clear_common_str();
+  const std::string& common_str() const;
+  void set_common_str(const std::string& value);
+  void set_common_str(std::string&& value);
+  void set_common_str(const char* value);
+  void set_common_str(const char* value, size_t size);
+  std::string* mutable_common_str();
+  std::string* release_common_str();
+  void set_allocated_common_str(std::string* common_str);
+  private:
+  const std::string& _internal_common_str() const;
+  void _internal_set_common_str(const std::string& value);
+  std::string* _internal_mutable_common_str();
+  public:
+
+  // .galbot.core_proto.Header header = 1;
+  bool has_header() const;
+  private:
+  bool _internal_has_header() const;
+  public:
+  void clear_header();
+  const ::galbot::core_proto::Header& header() const;
+  ::galbot::core_proto::Header* release_header();
+  ::galbot::core_proto::Header* mutable_header();
+  void set_allocated_header(::galbot::core_proto::Header* header);
+  private:
+  const ::galbot::core_proto::Header& _internal_header() const;
+  ::galbot::core_proto::Header* _internal_mutable_header();
+  public:
+  void unsafe_arena_set_allocated_header(
+      ::galbot::core_proto::Header* header);
+  ::galbot::core_proto::Header* unsafe_arena_release_header();
+
+  // @@protoc_insertion_point(class_scope:galbot.aphropm_proto.MotionPlanTarget)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::internal::MapField<
+      MotionPlanTarget_ChainTargetsEntry_DoNotUse,
+      std::string, ::galbot::aphropm_proto::RobotTargetMsg,
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::TYPE_STRING,
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::TYPE_MESSAGE> chain_targets_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr common_str_;
+  ::galbot::core_proto::Header* header_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_galbot_2faphropm_5fproto_2fmps_5finterface_2eproto;
+};
+// -------------------------------------------------------------------
+
+class MotionPlanReq PROTOBUF_FINAL :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:galbot.aphropm_proto.MotionPlanReq) */ {
+ public:
+  inline MotionPlanReq() : MotionPlanReq(nullptr) {}
+  virtual ~MotionPlanReq();
+
+  MotionPlanReq(const MotionPlanReq& from);
+  MotionPlanReq(MotionPlanReq&& from) noexcept
+    : MotionPlanReq() {
+    *this = ::std::move(from);
+  }
+
+  inline MotionPlanReq& operator=(const MotionPlanReq& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline MotionPlanReq& operator=(MotionPlanReq&& from) noexcept {
+    if (GetArena() == from.GetArena()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const MotionPlanReq& default_instance();
+
+  static inline const MotionPlanReq* internal_default_instance() {
+    return reinterpret_cast<const MotionPlanReq*>(
+               &_MotionPlanReq_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    23;
+
+  friend void swap(MotionPlanReq& a, MotionPlanReq& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(MotionPlanReq* other) {
+    if (other == this) return;
+    if (GetArena() == other->GetArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(MotionPlanReq* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline MotionPlanReq* New() const final {
+    return CreateMaybeMessage<MotionPlanReq>(nullptr);
+  }
+
+  MotionPlanReq* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<MotionPlanReq>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const MotionPlanReq& from);
+  void MergeFrom(const MotionPlanReq& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(MotionPlanReq* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "galbot.aphropm_proto.MotionPlanReq";
+  }
+  protected:
+  explicit MotionPlanReq(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_galbot_2faphropm_5fproto_2fmps_5finterface_2eproto);
+    return ::descriptor_table_galbot_2faphropm_5fproto_2fmps_5finterface_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kRobotTargetFieldNumber = 2,
+    kCommonStrFieldNumber = 300,
+    kRobotStateFieldNumber = 1,
+    kOptionFieldNumber = 3,
+  };
+  // repeated .galbot.aphropm_proto.MotionPlanTarget robot_target = 2;
+  int robot_target_size() const;
+  private:
+  int _internal_robot_target_size() const;
+  public:
+  void clear_robot_target();
+  ::galbot::aphropm_proto::MotionPlanTarget* mutable_robot_target(int index);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::galbot::aphropm_proto::MotionPlanTarget >*
+      mutable_robot_target();
+  private:
+  const ::galbot::aphropm_proto::MotionPlanTarget& _internal_robot_target(int index) const;
+  ::galbot::aphropm_proto::MotionPlanTarget* _internal_add_robot_target();
+  public:
+  const ::galbot::aphropm_proto::MotionPlanTarget& robot_target(int index) const;
+  ::galbot::aphropm_proto::MotionPlanTarget* add_robot_target();
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::galbot::aphropm_proto::MotionPlanTarget >&
+      robot_target() const;
+
+  // string common_str = 300;
+  void clear_common_str();
+  const std::string& common_str() const;
+  void set_common_str(const std::string& value);
+  void set_common_str(std::string&& value);
+  void set_common_str(const char* value);
+  void set_common_str(const char* value, size_t size);
+  std::string* mutable_common_str();
+  std::string* release_common_str();
+  void set_allocated_common_str(std::string* common_str);
+  private:
+  const std::string& _internal_common_str() const;
+  void _internal_set_common_str(const std::string& value);
+  std::string* _internal_mutable_common_str();
+  public:
+
+  // .galbot.aphropm_proto.RobotStatesMsg robot_state = 1;
+  bool has_robot_state() const;
+  private:
+  bool _internal_has_robot_state() const;
+  public:
+  void clear_robot_state();
+  const ::galbot::aphropm_proto::RobotStatesMsg& robot_state() const;
+  ::galbot::aphropm_proto::RobotStatesMsg* release_robot_state();
+  ::galbot::aphropm_proto::RobotStatesMsg* mutable_robot_state();
+  void set_allocated_robot_state(::galbot::aphropm_proto::RobotStatesMsg* robot_state);
+  private:
+  const ::galbot::aphropm_proto::RobotStatesMsg& _internal_robot_state() const;
+  ::galbot::aphropm_proto::RobotStatesMsg* _internal_mutable_robot_state();
+  public:
+  void unsafe_arena_set_allocated_robot_state(
+      ::galbot::aphropm_proto::RobotStatesMsg* robot_state);
+  ::galbot::aphropm_proto::RobotStatesMsg* unsafe_arena_release_robot_state();
+
+  // .galbot.aphropm_proto.MotionPlanOptions option = 3;
+  bool has_option() const;
+  private:
+  bool _internal_has_option() const;
+  public:
+  void clear_option();
+  const ::galbot::aphropm_proto::MotionPlanOptions& option() const;
+  ::galbot::aphropm_proto::MotionPlanOptions* release_option();
+  ::galbot::aphropm_proto::MotionPlanOptions* mutable_option();
+  void set_allocated_option(::galbot::aphropm_proto::MotionPlanOptions* option);
+  private:
+  const ::galbot::aphropm_proto::MotionPlanOptions& _internal_option() const;
+  ::galbot::aphropm_proto::MotionPlanOptions* _internal_mutable_option();
+  public:
+  void unsafe_arena_set_allocated_option(
+      ::galbot::aphropm_proto::MotionPlanOptions* option);
+  ::galbot::aphropm_proto::MotionPlanOptions* unsafe_arena_release_option();
+
+  // @@protoc_insertion_point(class_scope:galbot.aphropm_proto.MotionPlanReq)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::galbot::aphropm_proto::MotionPlanTarget > robot_target_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr common_str_;
+  ::galbot::aphropm_proto::RobotStatesMsg* robot_state_;
+  ::galbot::aphropm_proto::MotionPlanOptions* option_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_galbot_2faphropm_5fproto_2fmps_5finterface_2eproto;
+};
+// -------------------------------------------------------------------
+
+class MoveLineReq PROTOBUF_FINAL :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:galbot.aphropm_proto.MoveLineReq) */ {
+ public:
+  inline MoveLineReq() : MoveLineReq(nullptr) {}
+  virtual ~MoveLineReq();
+
+  MoveLineReq(const MoveLineReq& from);
+  MoveLineReq(MoveLineReq&& from) noexcept
+    : MoveLineReq() {
+    *this = ::std::move(from);
+  }
+
+  inline MoveLineReq& operator=(const MoveLineReq& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline MoveLineReq& operator=(MoveLineReq&& from) noexcept {
+    if (GetArena() == from.GetArena()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const MoveLineReq& default_instance();
+
+  static inline const MoveLineReq* internal_default_instance() {
+    return reinterpret_cast<const MoveLineReq*>(
+               &_MoveLineReq_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    24;
+
+  friend void swap(MoveLineReq& a, MoveLineReq& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(MoveLineReq* other) {
+    if (other == this) return;
+    if (GetArena() == other->GetArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(MoveLineReq* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline MoveLineReq* New() const final {
+    return CreateMaybeMessage<MoveLineReq>(nullptr);
+  }
+
+  MoveLineReq* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<MoveLineReq>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const MoveLineReq& from);
+  void MergeFrom(const MoveLineReq& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(MoveLineReq* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "galbot.aphropm_proto.MoveLineReq";
+  }
+  protected:
+  explicit MoveLineReq(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_galbot_2faphropm_5fproto_2fmps_5finterface_2eproto);
+    return ::descriptor_table_galbot_2faphropm_5fproto_2fmps_5finterface_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kRobotTargetFieldNumber = 2,
+    kCommonStrFieldNumber = 300,
+    kRobotStateFieldNumber = 1,
+    kOptionFieldNumber = 3,
+  };
+  // repeated .galbot.aphropm_proto.MotionPlanTarget robot_target = 2;
+  int robot_target_size() const;
+  private:
+  int _internal_robot_target_size() const;
+  public:
+  void clear_robot_target();
+  ::galbot::aphropm_proto::MotionPlanTarget* mutable_robot_target(int index);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::galbot::aphropm_proto::MotionPlanTarget >*
+      mutable_robot_target();
+  private:
+  const ::galbot::aphropm_proto::MotionPlanTarget& _internal_robot_target(int index) const;
+  ::galbot::aphropm_proto::MotionPlanTarget* _internal_add_robot_target();
+  public:
+  const ::galbot::aphropm_proto::MotionPlanTarget& robot_target(int index) const;
+  ::galbot::aphropm_proto::MotionPlanTarget* add_robot_target();
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::galbot::aphropm_proto::MotionPlanTarget >&
+      robot_target() const;
+
+  // string common_str = 300;
+  void clear_common_str();
+  const std::string& common_str() const;
+  void set_common_str(const std::string& value);
+  void set_common_str(std::string&& value);
+  void set_common_str(const char* value);
+  void set_common_str(const char* value, size_t size);
+  std::string* mutable_common_str();
+  std::string* release_common_str();
+  void set_allocated_common_str(std::string* common_str);
+  private:
+  const std::string& _internal_common_str() const;
+  void _internal_set_common_str(const std::string& value);
+  std::string* _internal_mutable_common_str();
+  public:
+
+  // .galbot.aphropm_proto.RobotStatesMsg robot_state = 1;
+  bool has_robot_state() const;
+  private:
+  bool _internal_has_robot_state() const;
+  public:
+  void clear_robot_state();
+  const ::galbot::aphropm_proto::RobotStatesMsg& robot_state() const;
+  ::galbot::aphropm_proto::RobotStatesMsg* release_robot_state();
+  ::galbot::aphropm_proto::RobotStatesMsg* mutable_robot_state();
+  void set_allocated_robot_state(::galbot::aphropm_proto::RobotStatesMsg* robot_state);
+  private:
+  const ::galbot::aphropm_proto::RobotStatesMsg& _internal_robot_state() const;
+  ::galbot::aphropm_proto::RobotStatesMsg* _internal_mutable_robot_state();
+  public:
+  void unsafe_arena_set_allocated_robot_state(
+      ::galbot::aphropm_proto::RobotStatesMsg* robot_state);
+  ::galbot::aphropm_proto::RobotStatesMsg* unsafe_arena_release_robot_state();
+
+  // .galbot.aphropm_proto.MotionPlanOptions option = 3;
+  bool has_option() const;
+  private:
+  bool _internal_has_option() const;
+  public:
+  void clear_option();
+  const ::galbot::aphropm_proto::MotionPlanOptions& option() const;
+  ::galbot::aphropm_proto::MotionPlanOptions* release_option();
+  ::galbot::aphropm_proto::MotionPlanOptions* mutable_option();
+  void set_allocated_option(::galbot::aphropm_proto::MotionPlanOptions* option);
+  private:
+  const ::galbot::aphropm_proto::MotionPlanOptions& _internal_option() const;
+  ::galbot::aphropm_proto::MotionPlanOptions* _internal_mutable_option();
+  public:
+  void unsafe_arena_set_allocated_option(
+      ::galbot::aphropm_proto::MotionPlanOptions* option);
+  ::galbot::aphropm_proto::MotionPlanOptions* unsafe_arena_release_option();
+
+  // @@protoc_insertion_point(class_scope:galbot.aphropm_proto.MoveLineReq)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::galbot::aphropm_proto::MotionPlanTarget > robot_target_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr common_str_;
+  ::galbot::aphropm_proto::RobotStatesMsg* robot_state_;
+  ::galbot::aphropm_proto::MotionPlanOptions* option_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_galbot_2faphropm_5fproto_2fmps_5finterface_2eproto;
+};
+// -------------------------------------------------------------------
+
+class TrajPlanReq PROTOBUF_FINAL :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:galbot.aphropm_proto.TrajPlanReq) */ {
+ public:
+  inline TrajPlanReq() : TrajPlanReq(nullptr) {}
+  virtual ~TrajPlanReq();
+
+  TrajPlanReq(const TrajPlanReq& from);
+  TrajPlanReq(TrajPlanReq&& from) noexcept
+    : TrajPlanReq() {
+    *this = ::std::move(from);
+  }
+
+  inline TrajPlanReq& operator=(const TrajPlanReq& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline TrajPlanReq& operator=(TrajPlanReq&& from) noexcept {
+    if (GetArena() == from.GetArena()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const TrajPlanReq& default_instance();
+
+  static inline const TrajPlanReq* internal_default_instance() {
+    return reinterpret_cast<const TrajPlanReq*>(
+               &_TrajPlanReq_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    25;
+
+  friend void swap(TrajPlanReq& a, TrajPlanReq& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(TrajPlanReq* other) {
+    if (other == this) return;
+    if (GetArena() == other->GetArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(TrajPlanReq* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline TrajPlanReq* New() const final {
+    return CreateMaybeMessage<TrajPlanReq>(nullptr);
+  }
+
+  TrajPlanReq* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<TrajPlanReq>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const TrajPlanReq& from);
+  void MergeFrom(const TrajPlanReq& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(TrajPlanReq* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "galbot.aphropm_proto.TrajPlanReq";
+  }
+  protected:
+  explicit TrajPlanReq(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_galbot_2faphropm_5fproto_2fmps_5finterface_2eproto);
+    return ::descriptor_table_galbot_2faphropm_5fproto_2fmps_5finterface_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kRobotTargetFieldNumber = 2,
+    kCommonStrFieldNumber = 300,
+    kRobotStateFieldNumber = 1,
+    kOptionFieldNumber = 3,
+  };
+  // repeated .galbot.aphropm_proto.MotionPlanTarget robot_target = 2;
+  int robot_target_size() const;
+  private:
+  int _internal_robot_target_size() const;
+  public:
+  void clear_robot_target();
+  ::galbot::aphropm_proto::MotionPlanTarget* mutable_robot_target(int index);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::galbot::aphropm_proto::MotionPlanTarget >*
+      mutable_robot_target();
+  private:
+  const ::galbot::aphropm_proto::MotionPlanTarget& _internal_robot_target(int index) const;
+  ::galbot::aphropm_proto::MotionPlanTarget* _internal_add_robot_target();
+  public:
+  const ::galbot::aphropm_proto::MotionPlanTarget& robot_target(int index) const;
+  ::galbot::aphropm_proto::MotionPlanTarget* add_robot_target();
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::galbot::aphropm_proto::MotionPlanTarget >&
+      robot_target() const;
+
+  // string common_str = 300;
+  void clear_common_str();
+  const std::string& common_str() const;
+  void set_common_str(const std::string& value);
+  void set_common_str(std::string&& value);
+  void set_common_str(const char* value);
+  void set_common_str(const char* value, size_t size);
+  std::string* mutable_common_str();
+  std::string* release_common_str();
+  void set_allocated_common_str(std::string* common_str);
+  private:
+  const std::string& _internal_common_str() const;
+  void _internal_set_common_str(const std::string& value);
+  std::string* _internal_mutable_common_str();
+  public:
+
+  // .galbot.aphropm_proto.RobotStatesMsg robot_state = 1;
+  bool has_robot_state() const;
+  private:
+  bool _internal_has_robot_state() const;
+  public:
+  void clear_robot_state();
+  const ::galbot::aphropm_proto::RobotStatesMsg& robot_state() const;
+  ::galbot::aphropm_proto::RobotStatesMsg* release_robot_state();
+  ::galbot::aphropm_proto::RobotStatesMsg* mutable_robot_state();
+  void set_allocated_robot_state(::galbot::aphropm_proto::RobotStatesMsg* robot_state);
+  private:
+  const ::galbot::aphropm_proto::RobotStatesMsg& _internal_robot_state() const;
+  ::galbot::aphropm_proto::RobotStatesMsg* _internal_mutable_robot_state();
+  public:
+  void unsafe_arena_set_allocated_robot_state(
+      ::galbot::aphropm_proto::RobotStatesMsg* robot_state);
+  ::galbot::aphropm_proto::RobotStatesMsg* unsafe_arena_release_robot_state();
+
+  // .galbot.aphropm_proto.MotionPlanOptions option = 3;
+  bool has_option() const;
+  private:
+  bool _internal_has_option() const;
+  public:
+  void clear_option();
+  const ::galbot::aphropm_proto::MotionPlanOptions& option() const;
+  ::galbot::aphropm_proto::MotionPlanOptions* release_option();
+  ::galbot::aphropm_proto::MotionPlanOptions* mutable_option();
+  void set_allocated_option(::galbot::aphropm_proto::MotionPlanOptions* option);
+  private:
+  const ::galbot::aphropm_proto::MotionPlanOptions& _internal_option() const;
+  ::galbot::aphropm_proto::MotionPlanOptions* _internal_mutable_option();
+  public:
+  void unsafe_arena_set_allocated_option(
+      ::galbot::aphropm_proto::MotionPlanOptions* option);
+  ::galbot::aphropm_proto::MotionPlanOptions* unsafe_arena_release_option();
+
+  // @@protoc_insertion_point(class_scope:galbot.aphropm_proto.TrajPlanReq)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::galbot::aphropm_proto::MotionPlanTarget > robot_target_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr common_str_;
+  ::galbot::aphropm_proto::RobotStatesMsg* robot_state_;
+  ::galbot::aphropm_proto::MotionPlanOptions* option_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_galbot_2faphropm_5fproto_2fmps_5finterface_2eproto;
+};
+// -------------------------------------------------------------------
+
+class SigPlanReq PROTOBUF_FINAL :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:galbot.aphropm_proto.SigPlanReq) */ {
+ public:
+  inline SigPlanReq() : SigPlanReq(nullptr) {}
+  virtual ~SigPlanReq();
+
+  SigPlanReq(const SigPlanReq& from);
+  SigPlanReq(SigPlanReq&& from) noexcept
+    : SigPlanReq() {
+    *this = ::std::move(from);
+  }
+
+  inline SigPlanReq& operator=(const SigPlanReq& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline SigPlanReq& operator=(SigPlanReq&& from) noexcept {
+    if (GetArena() == from.GetArena()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const SigPlanReq& default_instance();
+
+  static inline const SigPlanReq* internal_default_instance() {
+    return reinterpret_cast<const SigPlanReq*>(
+               &_SigPlanReq_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    26;
+
+  friend void swap(SigPlanReq& a, SigPlanReq& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(SigPlanReq* other) {
+    if (other == this) return;
+    if (GetArena() == other->GetArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(SigPlanReq* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline SigPlanReq* New() const final {
+    return CreateMaybeMessage<SigPlanReq>(nullptr);
+  }
+
+  SigPlanReq* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<SigPlanReq>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const SigPlanReq& from);
+  void MergeFrom(const SigPlanReq& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(SigPlanReq* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "galbot.aphropm_proto.SigPlanReq";
+  }
+  protected:
+  explicit SigPlanReq(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_galbot_2faphropm_5fproto_2fmps_5finterface_2eproto);
+    return ::descriptor_table_galbot_2faphropm_5fproto_2fmps_5finterface_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  typedef SigPlanReq_PlanType PlanType;
+  static constexpr PlanType TRAJ_PLAN =
+    SigPlanReq_PlanType_TRAJ_PLAN;
+  static constexpr PlanType MOTION_PLAN =
+    SigPlanReq_PlanType_MOTION_PLAN;
+  static constexpr PlanType MOVE_LINE =
+    SigPlanReq_PlanType_MOVE_LINE;
+  static inline bool PlanType_IsValid(int value) {
+    return SigPlanReq_PlanType_IsValid(value);
+  }
+  static constexpr PlanType PlanType_MIN =
+    SigPlanReq_PlanType_PlanType_MIN;
+  static constexpr PlanType PlanType_MAX =
+    SigPlanReq_PlanType_PlanType_MAX;
+  static constexpr int PlanType_ARRAYSIZE =
+    SigPlanReq_PlanType_PlanType_ARRAYSIZE;
+  static inline const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor*
+  PlanType_descriptor() {
+    return SigPlanReq_PlanType_descriptor();
+  }
+  template<typename T>
+  static inline const std::string& PlanType_Name(T enum_t_value) {
+    static_assert(::std::is_same<T, PlanType>::value ||
+      ::std::is_integral<T>::value,
+      "Incorrect type passed to function PlanType_Name.");
+    return SigPlanReq_PlanType_Name(enum_t_value);
+  }
+  static inline bool PlanType_Parse(::PROTOBUF_NAMESPACE_ID::ConstStringParam name,
+      PlanType* value) {
+    return SigPlanReq_PlanType_Parse(name, value);
+  }
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kRobotTargetFieldNumber = 2,
+    kCommonStrFieldNumber = 300,
+    kOptionFieldNumber = 3,
+    kPlanTypeFieldNumber = 1,
+  };
+  // repeated .galbot.aphropm_proto.MotionPlanTarget robot_target = 2;
+  int robot_target_size() const;
+  private:
+  int _internal_robot_target_size() const;
+  public:
+  void clear_robot_target();
+  ::galbot::aphropm_proto::MotionPlanTarget* mutable_robot_target(int index);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::galbot::aphropm_proto::MotionPlanTarget >*
+      mutable_robot_target();
+  private:
+  const ::galbot::aphropm_proto::MotionPlanTarget& _internal_robot_target(int index) const;
+  ::galbot::aphropm_proto::MotionPlanTarget* _internal_add_robot_target();
+  public:
+  const ::galbot::aphropm_proto::MotionPlanTarget& robot_target(int index) const;
+  ::galbot::aphropm_proto::MotionPlanTarget* add_robot_target();
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::galbot::aphropm_proto::MotionPlanTarget >&
+      robot_target() const;
+
+  // string common_str = 300;
+  void clear_common_str();
+  const std::string& common_str() const;
+  void set_common_str(const std::string& value);
+  void set_common_str(std::string&& value);
+  void set_common_str(const char* value);
+  void set_common_str(const char* value, size_t size);
+  std::string* mutable_common_str();
+  std::string* release_common_str();
+  void set_allocated_common_str(std::string* common_str);
+  private:
+  const std::string& _internal_common_str() const;
+  void _internal_set_common_str(const std::string& value);
+  std::string* _internal_mutable_common_str();
+  public:
+
+  // .galbot.aphropm_proto.MotionPlanOptions option = 3;
+  bool has_option() const;
+  private:
+  bool _internal_has_option() const;
+  public:
+  void clear_option();
+  const ::galbot::aphropm_proto::MotionPlanOptions& option() const;
+  ::galbot::aphropm_proto::MotionPlanOptions* release_option();
+  ::galbot::aphropm_proto::MotionPlanOptions* mutable_option();
+  void set_allocated_option(::galbot::aphropm_proto::MotionPlanOptions* option);
+  private:
+  const ::galbot::aphropm_proto::MotionPlanOptions& _internal_option() const;
+  ::galbot::aphropm_proto::MotionPlanOptions* _internal_mutable_option();
+  public:
+  void unsafe_arena_set_allocated_option(
+      ::galbot::aphropm_proto::MotionPlanOptions* option);
+  ::galbot::aphropm_proto::MotionPlanOptions* unsafe_arena_release_option();
+
+  // .galbot.aphropm_proto.SigPlanReq.PlanType plan_type = 1;
+  void clear_plan_type();
+  ::galbot::aphropm_proto::SigPlanReq_PlanType plan_type() const;
+  void set_plan_type(::galbot::aphropm_proto::SigPlanReq_PlanType value);
+  private:
+  ::galbot::aphropm_proto::SigPlanReq_PlanType _internal_plan_type() const;
+  void _internal_set_plan_type(::galbot::aphropm_proto::SigPlanReq_PlanType value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:galbot.aphropm_proto.SigPlanReq)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::galbot::aphropm_proto::MotionPlanTarget > robot_target_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr common_str_;
+  ::galbot::aphropm_proto::MotionPlanOptions* option_;
+  int plan_type_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_galbot_2faphropm_5fproto_2fmps_5finterface_2eproto;
+};
+// -------------------------------------------------------------------
+
+class CombinePlanReq PROTOBUF_FINAL :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:galbot.aphropm_proto.CombinePlanReq) */ {
+ public:
+  inline CombinePlanReq() : CombinePlanReq(nullptr) {}
+  virtual ~CombinePlanReq();
+
+  CombinePlanReq(const CombinePlanReq& from);
+  CombinePlanReq(CombinePlanReq&& from) noexcept
+    : CombinePlanReq() {
+    *this = ::std::move(from);
+  }
+
+  inline CombinePlanReq& operator=(const CombinePlanReq& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline CombinePlanReq& operator=(CombinePlanReq&& from) noexcept {
+    if (GetArena() == from.GetArena()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const CombinePlanReq& default_instance();
+
+  static inline const CombinePlanReq* internal_default_instance() {
+    return reinterpret_cast<const CombinePlanReq*>(
+               &_CombinePlanReq_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    27;
+
+  friend void swap(CombinePlanReq& a, CombinePlanReq& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(CombinePlanReq* other) {
+    if (other == this) return;
+    if (GetArena() == other->GetArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(CombinePlanReq* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline CombinePlanReq* New() const final {
+    return CreateMaybeMessage<CombinePlanReq>(nullptr);
+  }
+
+  CombinePlanReq* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<CombinePlanReq>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const CombinePlanReq& from);
+  void MergeFrom(const CombinePlanReq& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(CombinePlanReq* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "galbot.aphropm_proto.CombinePlanReq";
+  }
+  protected:
+  explicit CombinePlanReq(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_galbot_2faphropm_5fproto_2fmps_5finterface_2eproto);
+    return ::descriptor_table_galbot_2faphropm_5fproto_2fmps_5finterface_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kPlanReqsFieldNumber = 2,
+    kCommonStrFieldNumber = 300,
+    kRobotStateFieldNumber = 1,
+    kOptionFieldNumber = 3,
+    kEnforcePassFieldNumber = 4,
+  };
+  // repeated .galbot.aphropm_proto.SigPlanReq plan_reqs = 2;
+  int plan_reqs_size() const;
+  private:
+  int _internal_plan_reqs_size() const;
+  public:
+  void clear_plan_reqs();
+  ::galbot::aphropm_proto::SigPlanReq* mutable_plan_reqs(int index);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::galbot::aphropm_proto::SigPlanReq >*
+      mutable_plan_reqs();
+  private:
+  const ::galbot::aphropm_proto::SigPlanReq& _internal_plan_reqs(int index) const;
+  ::galbot::aphropm_proto::SigPlanReq* _internal_add_plan_reqs();
+  public:
+  const ::galbot::aphropm_proto::SigPlanReq& plan_reqs(int index) const;
+  ::galbot::aphropm_proto::SigPlanReq* add_plan_reqs();
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::galbot::aphropm_proto::SigPlanReq >&
+      plan_reqs() const;
+
+  // string common_str = 300;
+  void clear_common_str();
+  const std::string& common_str() const;
+  void set_common_str(const std::string& value);
+  void set_common_str(std::string&& value);
+  void set_common_str(const char* value);
+  void set_common_str(const char* value, size_t size);
+  std::string* mutable_common_str();
+  std::string* release_common_str();
+  void set_allocated_common_str(std::string* common_str);
+  private:
+  const std::string& _internal_common_str() const;
+  void _internal_set_common_str(const std::string& value);
+  std::string* _internal_mutable_common_str();
+  public:
+
+  // .galbot.aphropm_proto.RobotStatesMsg robot_state = 1;
+  bool has_robot_state() const;
+  private:
+  bool _internal_has_robot_state() const;
+  public:
+  void clear_robot_state();
+  const ::galbot::aphropm_proto::RobotStatesMsg& robot_state() const;
+  ::galbot::aphropm_proto::RobotStatesMsg* release_robot_state();
+  ::galbot::aphropm_proto::RobotStatesMsg* mutable_robot_state();
+  void set_allocated_robot_state(::galbot::aphropm_proto::RobotStatesMsg* robot_state);
+  private:
+  const ::galbot::aphropm_proto::RobotStatesMsg& _internal_robot_state() const;
+  ::galbot::aphropm_proto::RobotStatesMsg* _internal_mutable_robot_state();
+  public:
+  void unsafe_arena_set_allocated_robot_state(
+      ::galbot::aphropm_proto::RobotStatesMsg* robot_state);
+  ::galbot::aphropm_proto::RobotStatesMsg* unsafe_arena_release_robot_state();
+
+  // .galbot.aphropm_proto.MotionPlanOptions option = 3;
+  bool has_option() const;
+  private:
+  bool _internal_has_option() const;
+  public:
+  void clear_option();
+  const ::galbot::aphropm_proto::MotionPlanOptions& option() const;
+  ::galbot::aphropm_proto::MotionPlanOptions* release_option();
+  ::galbot::aphropm_proto::MotionPlanOptions* mutable_option();
+  void set_allocated_option(::galbot::aphropm_proto::MotionPlanOptions* option);
+  private:
+  const ::galbot::aphropm_proto::MotionPlanOptions& _internal_option() const;
+  ::galbot::aphropm_proto::MotionPlanOptions* _internal_mutable_option();
+  public:
+  void unsafe_arena_set_allocated_option(
+      ::galbot::aphropm_proto::MotionPlanOptions* option);
+  ::galbot::aphropm_proto::MotionPlanOptions* unsafe_arena_release_option();
+
+  // .google.protobuf.BoolValue enforce_pass = 4;
+  bool has_enforce_pass() const;
+  private:
+  bool _internal_has_enforce_pass() const;
+  public:
+  void clear_enforce_pass();
+  const PROTOBUF_NAMESPACE_ID::BoolValue& enforce_pass() const;
+  PROTOBUF_NAMESPACE_ID::BoolValue* release_enforce_pass();
+  PROTOBUF_NAMESPACE_ID::BoolValue* mutable_enforce_pass();
+  void set_allocated_enforce_pass(PROTOBUF_NAMESPACE_ID::BoolValue* enforce_pass);
+  private:
+  const PROTOBUF_NAMESPACE_ID::BoolValue& _internal_enforce_pass() const;
+  PROTOBUF_NAMESPACE_ID::BoolValue* _internal_mutable_enforce_pass();
+  public:
+  void unsafe_arena_set_allocated_enforce_pass(
+      PROTOBUF_NAMESPACE_ID::BoolValue* enforce_pass);
+  PROTOBUF_NAMESPACE_ID::BoolValue* unsafe_arena_release_enforce_pass();
+
+  // @@protoc_insertion_point(class_scope:galbot.aphropm_proto.CombinePlanReq)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::galbot::aphropm_proto::SigPlanReq > plan_reqs_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr common_str_;
+  ::galbot::aphropm_proto::RobotStatesMsg* robot_state_;
+  ::galbot::aphropm_proto::MotionPlanOptions* option_;
+  PROTOBUF_NAMESPACE_ID::BoolValue* enforce_pass_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_galbot_2faphropm_5fproto_2fmps_5finterface_2eproto;
+};
+// -------------------------------------------------------------------
+
 class MotionPlanServerRequest PROTOBUF_FINAL :
     public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:galbot.aphropm_proto.MotionPlanServerRequest) */ {
  public:
@@ -4396,6 +5812,11 @@ class MotionPlanServerRequest PROTOBUF_FINAL :
     kForwardKinematics = 10,
     kCheckCollision = 11,
     kSingleChainCombinePlan = 12,
+    kMotionPlanRequest = 13,
+    kMoveLineReq = 14,
+    kTrajPlanReq = 15,
+    kSigPlanReq = 16,
+    kCombinePlanReq = 17,
     REQUEST_NOT_SET = 0,
   };
 
@@ -4404,7 +5825,7 @@ class MotionPlanServerRequest PROTOBUF_FINAL :
                &_MotionPlanServerRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    21;
+    28;
 
   friend void swap(MotionPlanServerRequest& a, MotionPlanServerRequest& b) {
     a.Swap(&b);
@@ -4476,6 +5897,7 @@ class MotionPlanServerRequest PROTOBUF_FINAL :
 
   enum : int {
     kTaskIdFieldNumber = 1,
+    kCommonStrFieldNumber = 300,
     kImmediateExecuteFieldNumber = 2,
     kEnableEnvCollisionCheckFieldNumber = 50,
     kCommonRequestFieldNumber = 3,
@@ -4488,6 +5910,11 @@ class MotionPlanServerRequest PROTOBUF_FINAL :
     kForwardKinematicsFieldNumber = 10,
     kCheckCollisionFieldNumber = 11,
     kSingleChainCombinePlanFieldNumber = 12,
+    kMotionPlanRequestFieldNumber = 13,
+    kMoveLineReqFieldNumber = 14,
+    kTrajPlanReqFieldNumber = 15,
+    kSigPlanReqFieldNumber = 16,
+    kCombinePlanReqFieldNumber = 17,
   };
   // string task_id = 1;
   void clear_task_id();
@@ -4503,6 +5930,22 @@ class MotionPlanServerRequest PROTOBUF_FINAL :
   const std::string& _internal_task_id() const;
   void _internal_set_task_id(const std::string& value);
   std::string* _internal_mutable_task_id();
+  public:
+
+  // string common_str = 300;
+  void clear_common_str();
+  const std::string& common_str() const;
+  void set_common_str(const std::string& value);
+  void set_common_str(std::string&& value);
+  void set_common_str(const char* value);
+  void set_common_str(const char* value, size_t size);
+  std::string* mutable_common_str();
+  std::string* release_common_str();
+  void set_allocated_common_str(std::string* common_str);
+  private:
+  const std::string& _internal_common_str() const;
+  void _internal_set_common_str(const std::string& value);
+  std::string* _internal_mutable_common_str();
   public:
 
   // .google.protobuf.BoolValue immediate_execute = 2;
@@ -4721,6 +6164,96 @@ class MotionPlanServerRequest PROTOBUF_FINAL :
       ::galbot::aphropm_proto::SingleChainCombinePlanRequest* single_chain_combine_plan);
   ::galbot::aphropm_proto::SingleChainCombinePlanRequest* unsafe_arena_release_single_chain_combine_plan();
 
+  // .galbot.aphropm_proto.MotionPlanReq motion_plan_request = 13;
+  bool has_motion_plan_request() const;
+  private:
+  bool _internal_has_motion_plan_request() const;
+  public:
+  void clear_motion_plan_request();
+  const ::galbot::aphropm_proto::MotionPlanReq& motion_plan_request() const;
+  ::galbot::aphropm_proto::MotionPlanReq* release_motion_plan_request();
+  ::galbot::aphropm_proto::MotionPlanReq* mutable_motion_plan_request();
+  void set_allocated_motion_plan_request(::galbot::aphropm_proto::MotionPlanReq* motion_plan_request);
+  private:
+  const ::galbot::aphropm_proto::MotionPlanReq& _internal_motion_plan_request() const;
+  ::galbot::aphropm_proto::MotionPlanReq* _internal_mutable_motion_plan_request();
+  public:
+  void unsafe_arena_set_allocated_motion_plan_request(
+      ::galbot::aphropm_proto::MotionPlanReq* motion_plan_request);
+  ::galbot::aphropm_proto::MotionPlanReq* unsafe_arena_release_motion_plan_request();
+
+  // .galbot.aphropm_proto.MoveLineReq move_line_req = 14;
+  bool has_move_line_req() const;
+  private:
+  bool _internal_has_move_line_req() const;
+  public:
+  void clear_move_line_req();
+  const ::galbot::aphropm_proto::MoveLineReq& move_line_req() const;
+  ::galbot::aphropm_proto::MoveLineReq* release_move_line_req();
+  ::galbot::aphropm_proto::MoveLineReq* mutable_move_line_req();
+  void set_allocated_move_line_req(::galbot::aphropm_proto::MoveLineReq* move_line_req);
+  private:
+  const ::galbot::aphropm_proto::MoveLineReq& _internal_move_line_req() const;
+  ::galbot::aphropm_proto::MoveLineReq* _internal_mutable_move_line_req();
+  public:
+  void unsafe_arena_set_allocated_move_line_req(
+      ::galbot::aphropm_proto::MoveLineReq* move_line_req);
+  ::galbot::aphropm_proto::MoveLineReq* unsafe_arena_release_move_line_req();
+
+  // .galbot.aphropm_proto.TrajPlanReq traj_plan_req = 15;
+  bool has_traj_plan_req() const;
+  private:
+  bool _internal_has_traj_plan_req() const;
+  public:
+  void clear_traj_plan_req();
+  const ::galbot::aphropm_proto::TrajPlanReq& traj_plan_req() const;
+  ::galbot::aphropm_proto::TrajPlanReq* release_traj_plan_req();
+  ::galbot::aphropm_proto::TrajPlanReq* mutable_traj_plan_req();
+  void set_allocated_traj_plan_req(::galbot::aphropm_proto::TrajPlanReq* traj_plan_req);
+  private:
+  const ::galbot::aphropm_proto::TrajPlanReq& _internal_traj_plan_req() const;
+  ::galbot::aphropm_proto::TrajPlanReq* _internal_mutable_traj_plan_req();
+  public:
+  void unsafe_arena_set_allocated_traj_plan_req(
+      ::galbot::aphropm_proto::TrajPlanReq* traj_plan_req);
+  ::galbot::aphropm_proto::TrajPlanReq* unsafe_arena_release_traj_plan_req();
+
+  // .galbot.aphropm_proto.SigPlanReq sig_plan_req = 16;
+  bool has_sig_plan_req() const;
+  private:
+  bool _internal_has_sig_plan_req() const;
+  public:
+  void clear_sig_plan_req();
+  const ::galbot::aphropm_proto::SigPlanReq& sig_plan_req() const;
+  ::galbot::aphropm_proto::SigPlanReq* release_sig_plan_req();
+  ::galbot::aphropm_proto::SigPlanReq* mutable_sig_plan_req();
+  void set_allocated_sig_plan_req(::galbot::aphropm_proto::SigPlanReq* sig_plan_req);
+  private:
+  const ::galbot::aphropm_proto::SigPlanReq& _internal_sig_plan_req() const;
+  ::galbot::aphropm_proto::SigPlanReq* _internal_mutable_sig_plan_req();
+  public:
+  void unsafe_arena_set_allocated_sig_plan_req(
+      ::galbot::aphropm_proto::SigPlanReq* sig_plan_req);
+  ::galbot::aphropm_proto::SigPlanReq* unsafe_arena_release_sig_plan_req();
+
+  // .galbot.aphropm_proto.CombinePlanReq combine_plan_req = 17;
+  bool has_combine_plan_req() const;
+  private:
+  bool _internal_has_combine_plan_req() const;
+  public:
+  void clear_combine_plan_req();
+  const ::galbot::aphropm_proto::CombinePlanReq& combine_plan_req() const;
+  ::galbot::aphropm_proto::CombinePlanReq* release_combine_plan_req();
+  ::galbot::aphropm_proto::CombinePlanReq* mutable_combine_plan_req();
+  void set_allocated_combine_plan_req(::galbot::aphropm_proto::CombinePlanReq* combine_plan_req);
+  private:
+  const ::galbot::aphropm_proto::CombinePlanReq& _internal_combine_plan_req() const;
+  ::galbot::aphropm_proto::CombinePlanReq* _internal_mutable_combine_plan_req();
+  public:
+  void unsafe_arena_set_allocated_combine_plan_req(
+      ::galbot::aphropm_proto::CombinePlanReq* combine_plan_req);
+  ::galbot::aphropm_proto::CombinePlanReq* unsafe_arena_release_combine_plan_req();
+
   void clear_Request();
   RequestCase Request_case() const;
   // @@protoc_insertion_point(class_scope:galbot.aphropm_proto.MotionPlanServerRequest)
@@ -4736,6 +6269,11 @@ class MotionPlanServerRequest PROTOBUF_FINAL :
   void set_has_forward_kinematics();
   void set_has_check_collision();
   void set_has_single_chain_combine_plan();
+  void set_has_motion_plan_request();
+  void set_has_move_line_req();
+  void set_has_traj_plan_req();
+  void set_has_sig_plan_req();
+  void set_has_combine_plan_req();
 
   inline bool has_Request() const;
   inline void clear_has_Request();
@@ -4744,6 +6282,7 @@ class MotionPlanServerRequest PROTOBUF_FINAL :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr task_id_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr common_str_;
   PROTOBUF_NAMESPACE_ID::BoolValue* immediate_execute_;
   PROTOBUF_NAMESPACE_ID::BoolValue* enable_env_collision_check_;
   union RequestUnion {
@@ -4758,6 +6297,11 @@ class MotionPlanServerRequest PROTOBUF_FINAL :
     ::galbot::aphropm_proto::ForwardKinematicRequest* forward_kinematics_;
     ::galbot::aphropm_proto::CheckCollisionRequest* check_collision_;
     ::galbot::aphropm_proto::SingleChainCombinePlanRequest* single_chain_combine_plan_;
+    ::galbot::aphropm_proto::MotionPlanReq* motion_plan_request_;
+    ::galbot::aphropm_proto::MoveLineReq* move_line_req_;
+    ::galbot::aphropm_proto::TrajPlanReq* traj_plan_req_;
+    ::galbot::aphropm_proto::SigPlanReq* sig_plan_req_;
+    ::galbot::aphropm_proto::CombinePlanReq* combine_plan_req_;
   } Request_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   ::PROTOBUF_NAMESPACE_ID::uint32 _oneof_case_[1];
@@ -4788,7 +6332,7 @@ public:
   private:
   static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
     ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_galbot_2faphropm_5fproto_2fmps_5finterface_2eproto);
-    return ::descriptor_table_galbot_2faphropm_5fproto_2fmps_5finterface_2eproto.file_level_metadata[22];
+    return ::descriptor_table_galbot_2faphropm_5fproto_2fmps_5finterface_2eproto.file_level_metadata[29];
   }
 
   public:
@@ -4837,7 +6381,7 @@ class InverseKinematicResult PROTOBUF_FINAL :
                &_InverseKinematicResult_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    23;
+    30;
 
   friend void swap(InverseKinematicResult& a, InverseKinematicResult& b) {
     a.Swap(&b);
@@ -4967,7 +6511,7 @@ public:
   private:
   static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
     ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_galbot_2faphropm_5fproto_2fmps_5finterface_2eproto);
-    return ::descriptor_table_galbot_2faphropm_5fproto_2fmps_5finterface_2eproto.file_level_metadata[24];
+    return ::descriptor_table_galbot_2faphropm_5fproto_2fmps_5finterface_2eproto.file_level_metadata[31];
   }
 
   public:
@@ -5016,7 +6560,7 @@ class ForwardKinematicResult PROTOBUF_FINAL :
                &_ForwardKinematicResult_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    25;
+    32;
 
   friend void swap(ForwardKinematicResult& a, ForwardKinematicResult& b) {
     a.Swap(&b);
@@ -5146,7 +6690,7 @@ public:
   private:
   static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
     ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_galbot_2faphropm_5fproto_2fmps_5finterface_2eproto);
-    return ::descriptor_table_galbot_2faphropm_5fproto_2fmps_5finterface_2eproto.file_level_metadata[26];
+    return ::descriptor_table_galbot_2faphropm_5fproto_2fmps_5finterface_2eproto.file_level_metadata[33];
   }
 
   public:
@@ -5195,7 +6739,7 @@ class JacobianResult PROTOBUF_FINAL :
                &_JacobianResult_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    27;
+    34;
 
   friend void swap(JacobianResult& a, JacobianResult& b) {
     a.Swap(&b);
@@ -5303,6 +6847,603 @@ class JacobianResult PROTOBUF_FINAL :
 };
 // -------------------------------------------------------------------
 
+class InverseKinematicReq PROTOBUF_FINAL :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:galbot.aphropm_proto.InverseKinematicReq) */ {
+ public:
+  inline InverseKinematicReq() : InverseKinematicReq(nullptr) {}
+  virtual ~InverseKinematicReq();
+
+  InverseKinematicReq(const InverseKinematicReq& from);
+  InverseKinematicReq(InverseKinematicReq&& from) noexcept
+    : InverseKinematicReq() {
+    *this = ::std::move(from);
+  }
+
+  inline InverseKinematicReq& operator=(const InverseKinematicReq& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline InverseKinematicReq& operator=(InverseKinematicReq&& from) noexcept {
+    if (GetArena() == from.GetArena()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const InverseKinematicReq& default_instance();
+
+  static inline const InverseKinematicReq* internal_default_instance() {
+    return reinterpret_cast<const InverseKinematicReq*>(
+               &_InverseKinematicReq_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    35;
+
+  friend void swap(InverseKinematicReq& a, InverseKinematicReq& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(InverseKinematicReq* other) {
+    if (other == this) return;
+    if (GetArena() == other->GetArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(InverseKinematicReq* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline InverseKinematicReq* New() const final {
+    return CreateMaybeMessage<InverseKinematicReq>(nullptr);
+  }
+
+  InverseKinematicReq* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<InverseKinematicReq>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const InverseKinematicReq& from);
+  void MergeFrom(const InverseKinematicReq& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(InverseKinematicReq* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "galbot.aphropm_proto.InverseKinematicReq";
+  }
+  protected:
+  explicit InverseKinematicReq(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_galbot_2faphropm_5fproto_2fmps_5finterface_2eproto);
+    return ::descriptor_table_galbot_2faphropm_5fproto_2fmps_5finterface_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kCommonStrFieldNumber = 300,
+    kRobotStateFieldNumber = 1,
+    kRobotTargetFieldNumber = 2,
+  };
+  // string common_str = 300;
+  void clear_common_str();
+  const std::string& common_str() const;
+  void set_common_str(const std::string& value);
+  void set_common_str(std::string&& value);
+  void set_common_str(const char* value);
+  void set_common_str(const char* value, size_t size);
+  std::string* mutable_common_str();
+  std::string* release_common_str();
+  void set_allocated_common_str(std::string* common_str);
+  private:
+  const std::string& _internal_common_str() const;
+  void _internal_set_common_str(const std::string& value);
+  std::string* _internal_mutable_common_str();
+  public:
+
+  // .galbot.aphropm_proto.RobotStatesMsg robot_state = 1;
+  bool has_robot_state() const;
+  private:
+  bool _internal_has_robot_state() const;
+  public:
+  void clear_robot_state();
+  const ::galbot::aphropm_proto::RobotStatesMsg& robot_state() const;
+  ::galbot::aphropm_proto::RobotStatesMsg* release_robot_state();
+  ::galbot::aphropm_proto::RobotStatesMsg* mutable_robot_state();
+  void set_allocated_robot_state(::galbot::aphropm_proto::RobotStatesMsg* robot_state);
+  private:
+  const ::galbot::aphropm_proto::RobotStatesMsg& _internal_robot_state() const;
+  ::galbot::aphropm_proto::RobotStatesMsg* _internal_mutable_robot_state();
+  public:
+  void unsafe_arena_set_allocated_robot_state(
+      ::galbot::aphropm_proto::RobotStatesMsg* robot_state);
+  ::galbot::aphropm_proto::RobotStatesMsg* unsafe_arena_release_robot_state();
+
+  // .galbot.aphropm_proto.MotionPlanTarget robot_target = 2;
+  bool has_robot_target() const;
+  private:
+  bool _internal_has_robot_target() const;
+  public:
+  void clear_robot_target();
+  const ::galbot::aphropm_proto::MotionPlanTarget& robot_target() const;
+  ::galbot::aphropm_proto::MotionPlanTarget* release_robot_target();
+  ::galbot::aphropm_proto::MotionPlanTarget* mutable_robot_target();
+  void set_allocated_robot_target(::galbot::aphropm_proto::MotionPlanTarget* robot_target);
+  private:
+  const ::galbot::aphropm_proto::MotionPlanTarget& _internal_robot_target() const;
+  ::galbot::aphropm_proto::MotionPlanTarget* _internal_mutable_robot_target();
+  public:
+  void unsafe_arena_set_allocated_robot_target(
+      ::galbot::aphropm_proto::MotionPlanTarget* robot_target);
+  ::galbot::aphropm_proto::MotionPlanTarget* unsafe_arena_release_robot_target();
+
+  // @@protoc_insertion_point(class_scope:galbot.aphropm_proto.InverseKinematicReq)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr common_str_;
+  ::galbot::aphropm_proto::RobotStatesMsg* robot_state_;
+  ::galbot::aphropm_proto::MotionPlanTarget* robot_target_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_galbot_2faphropm_5fproto_2fmps_5finterface_2eproto;
+};
+// -------------------------------------------------------------------
+
+class ForwardKinematicReq PROTOBUF_FINAL :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:galbot.aphropm_proto.ForwardKinematicReq) */ {
+ public:
+  inline ForwardKinematicReq() : ForwardKinematicReq(nullptr) {}
+  virtual ~ForwardKinematicReq();
+
+  ForwardKinematicReq(const ForwardKinematicReq& from);
+  ForwardKinematicReq(ForwardKinematicReq&& from) noexcept
+    : ForwardKinematicReq() {
+    *this = ::std::move(from);
+  }
+
+  inline ForwardKinematicReq& operator=(const ForwardKinematicReq& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline ForwardKinematicReq& operator=(ForwardKinematicReq&& from) noexcept {
+    if (GetArena() == from.GetArena()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const ForwardKinematicReq& default_instance();
+
+  static inline const ForwardKinematicReq* internal_default_instance() {
+    return reinterpret_cast<const ForwardKinematicReq*>(
+               &_ForwardKinematicReq_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    36;
+
+  friend void swap(ForwardKinematicReq& a, ForwardKinematicReq& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(ForwardKinematicReq* other) {
+    if (other == this) return;
+    if (GetArena() == other->GetArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(ForwardKinematicReq* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline ForwardKinematicReq* New() const final {
+    return CreateMaybeMessage<ForwardKinematicReq>(nullptr);
+  }
+
+  ForwardKinematicReq* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<ForwardKinematicReq>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const ForwardKinematicReq& from);
+  void MergeFrom(const ForwardKinematicReq& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(ForwardKinematicReq* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "galbot.aphropm_proto.ForwardKinematicReq";
+  }
+  protected:
+  explicit ForwardKinematicReq(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_galbot_2faphropm_5fproto_2fmps_5finterface_2eproto);
+    return ::descriptor_table_galbot_2faphropm_5fproto_2fmps_5finterface_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kLinkNamesFieldNumber = 1,
+    kReferenceFrameNameFieldNumber = 3,
+    kCommonStrFieldNumber = 300,
+    kRobotStateFieldNumber = 2,
+  };
+  // repeated string link_names = 1;
+  int link_names_size() const;
+  private:
+  int _internal_link_names_size() const;
+  public:
+  void clear_link_names();
+  const std::string& link_names(int index) const;
+  std::string* mutable_link_names(int index);
+  void set_link_names(int index, const std::string& value);
+  void set_link_names(int index, std::string&& value);
+  void set_link_names(int index, const char* value);
+  void set_link_names(int index, const char* value, size_t size);
+  std::string* add_link_names();
+  void add_link_names(const std::string& value);
+  void add_link_names(std::string&& value);
+  void add_link_names(const char* value);
+  void add_link_names(const char* value, size_t size);
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>& link_names() const;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>* mutable_link_names();
+  private:
+  const std::string& _internal_link_names(int index) const;
+  std::string* _internal_add_link_names();
+  public:
+
+  // string reference_frame_name = 3;
+  void clear_reference_frame_name();
+  const std::string& reference_frame_name() const;
+  void set_reference_frame_name(const std::string& value);
+  void set_reference_frame_name(std::string&& value);
+  void set_reference_frame_name(const char* value);
+  void set_reference_frame_name(const char* value, size_t size);
+  std::string* mutable_reference_frame_name();
+  std::string* release_reference_frame_name();
+  void set_allocated_reference_frame_name(std::string* reference_frame_name);
+  private:
+  const std::string& _internal_reference_frame_name() const;
+  void _internal_set_reference_frame_name(const std::string& value);
+  std::string* _internal_mutable_reference_frame_name();
+  public:
+
+  // string common_str = 300;
+  void clear_common_str();
+  const std::string& common_str() const;
+  void set_common_str(const std::string& value);
+  void set_common_str(std::string&& value);
+  void set_common_str(const char* value);
+  void set_common_str(const char* value, size_t size);
+  std::string* mutable_common_str();
+  std::string* release_common_str();
+  void set_allocated_common_str(std::string* common_str);
+  private:
+  const std::string& _internal_common_str() const;
+  void _internal_set_common_str(const std::string& value);
+  std::string* _internal_mutable_common_str();
+  public:
+
+  // .galbot.aphropm_proto.RobotStatesMsg robot_state = 2;
+  bool has_robot_state() const;
+  private:
+  bool _internal_has_robot_state() const;
+  public:
+  void clear_robot_state();
+  const ::galbot::aphropm_proto::RobotStatesMsg& robot_state() const;
+  ::galbot::aphropm_proto::RobotStatesMsg* release_robot_state();
+  ::galbot::aphropm_proto::RobotStatesMsg* mutable_robot_state();
+  void set_allocated_robot_state(::galbot::aphropm_proto::RobotStatesMsg* robot_state);
+  private:
+  const ::galbot::aphropm_proto::RobotStatesMsg& _internal_robot_state() const;
+  ::galbot::aphropm_proto::RobotStatesMsg* _internal_mutable_robot_state();
+  public:
+  void unsafe_arena_set_allocated_robot_state(
+      ::galbot::aphropm_proto::RobotStatesMsg* robot_state);
+  ::galbot::aphropm_proto::RobotStatesMsg* unsafe_arena_release_robot_state();
+
+  // @@protoc_insertion_point(class_scope:galbot.aphropm_proto.ForwardKinematicReq)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string> link_names_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr reference_frame_name_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr common_str_;
+  ::galbot::aphropm_proto::RobotStatesMsg* robot_state_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_galbot_2faphropm_5fproto_2fmps_5finterface_2eproto;
+};
+// -------------------------------------------------------------------
+
+class JacobianReqMsg PROTOBUF_FINAL :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:galbot.aphropm_proto.JacobianReqMsg) */ {
+ public:
+  inline JacobianReqMsg() : JacobianReqMsg(nullptr) {}
+  virtual ~JacobianReqMsg();
+
+  JacobianReqMsg(const JacobianReqMsg& from);
+  JacobianReqMsg(JacobianReqMsg&& from) noexcept
+    : JacobianReqMsg() {
+    *this = ::std::move(from);
+  }
+
+  inline JacobianReqMsg& operator=(const JacobianReqMsg& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline JacobianReqMsg& operator=(JacobianReqMsg&& from) noexcept {
+    if (GetArena() == from.GetArena()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const JacobianReqMsg& default_instance();
+
+  static inline const JacobianReqMsg* internal_default_instance() {
+    return reinterpret_cast<const JacobianReqMsg*>(
+               &_JacobianReqMsg_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    37;
+
+  friend void swap(JacobianReqMsg& a, JacobianReqMsg& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(JacobianReqMsg* other) {
+    if (other == this) return;
+    if (GetArena() == other->GetArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(JacobianReqMsg* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline JacobianReqMsg* New() const final {
+    return CreateMaybeMessage<JacobianReqMsg>(nullptr);
+  }
+
+  JacobianReqMsg* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<JacobianReqMsg>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const JacobianReqMsg& from);
+  void MergeFrom(const JacobianReqMsg& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(JacobianReqMsg* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "galbot.aphropm_proto.JacobianReqMsg";
+  }
+  protected:
+  explicit JacobianReqMsg(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_galbot_2faphropm_5fproto_2fmps_5finterface_2eproto);
+    return ::descriptor_table_galbot_2faphropm_5fproto_2fmps_5finterface_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kLinkNamesFieldNumber = 1,
+    kReferenceFrameNameFieldNumber = 3,
+    kCommonStrFieldNumber = 300,
+    kRobotStateFieldNumber = 2,
+  };
+  // repeated string link_names = 1;
+  int link_names_size() const;
+  private:
+  int _internal_link_names_size() const;
+  public:
+  void clear_link_names();
+  const std::string& link_names(int index) const;
+  std::string* mutable_link_names(int index);
+  void set_link_names(int index, const std::string& value);
+  void set_link_names(int index, std::string&& value);
+  void set_link_names(int index, const char* value);
+  void set_link_names(int index, const char* value, size_t size);
+  std::string* add_link_names();
+  void add_link_names(const std::string& value);
+  void add_link_names(std::string&& value);
+  void add_link_names(const char* value);
+  void add_link_names(const char* value, size_t size);
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>& link_names() const;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>* mutable_link_names();
+  private:
+  const std::string& _internal_link_names(int index) const;
+  std::string* _internal_add_link_names();
+  public:
+
+  // string reference_frame_name = 3;
+  void clear_reference_frame_name();
+  const std::string& reference_frame_name() const;
+  void set_reference_frame_name(const std::string& value);
+  void set_reference_frame_name(std::string&& value);
+  void set_reference_frame_name(const char* value);
+  void set_reference_frame_name(const char* value, size_t size);
+  std::string* mutable_reference_frame_name();
+  std::string* release_reference_frame_name();
+  void set_allocated_reference_frame_name(std::string* reference_frame_name);
+  private:
+  const std::string& _internal_reference_frame_name() const;
+  void _internal_set_reference_frame_name(const std::string& value);
+  std::string* _internal_mutable_reference_frame_name();
+  public:
+
+  // string common_str = 300;
+  void clear_common_str();
+  const std::string& common_str() const;
+  void set_common_str(const std::string& value);
+  void set_common_str(std::string&& value);
+  void set_common_str(const char* value);
+  void set_common_str(const char* value, size_t size);
+  std::string* mutable_common_str();
+  std::string* release_common_str();
+  void set_allocated_common_str(std::string* common_str);
+  private:
+  const std::string& _internal_common_str() const;
+  void _internal_set_common_str(const std::string& value);
+  std::string* _internal_mutable_common_str();
+  public:
+
+  // .galbot.aphropm_proto.RobotStatesMsg robot_state = 2;
+  bool has_robot_state() const;
+  private:
+  bool _internal_has_robot_state() const;
+  public:
+  void clear_robot_state();
+  const ::galbot::aphropm_proto::RobotStatesMsg& robot_state() const;
+  ::galbot::aphropm_proto::RobotStatesMsg* release_robot_state();
+  ::galbot::aphropm_proto::RobotStatesMsg* mutable_robot_state();
+  void set_allocated_robot_state(::galbot::aphropm_proto::RobotStatesMsg* robot_state);
+  private:
+  const ::galbot::aphropm_proto::RobotStatesMsg& _internal_robot_state() const;
+  ::galbot::aphropm_proto::RobotStatesMsg* _internal_mutable_robot_state();
+  public:
+  void unsafe_arena_set_allocated_robot_state(
+      ::galbot::aphropm_proto::RobotStatesMsg* robot_state);
+  ::galbot::aphropm_proto::RobotStatesMsg* unsafe_arena_release_robot_state();
+
+  // @@protoc_insertion_point(class_scope:galbot.aphropm_proto.JacobianReqMsg)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string> link_names_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr reference_frame_name_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr common_str_;
+  ::galbot::aphropm_proto::RobotStatesMsg* robot_state_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_galbot_2faphropm_5fproto_2fmps_5finterface_2eproto;
+};
+// -------------------------------------------------------------------
+
 class JacobianRequest PROTOBUF_FINAL :
     public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:galbot.aphropm_proto.JacobianRequest) */ {
  public:
@@ -5344,7 +7485,7 @@ class JacobianRequest PROTOBUF_FINAL :
                &_JacobianRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    28;
+    38;
 
   friend void swap(JacobianRequest& a, JacobianRequest& b) {
     a.Swap(&b);
@@ -5485,6 +7626,244 @@ class JacobianRequest PROTOBUF_FINAL :
 };
 // -------------------------------------------------------------------
 
+class CheckCollisionReq PROTOBUF_FINAL :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:galbot.aphropm_proto.CheckCollisionReq) */ {
+ public:
+  inline CheckCollisionReq() : CheckCollisionReq(nullptr) {}
+  virtual ~CheckCollisionReq();
+
+  CheckCollisionReq(const CheckCollisionReq& from);
+  CheckCollisionReq(CheckCollisionReq&& from) noexcept
+    : CheckCollisionReq() {
+    *this = ::std::move(from);
+  }
+
+  inline CheckCollisionReq& operator=(const CheckCollisionReq& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline CheckCollisionReq& operator=(CheckCollisionReq&& from) noexcept {
+    if (GetArena() == from.GetArena()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const CheckCollisionReq& default_instance();
+
+  static inline const CheckCollisionReq* internal_default_instance() {
+    return reinterpret_cast<const CheckCollisionReq*>(
+               &_CheckCollisionReq_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    39;
+
+  friend void swap(CheckCollisionReq& a, CheckCollisionReq& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(CheckCollisionReq* other) {
+    if (other == this) return;
+    if (GetArena() == other->GetArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(CheckCollisionReq* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline CheckCollisionReq* New() const final {
+    return CreateMaybeMessage<CheckCollisionReq>(nullptr);
+  }
+
+  CheckCollisionReq* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<CheckCollisionReq>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const CheckCollisionReq& from);
+  void MergeFrom(const CheckCollisionReq& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(CheckCollisionReq* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "galbot.aphropm_proto.CheckCollisionReq";
+  }
+  protected:
+  explicit CheckCollisionReq(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_galbot_2faphropm_5fproto_2fmps_5finterface_2eproto);
+    return ::descriptor_table_galbot_2faphropm_5fproto_2fmps_5finterface_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kRobotStateFieldNumber = 1,
+    kUsingColPairFieldNumber = 2,
+    kIsCheckOnceFieldNumber = 3,
+    kIsLogFieldNumber = 4,
+    kCommonStrFieldNumber = 300,
+  };
+  // repeated .galbot.aphropm_proto.RobotStatesMsg robot_state = 1;
+  int robot_state_size() const;
+  private:
+  int _internal_robot_state_size() const;
+  public:
+  void clear_robot_state();
+  ::galbot::aphropm_proto::RobotStatesMsg* mutable_robot_state(int index);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::galbot::aphropm_proto::RobotStatesMsg >*
+      mutable_robot_state();
+  private:
+  const ::galbot::aphropm_proto::RobotStatesMsg& _internal_robot_state(int index) const;
+  ::galbot::aphropm_proto::RobotStatesMsg* _internal_add_robot_state();
+  public:
+  const ::galbot::aphropm_proto::RobotStatesMsg& robot_state(int index) const;
+  ::galbot::aphropm_proto::RobotStatesMsg* add_robot_state();
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::galbot::aphropm_proto::RobotStatesMsg >&
+      robot_state() const;
+
+  // repeated bool using_col_pair = 2;
+  int using_col_pair_size() const;
+  private:
+  int _internal_using_col_pair_size() const;
+  public:
+  void clear_using_col_pair();
+  private:
+  bool _internal_using_col_pair(int index) const;
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedField< bool >&
+      _internal_using_col_pair() const;
+  void _internal_add_using_col_pair(bool value);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedField< bool >*
+      _internal_mutable_using_col_pair();
+  public:
+  bool using_col_pair(int index) const;
+  void set_using_col_pair(int index, bool value);
+  void add_using_col_pair(bool value);
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedField< bool >&
+      using_col_pair() const;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedField< bool >*
+      mutable_using_col_pair();
+
+  // repeated bool is_check_once = 3;
+  int is_check_once_size() const;
+  private:
+  int _internal_is_check_once_size() const;
+  public:
+  void clear_is_check_once();
+  private:
+  bool _internal_is_check_once(int index) const;
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedField< bool >&
+      _internal_is_check_once() const;
+  void _internal_add_is_check_once(bool value);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedField< bool >*
+      _internal_mutable_is_check_once();
+  public:
+  bool is_check_once(int index) const;
+  void set_is_check_once(int index, bool value);
+  void add_is_check_once(bool value);
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedField< bool >&
+      is_check_once() const;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedField< bool >*
+      mutable_is_check_once();
+
+  // repeated bool is_log = 4;
+  int is_log_size() const;
+  private:
+  int _internal_is_log_size() const;
+  public:
+  void clear_is_log();
+  private:
+  bool _internal_is_log(int index) const;
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedField< bool >&
+      _internal_is_log() const;
+  void _internal_add_is_log(bool value);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedField< bool >*
+      _internal_mutable_is_log();
+  public:
+  bool is_log(int index) const;
+  void set_is_log(int index, bool value);
+  void add_is_log(bool value);
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedField< bool >&
+      is_log() const;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedField< bool >*
+      mutable_is_log();
+
+  // string common_str = 300;
+  void clear_common_str();
+  const std::string& common_str() const;
+  void set_common_str(const std::string& value);
+  void set_common_str(std::string&& value);
+  void set_common_str(const char* value);
+  void set_common_str(const char* value, size_t size);
+  std::string* mutable_common_str();
+  std::string* release_common_str();
+  void set_allocated_common_str(std::string* common_str);
+  private:
+  const std::string& _internal_common_str() const;
+  void _internal_set_common_str(const std::string& value);
+  std::string* _internal_mutable_common_str();
+  public:
+
+  // @@protoc_insertion_point(class_scope:galbot.aphropm_proto.CheckCollisionReq)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::galbot::aphropm_proto::RobotStatesMsg > robot_state_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedField< bool > using_col_pair_;
+  mutable std::atomic<int> _using_col_pair_cached_byte_size_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedField< bool > is_check_once_;
+  mutable std::atomic<int> _is_check_once_cached_byte_size_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedField< bool > is_log_;
+  mutable std::atomic<int> _is_log_cached_byte_size_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr common_str_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_galbot_2faphropm_5fproto_2fmps_5finterface_2eproto;
+};
+// -------------------------------------------------------------------
+
 class KinematicRequest PROTOBUF_FINAL :
     public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:galbot.aphropm_proto.KinematicRequest) */ {
  public:
@@ -5525,6 +7904,16 @@ class KinematicRequest PROTOBUF_FINAL :
     kInverseKinematicReq = 2,
     kForwardKinematicReq = 3,
     kJacobianReq = 4,
+    kInverseKinematicGeneralReq = 5,
+    kForwardKinematicGeneralReq = 6,
+    kJacobianGeneralReq = 7,
+    kSetIkConfig = 8,
+    kSetIkLocalConfig = 9,
+    kSetIkCalculateOption = 10,
+    kSetIkSoftLimit = 11,
+    kRefreshIkSoftLimit = 12,
+    kSolverUniqueLimitSetting = 13,
+    kCheckCollisionReq = 14,
     KINEMATIC_REQ_NOT_SET = 0,
   };
 
@@ -5533,7 +7922,7 @@ class KinematicRequest PROTOBUF_FINAL :
                &_KinematicRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    29;
+    40;
 
   friend void swap(KinematicRequest& a, KinematicRequest& b) {
     a.Swap(&b);
@@ -5605,9 +7994,20 @@ class KinematicRequest PROTOBUF_FINAL :
 
   enum : int {
     kTaskIdFieldNumber = 1,
+    kCommonStrFieldNumber = 300,
     kInverseKinematicReqFieldNumber = 2,
     kForwardKinematicReqFieldNumber = 3,
     kJacobianReqFieldNumber = 4,
+    kInverseKinematicGeneralReqFieldNumber = 5,
+    kForwardKinematicGeneralReqFieldNumber = 6,
+    kJacobianGeneralReqFieldNumber = 7,
+    kSetIkConfigFieldNumber = 8,
+    kSetIkLocalConfigFieldNumber = 9,
+    kSetIkCalculateOptionFieldNumber = 10,
+    kSetIkSoftLimitFieldNumber = 11,
+    kRefreshIkSoftLimitFieldNumber = 12,
+    kSolverUniqueLimitSettingFieldNumber = 13,
+    kCheckCollisionReqFieldNumber = 14,
   };
   // string task_id = 1;
   void clear_task_id();
@@ -5623,6 +8023,22 @@ class KinematicRequest PROTOBUF_FINAL :
   const std::string& _internal_task_id() const;
   void _internal_set_task_id(const std::string& value);
   std::string* _internal_mutable_task_id();
+  public:
+
+  // string common_str = 300;
+  void clear_common_str();
+  const std::string& common_str() const;
+  void set_common_str(const std::string& value);
+  void set_common_str(std::string&& value);
+  void set_common_str(const char* value);
+  void set_common_str(const char* value, size_t size);
+  std::string* mutable_common_str();
+  std::string* release_common_str();
+  void set_allocated_common_str(std::string* common_str);
+  private:
+  const std::string& _internal_common_str() const;
+  void _internal_set_common_str(const std::string& value);
+  std::string* _internal_mutable_common_str();
   public:
 
   // .galbot.aphropm_proto.InverseKinematicRequest inverse_kinematic_req = 2;
@@ -5679,6 +8095,186 @@ class KinematicRequest PROTOBUF_FINAL :
       ::galbot::aphropm_proto::JacobianRequest* jacobian_req);
   ::galbot::aphropm_proto::JacobianRequest* unsafe_arena_release_jacobian_req();
 
+  // .galbot.aphropm_proto.InverseKinematicReq inverse_kinematic_general_req = 5;
+  bool has_inverse_kinematic_general_req() const;
+  private:
+  bool _internal_has_inverse_kinematic_general_req() const;
+  public:
+  void clear_inverse_kinematic_general_req();
+  const ::galbot::aphropm_proto::InverseKinematicReq& inverse_kinematic_general_req() const;
+  ::galbot::aphropm_proto::InverseKinematicReq* release_inverse_kinematic_general_req();
+  ::galbot::aphropm_proto::InverseKinematicReq* mutable_inverse_kinematic_general_req();
+  void set_allocated_inverse_kinematic_general_req(::galbot::aphropm_proto::InverseKinematicReq* inverse_kinematic_general_req);
+  private:
+  const ::galbot::aphropm_proto::InverseKinematicReq& _internal_inverse_kinematic_general_req() const;
+  ::galbot::aphropm_proto::InverseKinematicReq* _internal_mutable_inverse_kinematic_general_req();
+  public:
+  void unsafe_arena_set_allocated_inverse_kinematic_general_req(
+      ::galbot::aphropm_proto::InverseKinematicReq* inverse_kinematic_general_req);
+  ::galbot::aphropm_proto::InverseKinematicReq* unsafe_arena_release_inverse_kinematic_general_req();
+
+  // .galbot.aphropm_proto.ForwardKinematicReq forward_kinematic_general_req = 6;
+  bool has_forward_kinematic_general_req() const;
+  private:
+  bool _internal_has_forward_kinematic_general_req() const;
+  public:
+  void clear_forward_kinematic_general_req();
+  const ::galbot::aphropm_proto::ForwardKinematicReq& forward_kinematic_general_req() const;
+  ::galbot::aphropm_proto::ForwardKinematicReq* release_forward_kinematic_general_req();
+  ::galbot::aphropm_proto::ForwardKinematicReq* mutable_forward_kinematic_general_req();
+  void set_allocated_forward_kinematic_general_req(::galbot::aphropm_proto::ForwardKinematicReq* forward_kinematic_general_req);
+  private:
+  const ::galbot::aphropm_proto::ForwardKinematicReq& _internal_forward_kinematic_general_req() const;
+  ::galbot::aphropm_proto::ForwardKinematicReq* _internal_mutable_forward_kinematic_general_req();
+  public:
+  void unsafe_arena_set_allocated_forward_kinematic_general_req(
+      ::galbot::aphropm_proto::ForwardKinematicReq* forward_kinematic_general_req);
+  ::galbot::aphropm_proto::ForwardKinematicReq* unsafe_arena_release_forward_kinematic_general_req();
+
+  // .galbot.aphropm_proto.JacobianReqMsg jacobian_general_req = 7;
+  bool has_jacobian_general_req() const;
+  private:
+  bool _internal_has_jacobian_general_req() const;
+  public:
+  void clear_jacobian_general_req();
+  const ::galbot::aphropm_proto::JacobianReqMsg& jacobian_general_req() const;
+  ::galbot::aphropm_proto::JacobianReqMsg* release_jacobian_general_req();
+  ::galbot::aphropm_proto::JacobianReqMsg* mutable_jacobian_general_req();
+  void set_allocated_jacobian_general_req(::galbot::aphropm_proto::JacobianReqMsg* jacobian_general_req);
+  private:
+  const ::galbot::aphropm_proto::JacobianReqMsg& _internal_jacobian_general_req() const;
+  ::galbot::aphropm_proto::JacobianReqMsg* _internal_mutable_jacobian_general_req();
+  public:
+  void unsafe_arena_set_allocated_jacobian_general_req(
+      ::galbot::aphropm_proto::JacobianReqMsg* jacobian_general_req);
+  ::galbot::aphropm_proto::JacobianReqMsg* unsafe_arena_release_jacobian_general_req();
+
+  // .galbot.aphropm_proto.IKSolverConfig set_ik_config = 8;
+  bool has_set_ik_config() const;
+  private:
+  bool _internal_has_set_ik_config() const;
+  public:
+  void clear_set_ik_config();
+  const ::galbot::aphropm_proto::IKSolverConfig& set_ik_config() const;
+  ::galbot::aphropm_proto::IKSolverConfig* release_set_ik_config();
+  ::galbot::aphropm_proto::IKSolverConfig* mutable_set_ik_config();
+  void set_allocated_set_ik_config(::galbot::aphropm_proto::IKSolverConfig* set_ik_config);
+  private:
+  const ::galbot::aphropm_proto::IKSolverConfig& _internal_set_ik_config() const;
+  ::galbot::aphropm_proto::IKSolverConfig* _internal_mutable_set_ik_config();
+  public:
+  void unsafe_arena_set_allocated_set_ik_config(
+      ::galbot::aphropm_proto::IKSolverConfig* set_ik_config);
+  ::galbot::aphropm_proto::IKSolverConfig* unsafe_arena_release_set_ik_config();
+
+  // .galbot.aphropm_proto.IKSolverLocalConfig set_ik_local_config = 9;
+  bool has_set_ik_local_config() const;
+  private:
+  bool _internal_has_set_ik_local_config() const;
+  public:
+  void clear_set_ik_local_config();
+  const ::galbot::aphropm_proto::IKSolverLocalConfig& set_ik_local_config() const;
+  ::galbot::aphropm_proto::IKSolverLocalConfig* release_set_ik_local_config();
+  ::galbot::aphropm_proto::IKSolverLocalConfig* mutable_set_ik_local_config();
+  void set_allocated_set_ik_local_config(::galbot::aphropm_proto::IKSolverLocalConfig* set_ik_local_config);
+  private:
+  const ::galbot::aphropm_proto::IKSolverLocalConfig& _internal_set_ik_local_config() const;
+  ::galbot::aphropm_proto::IKSolverLocalConfig* _internal_mutable_set_ik_local_config();
+  public:
+  void unsafe_arena_set_allocated_set_ik_local_config(
+      ::galbot::aphropm_proto::IKSolverLocalConfig* set_ik_local_config);
+  ::galbot::aphropm_proto::IKSolverLocalConfig* unsafe_arena_release_set_ik_local_config();
+
+  // .galbot.aphropm_proto.IKCalculateOption set_ik_calculate_option = 10;
+  bool has_set_ik_calculate_option() const;
+  private:
+  bool _internal_has_set_ik_calculate_option() const;
+  public:
+  void clear_set_ik_calculate_option();
+  const ::galbot::aphropm_proto::IKCalculateOption& set_ik_calculate_option() const;
+  ::galbot::aphropm_proto::IKCalculateOption* release_set_ik_calculate_option();
+  ::galbot::aphropm_proto::IKCalculateOption* mutable_set_ik_calculate_option();
+  void set_allocated_set_ik_calculate_option(::galbot::aphropm_proto::IKCalculateOption* set_ik_calculate_option);
+  private:
+  const ::galbot::aphropm_proto::IKCalculateOption& _internal_set_ik_calculate_option() const;
+  ::galbot::aphropm_proto::IKCalculateOption* _internal_mutable_set_ik_calculate_option();
+  public:
+  void unsafe_arena_set_allocated_set_ik_calculate_option(
+      ::galbot::aphropm_proto::IKCalculateOption* set_ik_calculate_option);
+  ::galbot::aphropm_proto::IKCalculateOption* unsafe_arena_release_set_ik_calculate_option();
+
+  // .galbot.aphropm_proto.KinematicsBoundary set_ik_soft_limit = 11;
+  bool has_set_ik_soft_limit() const;
+  private:
+  bool _internal_has_set_ik_soft_limit() const;
+  public:
+  void clear_set_ik_soft_limit();
+  const ::galbot::aphropm_proto::KinematicsBoundary& set_ik_soft_limit() const;
+  ::galbot::aphropm_proto::KinematicsBoundary* release_set_ik_soft_limit();
+  ::galbot::aphropm_proto::KinematicsBoundary* mutable_set_ik_soft_limit();
+  void set_allocated_set_ik_soft_limit(::galbot::aphropm_proto::KinematicsBoundary* set_ik_soft_limit);
+  private:
+  const ::galbot::aphropm_proto::KinematicsBoundary& _internal_set_ik_soft_limit() const;
+  ::galbot::aphropm_proto::KinematicsBoundary* _internal_mutable_set_ik_soft_limit();
+  public:
+  void unsafe_arena_set_allocated_set_ik_soft_limit(
+      ::galbot::aphropm_proto::KinematicsBoundary* set_ik_soft_limit);
+  ::galbot::aphropm_proto::KinematicsBoundary* unsafe_arena_release_set_ik_soft_limit();
+
+  // .google.protobuf.BoolValue refresh_ik_soft_limit = 12;
+  bool has_refresh_ik_soft_limit() const;
+  private:
+  bool _internal_has_refresh_ik_soft_limit() const;
+  public:
+  void clear_refresh_ik_soft_limit();
+  const PROTOBUF_NAMESPACE_ID::BoolValue& refresh_ik_soft_limit() const;
+  PROTOBUF_NAMESPACE_ID::BoolValue* release_refresh_ik_soft_limit();
+  PROTOBUF_NAMESPACE_ID::BoolValue* mutable_refresh_ik_soft_limit();
+  void set_allocated_refresh_ik_soft_limit(PROTOBUF_NAMESPACE_ID::BoolValue* refresh_ik_soft_limit);
+  private:
+  const PROTOBUF_NAMESPACE_ID::BoolValue& _internal_refresh_ik_soft_limit() const;
+  PROTOBUF_NAMESPACE_ID::BoolValue* _internal_mutable_refresh_ik_soft_limit();
+  public:
+  void unsafe_arena_set_allocated_refresh_ik_soft_limit(
+      PROTOBUF_NAMESPACE_ID::BoolValue* refresh_ik_soft_limit);
+  PROTOBUF_NAMESPACE_ID::BoolValue* unsafe_arena_release_refresh_ik_soft_limit();
+
+  // .galbot.aphropm_proto.IKSoftLimitSetting solver_unique_limit_setting = 13;
+  bool has_solver_unique_limit_setting() const;
+  private:
+  bool _internal_has_solver_unique_limit_setting() const;
+  public:
+  void clear_solver_unique_limit_setting();
+  const ::galbot::aphropm_proto::IKSoftLimitSetting& solver_unique_limit_setting() const;
+  ::galbot::aphropm_proto::IKSoftLimitSetting* release_solver_unique_limit_setting();
+  ::galbot::aphropm_proto::IKSoftLimitSetting* mutable_solver_unique_limit_setting();
+  void set_allocated_solver_unique_limit_setting(::galbot::aphropm_proto::IKSoftLimitSetting* solver_unique_limit_setting);
+  private:
+  const ::galbot::aphropm_proto::IKSoftLimitSetting& _internal_solver_unique_limit_setting() const;
+  ::galbot::aphropm_proto::IKSoftLimitSetting* _internal_mutable_solver_unique_limit_setting();
+  public:
+  void unsafe_arena_set_allocated_solver_unique_limit_setting(
+      ::galbot::aphropm_proto::IKSoftLimitSetting* solver_unique_limit_setting);
+  ::galbot::aphropm_proto::IKSoftLimitSetting* unsafe_arena_release_solver_unique_limit_setting();
+
+  // .galbot.aphropm_proto.CheckCollisionReq check_collision_req = 14;
+  bool has_check_collision_req() const;
+  private:
+  bool _internal_has_check_collision_req() const;
+  public:
+  void clear_check_collision_req();
+  const ::galbot::aphropm_proto::CheckCollisionReq& check_collision_req() const;
+  ::galbot::aphropm_proto::CheckCollisionReq* release_check_collision_req();
+  ::galbot::aphropm_proto::CheckCollisionReq* mutable_check_collision_req();
+  void set_allocated_check_collision_req(::galbot::aphropm_proto::CheckCollisionReq* check_collision_req);
+  private:
+  const ::galbot::aphropm_proto::CheckCollisionReq& _internal_check_collision_req() const;
+  ::galbot::aphropm_proto::CheckCollisionReq* _internal_mutable_check_collision_req();
+  public:
+  void unsafe_arena_set_allocated_check_collision_req(
+      ::galbot::aphropm_proto::CheckCollisionReq* check_collision_req);
+  ::galbot::aphropm_proto::CheckCollisionReq* unsafe_arena_release_check_collision_req();
+
   void clear_kinematic_req();
   KinematicReqCase kinematic_req_case() const;
   // @@protoc_insertion_point(class_scope:galbot.aphropm_proto.KinematicRequest)
@@ -5687,6 +8283,16 @@ class KinematicRequest PROTOBUF_FINAL :
   void set_has_inverse_kinematic_req();
   void set_has_forward_kinematic_req();
   void set_has_jacobian_req();
+  void set_has_inverse_kinematic_general_req();
+  void set_has_forward_kinematic_general_req();
+  void set_has_jacobian_general_req();
+  void set_has_set_ik_config();
+  void set_has_set_ik_local_config();
+  void set_has_set_ik_calculate_option();
+  void set_has_set_ik_soft_limit();
+  void set_has_refresh_ik_soft_limit();
+  void set_has_solver_unique_limit_setting();
+  void set_has_check_collision_req();
 
   inline bool has_kinematic_req() const;
   inline void clear_has_kinematic_req();
@@ -5695,17 +8301,289 @@ class KinematicRequest PROTOBUF_FINAL :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr task_id_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr common_str_;
   union KinematicReqUnion {
     KinematicReqUnion() {}
     ::galbot::aphropm_proto::InverseKinematicRequest* inverse_kinematic_req_;
     ::galbot::aphropm_proto::ForwardKinematicRequest* forward_kinematic_req_;
     ::galbot::aphropm_proto::JacobianRequest* jacobian_req_;
+    ::galbot::aphropm_proto::InverseKinematicReq* inverse_kinematic_general_req_;
+    ::galbot::aphropm_proto::ForwardKinematicReq* forward_kinematic_general_req_;
+    ::galbot::aphropm_proto::JacobianReqMsg* jacobian_general_req_;
+    ::galbot::aphropm_proto::IKSolverConfig* set_ik_config_;
+    ::galbot::aphropm_proto::IKSolverLocalConfig* set_ik_local_config_;
+    ::galbot::aphropm_proto::IKCalculateOption* set_ik_calculate_option_;
+    ::galbot::aphropm_proto::KinematicsBoundary* set_ik_soft_limit_;
+    PROTOBUF_NAMESPACE_ID::BoolValue* refresh_ik_soft_limit_;
+    ::galbot::aphropm_proto::IKSoftLimitSetting* solver_unique_limit_setting_;
+    ::galbot::aphropm_proto::CheckCollisionReq* check_collision_req_;
   } kinematic_req_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   ::PROTOBUF_NAMESPACE_ID::uint32 _oneof_case_[1];
 
   friend struct ::TableStruct_galbot_2faphropm_5fproto_2fmps_5finterface_2eproto;
 };
+// -------------------------------------------------------------------
+
+class CheckCollisionRes PROTOBUF_FINAL :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:galbot.aphropm_proto.CheckCollisionRes) */ {
+ public:
+  inline CheckCollisionRes() : CheckCollisionRes(nullptr) {}
+  virtual ~CheckCollisionRes();
+
+  CheckCollisionRes(const CheckCollisionRes& from);
+  CheckCollisionRes(CheckCollisionRes&& from) noexcept
+    : CheckCollisionRes() {
+    *this = ::std::move(from);
+  }
+
+  inline CheckCollisionRes& operator=(const CheckCollisionRes& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline CheckCollisionRes& operator=(CheckCollisionRes&& from) noexcept {
+    if (GetArena() == from.GetArena()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const CheckCollisionRes& default_instance();
+
+  static inline const CheckCollisionRes* internal_default_instance() {
+    return reinterpret_cast<const CheckCollisionRes*>(
+               &_CheckCollisionRes_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    41;
+
+  friend void swap(CheckCollisionRes& a, CheckCollisionRes& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(CheckCollisionRes* other) {
+    if (other == this) return;
+    if (GetArena() == other->GetArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(CheckCollisionRes* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline CheckCollisionRes* New() const final {
+    return CreateMaybeMessage<CheckCollisionRes>(nullptr);
+  }
+
+  CheckCollisionRes* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<CheckCollisionRes>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const CheckCollisionRes& from);
+  void MergeFrom(const CheckCollisionRes& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(CheckCollisionRes* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "galbot.aphropm_proto.CheckCollisionRes";
+  }
+  protected:
+  explicit CheckCollisionRes(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_galbot_2faphropm_5fproto_2fmps_5finterface_2eproto);
+    return ::descriptor_table_galbot_2faphropm_5fproto_2fmps_5finterface_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kLink1FieldNumber = 2,
+    kLink2FieldNumber = 3,
+    kCommonStrFieldNumber = 300,
+    kDistanceFieldNumber = 4,
+    kIsCollisionFieldNumber = 1,
+  };
+  // string link1 = 2;
+  void clear_link1();
+  const std::string& link1() const;
+  void set_link1(const std::string& value);
+  void set_link1(std::string&& value);
+  void set_link1(const char* value);
+  void set_link1(const char* value, size_t size);
+  std::string* mutable_link1();
+  std::string* release_link1();
+  void set_allocated_link1(std::string* link1);
+  private:
+  const std::string& _internal_link1() const;
+  void _internal_set_link1(const std::string& value);
+  std::string* _internal_mutable_link1();
+  public:
+
+  // string link2 = 3;
+  void clear_link2();
+  const std::string& link2() const;
+  void set_link2(const std::string& value);
+  void set_link2(std::string&& value);
+  void set_link2(const char* value);
+  void set_link2(const char* value, size_t size);
+  std::string* mutable_link2();
+  std::string* release_link2();
+  void set_allocated_link2(std::string* link2);
+  private:
+  const std::string& _internal_link2() const;
+  void _internal_set_link2(const std::string& value);
+  std::string* _internal_mutable_link2();
+  public:
+
+  // string common_str = 300;
+  void clear_common_str();
+  const std::string& common_str() const;
+  void set_common_str(const std::string& value);
+  void set_common_str(std::string&& value);
+  void set_common_str(const char* value);
+  void set_common_str(const char* value, size_t size);
+  std::string* mutable_common_str();
+  std::string* release_common_str();
+  void set_allocated_common_str(std::string* common_str);
+  private:
+  const std::string& _internal_common_str() const;
+  void _internal_set_common_str(const std::string& value);
+  std::string* _internal_mutable_common_str();
+  public:
+
+  // double distance = 4;
+  void clear_distance();
+  double distance() const;
+  void set_distance(double value);
+  private:
+  double _internal_distance() const;
+  void _internal_set_distance(double value);
+  public:
+
+  // bool is_collision = 1;
+  void clear_is_collision();
+  bool is_collision() const;
+  void set_is_collision(bool value);
+  private:
+  bool _internal_is_collision() const;
+  void _internal_set_is_collision(bool value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:galbot.aphropm_proto.CheckCollisionRes)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr link1_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr link2_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr common_str_;
+  double distance_;
+  bool is_collision_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_galbot_2faphropm_5fproto_2fmps_5finterface_2eproto;
+};
+// -------------------------------------------------------------------
+
+class KinematicResponse_IkResultEntry_DoNotUse : public ::PROTOBUF_NAMESPACE_ID::internal::MapEntry<KinematicResponse_IkResultEntry_DoNotUse, 
+    std::string, ::galbot::aphropm_proto::JointStatesMsg,
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::TYPE_STRING,
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::TYPE_MESSAGE> {
+public:
+  typedef ::PROTOBUF_NAMESPACE_ID::internal::MapEntry<KinematicResponse_IkResultEntry_DoNotUse, 
+    std::string, ::galbot::aphropm_proto::JointStatesMsg,
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::TYPE_STRING,
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::TYPE_MESSAGE> SuperType;
+  KinematicResponse_IkResultEntry_DoNotUse();
+  explicit KinematicResponse_IkResultEntry_DoNotUse(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  void MergeFrom(const KinematicResponse_IkResultEntry_DoNotUse& other);
+  static const KinematicResponse_IkResultEntry_DoNotUse* internal_default_instance() { return reinterpret_cast<const KinematicResponse_IkResultEntry_DoNotUse*>(&_KinematicResponse_IkResultEntry_DoNotUse_default_instance_); }
+  static bool ValidateKey(std::string* s) {
+    return ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(s->data(), static_cast<int>(s->size()), ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::PARSE, "galbot.aphropm_proto.KinematicResponse.IkResultEntry.key");
+ }
+  static bool ValidateValue(void*) { return true; }
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& other) final;
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_galbot_2faphropm_5fproto_2fmps_5finterface_2eproto);
+    return ::descriptor_table_galbot_2faphropm_5fproto_2fmps_5finterface_2eproto.file_level_metadata[42];
+  }
+
+  public:
+};
+
+// -------------------------------------------------------------------
+
+class KinematicResponse_FkResultEntry_DoNotUse : public ::PROTOBUF_NAMESPACE_ID::internal::MapEntry<KinematicResponse_FkResultEntry_DoNotUse, 
+    std::string, ::galbot::spatial_proto::FrameTriad,
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::TYPE_STRING,
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::TYPE_MESSAGE> {
+public:
+  typedef ::PROTOBUF_NAMESPACE_ID::internal::MapEntry<KinematicResponse_FkResultEntry_DoNotUse, 
+    std::string, ::galbot::spatial_proto::FrameTriad,
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::TYPE_STRING,
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::TYPE_MESSAGE> SuperType;
+  KinematicResponse_FkResultEntry_DoNotUse();
+  explicit KinematicResponse_FkResultEntry_DoNotUse(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  void MergeFrom(const KinematicResponse_FkResultEntry_DoNotUse& other);
+  static const KinematicResponse_FkResultEntry_DoNotUse* internal_default_instance() { return reinterpret_cast<const KinematicResponse_FkResultEntry_DoNotUse*>(&_KinematicResponse_FkResultEntry_DoNotUse_default_instance_); }
+  static bool ValidateKey(std::string* s) {
+    return ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(s->data(), static_cast<int>(s->size()), ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::PARSE, "galbot.aphropm_proto.KinematicResponse.FkResultEntry.key");
+ }
+  static bool ValidateValue(void*) { return true; }
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& other) final;
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_galbot_2faphropm_5fproto_2fmps_5finterface_2eproto);
+    return ::descriptor_table_galbot_2faphropm_5fproto_2fmps_5finterface_2eproto.file_level_metadata[43];
+  }
+
+  public:
+};
+
 // -------------------------------------------------------------------
 
 class KinematicResponse PROTOBUF_FINAL :
@@ -5756,7 +8634,7 @@ class KinematicResponse PROTOBUF_FINAL :
                &_KinematicResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    30;
+    44;
 
   friend void swap(KinematicResponse& a, KinematicResponse& b) {
     a.Swap(&b);
@@ -5824,16 +8702,73 @@ class KinematicResponse PROTOBUF_FINAL :
 
   // nested types ----------------------------------------------------
 
+
   // accessors -------------------------------------------------------
 
   enum : int {
+    kIkResultFieldNumber = 7,
+    kFkResultFieldNumber = 8,
+    kCheckCollisionResultFieldNumber = 9,
     kTaskIdFieldNumber = 1,
     kMsgFieldNumber = 3,
+    kCommonStrFieldNumber = 300,
     kRetFieldNumber = 2,
     kInverseKinematicResultFieldNumber = 4,
     kForwardKinematicResultFieldNumber = 5,
     kJacobianResultFieldNumber = 6,
   };
+  // map<string, .galbot.aphropm_proto.JointStatesMsg> ik_result = 7;
+  int ik_result_size() const;
+  private:
+  int _internal_ik_result_size() const;
+  public:
+  void clear_ik_result();
+  private:
+  const ::PROTOBUF_NAMESPACE_ID::Map< std::string, ::galbot::aphropm_proto::JointStatesMsg >&
+      _internal_ik_result() const;
+  ::PROTOBUF_NAMESPACE_ID::Map< std::string, ::galbot::aphropm_proto::JointStatesMsg >*
+      _internal_mutable_ik_result();
+  public:
+  const ::PROTOBUF_NAMESPACE_ID::Map< std::string, ::galbot::aphropm_proto::JointStatesMsg >&
+      ik_result() const;
+  ::PROTOBUF_NAMESPACE_ID::Map< std::string, ::galbot::aphropm_proto::JointStatesMsg >*
+      mutable_ik_result();
+
+  // map<string, .galbot.spatial_proto.FrameTriad> fk_result = 8;
+  int fk_result_size() const;
+  private:
+  int _internal_fk_result_size() const;
+  public:
+  void clear_fk_result();
+  private:
+  const ::PROTOBUF_NAMESPACE_ID::Map< std::string, ::galbot::spatial_proto::FrameTriad >&
+      _internal_fk_result() const;
+  ::PROTOBUF_NAMESPACE_ID::Map< std::string, ::galbot::spatial_proto::FrameTriad >*
+      _internal_mutable_fk_result();
+  public:
+  const ::PROTOBUF_NAMESPACE_ID::Map< std::string, ::galbot::spatial_proto::FrameTriad >&
+      fk_result() const;
+  ::PROTOBUF_NAMESPACE_ID::Map< std::string, ::galbot::spatial_proto::FrameTriad >*
+      mutable_fk_result();
+
+  // repeated .galbot.aphropm_proto.CheckCollisionRes check_collision_result = 9;
+  int check_collision_result_size() const;
+  private:
+  int _internal_check_collision_result_size() const;
+  public:
+  void clear_check_collision_result();
+  ::galbot::aphropm_proto::CheckCollisionRes* mutable_check_collision_result(int index);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::galbot::aphropm_proto::CheckCollisionRes >*
+      mutable_check_collision_result();
+  private:
+  const ::galbot::aphropm_proto::CheckCollisionRes& _internal_check_collision_result(int index) const;
+  ::galbot::aphropm_proto::CheckCollisionRes* _internal_add_check_collision_result();
+  public:
+  const ::galbot::aphropm_proto::CheckCollisionRes& check_collision_result(int index) const;
+  ::galbot::aphropm_proto::CheckCollisionRes* add_check_collision_result();
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::galbot::aphropm_proto::CheckCollisionRes >&
+      check_collision_result() const;
+
   // string task_id = 1;
   void clear_task_id();
   const std::string& task_id() const;
@@ -5864,6 +8799,22 @@ class KinematicResponse PROTOBUF_FINAL :
   const std::string& _internal_msg() const;
   void _internal_set_msg(const std::string& value);
   std::string* _internal_mutable_msg();
+  public:
+
+  // string common_str = 300;
+  void clear_common_str();
+  const std::string& common_str() const;
+  void set_common_str(const std::string& value);
+  void set_common_str(std::string&& value);
+  void set_common_str(const char* value);
+  void set_common_str(const char* value, size_t size);
+  std::string* mutable_common_str();
+  std::string* release_common_str();
+  void set_allocated_common_str(std::string* common_str);
+  private:
+  const std::string& _internal_common_str() const;
+  void _internal_set_common_str(const std::string& value);
+  std::string* _internal_mutable_common_str();
   public:
 
   // bool ret = 2;
@@ -5944,8 +8895,20 @@ class KinematicResponse PROTOBUF_FINAL :
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::internal::MapField<
+      KinematicResponse_IkResultEntry_DoNotUse,
+      std::string, ::galbot::aphropm_proto::JointStatesMsg,
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::TYPE_STRING,
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::TYPE_MESSAGE> ik_result_;
+  ::PROTOBUF_NAMESPACE_ID::internal::MapField<
+      KinematicResponse_FkResultEntry_DoNotUse,
+      std::string, ::galbot::spatial_proto::FrameTriad,
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::TYPE_STRING,
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::TYPE_MESSAGE> fk_result_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::galbot::aphropm_proto::CheckCollisionRes > check_collision_result_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr task_id_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr msg_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr common_str_;
   bool ret_;
   union KinematicResultUnion {
     KinematicResultUnion() {}
@@ -6506,6 +9469,67 @@ inline void MotionPlanOptions::set_allocated_is_traj_plan_after_optim(PROTOBUF_N
   }
   is_traj_plan_after_optim_ = is_traj_plan_after_optim;
   // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.MotionPlanOptions.is_traj_plan_after_optim)
+}
+
+// string common_str = 300;
+inline void MotionPlanOptions::clear_common_str() {
+  common_str_.ClearToEmpty();
+}
+inline const std::string& MotionPlanOptions::common_str() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.MotionPlanOptions.common_str)
+  return _internal_common_str();
+}
+inline void MotionPlanOptions::set_common_str(const std::string& value) {
+  _internal_set_common_str(value);
+  // @@protoc_insertion_point(field_set:galbot.aphropm_proto.MotionPlanOptions.common_str)
+}
+inline std::string* MotionPlanOptions::mutable_common_str() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.MotionPlanOptions.common_str)
+  return _internal_mutable_common_str();
+}
+inline const std::string& MotionPlanOptions::_internal_common_str() const {
+  return common_str_.Get();
+}
+inline void MotionPlanOptions::_internal_set_common_str(const std::string& value) {
+  
+  common_str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArena());
+}
+inline void MotionPlanOptions::set_common_str(std::string&& value) {
+  
+  common_str_.Set(
+    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::move(value), GetArena());
+  // @@protoc_insertion_point(field_set_rvalue:galbot.aphropm_proto.MotionPlanOptions.common_str)
+}
+inline void MotionPlanOptions::set_common_str(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  common_str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(value), GetArena());
+  // @@protoc_insertion_point(field_set_char:galbot.aphropm_proto.MotionPlanOptions.common_str)
+}
+inline void MotionPlanOptions::set_common_str(const char* value,
+    size_t size) {
+  
+  common_str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(
+      reinterpret_cast<const char*>(value), size), GetArena());
+  // @@protoc_insertion_point(field_set_pointer:galbot.aphropm_proto.MotionPlanOptions.common_str)
+}
+inline std::string* MotionPlanOptions::_internal_mutable_common_str() {
+  
+  return common_str_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArena());
+}
+inline std::string* MotionPlanOptions::release_common_str() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.MotionPlanOptions.common_str)
+  return common_str_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline void MotionPlanOptions::set_allocated_common_str(std::string* common_str) {
+  if (common_str != nullptr) {
+    
+  } else {
+    
+  }
+  common_str_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), common_str,
+      GetArena());
+  // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.MotionPlanOptions.common_str)
 }
 
 // -------------------------------------------------------------------
@@ -9544,6 +12568,144 @@ inline void ConfigSettingRequest::set_allocated_set_singorix_target_type(::galbo
   // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.ConfigSettingRequest.set_singorix_target_type)
 }
 
+// .google.protobuf.BoolValue refresh_sampler_limit = 12;
+inline bool ConfigSettingRequest::_internal_has_refresh_sampler_limit() const {
+  return this != internal_default_instance() && refresh_sampler_limit_ != nullptr;
+}
+inline bool ConfigSettingRequest::has_refresh_sampler_limit() const {
+  return _internal_has_refresh_sampler_limit();
+}
+inline const PROTOBUF_NAMESPACE_ID::BoolValue& ConfigSettingRequest::_internal_refresh_sampler_limit() const {
+  const PROTOBUF_NAMESPACE_ID::BoolValue* p = refresh_sampler_limit_;
+  return p != nullptr ? *p : reinterpret_cast<const PROTOBUF_NAMESPACE_ID::BoolValue&>(
+      PROTOBUF_NAMESPACE_ID::_BoolValue_default_instance_);
+}
+inline const PROTOBUF_NAMESPACE_ID::BoolValue& ConfigSettingRequest::refresh_sampler_limit() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.ConfigSettingRequest.refresh_sampler_limit)
+  return _internal_refresh_sampler_limit();
+}
+inline void ConfigSettingRequest::unsafe_arena_set_allocated_refresh_sampler_limit(
+    PROTOBUF_NAMESPACE_ID::BoolValue* refresh_sampler_limit) {
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(refresh_sampler_limit_);
+  }
+  refresh_sampler_limit_ = refresh_sampler_limit;
+  if (refresh_sampler_limit) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:galbot.aphropm_proto.ConfigSettingRequest.refresh_sampler_limit)
+}
+inline PROTOBUF_NAMESPACE_ID::BoolValue* ConfigSettingRequest::release_refresh_sampler_limit() {
+  
+  PROTOBUF_NAMESPACE_ID::BoolValue* temp = refresh_sampler_limit_;
+  refresh_sampler_limit_ = nullptr;
+  if (GetArena() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+  return temp;
+}
+inline PROTOBUF_NAMESPACE_ID::BoolValue* ConfigSettingRequest::unsafe_arena_release_refresh_sampler_limit() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.ConfigSettingRequest.refresh_sampler_limit)
+  
+  PROTOBUF_NAMESPACE_ID::BoolValue* temp = refresh_sampler_limit_;
+  refresh_sampler_limit_ = nullptr;
+  return temp;
+}
+inline PROTOBUF_NAMESPACE_ID::BoolValue* ConfigSettingRequest::_internal_mutable_refresh_sampler_limit() {
+  
+  if (refresh_sampler_limit_ == nullptr) {
+    auto* p = CreateMaybeMessage<PROTOBUF_NAMESPACE_ID::BoolValue>(GetArena());
+    refresh_sampler_limit_ = p;
+  }
+  return refresh_sampler_limit_;
+}
+inline PROTOBUF_NAMESPACE_ID::BoolValue* ConfigSettingRequest::mutable_refresh_sampler_limit() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.ConfigSettingRequest.refresh_sampler_limit)
+  return _internal_mutable_refresh_sampler_limit();
+}
+inline void ConfigSettingRequest::set_allocated_refresh_sampler_limit(PROTOBUF_NAMESPACE_ID::BoolValue* refresh_sampler_limit) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArena();
+  if (message_arena == nullptr) {
+    delete reinterpret_cast< ::PROTOBUF_NAMESPACE_ID::MessageLite*>(refresh_sampler_limit_);
+  }
+  if (refresh_sampler_limit) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+      reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(refresh_sampler_limit)->GetArena();
+    if (message_arena != submessage_arena) {
+      refresh_sampler_limit = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, refresh_sampler_limit, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  refresh_sampler_limit_ = refresh_sampler_limit;
+  // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.ConfigSettingRequest.refresh_sampler_limit)
+}
+
+// string common_str = 300;
+inline void ConfigSettingRequest::clear_common_str() {
+  common_str_.ClearToEmpty();
+}
+inline const std::string& ConfigSettingRequest::common_str() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.ConfigSettingRequest.common_str)
+  return _internal_common_str();
+}
+inline void ConfigSettingRequest::set_common_str(const std::string& value) {
+  _internal_set_common_str(value);
+  // @@protoc_insertion_point(field_set:galbot.aphropm_proto.ConfigSettingRequest.common_str)
+}
+inline std::string* ConfigSettingRequest::mutable_common_str() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.ConfigSettingRequest.common_str)
+  return _internal_mutable_common_str();
+}
+inline const std::string& ConfigSettingRequest::_internal_common_str() const {
+  return common_str_.Get();
+}
+inline void ConfigSettingRequest::_internal_set_common_str(const std::string& value) {
+  
+  common_str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArena());
+}
+inline void ConfigSettingRequest::set_common_str(std::string&& value) {
+  
+  common_str_.Set(
+    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::move(value), GetArena());
+  // @@protoc_insertion_point(field_set_rvalue:galbot.aphropm_proto.ConfigSettingRequest.common_str)
+}
+inline void ConfigSettingRequest::set_common_str(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  common_str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(value), GetArena());
+  // @@protoc_insertion_point(field_set_char:galbot.aphropm_proto.ConfigSettingRequest.common_str)
+}
+inline void ConfigSettingRequest::set_common_str(const char* value,
+    size_t size) {
+  
+  common_str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(
+      reinterpret_cast<const char*>(value), size), GetArena());
+  // @@protoc_insertion_point(field_set_pointer:galbot.aphropm_proto.ConfigSettingRequest.common_str)
+}
+inline std::string* ConfigSettingRequest::_internal_mutable_common_str() {
+  
+  return common_str_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArena());
+}
+inline std::string* ConfigSettingRequest::release_common_str() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.ConfigSettingRequest.common_str)
+  return common_str_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline void ConfigSettingRequest::set_allocated_common_str(std::string* common_str) {
+  if (common_str != nullptr) {
+    
+  } else {
+    
+  }
+  common_str_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), common_str,
+      GetArena());
+  // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.ConfigSettingRequest.common_str)
+}
+
 // -------------------------------------------------------------------
 
 // InverseKinematicRequest
@@ -10671,6 +13833,1516 @@ inline void SingleChainCombinePlanRequest::set_allocated_options(::galbot::aphro
 
 // -------------------------------------------------------------------
 
+// -------------------------------------------------------------------
+
+// MotionPlanTarget
+
+// .galbot.core_proto.Header header = 1;
+inline bool MotionPlanTarget::_internal_has_header() const {
+  return this != internal_default_instance() && header_ != nullptr;
+}
+inline bool MotionPlanTarget::has_header() const {
+  return _internal_has_header();
+}
+inline const ::galbot::core_proto::Header& MotionPlanTarget::_internal_header() const {
+  const ::galbot::core_proto::Header* p = header_;
+  return p != nullptr ? *p : reinterpret_cast<const ::galbot::core_proto::Header&>(
+      ::galbot::core_proto::_Header_default_instance_);
+}
+inline const ::galbot::core_proto::Header& MotionPlanTarget::header() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.MotionPlanTarget.header)
+  return _internal_header();
+}
+inline void MotionPlanTarget::unsafe_arena_set_allocated_header(
+    ::galbot::core_proto::Header* header) {
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(header_);
+  }
+  header_ = header;
+  if (header) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:galbot.aphropm_proto.MotionPlanTarget.header)
+}
+inline ::galbot::core_proto::Header* MotionPlanTarget::release_header() {
+  
+  ::galbot::core_proto::Header* temp = header_;
+  header_ = nullptr;
+  if (GetArena() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+  return temp;
+}
+inline ::galbot::core_proto::Header* MotionPlanTarget::unsafe_arena_release_header() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.MotionPlanTarget.header)
+  
+  ::galbot::core_proto::Header* temp = header_;
+  header_ = nullptr;
+  return temp;
+}
+inline ::galbot::core_proto::Header* MotionPlanTarget::_internal_mutable_header() {
+  
+  if (header_ == nullptr) {
+    auto* p = CreateMaybeMessage<::galbot::core_proto::Header>(GetArena());
+    header_ = p;
+  }
+  return header_;
+}
+inline ::galbot::core_proto::Header* MotionPlanTarget::mutable_header() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.MotionPlanTarget.header)
+  return _internal_mutable_header();
+}
+inline void MotionPlanTarget::set_allocated_header(::galbot::core_proto::Header* header) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArena();
+  if (message_arena == nullptr) {
+    delete reinterpret_cast< ::PROTOBUF_NAMESPACE_ID::MessageLite*>(header_);
+  }
+  if (header) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+      reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(header)->GetArena();
+    if (message_arena != submessage_arena) {
+      header = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, header, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  header_ = header;
+  // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.MotionPlanTarget.header)
+}
+
+// map<string, .galbot.aphropm_proto.RobotTargetMsg> chain_targets = 2;
+inline int MotionPlanTarget::_internal_chain_targets_size() const {
+  return chain_targets_.size();
+}
+inline int MotionPlanTarget::chain_targets_size() const {
+  return _internal_chain_targets_size();
+}
+inline const ::PROTOBUF_NAMESPACE_ID::Map< std::string, ::galbot::aphropm_proto::RobotTargetMsg >&
+MotionPlanTarget::_internal_chain_targets() const {
+  return chain_targets_.GetMap();
+}
+inline const ::PROTOBUF_NAMESPACE_ID::Map< std::string, ::galbot::aphropm_proto::RobotTargetMsg >&
+MotionPlanTarget::chain_targets() const {
+  // @@protoc_insertion_point(field_map:galbot.aphropm_proto.MotionPlanTarget.chain_targets)
+  return _internal_chain_targets();
+}
+inline ::PROTOBUF_NAMESPACE_ID::Map< std::string, ::galbot::aphropm_proto::RobotTargetMsg >*
+MotionPlanTarget::_internal_mutable_chain_targets() {
+  return chain_targets_.MutableMap();
+}
+inline ::PROTOBUF_NAMESPACE_ID::Map< std::string, ::galbot::aphropm_proto::RobotTargetMsg >*
+MotionPlanTarget::mutable_chain_targets() {
+  // @@protoc_insertion_point(field_mutable_map:galbot.aphropm_proto.MotionPlanTarget.chain_targets)
+  return _internal_mutable_chain_targets();
+}
+
+// string common_str = 300;
+inline void MotionPlanTarget::clear_common_str() {
+  common_str_.ClearToEmpty();
+}
+inline const std::string& MotionPlanTarget::common_str() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.MotionPlanTarget.common_str)
+  return _internal_common_str();
+}
+inline void MotionPlanTarget::set_common_str(const std::string& value) {
+  _internal_set_common_str(value);
+  // @@protoc_insertion_point(field_set:galbot.aphropm_proto.MotionPlanTarget.common_str)
+}
+inline std::string* MotionPlanTarget::mutable_common_str() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.MotionPlanTarget.common_str)
+  return _internal_mutable_common_str();
+}
+inline const std::string& MotionPlanTarget::_internal_common_str() const {
+  return common_str_.Get();
+}
+inline void MotionPlanTarget::_internal_set_common_str(const std::string& value) {
+  
+  common_str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArena());
+}
+inline void MotionPlanTarget::set_common_str(std::string&& value) {
+  
+  common_str_.Set(
+    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::move(value), GetArena());
+  // @@protoc_insertion_point(field_set_rvalue:galbot.aphropm_proto.MotionPlanTarget.common_str)
+}
+inline void MotionPlanTarget::set_common_str(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  common_str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(value), GetArena());
+  // @@protoc_insertion_point(field_set_char:galbot.aphropm_proto.MotionPlanTarget.common_str)
+}
+inline void MotionPlanTarget::set_common_str(const char* value,
+    size_t size) {
+  
+  common_str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(
+      reinterpret_cast<const char*>(value), size), GetArena());
+  // @@protoc_insertion_point(field_set_pointer:galbot.aphropm_proto.MotionPlanTarget.common_str)
+}
+inline std::string* MotionPlanTarget::_internal_mutable_common_str() {
+  
+  return common_str_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArena());
+}
+inline std::string* MotionPlanTarget::release_common_str() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.MotionPlanTarget.common_str)
+  return common_str_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline void MotionPlanTarget::set_allocated_common_str(std::string* common_str) {
+  if (common_str != nullptr) {
+    
+  } else {
+    
+  }
+  common_str_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), common_str,
+      GetArena());
+  // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.MotionPlanTarget.common_str)
+}
+
+// -------------------------------------------------------------------
+
+// MotionPlanReq
+
+// .galbot.aphropm_proto.RobotStatesMsg robot_state = 1;
+inline bool MotionPlanReq::_internal_has_robot_state() const {
+  return this != internal_default_instance() && robot_state_ != nullptr;
+}
+inline bool MotionPlanReq::has_robot_state() const {
+  return _internal_has_robot_state();
+}
+inline const ::galbot::aphropm_proto::RobotStatesMsg& MotionPlanReq::_internal_robot_state() const {
+  const ::galbot::aphropm_proto::RobotStatesMsg* p = robot_state_;
+  return p != nullptr ? *p : reinterpret_cast<const ::galbot::aphropm_proto::RobotStatesMsg&>(
+      ::galbot::aphropm_proto::_RobotStatesMsg_default_instance_);
+}
+inline const ::galbot::aphropm_proto::RobotStatesMsg& MotionPlanReq::robot_state() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.MotionPlanReq.robot_state)
+  return _internal_robot_state();
+}
+inline void MotionPlanReq::unsafe_arena_set_allocated_robot_state(
+    ::galbot::aphropm_proto::RobotStatesMsg* robot_state) {
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(robot_state_);
+  }
+  robot_state_ = robot_state;
+  if (robot_state) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:galbot.aphropm_proto.MotionPlanReq.robot_state)
+}
+inline ::galbot::aphropm_proto::RobotStatesMsg* MotionPlanReq::release_robot_state() {
+  
+  ::galbot::aphropm_proto::RobotStatesMsg* temp = robot_state_;
+  robot_state_ = nullptr;
+  if (GetArena() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+  return temp;
+}
+inline ::galbot::aphropm_proto::RobotStatesMsg* MotionPlanReq::unsafe_arena_release_robot_state() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.MotionPlanReq.robot_state)
+  
+  ::galbot::aphropm_proto::RobotStatesMsg* temp = robot_state_;
+  robot_state_ = nullptr;
+  return temp;
+}
+inline ::galbot::aphropm_proto::RobotStatesMsg* MotionPlanReq::_internal_mutable_robot_state() {
+  
+  if (robot_state_ == nullptr) {
+    auto* p = CreateMaybeMessage<::galbot::aphropm_proto::RobotStatesMsg>(GetArena());
+    robot_state_ = p;
+  }
+  return robot_state_;
+}
+inline ::galbot::aphropm_proto::RobotStatesMsg* MotionPlanReq::mutable_robot_state() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.MotionPlanReq.robot_state)
+  return _internal_mutable_robot_state();
+}
+inline void MotionPlanReq::set_allocated_robot_state(::galbot::aphropm_proto::RobotStatesMsg* robot_state) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArena();
+  if (message_arena == nullptr) {
+    delete reinterpret_cast< ::PROTOBUF_NAMESPACE_ID::MessageLite*>(robot_state_);
+  }
+  if (robot_state) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+      reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(robot_state)->GetArena();
+    if (message_arena != submessage_arena) {
+      robot_state = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, robot_state, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  robot_state_ = robot_state;
+  // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.MotionPlanReq.robot_state)
+}
+
+// repeated .galbot.aphropm_proto.MotionPlanTarget robot_target = 2;
+inline int MotionPlanReq::_internal_robot_target_size() const {
+  return robot_target_.size();
+}
+inline int MotionPlanReq::robot_target_size() const {
+  return _internal_robot_target_size();
+}
+inline void MotionPlanReq::clear_robot_target() {
+  robot_target_.Clear();
+}
+inline ::galbot::aphropm_proto::MotionPlanTarget* MotionPlanReq::mutable_robot_target(int index) {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.MotionPlanReq.robot_target)
+  return robot_target_.Mutable(index);
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::galbot::aphropm_proto::MotionPlanTarget >*
+MotionPlanReq::mutable_robot_target() {
+  // @@protoc_insertion_point(field_mutable_list:galbot.aphropm_proto.MotionPlanReq.robot_target)
+  return &robot_target_;
+}
+inline const ::galbot::aphropm_proto::MotionPlanTarget& MotionPlanReq::_internal_robot_target(int index) const {
+  return robot_target_.Get(index);
+}
+inline const ::galbot::aphropm_proto::MotionPlanTarget& MotionPlanReq::robot_target(int index) const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.MotionPlanReq.robot_target)
+  return _internal_robot_target(index);
+}
+inline ::galbot::aphropm_proto::MotionPlanTarget* MotionPlanReq::_internal_add_robot_target() {
+  return robot_target_.Add();
+}
+inline ::galbot::aphropm_proto::MotionPlanTarget* MotionPlanReq::add_robot_target() {
+  // @@protoc_insertion_point(field_add:galbot.aphropm_proto.MotionPlanReq.robot_target)
+  return _internal_add_robot_target();
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::galbot::aphropm_proto::MotionPlanTarget >&
+MotionPlanReq::robot_target() const {
+  // @@protoc_insertion_point(field_list:galbot.aphropm_proto.MotionPlanReq.robot_target)
+  return robot_target_;
+}
+
+// .galbot.aphropm_proto.MotionPlanOptions option = 3;
+inline bool MotionPlanReq::_internal_has_option() const {
+  return this != internal_default_instance() && option_ != nullptr;
+}
+inline bool MotionPlanReq::has_option() const {
+  return _internal_has_option();
+}
+inline void MotionPlanReq::clear_option() {
+  if (GetArena() == nullptr && option_ != nullptr) {
+    delete option_;
+  }
+  option_ = nullptr;
+}
+inline const ::galbot::aphropm_proto::MotionPlanOptions& MotionPlanReq::_internal_option() const {
+  const ::galbot::aphropm_proto::MotionPlanOptions* p = option_;
+  return p != nullptr ? *p : reinterpret_cast<const ::galbot::aphropm_proto::MotionPlanOptions&>(
+      ::galbot::aphropm_proto::_MotionPlanOptions_default_instance_);
+}
+inline const ::galbot::aphropm_proto::MotionPlanOptions& MotionPlanReq::option() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.MotionPlanReq.option)
+  return _internal_option();
+}
+inline void MotionPlanReq::unsafe_arena_set_allocated_option(
+    ::galbot::aphropm_proto::MotionPlanOptions* option) {
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(option_);
+  }
+  option_ = option;
+  if (option) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:galbot.aphropm_proto.MotionPlanReq.option)
+}
+inline ::galbot::aphropm_proto::MotionPlanOptions* MotionPlanReq::release_option() {
+  
+  ::galbot::aphropm_proto::MotionPlanOptions* temp = option_;
+  option_ = nullptr;
+  if (GetArena() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+  return temp;
+}
+inline ::galbot::aphropm_proto::MotionPlanOptions* MotionPlanReq::unsafe_arena_release_option() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.MotionPlanReq.option)
+  
+  ::galbot::aphropm_proto::MotionPlanOptions* temp = option_;
+  option_ = nullptr;
+  return temp;
+}
+inline ::galbot::aphropm_proto::MotionPlanOptions* MotionPlanReq::_internal_mutable_option() {
+  
+  if (option_ == nullptr) {
+    auto* p = CreateMaybeMessage<::galbot::aphropm_proto::MotionPlanOptions>(GetArena());
+    option_ = p;
+  }
+  return option_;
+}
+inline ::galbot::aphropm_proto::MotionPlanOptions* MotionPlanReq::mutable_option() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.MotionPlanReq.option)
+  return _internal_mutable_option();
+}
+inline void MotionPlanReq::set_allocated_option(::galbot::aphropm_proto::MotionPlanOptions* option) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArena();
+  if (message_arena == nullptr) {
+    delete option_;
+  }
+  if (option) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+      ::PROTOBUF_NAMESPACE_ID::Arena::GetArena(option);
+    if (message_arena != submessage_arena) {
+      option = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, option, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  option_ = option;
+  // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.MotionPlanReq.option)
+}
+
+// string common_str = 300;
+inline void MotionPlanReq::clear_common_str() {
+  common_str_.ClearToEmpty();
+}
+inline const std::string& MotionPlanReq::common_str() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.MotionPlanReq.common_str)
+  return _internal_common_str();
+}
+inline void MotionPlanReq::set_common_str(const std::string& value) {
+  _internal_set_common_str(value);
+  // @@protoc_insertion_point(field_set:galbot.aphropm_proto.MotionPlanReq.common_str)
+}
+inline std::string* MotionPlanReq::mutable_common_str() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.MotionPlanReq.common_str)
+  return _internal_mutable_common_str();
+}
+inline const std::string& MotionPlanReq::_internal_common_str() const {
+  return common_str_.Get();
+}
+inline void MotionPlanReq::_internal_set_common_str(const std::string& value) {
+  
+  common_str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArena());
+}
+inline void MotionPlanReq::set_common_str(std::string&& value) {
+  
+  common_str_.Set(
+    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::move(value), GetArena());
+  // @@protoc_insertion_point(field_set_rvalue:galbot.aphropm_proto.MotionPlanReq.common_str)
+}
+inline void MotionPlanReq::set_common_str(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  common_str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(value), GetArena());
+  // @@protoc_insertion_point(field_set_char:galbot.aphropm_proto.MotionPlanReq.common_str)
+}
+inline void MotionPlanReq::set_common_str(const char* value,
+    size_t size) {
+  
+  common_str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(
+      reinterpret_cast<const char*>(value), size), GetArena());
+  // @@protoc_insertion_point(field_set_pointer:galbot.aphropm_proto.MotionPlanReq.common_str)
+}
+inline std::string* MotionPlanReq::_internal_mutable_common_str() {
+  
+  return common_str_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArena());
+}
+inline std::string* MotionPlanReq::release_common_str() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.MotionPlanReq.common_str)
+  return common_str_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline void MotionPlanReq::set_allocated_common_str(std::string* common_str) {
+  if (common_str != nullptr) {
+    
+  } else {
+    
+  }
+  common_str_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), common_str,
+      GetArena());
+  // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.MotionPlanReq.common_str)
+}
+
+// -------------------------------------------------------------------
+
+// MoveLineReq
+
+// .galbot.aphropm_proto.RobotStatesMsg robot_state = 1;
+inline bool MoveLineReq::_internal_has_robot_state() const {
+  return this != internal_default_instance() && robot_state_ != nullptr;
+}
+inline bool MoveLineReq::has_robot_state() const {
+  return _internal_has_robot_state();
+}
+inline const ::galbot::aphropm_proto::RobotStatesMsg& MoveLineReq::_internal_robot_state() const {
+  const ::galbot::aphropm_proto::RobotStatesMsg* p = robot_state_;
+  return p != nullptr ? *p : reinterpret_cast<const ::galbot::aphropm_proto::RobotStatesMsg&>(
+      ::galbot::aphropm_proto::_RobotStatesMsg_default_instance_);
+}
+inline const ::galbot::aphropm_proto::RobotStatesMsg& MoveLineReq::robot_state() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.MoveLineReq.robot_state)
+  return _internal_robot_state();
+}
+inline void MoveLineReq::unsafe_arena_set_allocated_robot_state(
+    ::galbot::aphropm_proto::RobotStatesMsg* robot_state) {
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(robot_state_);
+  }
+  robot_state_ = robot_state;
+  if (robot_state) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:galbot.aphropm_proto.MoveLineReq.robot_state)
+}
+inline ::galbot::aphropm_proto::RobotStatesMsg* MoveLineReq::release_robot_state() {
+  
+  ::galbot::aphropm_proto::RobotStatesMsg* temp = robot_state_;
+  robot_state_ = nullptr;
+  if (GetArena() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+  return temp;
+}
+inline ::galbot::aphropm_proto::RobotStatesMsg* MoveLineReq::unsafe_arena_release_robot_state() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.MoveLineReq.robot_state)
+  
+  ::galbot::aphropm_proto::RobotStatesMsg* temp = robot_state_;
+  robot_state_ = nullptr;
+  return temp;
+}
+inline ::galbot::aphropm_proto::RobotStatesMsg* MoveLineReq::_internal_mutable_robot_state() {
+  
+  if (robot_state_ == nullptr) {
+    auto* p = CreateMaybeMessage<::galbot::aphropm_proto::RobotStatesMsg>(GetArena());
+    robot_state_ = p;
+  }
+  return robot_state_;
+}
+inline ::galbot::aphropm_proto::RobotStatesMsg* MoveLineReq::mutable_robot_state() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.MoveLineReq.robot_state)
+  return _internal_mutable_robot_state();
+}
+inline void MoveLineReq::set_allocated_robot_state(::galbot::aphropm_proto::RobotStatesMsg* robot_state) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArena();
+  if (message_arena == nullptr) {
+    delete reinterpret_cast< ::PROTOBUF_NAMESPACE_ID::MessageLite*>(robot_state_);
+  }
+  if (robot_state) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+      reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(robot_state)->GetArena();
+    if (message_arena != submessage_arena) {
+      robot_state = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, robot_state, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  robot_state_ = robot_state;
+  // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.MoveLineReq.robot_state)
+}
+
+// repeated .galbot.aphropm_proto.MotionPlanTarget robot_target = 2;
+inline int MoveLineReq::_internal_robot_target_size() const {
+  return robot_target_.size();
+}
+inline int MoveLineReq::robot_target_size() const {
+  return _internal_robot_target_size();
+}
+inline void MoveLineReq::clear_robot_target() {
+  robot_target_.Clear();
+}
+inline ::galbot::aphropm_proto::MotionPlanTarget* MoveLineReq::mutable_robot_target(int index) {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.MoveLineReq.robot_target)
+  return robot_target_.Mutable(index);
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::galbot::aphropm_proto::MotionPlanTarget >*
+MoveLineReq::mutable_robot_target() {
+  // @@protoc_insertion_point(field_mutable_list:galbot.aphropm_proto.MoveLineReq.robot_target)
+  return &robot_target_;
+}
+inline const ::galbot::aphropm_proto::MotionPlanTarget& MoveLineReq::_internal_robot_target(int index) const {
+  return robot_target_.Get(index);
+}
+inline const ::galbot::aphropm_proto::MotionPlanTarget& MoveLineReq::robot_target(int index) const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.MoveLineReq.robot_target)
+  return _internal_robot_target(index);
+}
+inline ::galbot::aphropm_proto::MotionPlanTarget* MoveLineReq::_internal_add_robot_target() {
+  return robot_target_.Add();
+}
+inline ::galbot::aphropm_proto::MotionPlanTarget* MoveLineReq::add_robot_target() {
+  // @@protoc_insertion_point(field_add:galbot.aphropm_proto.MoveLineReq.robot_target)
+  return _internal_add_robot_target();
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::galbot::aphropm_proto::MotionPlanTarget >&
+MoveLineReq::robot_target() const {
+  // @@protoc_insertion_point(field_list:galbot.aphropm_proto.MoveLineReq.robot_target)
+  return robot_target_;
+}
+
+// .galbot.aphropm_proto.MotionPlanOptions option = 3;
+inline bool MoveLineReq::_internal_has_option() const {
+  return this != internal_default_instance() && option_ != nullptr;
+}
+inline bool MoveLineReq::has_option() const {
+  return _internal_has_option();
+}
+inline void MoveLineReq::clear_option() {
+  if (GetArena() == nullptr && option_ != nullptr) {
+    delete option_;
+  }
+  option_ = nullptr;
+}
+inline const ::galbot::aphropm_proto::MotionPlanOptions& MoveLineReq::_internal_option() const {
+  const ::galbot::aphropm_proto::MotionPlanOptions* p = option_;
+  return p != nullptr ? *p : reinterpret_cast<const ::galbot::aphropm_proto::MotionPlanOptions&>(
+      ::galbot::aphropm_proto::_MotionPlanOptions_default_instance_);
+}
+inline const ::galbot::aphropm_proto::MotionPlanOptions& MoveLineReq::option() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.MoveLineReq.option)
+  return _internal_option();
+}
+inline void MoveLineReq::unsafe_arena_set_allocated_option(
+    ::galbot::aphropm_proto::MotionPlanOptions* option) {
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(option_);
+  }
+  option_ = option;
+  if (option) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:galbot.aphropm_proto.MoveLineReq.option)
+}
+inline ::galbot::aphropm_proto::MotionPlanOptions* MoveLineReq::release_option() {
+  
+  ::galbot::aphropm_proto::MotionPlanOptions* temp = option_;
+  option_ = nullptr;
+  if (GetArena() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+  return temp;
+}
+inline ::galbot::aphropm_proto::MotionPlanOptions* MoveLineReq::unsafe_arena_release_option() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.MoveLineReq.option)
+  
+  ::galbot::aphropm_proto::MotionPlanOptions* temp = option_;
+  option_ = nullptr;
+  return temp;
+}
+inline ::galbot::aphropm_proto::MotionPlanOptions* MoveLineReq::_internal_mutable_option() {
+  
+  if (option_ == nullptr) {
+    auto* p = CreateMaybeMessage<::galbot::aphropm_proto::MotionPlanOptions>(GetArena());
+    option_ = p;
+  }
+  return option_;
+}
+inline ::galbot::aphropm_proto::MotionPlanOptions* MoveLineReq::mutable_option() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.MoveLineReq.option)
+  return _internal_mutable_option();
+}
+inline void MoveLineReq::set_allocated_option(::galbot::aphropm_proto::MotionPlanOptions* option) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArena();
+  if (message_arena == nullptr) {
+    delete option_;
+  }
+  if (option) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+      ::PROTOBUF_NAMESPACE_ID::Arena::GetArena(option);
+    if (message_arena != submessage_arena) {
+      option = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, option, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  option_ = option;
+  // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.MoveLineReq.option)
+}
+
+// string common_str = 300;
+inline void MoveLineReq::clear_common_str() {
+  common_str_.ClearToEmpty();
+}
+inline const std::string& MoveLineReq::common_str() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.MoveLineReq.common_str)
+  return _internal_common_str();
+}
+inline void MoveLineReq::set_common_str(const std::string& value) {
+  _internal_set_common_str(value);
+  // @@protoc_insertion_point(field_set:galbot.aphropm_proto.MoveLineReq.common_str)
+}
+inline std::string* MoveLineReq::mutable_common_str() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.MoveLineReq.common_str)
+  return _internal_mutable_common_str();
+}
+inline const std::string& MoveLineReq::_internal_common_str() const {
+  return common_str_.Get();
+}
+inline void MoveLineReq::_internal_set_common_str(const std::string& value) {
+  
+  common_str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArena());
+}
+inline void MoveLineReq::set_common_str(std::string&& value) {
+  
+  common_str_.Set(
+    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::move(value), GetArena());
+  // @@protoc_insertion_point(field_set_rvalue:galbot.aphropm_proto.MoveLineReq.common_str)
+}
+inline void MoveLineReq::set_common_str(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  common_str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(value), GetArena());
+  // @@protoc_insertion_point(field_set_char:galbot.aphropm_proto.MoveLineReq.common_str)
+}
+inline void MoveLineReq::set_common_str(const char* value,
+    size_t size) {
+  
+  common_str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(
+      reinterpret_cast<const char*>(value), size), GetArena());
+  // @@protoc_insertion_point(field_set_pointer:galbot.aphropm_proto.MoveLineReq.common_str)
+}
+inline std::string* MoveLineReq::_internal_mutable_common_str() {
+  
+  return common_str_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArena());
+}
+inline std::string* MoveLineReq::release_common_str() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.MoveLineReq.common_str)
+  return common_str_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline void MoveLineReq::set_allocated_common_str(std::string* common_str) {
+  if (common_str != nullptr) {
+    
+  } else {
+    
+  }
+  common_str_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), common_str,
+      GetArena());
+  // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.MoveLineReq.common_str)
+}
+
+// -------------------------------------------------------------------
+
+// TrajPlanReq
+
+// .galbot.aphropm_proto.RobotStatesMsg robot_state = 1;
+inline bool TrajPlanReq::_internal_has_robot_state() const {
+  return this != internal_default_instance() && robot_state_ != nullptr;
+}
+inline bool TrajPlanReq::has_robot_state() const {
+  return _internal_has_robot_state();
+}
+inline const ::galbot::aphropm_proto::RobotStatesMsg& TrajPlanReq::_internal_robot_state() const {
+  const ::galbot::aphropm_proto::RobotStatesMsg* p = robot_state_;
+  return p != nullptr ? *p : reinterpret_cast<const ::galbot::aphropm_proto::RobotStatesMsg&>(
+      ::galbot::aphropm_proto::_RobotStatesMsg_default_instance_);
+}
+inline const ::galbot::aphropm_proto::RobotStatesMsg& TrajPlanReq::robot_state() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.TrajPlanReq.robot_state)
+  return _internal_robot_state();
+}
+inline void TrajPlanReq::unsafe_arena_set_allocated_robot_state(
+    ::galbot::aphropm_proto::RobotStatesMsg* robot_state) {
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(robot_state_);
+  }
+  robot_state_ = robot_state;
+  if (robot_state) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:galbot.aphropm_proto.TrajPlanReq.robot_state)
+}
+inline ::galbot::aphropm_proto::RobotStatesMsg* TrajPlanReq::release_robot_state() {
+  
+  ::galbot::aphropm_proto::RobotStatesMsg* temp = robot_state_;
+  robot_state_ = nullptr;
+  if (GetArena() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+  return temp;
+}
+inline ::galbot::aphropm_proto::RobotStatesMsg* TrajPlanReq::unsafe_arena_release_robot_state() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.TrajPlanReq.robot_state)
+  
+  ::galbot::aphropm_proto::RobotStatesMsg* temp = robot_state_;
+  robot_state_ = nullptr;
+  return temp;
+}
+inline ::galbot::aphropm_proto::RobotStatesMsg* TrajPlanReq::_internal_mutable_robot_state() {
+  
+  if (robot_state_ == nullptr) {
+    auto* p = CreateMaybeMessage<::galbot::aphropm_proto::RobotStatesMsg>(GetArena());
+    robot_state_ = p;
+  }
+  return robot_state_;
+}
+inline ::galbot::aphropm_proto::RobotStatesMsg* TrajPlanReq::mutable_robot_state() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.TrajPlanReq.robot_state)
+  return _internal_mutable_robot_state();
+}
+inline void TrajPlanReq::set_allocated_robot_state(::galbot::aphropm_proto::RobotStatesMsg* robot_state) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArena();
+  if (message_arena == nullptr) {
+    delete reinterpret_cast< ::PROTOBUF_NAMESPACE_ID::MessageLite*>(robot_state_);
+  }
+  if (robot_state) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+      reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(robot_state)->GetArena();
+    if (message_arena != submessage_arena) {
+      robot_state = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, robot_state, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  robot_state_ = robot_state;
+  // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.TrajPlanReq.robot_state)
+}
+
+// repeated .galbot.aphropm_proto.MotionPlanTarget robot_target = 2;
+inline int TrajPlanReq::_internal_robot_target_size() const {
+  return robot_target_.size();
+}
+inline int TrajPlanReq::robot_target_size() const {
+  return _internal_robot_target_size();
+}
+inline void TrajPlanReq::clear_robot_target() {
+  robot_target_.Clear();
+}
+inline ::galbot::aphropm_proto::MotionPlanTarget* TrajPlanReq::mutable_robot_target(int index) {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.TrajPlanReq.robot_target)
+  return robot_target_.Mutable(index);
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::galbot::aphropm_proto::MotionPlanTarget >*
+TrajPlanReq::mutable_robot_target() {
+  // @@protoc_insertion_point(field_mutable_list:galbot.aphropm_proto.TrajPlanReq.robot_target)
+  return &robot_target_;
+}
+inline const ::galbot::aphropm_proto::MotionPlanTarget& TrajPlanReq::_internal_robot_target(int index) const {
+  return robot_target_.Get(index);
+}
+inline const ::galbot::aphropm_proto::MotionPlanTarget& TrajPlanReq::robot_target(int index) const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.TrajPlanReq.robot_target)
+  return _internal_robot_target(index);
+}
+inline ::galbot::aphropm_proto::MotionPlanTarget* TrajPlanReq::_internal_add_robot_target() {
+  return robot_target_.Add();
+}
+inline ::galbot::aphropm_proto::MotionPlanTarget* TrajPlanReq::add_robot_target() {
+  // @@protoc_insertion_point(field_add:galbot.aphropm_proto.TrajPlanReq.robot_target)
+  return _internal_add_robot_target();
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::galbot::aphropm_proto::MotionPlanTarget >&
+TrajPlanReq::robot_target() const {
+  // @@protoc_insertion_point(field_list:galbot.aphropm_proto.TrajPlanReq.robot_target)
+  return robot_target_;
+}
+
+// .galbot.aphropm_proto.MotionPlanOptions option = 3;
+inline bool TrajPlanReq::_internal_has_option() const {
+  return this != internal_default_instance() && option_ != nullptr;
+}
+inline bool TrajPlanReq::has_option() const {
+  return _internal_has_option();
+}
+inline void TrajPlanReq::clear_option() {
+  if (GetArena() == nullptr && option_ != nullptr) {
+    delete option_;
+  }
+  option_ = nullptr;
+}
+inline const ::galbot::aphropm_proto::MotionPlanOptions& TrajPlanReq::_internal_option() const {
+  const ::galbot::aphropm_proto::MotionPlanOptions* p = option_;
+  return p != nullptr ? *p : reinterpret_cast<const ::galbot::aphropm_proto::MotionPlanOptions&>(
+      ::galbot::aphropm_proto::_MotionPlanOptions_default_instance_);
+}
+inline const ::galbot::aphropm_proto::MotionPlanOptions& TrajPlanReq::option() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.TrajPlanReq.option)
+  return _internal_option();
+}
+inline void TrajPlanReq::unsafe_arena_set_allocated_option(
+    ::galbot::aphropm_proto::MotionPlanOptions* option) {
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(option_);
+  }
+  option_ = option;
+  if (option) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:galbot.aphropm_proto.TrajPlanReq.option)
+}
+inline ::galbot::aphropm_proto::MotionPlanOptions* TrajPlanReq::release_option() {
+  
+  ::galbot::aphropm_proto::MotionPlanOptions* temp = option_;
+  option_ = nullptr;
+  if (GetArena() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+  return temp;
+}
+inline ::galbot::aphropm_proto::MotionPlanOptions* TrajPlanReq::unsafe_arena_release_option() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.TrajPlanReq.option)
+  
+  ::galbot::aphropm_proto::MotionPlanOptions* temp = option_;
+  option_ = nullptr;
+  return temp;
+}
+inline ::galbot::aphropm_proto::MotionPlanOptions* TrajPlanReq::_internal_mutable_option() {
+  
+  if (option_ == nullptr) {
+    auto* p = CreateMaybeMessage<::galbot::aphropm_proto::MotionPlanOptions>(GetArena());
+    option_ = p;
+  }
+  return option_;
+}
+inline ::galbot::aphropm_proto::MotionPlanOptions* TrajPlanReq::mutable_option() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.TrajPlanReq.option)
+  return _internal_mutable_option();
+}
+inline void TrajPlanReq::set_allocated_option(::galbot::aphropm_proto::MotionPlanOptions* option) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArena();
+  if (message_arena == nullptr) {
+    delete option_;
+  }
+  if (option) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+      ::PROTOBUF_NAMESPACE_ID::Arena::GetArena(option);
+    if (message_arena != submessage_arena) {
+      option = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, option, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  option_ = option;
+  // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.TrajPlanReq.option)
+}
+
+// string common_str = 300;
+inline void TrajPlanReq::clear_common_str() {
+  common_str_.ClearToEmpty();
+}
+inline const std::string& TrajPlanReq::common_str() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.TrajPlanReq.common_str)
+  return _internal_common_str();
+}
+inline void TrajPlanReq::set_common_str(const std::string& value) {
+  _internal_set_common_str(value);
+  // @@protoc_insertion_point(field_set:galbot.aphropm_proto.TrajPlanReq.common_str)
+}
+inline std::string* TrajPlanReq::mutable_common_str() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.TrajPlanReq.common_str)
+  return _internal_mutable_common_str();
+}
+inline const std::string& TrajPlanReq::_internal_common_str() const {
+  return common_str_.Get();
+}
+inline void TrajPlanReq::_internal_set_common_str(const std::string& value) {
+  
+  common_str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArena());
+}
+inline void TrajPlanReq::set_common_str(std::string&& value) {
+  
+  common_str_.Set(
+    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::move(value), GetArena());
+  // @@protoc_insertion_point(field_set_rvalue:galbot.aphropm_proto.TrajPlanReq.common_str)
+}
+inline void TrajPlanReq::set_common_str(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  common_str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(value), GetArena());
+  // @@protoc_insertion_point(field_set_char:galbot.aphropm_proto.TrajPlanReq.common_str)
+}
+inline void TrajPlanReq::set_common_str(const char* value,
+    size_t size) {
+  
+  common_str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(
+      reinterpret_cast<const char*>(value), size), GetArena());
+  // @@protoc_insertion_point(field_set_pointer:galbot.aphropm_proto.TrajPlanReq.common_str)
+}
+inline std::string* TrajPlanReq::_internal_mutable_common_str() {
+  
+  return common_str_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArena());
+}
+inline std::string* TrajPlanReq::release_common_str() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.TrajPlanReq.common_str)
+  return common_str_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline void TrajPlanReq::set_allocated_common_str(std::string* common_str) {
+  if (common_str != nullptr) {
+    
+  } else {
+    
+  }
+  common_str_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), common_str,
+      GetArena());
+  // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.TrajPlanReq.common_str)
+}
+
+// -------------------------------------------------------------------
+
+// SigPlanReq
+
+// .galbot.aphropm_proto.SigPlanReq.PlanType plan_type = 1;
+inline void SigPlanReq::clear_plan_type() {
+  plan_type_ = 0;
+}
+inline ::galbot::aphropm_proto::SigPlanReq_PlanType SigPlanReq::_internal_plan_type() const {
+  return static_cast< ::galbot::aphropm_proto::SigPlanReq_PlanType >(plan_type_);
+}
+inline ::galbot::aphropm_proto::SigPlanReq_PlanType SigPlanReq::plan_type() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.SigPlanReq.plan_type)
+  return _internal_plan_type();
+}
+inline void SigPlanReq::_internal_set_plan_type(::galbot::aphropm_proto::SigPlanReq_PlanType value) {
+  
+  plan_type_ = value;
+}
+inline void SigPlanReq::set_plan_type(::galbot::aphropm_proto::SigPlanReq_PlanType value) {
+  _internal_set_plan_type(value);
+  // @@protoc_insertion_point(field_set:galbot.aphropm_proto.SigPlanReq.plan_type)
+}
+
+// repeated .galbot.aphropm_proto.MotionPlanTarget robot_target = 2;
+inline int SigPlanReq::_internal_robot_target_size() const {
+  return robot_target_.size();
+}
+inline int SigPlanReq::robot_target_size() const {
+  return _internal_robot_target_size();
+}
+inline void SigPlanReq::clear_robot_target() {
+  robot_target_.Clear();
+}
+inline ::galbot::aphropm_proto::MotionPlanTarget* SigPlanReq::mutable_robot_target(int index) {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.SigPlanReq.robot_target)
+  return robot_target_.Mutable(index);
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::galbot::aphropm_proto::MotionPlanTarget >*
+SigPlanReq::mutable_robot_target() {
+  // @@protoc_insertion_point(field_mutable_list:galbot.aphropm_proto.SigPlanReq.robot_target)
+  return &robot_target_;
+}
+inline const ::galbot::aphropm_proto::MotionPlanTarget& SigPlanReq::_internal_robot_target(int index) const {
+  return robot_target_.Get(index);
+}
+inline const ::galbot::aphropm_proto::MotionPlanTarget& SigPlanReq::robot_target(int index) const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.SigPlanReq.robot_target)
+  return _internal_robot_target(index);
+}
+inline ::galbot::aphropm_proto::MotionPlanTarget* SigPlanReq::_internal_add_robot_target() {
+  return robot_target_.Add();
+}
+inline ::galbot::aphropm_proto::MotionPlanTarget* SigPlanReq::add_robot_target() {
+  // @@protoc_insertion_point(field_add:galbot.aphropm_proto.SigPlanReq.robot_target)
+  return _internal_add_robot_target();
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::galbot::aphropm_proto::MotionPlanTarget >&
+SigPlanReq::robot_target() const {
+  // @@protoc_insertion_point(field_list:galbot.aphropm_proto.SigPlanReq.robot_target)
+  return robot_target_;
+}
+
+// .galbot.aphropm_proto.MotionPlanOptions option = 3;
+inline bool SigPlanReq::_internal_has_option() const {
+  return this != internal_default_instance() && option_ != nullptr;
+}
+inline bool SigPlanReq::has_option() const {
+  return _internal_has_option();
+}
+inline void SigPlanReq::clear_option() {
+  if (GetArena() == nullptr && option_ != nullptr) {
+    delete option_;
+  }
+  option_ = nullptr;
+}
+inline const ::galbot::aphropm_proto::MotionPlanOptions& SigPlanReq::_internal_option() const {
+  const ::galbot::aphropm_proto::MotionPlanOptions* p = option_;
+  return p != nullptr ? *p : reinterpret_cast<const ::galbot::aphropm_proto::MotionPlanOptions&>(
+      ::galbot::aphropm_proto::_MotionPlanOptions_default_instance_);
+}
+inline const ::galbot::aphropm_proto::MotionPlanOptions& SigPlanReq::option() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.SigPlanReq.option)
+  return _internal_option();
+}
+inline void SigPlanReq::unsafe_arena_set_allocated_option(
+    ::galbot::aphropm_proto::MotionPlanOptions* option) {
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(option_);
+  }
+  option_ = option;
+  if (option) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:galbot.aphropm_proto.SigPlanReq.option)
+}
+inline ::galbot::aphropm_proto::MotionPlanOptions* SigPlanReq::release_option() {
+  
+  ::galbot::aphropm_proto::MotionPlanOptions* temp = option_;
+  option_ = nullptr;
+  if (GetArena() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+  return temp;
+}
+inline ::galbot::aphropm_proto::MotionPlanOptions* SigPlanReq::unsafe_arena_release_option() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.SigPlanReq.option)
+  
+  ::galbot::aphropm_proto::MotionPlanOptions* temp = option_;
+  option_ = nullptr;
+  return temp;
+}
+inline ::galbot::aphropm_proto::MotionPlanOptions* SigPlanReq::_internal_mutable_option() {
+  
+  if (option_ == nullptr) {
+    auto* p = CreateMaybeMessage<::galbot::aphropm_proto::MotionPlanOptions>(GetArena());
+    option_ = p;
+  }
+  return option_;
+}
+inline ::galbot::aphropm_proto::MotionPlanOptions* SigPlanReq::mutable_option() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.SigPlanReq.option)
+  return _internal_mutable_option();
+}
+inline void SigPlanReq::set_allocated_option(::galbot::aphropm_proto::MotionPlanOptions* option) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArena();
+  if (message_arena == nullptr) {
+    delete option_;
+  }
+  if (option) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+      ::PROTOBUF_NAMESPACE_ID::Arena::GetArena(option);
+    if (message_arena != submessage_arena) {
+      option = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, option, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  option_ = option;
+  // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.SigPlanReq.option)
+}
+
+// string common_str = 300;
+inline void SigPlanReq::clear_common_str() {
+  common_str_.ClearToEmpty();
+}
+inline const std::string& SigPlanReq::common_str() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.SigPlanReq.common_str)
+  return _internal_common_str();
+}
+inline void SigPlanReq::set_common_str(const std::string& value) {
+  _internal_set_common_str(value);
+  // @@protoc_insertion_point(field_set:galbot.aphropm_proto.SigPlanReq.common_str)
+}
+inline std::string* SigPlanReq::mutable_common_str() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.SigPlanReq.common_str)
+  return _internal_mutable_common_str();
+}
+inline const std::string& SigPlanReq::_internal_common_str() const {
+  return common_str_.Get();
+}
+inline void SigPlanReq::_internal_set_common_str(const std::string& value) {
+  
+  common_str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArena());
+}
+inline void SigPlanReq::set_common_str(std::string&& value) {
+  
+  common_str_.Set(
+    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::move(value), GetArena());
+  // @@protoc_insertion_point(field_set_rvalue:galbot.aphropm_proto.SigPlanReq.common_str)
+}
+inline void SigPlanReq::set_common_str(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  common_str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(value), GetArena());
+  // @@protoc_insertion_point(field_set_char:galbot.aphropm_proto.SigPlanReq.common_str)
+}
+inline void SigPlanReq::set_common_str(const char* value,
+    size_t size) {
+  
+  common_str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(
+      reinterpret_cast<const char*>(value), size), GetArena());
+  // @@protoc_insertion_point(field_set_pointer:galbot.aphropm_proto.SigPlanReq.common_str)
+}
+inline std::string* SigPlanReq::_internal_mutable_common_str() {
+  
+  return common_str_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArena());
+}
+inline std::string* SigPlanReq::release_common_str() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.SigPlanReq.common_str)
+  return common_str_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline void SigPlanReq::set_allocated_common_str(std::string* common_str) {
+  if (common_str != nullptr) {
+    
+  } else {
+    
+  }
+  common_str_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), common_str,
+      GetArena());
+  // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.SigPlanReq.common_str)
+}
+
+// -------------------------------------------------------------------
+
+// CombinePlanReq
+
+// .galbot.aphropm_proto.RobotStatesMsg robot_state = 1;
+inline bool CombinePlanReq::_internal_has_robot_state() const {
+  return this != internal_default_instance() && robot_state_ != nullptr;
+}
+inline bool CombinePlanReq::has_robot_state() const {
+  return _internal_has_robot_state();
+}
+inline const ::galbot::aphropm_proto::RobotStatesMsg& CombinePlanReq::_internal_robot_state() const {
+  const ::galbot::aphropm_proto::RobotStatesMsg* p = robot_state_;
+  return p != nullptr ? *p : reinterpret_cast<const ::galbot::aphropm_proto::RobotStatesMsg&>(
+      ::galbot::aphropm_proto::_RobotStatesMsg_default_instance_);
+}
+inline const ::galbot::aphropm_proto::RobotStatesMsg& CombinePlanReq::robot_state() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.CombinePlanReq.robot_state)
+  return _internal_robot_state();
+}
+inline void CombinePlanReq::unsafe_arena_set_allocated_robot_state(
+    ::galbot::aphropm_proto::RobotStatesMsg* robot_state) {
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(robot_state_);
+  }
+  robot_state_ = robot_state;
+  if (robot_state) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:galbot.aphropm_proto.CombinePlanReq.robot_state)
+}
+inline ::galbot::aphropm_proto::RobotStatesMsg* CombinePlanReq::release_robot_state() {
+  
+  ::galbot::aphropm_proto::RobotStatesMsg* temp = robot_state_;
+  robot_state_ = nullptr;
+  if (GetArena() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+  return temp;
+}
+inline ::galbot::aphropm_proto::RobotStatesMsg* CombinePlanReq::unsafe_arena_release_robot_state() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.CombinePlanReq.robot_state)
+  
+  ::galbot::aphropm_proto::RobotStatesMsg* temp = robot_state_;
+  robot_state_ = nullptr;
+  return temp;
+}
+inline ::galbot::aphropm_proto::RobotStatesMsg* CombinePlanReq::_internal_mutable_robot_state() {
+  
+  if (robot_state_ == nullptr) {
+    auto* p = CreateMaybeMessage<::galbot::aphropm_proto::RobotStatesMsg>(GetArena());
+    robot_state_ = p;
+  }
+  return robot_state_;
+}
+inline ::galbot::aphropm_proto::RobotStatesMsg* CombinePlanReq::mutable_robot_state() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.CombinePlanReq.robot_state)
+  return _internal_mutable_robot_state();
+}
+inline void CombinePlanReq::set_allocated_robot_state(::galbot::aphropm_proto::RobotStatesMsg* robot_state) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArena();
+  if (message_arena == nullptr) {
+    delete reinterpret_cast< ::PROTOBUF_NAMESPACE_ID::MessageLite*>(robot_state_);
+  }
+  if (robot_state) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+      reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(robot_state)->GetArena();
+    if (message_arena != submessage_arena) {
+      robot_state = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, robot_state, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  robot_state_ = robot_state;
+  // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.CombinePlanReq.robot_state)
+}
+
+// repeated .galbot.aphropm_proto.SigPlanReq plan_reqs = 2;
+inline int CombinePlanReq::_internal_plan_reqs_size() const {
+  return plan_reqs_.size();
+}
+inline int CombinePlanReq::plan_reqs_size() const {
+  return _internal_plan_reqs_size();
+}
+inline void CombinePlanReq::clear_plan_reqs() {
+  plan_reqs_.Clear();
+}
+inline ::galbot::aphropm_proto::SigPlanReq* CombinePlanReq::mutable_plan_reqs(int index) {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.CombinePlanReq.plan_reqs)
+  return plan_reqs_.Mutable(index);
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::galbot::aphropm_proto::SigPlanReq >*
+CombinePlanReq::mutable_plan_reqs() {
+  // @@protoc_insertion_point(field_mutable_list:galbot.aphropm_proto.CombinePlanReq.plan_reqs)
+  return &plan_reqs_;
+}
+inline const ::galbot::aphropm_proto::SigPlanReq& CombinePlanReq::_internal_plan_reqs(int index) const {
+  return plan_reqs_.Get(index);
+}
+inline const ::galbot::aphropm_proto::SigPlanReq& CombinePlanReq::plan_reqs(int index) const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.CombinePlanReq.plan_reqs)
+  return _internal_plan_reqs(index);
+}
+inline ::galbot::aphropm_proto::SigPlanReq* CombinePlanReq::_internal_add_plan_reqs() {
+  return plan_reqs_.Add();
+}
+inline ::galbot::aphropm_proto::SigPlanReq* CombinePlanReq::add_plan_reqs() {
+  // @@protoc_insertion_point(field_add:galbot.aphropm_proto.CombinePlanReq.plan_reqs)
+  return _internal_add_plan_reqs();
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::galbot::aphropm_proto::SigPlanReq >&
+CombinePlanReq::plan_reqs() const {
+  // @@protoc_insertion_point(field_list:galbot.aphropm_proto.CombinePlanReq.plan_reqs)
+  return plan_reqs_;
+}
+
+// .galbot.aphropm_proto.MotionPlanOptions option = 3;
+inline bool CombinePlanReq::_internal_has_option() const {
+  return this != internal_default_instance() && option_ != nullptr;
+}
+inline bool CombinePlanReq::has_option() const {
+  return _internal_has_option();
+}
+inline void CombinePlanReq::clear_option() {
+  if (GetArena() == nullptr && option_ != nullptr) {
+    delete option_;
+  }
+  option_ = nullptr;
+}
+inline const ::galbot::aphropm_proto::MotionPlanOptions& CombinePlanReq::_internal_option() const {
+  const ::galbot::aphropm_proto::MotionPlanOptions* p = option_;
+  return p != nullptr ? *p : reinterpret_cast<const ::galbot::aphropm_proto::MotionPlanOptions&>(
+      ::galbot::aphropm_proto::_MotionPlanOptions_default_instance_);
+}
+inline const ::galbot::aphropm_proto::MotionPlanOptions& CombinePlanReq::option() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.CombinePlanReq.option)
+  return _internal_option();
+}
+inline void CombinePlanReq::unsafe_arena_set_allocated_option(
+    ::galbot::aphropm_proto::MotionPlanOptions* option) {
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(option_);
+  }
+  option_ = option;
+  if (option) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:galbot.aphropm_proto.CombinePlanReq.option)
+}
+inline ::galbot::aphropm_proto::MotionPlanOptions* CombinePlanReq::release_option() {
+  
+  ::galbot::aphropm_proto::MotionPlanOptions* temp = option_;
+  option_ = nullptr;
+  if (GetArena() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+  return temp;
+}
+inline ::galbot::aphropm_proto::MotionPlanOptions* CombinePlanReq::unsafe_arena_release_option() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.CombinePlanReq.option)
+  
+  ::galbot::aphropm_proto::MotionPlanOptions* temp = option_;
+  option_ = nullptr;
+  return temp;
+}
+inline ::galbot::aphropm_proto::MotionPlanOptions* CombinePlanReq::_internal_mutable_option() {
+  
+  if (option_ == nullptr) {
+    auto* p = CreateMaybeMessage<::galbot::aphropm_proto::MotionPlanOptions>(GetArena());
+    option_ = p;
+  }
+  return option_;
+}
+inline ::galbot::aphropm_proto::MotionPlanOptions* CombinePlanReq::mutable_option() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.CombinePlanReq.option)
+  return _internal_mutable_option();
+}
+inline void CombinePlanReq::set_allocated_option(::galbot::aphropm_proto::MotionPlanOptions* option) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArena();
+  if (message_arena == nullptr) {
+    delete option_;
+  }
+  if (option) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+      ::PROTOBUF_NAMESPACE_ID::Arena::GetArena(option);
+    if (message_arena != submessage_arena) {
+      option = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, option, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  option_ = option;
+  // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.CombinePlanReq.option)
+}
+
+// .google.protobuf.BoolValue enforce_pass = 4;
+inline bool CombinePlanReq::_internal_has_enforce_pass() const {
+  return this != internal_default_instance() && enforce_pass_ != nullptr;
+}
+inline bool CombinePlanReq::has_enforce_pass() const {
+  return _internal_has_enforce_pass();
+}
+inline const PROTOBUF_NAMESPACE_ID::BoolValue& CombinePlanReq::_internal_enforce_pass() const {
+  const PROTOBUF_NAMESPACE_ID::BoolValue* p = enforce_pass_;
+  return p != nullptr ? *p : reinterpret_cast<const PROTOBUF_NAMESPACE_ID::BoolValue&>(
+      PROTOBUF_NAMESPACE_ID::_BoolValue_default_instance_);
+}
+inline const PROTOBUF_NAMESPACE_ID::BoolValue& CombinePlanReq::enforce_pass() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.CombinePlanReq.enforce_pass)
+  return _internal_enforce_pass();
+}
+inline void CombinePlanReq::unsafe_arena_set_allocated_enforce_pass(
+    PROTOBUF_NAMESPACE_ID::BoolValue* enforce_pass) {
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(enforce_pass_);
+  }
+  enforce_pass_ = enforce_pass;
+  if (enforce_pass) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:galbot.aphropm_proto.CombinePlanReq.enforce_pass)
+}
+inline PROTOBUF_NAMESPACE_ID::BoolValue* CombinePlanReq::release_enforce_pass() {
+  
+  PROTOBUF_NAMESPACE_ID::BoolValue* temp = enforce_pass_;
+  enforce_pass_ = nullptr;
+  if (GetArena() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+  return temp;
+}
+inline PROTOBUF_NAMESPACE_ID::BoolValue* CombinePlanReq::unsafe_arena_release_enforce_pass() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.CombinePlanReq.enforce_pass)
+  
+  PROTOBUF_NAMESPACE_ID::BoolValue* temp = enforce_pass_;
+  enforce_pass_ = nullptr;
+  return temp;
+}
+inline PROTOBUF_NAMESPACE_ID::BoolValue* CombinePlanReq::_internal_mutable_enforce_pass() {
+  
+  if (enforce_pass_ == nullptr) {
+    auto* p = CreateMaybeMessage<PROTOBUF_NAMESPACE_ID::BoolValue>(GetArena());
+    enforce_pass_ = p;
+  }
+  return enforce_pass_;
+}
+inline PROTOBUF_NAMESPACE_ID::BoolValue* CombinePlanReq::mutable_enforce_pass() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.CombinePlanReq.enforce_pass)
+  return _internal_mutable_enforce_pass();
+}
+inline void CombinePlanReq::set_allocated_enforce_pass(PROTOBUF_NAMESPACE_ID::BoolValue* enforce_pass) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArena();
+  if (message_arena == nullptr) {
+    delete reinterpret_cast< ::PROTOBUF_NAMESPACE_ID::MessageLite*>(enforce_pass_);
+  }
+  if (enforce_pass) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+      reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(enforce_pass)->GetArena();
+    if (message_arena != submessage_arena) {
+      enforce_pass = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, enforce_pass, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  enforce_pass_ = enforce_pass;
+  // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.CombinePlanReq.enforce_pass)
+}
+
+// string common_str = 300;
+inline void CombinePlanReq::clear_common_str() {
+  common_str_.ClearToEmpty();
+}
+inline const std::string& CombinePlanReq::common_str() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.CombinePlanReq.common_str)
+  return _internal_common_str();
+}
+inline void CombinePlanReq::set_common_str(const std::string& value) {
+  _internal_set_common_str(value);
+  // @@protoc_insertion_point(field_set:galbot.aphropm_proto.CombinePlanReq.common_str)
+}
+inline std::string* CombinePlanReq::mutable_common_str() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.CombinePlanReq.common_str)
+  return _internal_mutable_common_str();
+}
+inline const std::string& CombinePlanReq::_internal_common_str() const {
+  return common_str_.Get();
+}
+inline void CombinePlanReq::_internal_set_common_str(const std::string& value) {
+  
+  common_str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArena());
+}
+inline void CombinePlanReq::set_common_str(std::string&& value) {
+  
+  common_str_.Set(
+    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::move(value), GetArena());
+  // @@protoc_insertion_point(field_set_rvalue:galbot.aphropm_proto.CombinePlanReq.common_str)
+}
+inline void CombinePlanReq::set_common_str(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  common_str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(value), GetArena());
+  // @@protoc_insertion_point(field_set_char:galbot.aphropm_proto.CombinePlanReq.common_str)
+}
+inline void CombinePlanReq::set_common_str(const char* value,
+    size_t size) {
+  
+  common_str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(
+      reinterpret_cast<const char*>(value), size), GetArena());
+  // @@protoc_insertion_point(field_set_pointer:galbot.aphropm_proto.CombinePlanReq.common_str)
+}
+inline std::string* CombinePlanReq::_internal_mutable_common_str() {
+  
+  return common_str_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArena());
+}
+inline std::string* CombinePlanReq::release_common_str() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.CombinePlanReq.common_str)
+  return common_str_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline void CombinePlanReq::set_allocated_common_str(std::string* common_str) {
+  if (common_str != nullptr) {
+    
+  } else {
+    
+  }
+  common_str_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), common_str,
+      GetArena());
+  // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.CombinePlanReq.common_str)
+}
+
+// -------------------------------------------------------------------
+
 // MotionPlanServerRequest
 
 // string task_id = 1;
@@ -11533,6 +16205,371 @@ inline ::galbot::aphropm_proto::SingleChainCombinePlanRequest* MotionPlanServerR
   return _internal_mutable_single_chain_combine_plan();
 }
 
+// .galbot.aphropm_proto.MotionPlanReq motion_plan_request = 13;
+inline bool MotionPlanServerRequest::_internal_has_motion_plan_request() const {
+  return Request_case() == kMotionPlanRequest;
+}
+inline bool MotionPlanServerRequest::has_motion_plan_request() const {
+  return _internal_has_motion_plan_request();
+}
+inline void MotionPlanServerRequest::set_has_motion_plan_request() {
+  _oneof_case_[0] = kMotionPlanRequest;
+}
+inline void MotionPlanServerRequest::clear_motion_plan_request() {
+  if (_internal_has_motion_plan_request()) {
+    if (GetArena() == nullptr) {
+      delete Request_.motion_plan_request_;
+    }
+    clear_has_Request();
+  }
+}
+inline ::galbot::aphropm_proto::MotionPlanReq* MotionPlanServerRequest::release_motion_plan_request() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.MotionPlanServerRequest.motion_plan_request)
+  if (_internal_has_motion_plan_request()) {
+    clear_has_Request();
+      ::galbot::aphropm_proto::MotionPlanReq* temp = Request_.motion_plan_request_;
+    if (GetArena() != nullptr) {
+      temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+    }
+    Request_.motion_plan_request_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::galbot::aphropm_proto::MotionPlanReq& MotionPlanServerRequest::_internal_motion_plan_request() const {
+  return _internal_has_motion_plan_request()
+      ? *Request_.motion_plan_request_
+      : reinterpret_cast< ::galbot::aphropm_proto::MotionPlanReq&>(::galbot::aphropm_proto::_MotionPlanReq_default_instance_);
+}
+inline const ::galbot::aphropm_proto::MotionPlanReq& MotionPlanServerRequest::motion_plan_request() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.MotionPlanServerRequest.motion_plan_request)
+  return _internal_motion_plan_request();
+}
+inline ::galbot::aphropm_proto::MotionPlanReq* MotionPlanServerRequest::unsafe_arena_release_motion_plan_request() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:galbot.aphropm_proto.MotionPlanServerRequest.motion_plan_request)
+  if (_internal_has_motion_plan_request()) {
+    clear_has_Request();
+    ::galbot::aphropm_proto::MotionPlanReq* temp = Request_.motion_plan_request_;
+    Request_.motion_plan_request_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void MotionPlanServerRequest::unsafe_arena_set_allocated_motion_plan_request(::galbot::aphropm_proto::MotionPlanReq* motion_plan_request) {
+  clear_Request();
+  if (motion_plan_request) {
+    set_has_motion_plan_request();
+    Request_.motion_plan_request_ = motion_plan_request;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:galbot.aphropm_proto.MotionPlanServerRequest.motion_plan_request)
+}
+inline ::galbot::aphropm_proto::MotionPlanReq* MotionPlanServerRequest::_internal_mutable_motion_plan_request() {
+  if (!_internal_has_motion_plan_request()) {
+    clear_Request();
+    set_has_motion_plan_request();
+    Request_.motion_plan_request_ = CreateMaybeMessage< ::galbot::aphropm_proto::MotionPlanReq >(GetArena());
+  }
+  return Request_.motion_plan_request_;
+}
+inline ::galbot::aphropm_proto::MotionPlanReq* MotionPlanServerRequest::mutable_motion_plan_request() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.MotionPlanServerRequest.motion_plan_request)
+  return _internal_mutable_motion_plan_request();
+}
+
+// .galbot.aphropm_proto.MoveLineReq move_line_req = 14;
+inline bool MotionPlanServerRequest::_internal_has_move_line_req() const {
+  return Request_case() == kMoveLineReq;
+}
+inline bool MotionPlanServerRequest::has_move_line_req() const {
+  return _internal_has_move_line_req();
+}
+inline void MotionPlanServerRequest::set_has_move_line_req() {
+  _oneof_case_[0] = kMoveLineReq;
+}
+inline void MotionPlanServerRequest::clear_move_line_req() {
+  if (_internal_has_move_line_req()) {
+    if (GetArena() == nullptr) {
+      delete Request_.move_line_req_;
+    }
+    clear_has_Request();
+  }
+}
+inline ::galbot::aphropm_proto::MoveLineReq* MotionPlanServerRequest::release_move_line_req() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.MotionPlanServerRequest.move_line_req)
+  if (_internal_has_move_line_req()) {
+    clear_has_Request();
+      ::galbot::aphropm_proto::MoveLineReq* temp = Request_.move_line_req_;
+    if (GetArena() != nullptr) {
+      temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+    }
+    Request_.move_line_req_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::galbot::aphropm_proto::MoveLineReq& MotionPlanServerRequest::_internal_move_line_req() const {
+  return _internal_has_move_line_req()
+      ? *Request_.move_line_req_
+      : reinterpret_cast< ::galbot::aphropm_proto::MoveLineReq&>(::galbot::aphropm_proto::_MoveLineReq_default_instance_);
+}
+inline const ::galbot::aphropm_proto::MoveLineReq& MotionPlanServerRequest::move_line_req() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.MotionPlanServerRequest.move_line_req)
+  return _internal_move_line_req();
+}
+inline ::galbot::aphropm_proto::MoveLineReq* MotionPlanServerRequest::unsafe_arena_release_move_line_req() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:galbot.aphropm_proto.MotionPlanServerRequest.move_line_req)
+  if (_internal_has_move_line_req()) {
+    clear_has_Request();
+    ::galbot::aphropm_proto::MoveLineReq* temp = Request_.move_line_req_;
+    Request_.move_line_req_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void MotionPlanServerRequest::unsafe_arena_set_allocated_move_line_req(::galbot::aphropm_proto::MoveLineReq* move_line_req) {
+  clear_Request();
+  if (move_line_req) {
+    set_has_move_line_req();
+    Request_.move_line_req_ = move_line_req;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:galbot.aphropm_proto.MotionPlanServerRequest.move_line_req)
+}
+inline ::galbot::aphropm_proto::MoveLineReq* MotionPlanServerRequest::_internal_mutable_move_line_req() {
+  if (!_internal_has_move_line_req()) {
+    clear_Request();
+    set_has_move_line_req();
+    Request_.move_line_req_ = CreateMaybeMessage< ::galbot::aphropm_proto::MoveLineReq >(GetArena());
+  }
+  return Request_.move_line_req_;
+}
+inline ::galbot::aphropm_proto::MoveLineReq* MotionPlanServerRequest::mutable_move_line_req() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.MotionPlanServerRequest.move_line_req)
+  return _internal_mutable_move_line_req();
+}
+
+// .galbot.aphropm_proto.TrajPlanReq traj_plan_req = 15;
+inline bool MotionPlanServerRequest::_internal_has_traj_plan_req() const {
+  return Request_case() == kTrajPlanReq;
+}
+inline bool MotionPlanServerRequest::has_traj_plan_req() const {
+  return _internal_has_traj_plan_req();
+}
+inline void MotionPlanServerRequest::set_has_traj_plan_req() {
+  _oneof_case_[0] = kTrajPlanReq;
+}
+inline void MotionPlanServerRequest::clear_traj_plan_req() {
+  if (_internal_has_traj_plan_req()) {
+    if (GetArena() == nullptr) {
+      delete Request_.traj_plan_req_;
+    }
+    clear_has_Request();
+  }
+}
+inline ::galbot::aphropm_proto::TrajPlanReq* MotionPlanServerRequest::release_traj_plan_req() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.MotionPlanServerRequest.traj_plan_req)
+  if (_internal_has_traj_plan_req()) {
+    clear_has_Request();
+      ::galbot::aphropm_proto::TrajPlanReq* temp = Request_.traj_plan_req_;
+    if (GetArena() != nullptr) {
+      temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+    }
+    Request_.traj_plan_req_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::galbot::aphropm_proto::TrajPlanReq& MotionPlanServerRequest::_internal_traj_plan_req() const {
+  return _internal_has_traj_plan_req()
+      ? *Request_.traj_plan_req_
+      : reinterpret_cast< ::galbot::aphropm_proto::TrajPlanReq&>(::galbot::aphropm_proto::_TrajPlanReq_default_instance_);
+}
+inline const ::galbot::aphropm_proto::TrajPlanReq& MotionPlanServerRequest::traj_plan_req() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.MotionPlanServerRequest.traj_plan_req)
+  return _internal_traj_plan_req();
+}
+inline ::galbot::aphropm_proto::TrajPlanReq* MotionPlanServerRequest::unsafe_arena_release_traj_plan_req() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:galbot.aphropm_proto.MotionPlanServerRequest.traj_plan_req)
+  if (_internal_has_traj_plan_req()) {
+    clear_has_Request();
+    ::galbot::aphropm_proto::TrajPlanReq* temp = Request_.traj_plan_req_;
+    Request_.traj_plan_req_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void MotionPlanServerRequest::unsafe_arena_set_allocated_traj_plan_req(::galbot::aphropm_proto::TrajPlanReq* traj_plan_req) {
+  clear_Request();
+  if (traj_plan_req) {
+    set_has_traj_plan_req();
+    Request_.traj_plan_req_ = traj_plan_req;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:galbot.aphropm_proto.MotionPlanServerRequest.traj_plan_req)
+}
+inline ::galbot::aphropm_proto::TrajPlanReq* MotionPlanServerRequest::_internal_mutable_traj_plan_req() {
+  if (!_internal_has_traj_plan_req()) {
+    clear_Request();
+    set_has_traj_plan_req();
+    Request_.traj_plan_req_ = CreateMaybeMessage< ::galbot::aphropm_proto::TrajPlanReq >(GetArena());
+  }
+  return Request_.traj_plan_req_;
+}
+inline ::galbot::aphropm_proto::TrajPlanReq* MotionPlanServerRequest::mutable_traj_plan_req() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.MotionPlanServerRequest.traj_plan_req)
+  return _internal_mutable_traj_plan_req();
+}
+
+// .galbot.aphropm_proto.SigPlanReq sig_plan_req = 16;
+inline bool MotionPlanServerRequest::_internal_has_sig_plan_req() const {
+  return Request_case() == kSigPlanReq;
+}
+inline bool MotionPlanServerRequest::has_sig_plan_req() const {
+  return _internal_has_sig_plan_req();
+}
+inline void MotionPlanServerRequest::set_has_sig_plan_req() {
+  _oneof_case_[0] = kSigPlanReq;
+}
+inline void MotionPlanServerRequest::clear_sig_plan_req() {
+  if (_internal_has_sig_plan_req()) {
+    if (GetArena() == nullptr) {
+      delete Request_.sig_plan_req_;
+    }
+    clear_has_Request();
+  }
+}
+inline ::galbot::aphropm_proto::SigPlanReq* MotionPlanServerRequest::release_sig_plan_req() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.MotionPlanServerRequest.sig_plan_req)
+  if (_internal_has_sig_plan_req()) {
+    clear_has_Request();
+      ::galbot::aphropm_proto::SigPlanReq* temp = Request_.sig_plan_req_;
+    if (GetArena() != nullptr) {
+      temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+    }
+    Request_.sig_plan_req_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::galbot::aphropm_proto::SigPlanReq& MotionPlanServerRequest::_internal_sig_plan_req() const {
+  return _internal_has_sig_plan_req()
+      ? *Request_.sig_plan_req_
+      : reinterpret_cast< ::galbot::aphropm_proto::SigPlanReq&>(::galbot::aphropm_proto::_SigPlanReq_default_instance_);
+}
+inline const ::galbot::aphropm_proto::SigPlanReq& MotionPlanServerRequest::sig_plan_req() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.MotionPlanServerRequest.sig_plan_req)
+  return _internal_sig_plan_req();
+}
+inline ::galbot::aphropm_proto::SigPlanReq* MotionPlanServerRequest::unsafe_arena_release_sig_plan_req() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:galbot.aphropm_proto.MotionPlanServerRequest.sig_plan_req)
+  if (_internal_has_sig_plan_req()) {
+    clear_has_Request();
+    ::galbot::aphropm_proto::SigPlanReq* temp = Request_.sig_plan_req_;
+    Request_.sig_plan_req_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void MotionPlanServerRequest::unsafe_arena_set_allocated_sig_plan_req(::galbot::aphropm_proto::SigPlanReq* sig_plan_req) {
+  clear_Request();
+  if (sig_plan_req) {
+    set_has_sig_plan_req();
+    Request_.sig_plan_req_ = sig_plan_req;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:galbot.aphropm_proto.MotionPlanServerRequest.sig_plan_req)
+}
+inline ::galbot::aphropm_proto::SigPlanReq* MotionPlanServerRequest::_internal_mutable_sig_plan_req() {
+  if (!_internal_has_sig_plan_req()) {
+    clear_Request();
+    set_has_sig_plan_req();
+    Request_.sig_plan_req_ = CreateMaybeMessage< ::galbot::aphropm_proto::SigPlanReq >(GetArena());
+  }
+  return Request_.sig_plan_req_;
+}
+inline ::galbot::aphropm_proto::SigPlanReq* MotionPlanServerRequest::mutable_sig_plan_req() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.MotionPlanServerRequest.sig_plan_req)
+  return _internal_mutable_sig_plan_req();
+}
+
+// .galbot.aphropm_proto.CombinePlanReq combine_plan_req = 17;
+inline bool MotionPlanServerRequest::_internal_has_combine_plan_req() const {
+  return Request_case() == kCombinePlanReq;
+}
+inline bool MotionPlanServerRequest::has_combine_plan_req() const {
+  return _internal_has_combine_plan_req();
+}
+inline void MotionPlanServerRequest::set_has_combine_plan_req() {
+  _oneof_case_[0] = kCombinePlanReq;
+}
+inline void MotionPlanServerRequest::clear_combine_plan_req() {
+  if (_internal_has_combine_plan_req()) {
+    if (GetArena() == nullptr) {
+      delete Request_.combine_plan_req_;
+    }
+    clear_has_Request();
+  }
+}
+inline ::galbot::aphropm_proto::CombinePlanReq* MotionPlanServerRequest::release_combine_plan_req() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.MotionPlanServerRequest.combine_plan_req)
+  if (_internal_has_combine_plan_req()) {
+    clear_has_Request();
+      ::galbot::aphropm_proto::CombinePlanReq* temp = Request_.combine_plan_req_;
+    if (GetArena() != nullptr) {
+      temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+    }
+    Request_.combine_plan_req_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::galbot::aphropm_proto::CombinePlanReq& MotionPlanServerRequest::_internal_combine_plan_req() const {
+  return _internal_has_combine_plan_req()
+      ? *Request_.combine_plan_req_
+      : reinterpret_cast< ::galbot::aphropm_proto::CombinePlanReq&>(::galbot::aphropm_proto::_CombinePlanReq_default_instance_);
+}
+inline const ::galbot::aphropm_proto::CombinePlanReq& MotionPlanServerRequest::combine_plan_req() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.MotionPlanServerRequest.combine_plan_req)
+  return _internal_combine_plan_req();
+}
+inline ::galbot::aphropm_proto::CombinePlanReq* MotionPlanServerRequest::unsafe_arena_release_combine_plan_req() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:galbot.aphropm_proto.MotionPlanServerRequest.combine_plan_req)
+  if (_internal_has_combine_plan_req()) {
+    clear_has_Request();
+    ::galbot::aphropm_proto::CombinePlanReq* temp = Request_.combine_plan_req_;
+    Request_.combine_plan_req_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void MotionPlanServerRequest::unsafe_arena_set_allocated_combine_plan_req(::galbot::aphropm_proto::CombinePlanReq* combine_plan_req) {
+  clear_Request();
+  if (combine_plan_req) {
+    set_has_combine_plan_req();
+    Request_.combine_plan_req_ = combine_plan_req;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:galbot.aphropm_proto.MotionPlanServerRequest.combine_plan_req)
+}
+inline ::galbot::aphropm_proto::CombinePlanReq* MotionPlanServerRequest::_internal_mutable_combine_plan_req() {
+  if (!_internal_has_combine_plan_req()) {
+    clear_Request();
+    set_has_combine_plan_req();
+    Request_.combine_plan_req_ = CreateMaybeMessage< ::galbot::aphropm_proto::CombinePlanReq >(GetArena());
+  }
+  return Request_.combine_plan_req_;
+}
+inline ::galbot::aphropm_proto::CombinePlanReq* MotionPlanServerRequest::mutable_combine_plan_req() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.MotionPlanServerRequest.combine_plan_req)
+  return _internal_mutable_combine_plan_req();
+}
+
 // .google.protobuf.BoolValue enable_env_collision_check = 50;
 inline bool MotionPlanServerRequest::_internal_has_enable_env_collision_check() const {
   return this != internal_default_instance() && enable_env_collision_check_ != nullptr;
@@ -11608,6 +16645,67 @@ inline void MotionPlanServerRequest::set_allocated_enable_env_collision_check(PR
   }
   enable_env_collision_check_ = enable_env_collision_check;
   // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.MotionPlanServerRequest.enable_env_collision_check)
+}
+
+// string common_str = 300;
+inline void MotionPlanServerRequest::clear_common_str() {
+  common_str_.ClearToEmpty();
+}
+inline const std::string& MotionPlanServerRequest::common_str() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.MotionPlanServerRequest.common_str)
+  return _internal_common_str();
+}
+inline void MotionPlanServerRequest::set_common_str(const std::string& value) {
+  _internal_set_common_str(value);
+  // @@protoc_insertion_point(field_set:galbot.aphropm_proto.MotionPlanServerRequest.common_str)
+}
+inline std::string* MotionPlanServerRequest::mutable_common_str() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.MotionPlanServerRequest.common_str)
+  return _internal_mutable_common_str();
+}
+inline const std::string& MotionPlanServerRequest::_internal_common_str() const {
+  return common_str_.Get();
+}
+inline void MotionPlanServerRequest::_internal_set_common_str(const std::string& value) {
+  
+  common_str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArena());
+}
+inline void MotionPlanServerRequest::set_common_str(std::string&& value) {
+  
+  common_str_.Set(
+    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::move(value), GetArena());
+  // @@protoc_insertion_point(field_set_rvalue:galbot.aphropm_proto.MotionPlanServerRequest.common_str)
+}
+inline void MotionPlanServerRequest::set_common_str(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  common_str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(value), GetArena());
+  // @@protoc_insertion_point(field_set_char:galbot.aphropm_proto.MotionPlanServerRequest.common_str)
+}
+inline void MotionPlanServerRequest::set_common_str(const char* value,
+    size_t size) {
+  
+  common_str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(
+      reinterpret_cast<const char*>(value), size), GetArena());
+  // @@protoc_insertion_point(field_set_pointer:galbot.aphropm_proto.MotionPlanServerRequest.common_str)
+}
+inline std::string* MotionPlanServerRequest::_internal_mutable_common_str() {
+  
+  return common_str_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArena());
+}
+inline std::string* MotionPlanServerRequest::release_common_str() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.MotionPlanServerRequest.common_str)
+  return common_str_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline void MotionPlanServerRequest::set_allocated_common_str(std::string* common_str) {
+  if (common_str != nullptr) {
+    
+  } else {
+    
+  }
+  common_str_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), common_str,
+      GetArena());
+  // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.MotionPlanServerRequest.common_str)
 }
 
 inline bool MotionPlanServerRequest::has_Request() const {
@@ -11713,6 +16811,785 @@ inline ::PROTOBUF_NAMESPACE_ID::Map< std::string, ::galbot::core_proto::Matrix >
 JacobianResult::mutable_jacobian_result() {
   // @@protoc_insertion_point(field_mutable_map:galbot.aphropm_proto.JacobianResult.jacobian_result)
   return _internal_mutable_jacobian_result();
+}
+
+// -------------------------------------------------------------------
+
+// InverseKinematicReq
+
+// .galbot.aphropm_proto.RobotStatesMsg robot_state = 1;
+inline bool InverseKinematicReq::_internal_has_robot_state() const {
+  return this != internal_default_instance() && robot_state_ != nullptr;
+}
+inline bool InverseKinematicReq::has_robot_state() const {
+  return _internal_has_robot_state();
+}
+inline const ::galbot::aphropm_proto::RobotStatesMsg& InverseKinematicReq::_internal_robot_state() const {
+  const ::galbot::aphropm_proto::RobotStatesMsg* p = robot_state_;
+  return p != nullptr ? *p : reinterpret_cast<const ::galbot::aphropm_proto::RobotStatesMsg&>(
+      ::galbot::aphropm_proto::_RobotStatesMsg_default_instance_);
+}
+inline const ::galbot::aphropm_proto::RobotStatesMsg& InverseKinematicReq::robot_state() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.InverseKinematicReq.robot_state)
+  return _internal_robot_state();
+}
+inline void InverseKinematicReq::unsafe_arena_set_allocated_robot_state(
+    ::galbot::aphropm_proto::RobotStatesMsg* robot_state) {
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(robot_state_);
+  }
+  robot_state_ = robot_state;
+  if (robot_state) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:galbot.aphropm_proto.InverseKinematicReq.robot_state)
+}
+inline ::galbot::aphropm_proto::RobotStatesMsg* InverseKinematicReq::release_robot_state() {
+  
+  ::galbot::aphropm_proto::RobotStatesMsg* temp = robot_state_;
+  robot_state_ = nullptr;
+  if (GetArena() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+  return temp;
+}
+inline ::galbot::aphropm_proto::RobotStatesMsg* InverseKinematicReq::unsafe_arena_release_robot_state() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.InverseKinematicReq.robot_state)
+  
+  ::galbot::aphropm_proto::RobotStatesMsg* temp = robot_state_;
+  robot_state_ = nullptr;
+  return temp;
+}
+inline ::galbot::aphropm_proto::RobotStatesMsg* InverseKinematicReq::_internal_mutable_robot_state() {
+  
+  if (robot_state_ == nullptr) {
+    auto* p = CreateMaybeMessage<::galbot::aphropm_proto::RobotStatesMsg>(GetArena());
+    robot_state_ = p;
+  }
+  return robot_state_;
+}
+inline ::galbot::aphropm_proto::RobotStatesMsg* InverseKinematicReq::mutable_robot_state() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.InverseKinematicReq.robot_state)
+  return _internal_mutable_robot_state();
+}
+inline void InverseKinematicReq::set_allocated_robot_state(::galbot::aphropm_proto::RobotStatesMsg* robot_state) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArena();
+  if (message_arena == nullptr) {
+    delete reinterpret_cast< ::PROTOBUF_NAMESPACE_ID::MessageLite*>(robot_state_);
+  }
+  if (robot_state) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+      reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(robot_state)->GetArena();
+    if (message_arena != submessage_arena) {
+      robot_state = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, robot_state, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  robot_state_ = robot_state;
+  // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.InverseKinematicReq.robot_state)
+}
+
+// .galbot.aphropm_proto.MotionPlanTarget robot_target = 2;
+inline bool InverseKinematicReq::_internal_has_robot_target() const {
+  return this != internal_default_instance() && robot_target_ != nullptr;
+}
+inline bool InverseKinematicReq::has_robot_target() const {
+  return _internal_has_robot_target();
+}
+inline void InverseKinematicReq::clear_robot_target() {
+  if (GetArena() == nullptr && robot_target_ != nullptr) {
+    delete robot_target_;
+  }
+  robot_target_ = nullptr;
+}
+inline const ::galbot::aphropm_proto::MotionPlanTarget& InverseKinematicReq::_internal_robot_target() const {
+  const ::galbot::aphropm_proto::MotionPlanTarget* p = robot_target_;
+  return p != nullptr ? *p : reinterpret_cast<const ::galbot::aphropm_proto::MotionPlanTarget&>(
+      ::galbot::aphropm_proto::_MotionPlanTarget_default_instance_);
+}
+inline const ::galbot::aphropm_proto::MotionPlanTarget& InverseKinematicReq::robot_target() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.InverseKinematicReq.robot_target)
+  return _internal_robot_target();
+}
+inline void InverseKinematicReq::unsafe_arena_set_allocated_robot_target(
+    ::galbot::aphropm_proto::MotionPlanTarget* robot_target) {
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(robot_target_);
+  }
+  robot_target_ = robot_target;
+  if (robot_target) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:galbot.aphropm_proto.InverseKinematicReq.robot_target)
+}
+inline ::galbot::aphropm_proto::MotionPlanTarget* InverseKinematicReq::release_robot_target() {
+  
+  ::galbot::aphropm_proto::MotionPlanTarget* temp = robot_target_;
+  robot_target_ = nullptr;
+  if (GetArena() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+  return temp;
+}
+inline ::galbot::aphropm_proto::MotionPlanTarget* InverseKinematicReq::unsafe_arena_release_robot_target() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.InverseKinematicReq.robot_target)
+  
+  ::galbot::aphropm_proto::MotionPlanTarget* temp = robot_target_;
+  robot_target_ = nullptr;
+  return temp;
+}
+inline ::galbot::aphropm_proto::MotionPlanTarget* InverseKinematicReq::_internal_mutable_robot_target() {
+  
+  if (robot_target_ == nullptr) {
+    auto* p = CreateMaybeMessage<::galbot::aphropm_proto::MotionPlanTarget>(GetArena());
+    robot_target_ = p;
+  }
+  return robot_target_;
+}
+inline ::galbot::aphropm_proto::MotionPlanTarget* InverseKinematicReq::mutable_robot_target() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.InverseKinematicReq.robot_target)
+  return _internal_mutable_robot_target();
+}
+inline void InverseKinematicReq::set_allocated_robot_target(::galbot::aphropm_proto::MotionPlanTarget* robot_target) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArena();
+  if (message_arena == nullptr) {
+    delete robot_target_;
+  }
+  if (robot_target) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+      ::PROTOBUF_NAMESPACE_ID::Arena::GetArena(robot_target);
+    if (message_arena != submessage_arena) {
+      robot_target = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, robot_target, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  robot_target_ = robot_target;
+  // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.InverseKinematicReq.robot_target)
+}
+
+// string common_str = 300;
+inline void InverseKinematicReq::clear_common_str() {
+  common_str_.ClearToEmpty();
+}
+inline const std::string& InverseKinematicReq::common_str() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.InverseKinematicReq.common_str)
+  return _internal_common_str();
+}
+inline void InverseKinematicReq::set_common_str(const std::string& value) {
+  _internal_set_common_str(value);
+  // @@protoc_insertion_point(field_set:galbot.aphropm_proto.InverseKinematicReq.common_str)
+}
+inline std::string* InverseKinematicReq::mutable_common_str() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.InverseKinematicReq.common_str)
+  return _internal_mutable_common_str();
+}
+inline const std::string& InverseKinematicReq::_internal_common_str() const {
+  return common_str_.Get();
+}
+inline void InverseKinematicReq::_internal_set_common_str(const std::string& value) {
+  
+  common_str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArena());
+}
+inline void InverseKinematicReq::set_common_str(std::string&& value) {
+  
+  common_str_.Set(
+    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::move(value), GetArena());
+  // @@protoc_insertion_point(field_set_rvalue:galbot.aphropm_proto.InverseKinematicReq.common_str)
+}
+inline void InverseKinematicReq::set_common_str(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  common_str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(value), GetArena());
+  // @@protoc_insertion_point(field_set_char:galbot.aphropm_proto.InverseKinematicReq.common_str)
+}
+inline void InverseKinematicReq::set_common_str(const char* value,
+    size_t size) {
+  
+  common_str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(
+      reinterpret_cast<const char*>(value), size), GetArena());
+  // @@protoc_insertion_point(field_set_pointer:galbot.aphropm_proto.InverseKinematicReq.common_str)
+}
+inline std::string* InverseKinematicReq::_internal_mutable_common_str() {
+  
+  return common_str_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArena());
+}
+inline std::string* InverseKinematicReq::release_common_str() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.InverseKinematicReq.common_str)
+  return common_str_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline void InverseKinematicReq::set_allocated_common_str(std::string* common_str) {
+  if (common_str != nullptr) {
+    
+  } else {
+    
+  }
+  common_str_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), common_str,
+      GetArena());
+  // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.InverseKinematicReq.common_str)
+}
+
+// -------------------------------------------------------------------
+
+// ForwardKinematicReq
+
+// repeated string link_names = 1;
+inline int ForwardKinematicReq::_internal_link_names_size() const {
+  return link_names_.size();
+}
+inline int ForwardKinematicReq::link_names_size() const {
+  return _internal_link_names_size();
+}
+inline void ForwardKinematicReq::clear_link_names() {
+  link_names_.Clear();
+}
+inline std::string* ForwardKinematicReq::add_link_names() {
+  // @@protoc_insertion_point(field_add_mutable:galbot.aphropm_proto.ForwardKinematicReq.link_names)
+  return _internal_add_link_names();
+}
+inline const std::string& ForwardKinematicReq::_internal_link_names(int index) const {
+  return link_names_.Get(index);
+}
+inline const std::string& ForwardKinematicReq::link_names(int index) const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.ForwardKinematicReq.link_names)
+  return _internal_link_names(index);
+}
+inline std::string* ForwardKinematicReq::mutable_link_names(int index) {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.ForwardKinematicReq.link_names)
+  return link_names_.Mutable(index);
+}
+inline void ForwardKinematicReq::set_link_names(int index, const std::string& value) {
+  // @@protoc_insertion_point(field_set:galbot.aphropm_proto.ForwardKinematicReq.link_names)
+  link_names_.Mutable(index)->assign(value);
+}
+inline void ForwardKinematicReq::set_link_names(int index, std::string&& value) {
+  // @@protoc_insertion_point(field_set:galbot.aphropm_proto.ForwardKinematicReq.link_names)
+  link_names_.Mutable(index)->assign(std::move(value));
+}
+inline void ForwardKinematicReq::set_link_names(int index, const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  link_names_.Mutable(index)->assign(value);
+  // @@protoc_insertion_point(field_set_char:galbot.aphropm_proto.ForwardKinematicReq.link_names)
+}
+inline void ForwardKinematicReq::set_link_names(int index, const char* value, size_t size) {
+  link_names_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:galbot.aphropm_proto.ForwardKinematicReq.link_names)
+}
+inline std::string* ForwardKinematicReq::_internal_add_link_names() {
+  return link_names_.Add();
+}
+inline void ForwardKinematicReq::add_link_names(const std::string& value) {
+  link_names_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add:galbot.aphropm_proto.ForwardKinematicReq.link_names)
+}
+inline void ForwardKinematicReq::add_link_names(std::string&& value) {
+  link_names_.Add(std::move(value));
+  // @@protoc_insertion_point(field_add:galbot.aphropm_proto.ForwardKinematicReq.link_names)
+}
+inline void ForwardKinematicReq::add_link_names(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  link_names_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add_char:galbot.aphropm_proto.ForwardKinematicReq.link_names)
+}
+inline void ForwardKinematicReq::add_link_names(const char* value, size_t size) {
+  link_names_.Add()->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_add_pointer:galbot.aphropm_proto.ForwardKinematicReq.link_names)
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>&
+ForwardKinematicReq::link_names() const {
+  // @@protoc_insertion_point(field_list:galbot.aphropm_proto.ForwardKinematicReq.link_names)
+  return link_names_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>*
+ForwardKinematicReq::mutable_link_names() {
+  // @@protoc_insertion_point(field_mutable_list:galbot.aphropm_proto.ForwardKinematicReq.link_names)
+  return &link_names_;
+}
+
+// .galbot.aphropm_proto.RobotStatesMsg robot_state = 2;
+inline bool ForwardKinematicReq::_internal_has_robot_state() const {
+  return this != internal_default_instance() && robot_state_ != nullptr;
+}
+inline bool ForwardKinematicReq::has_robot_state() const {
+  return _internal_has_robot_state();
+}
+inline const ::galbot::aphropm_proto::RobotStatesMsg& ForwardKinematicReq::_internal_robot_state() const {
+  const ::galbot::aphropm_proto::RobotStatesMsg* p = robot_state_;
+  return p != nullptr ? *p : reinterpret_cast<const ::galbot::aphropm_proto::RobotStatesMsg&>(
+      ::galbot::aphropm_proto::_RobotStatesMsg_default_instance_);
+}
+inline const ::galbot::aphropm_proto::RobotStatesMsg& ForwardKinematicReq::robot_state() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.ForwardKinematicReq.robot_state)
+  return _internal_robot_state();
+}
+inline void ForwardKinematicReq::unsafe_arena_set_allocated_robot_state(
+    ::galbot::aphropm_proto::RobotStatesMsg* robot_state) {
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(robot_state_);
+  }
+  robot_state_ = robot_state;
+  if (robot_state) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:galbot.aphropm_proto.ForwardKinematicReq.robot_state)
+}
+inline ::galbot::aphropm_proto::RobotStatesMsg* ForwardKinematicReq::release_robot_state() {
+  
+  ::galbot::aphropm_proto::RobotStatesMsg* temp = robot_state_;
+  robot_state_ = nullptr;
+  if (GetArena() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+  return temp;
+}
+inline ::galbot::aphropm_proto::RobotStatesMsg* ForwardKinematicReq::unsafe_arena_release_robot_state() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.ForwardKinematicReq.robot_state)
+  
+  ::galbot::aphropm_proto::RobotStatesMsg* temp = robot_state_;
+  robot_state_ = nullptr;
+  return temp;
+}
+inline ::galbot::aphropm_proto::RobotStatesMsg* ForwardKinematicReq::_internal_mutable_robot_state() {
+  
+  if (robot_state_ == nullptr) {
+    auto* p = CreateMaybeMessage<::galbot::aphropm_proto::RobotStatesMsg>(GetArena());
+    robot_state_ = p;
+  }
+  return robot_state_;
+}
+inline ::galbot::aphropm_proto::RobotStatesMsg* ForwardKinematicReq::mutable_robot_state() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.ForwardKinematicReq.robot_state)
+  return _internal_mutable_robot_state();
+}
+inline void ForwardKinematicReq::set_allocated_robot_state(::galbot::aphropm_proto::RobotStatesMsg* robot_state) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArena();
+  if (message_arena == nullptr) {
+    delete reinterpret_cast< ::PROTOBUF_NAMESPACE_ID::MessageLite*>(robot_state_);
+  }
+  if (robot_state) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+      reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(robot_state)->GetArena();
+    if (message_arena != submessage_arena) {
+      robot_state = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, robot_state, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  robot_state_ = robot_state;
+  // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.ForwardKinematicReq.robot_state)
+}
+
+// string reference_frame_name = 3;
+inline void ForwardKinematicReq::clear_reference_frame_name() {
+  reference_frame_name_.ClearToEmpty();
+}
+inline const std::string& ForwardKinematicReq::reference_frame_name() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.ForwardKinematicReq.reference_frame_name)
+  return _internal_reference_frame_name();
+}
+inline void ForwardKinematicReq::set_reference_frame_name(const std::string& value) {
+  _internal_set_reference_frame_name(value);
+  // @@protoc_insertion_point(field_set:galbot.aphropm_proto.ForwardKinematicReq.reference_frame_name)
+}
+inline std::string* ForwardKinematicReq::mutable_reference_frame_name() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.ForwardKinematicReq.reference_frame_name)
+  return _internal_mutable_reference_frame_name();
+}
+inline const std::string& ForwardKinematicReq::_internal_reference_frame_name() const {
+  return reference_frame_name_.Get();
+}
+inline void ForwardKinematicReq::_internal_set_reference_frame_name(const std::string& value) {
+  
+  reference_frame_name_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArena());
+}
+inline void ForwardKinematicReq::set_reference_frame_name(std::string&& value) {
+  
+  reference_frame_name_.Set(
+    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::move(value), GetArena());
+  // @@protoc_insertion_point(field_set_rvalue:galbot.aphropm_proto.ForwardKinematicReq.reference_frame_name)
+}
+inline void ForwardKinematicReq::set_reference_frame_name(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  reference_frame_name_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(value), GetArena());
+  // @@protoc_insertion_point(field_set_char:galbot.aphropm_proto.ForwardKinematicReq.reference_frame_name)
+}
+inline void ForwardKinematicReq::set_reference_frame_name(const char* value,
+    size_t size) {
+  
+  reference_frame_name_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(
+      reinterpret_cast<const char*>(value), size), GetArena());
+  // @@protoc_insertion_point(field_set_pointer:galbot.aphropm_proto.ForwardKinematicReq.reference_frame_name)
+}
+inline std::string* ForwardKinematicReq::_internal_mutable_reference_frame_name() {
+  
+  return reference_frame_name_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArena());
+}
+inline std::string* ForwardKinematicReq::release_reference_frame_name() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.ForwardKinematicReq.reference_frame_name)
+  return reference_frame_name_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline void ForwardKinematicReq::set_allocated_reference_frame_name(std::string* reference_frame_name) {
+  if (reference_frame_name != nullptr) {
+    
+  } else {
+    
+  }
+  reference_frame_name_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), reference_frame_name,
+      GetArena());
+  // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.ForwardKinematicReq.reference_frame_name)
+}
+
+// string common_str = 300;
+inline void ForwardKinematicReq::clear_common_str() {
+  common_str_.ClearToEmpty();
+}
+inline const std::string& ForwardKinematicReq::common_str() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.ForwardKinematicReq.common_str)
+  return _internal_common_str();
+}
+inline void ForwardKinematicReq::set_common_str(const std::string& value) {
+  _internal_set_common_str(value);
+  // @@protoc_insertion_point(field_set:galbot.aphropm_proto.ForwardKinematicReq.common_str)
+}
+inline std::string* ForwardKinematicReq::mutable_common_str() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.ForwardKinematicReq.common_str)
+  return _internal_mutable_common_str();
+}
+inline const std::string& ForwardKinematicReq::_internal_common_str() const {
+  return common_str_.Get();
+}
+inline void ForwardKinematicReq::_internal_set_common_str(const std::string& value) {
+  
+  common_str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArena());
+}
+inline void ForwardKinematicReq::set_common_str(std::string&& value) {
+  
+  common_str_.Set(
+    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::move(value), GetArena());
+  // @@protoc_insertion_point(field_set_rvalue:galbot.aphropm_proto.ForwardKinematicReq.common_str)
+}
+inline void ForwardKinematicReq::set_common_str(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  common_str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(value), GetArena());
+  // @@protoc_insertion_point(field_set_char:galbot.aphropm_proto.ForwardKinematicReq.common_str)
+}
+inline void ForwardKinematicReq::set_common_str(const char* value,
+    size_t size) {
+  
+  common_str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(
+      reinterpret_cast<const char*>(value), size), GetArena());
+  // @@protoc_insertion_point(field_set_pointer:galbot.aphropm_proto.ForwardKinematicReq.common_str)
+}
+inline std::string* ForwardKinematicReq::_internal_mutable_common_str() {
+  
+  return common_str_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArena());
+}
+inline std::string* ForwardKinematicReq::release_common_str() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.ForwardKinematicReq.common_str)
+  return common_str_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline void ForwardKinematicReq::set_allocated_common_str(std::string* common_str) {
+  if (common_str != nullptr) {
+    
+  } else {
+    
+  }
+  common_str_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), common_str,
+      GetArena());
+  // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.ForwardKinematicReq.common_str)
+}
+
+// -------------------------------------------------------------------
+
+// JacobianReqMsg
+
+// repeated string link_names = 1;
+inline int JacobianReqMsg::_internal_link_names_size() const {
+  return link_names_.size();
+}
+inline int JacobianReqMsg::link_names_size() const {
+  return _internal_link_names_size();
+}
+inline void JacobianReqMsg::clear_link_names() {
+  link_names_.Clear();
+}
+inline std::string* JacobianReqMsg::add_link_names() {
+  // @@protoc_insertion_point(field_add_mutable:galbot.aphropm_proto.JacobianReqMsg.link_names)
+  return _internal_add_link_names();
+}
+inline const std::string& JacobianReqMsg::_internal_link_names(int index) const {
+  return link_names_.Get(index);
+}
+inline const std::string& JacobianReqMsg::link_names(int index) const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.JacobianReqMsg.link_names)
+  return _internal_link_names(index);
+}
+inline std::string* JacobianReqMsg::mutable_link_names(int index) {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.JacobianReqMsg.link_names)
+  return link_names_.Mutable(index);
+}
+inline void JacobianReqMsg::set_link_names(int index, const std::string& value) {
+  // @@protoc_insertion_point(field_set:galbot.aphropm_proto.JacobianReqMsg.link_names)
+  link_names_.Mutable(index)->assign(value);
+}
+inline void JacobianReqMsg::set_link_names(int index, std::string&& value) {
+  // @@protoc_insertion_point(field_set:galbot.aphropm_proto.JacobianReqMsg.link_names)
+  link_names_.Mutable(index)->assign(std::move(value));
+}
+inline void JacobianReqMsg::set_link_names(int index, const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  link_names_.Mutable(index)->assign(value);
+  // @@protoc_insertion_point(field_set_char:galbot.aphropm_proto.JacobianReqMsg.link_names)
+}
+inline void JacobianReqMsg::set_link_names(int index, const char* value, size_t size) {
+  link_names_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:galbot.aphropm_proto.JacobianReqMsg.link_names)
+}
+inline std::string* JacobianReqMsg::_internal_add_link_names() {
+  return link_names_.Add();
+}
+inline void JacobianReqMsg::add_link_names(const std::string& value) {
+  link_names_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add:galbot.aphropm_proto.JacobianReqMsg.link_names)
+}
+inline void JacobianReqMsg::add_link_names(std::string&& value) {
+  link_names_.Add(std::move(value));
+  // @@protoc_insertion_point(field_add:galbot.aphropm_proto.JacobianReqMsg.link_names)
+}
+inline void JacobianReqMsg::add_link_names(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  link_names_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add_char:galbot.aphropm_proto.JacobianReqMsg.link_names)
+}
+inline void JacobianReqMsg::add_link_names(const char* value, size_t size) {
+  link_names_.Add()->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_add_pointer:galbot.aphropm_proto.JacobianReqMsg.link_names)
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>&
+JacobianReqMsg::link_names() const {
+  // @@protoc_insertion_point(field_list:galbot.aphropm_proto.JacobianReqMsg.link_names)
+  return link_names_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>*
+JacobianReqMsg::mutable_link_names() {
+  // @@protoc_insertion_point(field_mutable_list:galbot.aphropm_proto.JacobianReqMsg.link_names)
+  return &link_names_;
+}
+
+// .galbot.aphropm_proto.RobotStatesMsg robot_state = 2;
+inline bool JacobianReqMsg::_internal_has_robot_state() const {
+  return this != internal_default_instance() && robot_state_ != nullptr;
+}
+inline bool JacobianReqMsg::has_robot_state() const {
+  return _internal_has_robot_state();
+}
+inline const ::galbot::aphropm_proto::RobotStatesMsg& JacobianReqMsg::_internal_robot_state() const {
+  const ::galbot::aphropm_proto::RobotStatesMsg* p = robot_state_;
+  return p != nullptr ? *p : reinterpret_cast<const ::galbot::aphropm_proto::RobotStatesMsg&>(
+      ::galbot::aphropm_proto::_RobotStatesMsg_default_instance_);
+}
+inline const ::galbot::aphropm_proto::RobotStatesMsg& JacobianReqMsg::robot_state() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.JacobianReqMsg.robot_state)
+  return _internal_robot_state();
+}
+inline void JacobianReqMsg::unsafe_arena_set_allocated_robot_state(
+    ::galbot::aphropm_proto::RobotStatesMsg* robot_state) {
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(robot_state_);
+  }
+  robot_state_ = robot_state;
+  if (robot_state) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:galbot.aphropm_proto.JacobianReqMsg.robot_state)
+}
+inline ::galbot::aphropm_proto::RobotStatesMsg* JacobianReqMsg::release_robot_state() {
+  
+  ::galbot::aphropm_proto::RobotStatesMsg* temp = robot_state_;
+  robot_state_ = nullptr;
+  if (GetArena() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+  return temp;
+}
+inline ::galbot::aphropm_proto::RobotStatesMsg* JacobianReqMsg::unsafe_arena_release_robot_state() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.JacobianReqMsg.robot_state)
+  
+  ::galbot::aphropm_proto::RobotStatesMsg* temp = robot_state_;
+  robot_state_ = nullptr;
+  return temp;
+}
+inline ::galbot::aphropm_proto::RobotStatesMsg* JacobianReqMsg::_internal_mutable_robot_state() {
+  
+  if (robot_state_ == nullptr) {
+    auto* p = CreateMaybeMessage<::galbot::aphropm_proto::RobotStatesMsg>(GetArena());
+    robot_state_ = p;
+  }
+  return robot_state_;
+}
+inline ::galbot::aphropm_proto::RobotStatesMsg* JacobianReqMsg::mutable_robot_state() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.JacobianReqMsg.robot_state)
+  return _internal_mutable_robot_state();
+}
+inline void JacobianReqMsg::set_allocated_robot_state(::galbot::aphropm_proto::RobotStatesMsg* robot_state) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArena();
+  if (message_arena == nullptr) {
+    delete reinterpret_cast< ::PROTOBUF_NAMESPACE_ID::MessageLite*>(robot_state_);
+  }
+  if (robot_state) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+      reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(robot_state)->GetArena();
+    if (message_arena != submessage_arena) {
+      robot_state = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, robot_state, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  robot_state_ = robot_state;
+  // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.JacobianReqMsg.robot_state)
+}
+
+// string reference_frame_name = 3;
+inline void JacobianReqMsg::clear_reference_frame_name() {
+  reference_frame_name_.ClearToEmpty();
+}
+inline const std::string& JacobianReqMsg::reference_frame_name() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.JacobianReqMsg.reference_frame_name)
+  return _internal_reference_frame_name();
+}
+inline void JacobianReqMsg::set_reference_frame_name(const std::string& value) {
+  _internal_set_reference_frame_name(value);
+  // @@protoc_insertion_point(field_set:galbot.aphropm_proto.JacobianReqMsg.reference_frame_name)
+}
+inline std::string* JacobianReqMsg::mutable_reference_frame_name() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.JacobianReqMsg.reference_frame_name)
+  return _internal_mutable_reference_frame_name();
+}
+inline const std::string& JacobianReqMsg::_internal_reference_frame_name() const {
+  return reference_frame_name_.Get();
+}
+inline void JacobianReqMsg::_internal_set_reference_frame_name(const std::string& value) {
+  
+  reference_frame_name_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArena());
+}
+inline void JacobianReqMsg::set_reference_frame_name(std::string&& value) {
+  
+  reference_frame_name_.Set(
+    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::move(value), GetArena());
+  // @@protoc_insertion_point(field_set_rvalue:galbot.aphropm_proto.JacobianReqMsg.reference_frame_name)
+}
+inline void JacobianReqMsg::set_reference_frame_name(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  reference_frame_name_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(value), GetArena());
+  // @@protoc_insertion_point(field_set_char:galbot.aphropm_proto.JacobianReqMsg.reference_frame_name)
+}
+inline void JacobianReqMsg::set_reference_frame_name(const char* value,
+    size_t size) {
+  
+  reference_frame_name_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(
+      reinterpret_cast<const char*>(value), size), GetArena());
+  // @@protoc_insertion_point(field_set_pointer:galbot.aphropm_proto.JacobianReqMsg.reference_frame_name)
+}
+inline std::string* JacobianReqMsg::_internal_mutable_reference_frame_name() {
+  
+  return reference_frame_name_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArena());
+}
+inline std::string* JacobianReqMsg::release_reference_frame_name() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.JacobianReqMsg.reference_frame_name)
+  return reference_frame_name_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline void JacobianReqMsg::set_allocated_reference_frame_name(std::string* reference_frame_name) {
+  if (reference_frame_name != nullptr) {
+    
+  } else {
+    
+  }
+  reference_frame_name_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), reference_frame_name,
+      GetArena());
+  // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.JacobianReqMsg.reference_frame_name)
+}
+
+// string common_str = 300;
+inline void JacobianReqMsg::clear_common_str() {
+  common_str_.ClearToEmpty();
+}
+inline const std::string& JacobianReqMsg::common_str() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.JacobianReqMsg.common_str)
+  return _internal_common_str();
+}
+inline void JacobianReqMsg::set_common_str(const std::string& value) {
+  _internal_set_common_str(value);
+  // @@protoc_insertion_point(field_set:galbot.aphropm_proto.JacobianReqMsg.common_str)
+}
+inline std::string* JacobianReqMsg::mutable_common_str() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.JacobianReqMsg.common_str)
+  return _internal_mutable_common_str();
+}
+inline const std::string& JacobianReqMsg::_internal_common_str() const {
+  return common_str_.Get();
+}
+inline void JacobianReqMsg::_internal_set_common_str(const std::string& value) {
+  
+  common_str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArena());
+}
+inline void JacobianReqMsg::set_common_str(std::string&& value) {
+  
+  common_str_.Set(
+    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::move(value), GetArena());
+  // @@protoc_insertion_point(field_set_rvalue:galbot.aphropm_proto.JacobianReqMsg.common_str)
+}
+inline void JacobianReqMsg::set_common_str(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  common_str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(value), GetArena());
+  // @@protoc_insertion_point(field_set_char:galbot.aphropm_proto.JacobianReqMsg.common_str)
+}
+inline void JacobianReqMsg::set_common_str(const char* value,
+    size_t size) {
+  
+  common_str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(
+      reinterpret_cast<const char*>(value), size), GetArena());
+  // @@protoc_insertion_point(field_set_pointer:galbot.aphropm_proto.JacobianReqMsg.common_str)
+}
+inline std::string* JacobianReqMsg::_internal_mutable_common_str() {
+  
+  return common_str_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArena());
+}
+inline std::string* JacobianReqMsg::release_common_str() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.JacobianReqMsg.common_str)
+  return common_str_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline void JacobianReqMsg::set_allocated_common_str(std::string* common_str) {
+  if (common_str != nullptr) {
+    
+  } else {
+    
+  }
+  common_str_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), common_str,
+      GetArena());
+  // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.JacobianReqMsg.common_str)
 }
 
 // -------------------------------------------------------------------
@@ -11888,6 +17765,248 @@ inline void JacobianRequest::_internal_set_parent_frame(::galbot::aphropm_proto:
 inline void JacobianRequest::set_parent_frame(::galbot::aphropm_proto::MapFrame value) {
   _internal_set_parent_frame(value);
   // @@protoc_insertion_point(field_set:galbot.aphropm_proto.JacobianRequest.parent_frame)
+}
+
+// -------------------------------------------------------------------
+
+// CheckCollisionReq
+
+// repeated .galbot.aphropm_proto.RobotStatesMsg robot_state = 1;
+inline int CheckCollisionReq::_internal_robot_state_size() const {
+  return robot_state_.size();
+}
+inline int CheckCollisionReq::robot_state_size() const {
+  return _internal_robot_state_size();
+}
+inline ::galbot::aphropm_proto::RobotStatesMsg* CheckCollisionReq::mutable_robot_state(int index) {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.CheckCollisionReq.robot_state)
+  return robot_state_.Mutable(index);
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::galbot::aphropm_proto::RobotStatesMsg >*
+CheckCollisionReq::mutable_robot_state() {
+  // @@protoc_insertion_point(field_mutable_list:galbot.aphropm_proto.CheckCollisionReq.robot_state)
+  return &robot_state_;
+}
+inline const ::galbot::aphropm_proto::RobotStatesMsg& CheckCollisionReq::_internal_robot_state(int index) const {
+  return robot_state_.Get(index);
+}
+inline const ::galbot::aphropm_proto::RobotStatesMsg& CheckCollisionReq::robot_state(int index) const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.CheckCollisionReq.robot_state)
+  return _internal_robot_state(index);
+}
+inline ::galbot::aphropm_proto::RobotStatesMsg* CheckCollisionReq::_internal_add_robot_state() {
+  return robot_state_.Add();
+}
+inline ::galbot::aphropm_proto::RobotStatesMsg* CheckCollisionReq::add_robot_state() {
+  // @@protoc_insertion_point(field_add:galbot.aphropm_proto.CheckCollisionReq.robot_state)
+  return _internal_add_robot_state();
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::galbot::aphropm_proto::RobotStatesMsg >&
+CheckCollisionReq::robot_state() const {
+  // @@protoc_insertion_point(field_list:galbot.aphropm_proto.CheckCollisionReq.robot_state)
+  return robot_state_;
+}
+
+// repeated bool using_col_pair = 2;
+inline int CheckCollisionReq::_internal_using_col_pair_size() const {
+  return using_col_pair_.size();
+}
+inline int CheckCollisionReq::using_col_pair_size() const {
+  return _internal_using_col_pair_size();
+}
+inline void CheckCollisionReq::clear_using_col_pair() {
+  using_col_pair_.Clear();
+}
+inline bool CheckCollisionReq::_internal_using_col_pair(int index) const {
+  return using_col_pair_.Get(index);
+}
+inline bool CheckCollisionReq::using_col_pair(int index) const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.CheckCollisionReq.using_col_pair)
+  return _internal_using_col_pair(index);
+}
+inline void CheckCollisionReq::set_using_col_pair(int index, bool value) {
+  using_col_pair_.Set(index, value);
+  // @@protoc_insertion_point(field_set:galbot.aphropm_proto.CheckCollisionReq.using_col_pair)
+}
+inline void CheckCollisionReq::_internal_add_using_col_pair(bool value) {
+  using_col_pair_.Add(value);
+}
+inline void CheckCollisionReq::add_using_col_pair(bool value) {
+  _internal_add_using_col_pair(value);
+  // @@protoc_insertion_point(field_add:galbot.aphropm_proto.CheckCollisionReq.using_col_pair)
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedField< bool >&
+CheckCollisionReq::_internal_using_col_pair() const {
+  return using_col_pair_;
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedField< bool >&
+CheckCollisionReq::using_col_pair() const {
+  // @@protoc_insertion_point(field_list:galbot.aphropm_proto.CheckCollisionReq.using_col_pair)
+  return _internal_using_col_pair();
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedField< bool >*
+CheckCollisionReq::_internal_mutable_using_col_pair() {
+  return &using_col_pair_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedField< bool >*
+CheckCollisionReq::mutable_using_col_pair() {
+  // @@protoc_insertion_point(field_mutable_list:galbot.aphropm_proto.CheckCollisionReq.using_col_pair)
+  return _internal_mutable_using_col_pair();
+}
+
+// repeated bool is_check_once = 3;
+inline int CheckCollisionReq::_internal_is_check_once_size() const {
+  return is_check_once_.size();
+}
+inline int CheckCollisionReq::is_check_once_size() const {
+  return _internal_is_check_once_size();
+}
+inline void CheckCollisionReq::clear_is_check_once() {
+  is_check_once_.Clear();
+}
+inline bool CheckCollisionReq::_internal_is_check_once(int index) const {
+  return is_check_once_.Get(index);
+}
+inline bool CheckCollisionReq::is_check_once(int index) const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.CheckCollisionReq.is_check_once)
+  return _internal_is_check_once(index);
+}
+inline void CheckCollisionReq::set_is_check_once(int index, bool value) {
+  is_check_once_.Set(index, value);
+  // @@protoc_insertion_point(field_set:galbot.aphropm_proto.CheckCollisionReq.is_check_once)
+}
+inline void CheckCollisionReq::_internal_add_is_check_once(bool value) {
+  is_check_once_.Add(value);
+}
+inline void CheckCollisionReq::add_is_check_once(bool value) {
+  _internal_add_is_check_once(value);
+  // @@protoc_insertion_point(field_add:galbot.aphropm_proto.CheckCollisionReq.is_check_once)
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedField< bool >&
+CheckCollisionReq::_internal_is_check_once() const {
+  return is_check_once_;
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedField< bool >&
+CheckCollisionReq::is_check_once() const {
+  // @@protoc_insertion_point(field_list:galbot.aphropm_proto.CheckCollisionReq.is_check_once)
+  return _internal_is_check_once();
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedField< bool >*
+CheckCollisionReq::_internal_mutable_is_check_once() {
+  return &is_check_once_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedField< bool >*
+CheckCollisionReq::mutable_is_check_once() {
+  // @@protoc_insertion_point(field_mutable_list:galbot.aphropm_proto.CheckCollisionReq.is_check_once)
+  return _internal_mutable_is_check_once();
+}
+
+// repeated bool is_log = 4;
+inline int CheckCollisionReq::_internal_is_log_size() const {
+  return is_log_.size();
+}
+inline int CheckCollisionReq::is_log_size() const {
+  return _internal_is_log_size();
+}
+inline void CheckCollisionReq::clear_is_log() {
+  is_log_.Clear();
+}
+inline bool CheckCollisionReq::_internal_is_log(int index) const {
+  return is_log_.Get(index);
+}
+inline bool CheckCollisionReq::is_log(int index) const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.CheckCollisionReq.is_log)
+  return _internal_is_log(index);
+}
+inline void CheckCollisionReq::set_is_log(int index, bool value) {
+  is_log_.Set(index, value);
+  // @@protoc_insertion_point(field_set:galbot.aphropm_proto.CheckCollisionReq.is_log)
+}
+inline void CheckCollisionReq::_internal_add_is_log(bool value) {
+  is_log_.Add(value);
+}
+inline void CheckCollisionReq::add_is_log(bool value) {
+  _internal_add_is_log(value);
+  // @@protoc_insertion_point(field_add:galbot.aphropm_proto.CheckCollisionReq.is_log)
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedField< bool >&
+CheckCollisionReq::_internal_is_log() const {
+  return is_log_;
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedField< bool >&
+CheckCollisionReq::is_log() const {
+  // @@protoc_insertion_point(field_list:galbot.aphropm_proto.CheckCollisionReq.is_log)
+  return _internal_is_log();
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedField< bool >*
+CheckCollisionReq::_internal_mutable_is_log() {
+  return &is_log_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedField< bool >*
+CheckCollisionReq::mutable_is_log() {
+  // @@protoc_insertion_point(field_mutable_list:galbot.aphropm_proto.CheckCollisionReq.is_log)
+  return _internal_mutable_is_log();
+}
+
+// string common_str = 300;
+inline void CheckCollisionReq::clear_common_str() {
+  common_str_.ClearToEmpty();
+}
+inline const std::string& CheckCollisionReq::common_str() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.CheckCollisionReq.common_str)
+  return _internal_common_str();
+}
+inline void CheckCollisionReq::set_common_str(const std::string& value) {
+  _internal_set_common_str(value);
+  // @@protoc_insertion_point(field_set:galbot.aphropm_proto.CheckCollisionReq.common_str)
+}
+inline std::string* CheckCollisionReq::mutable_common_str() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.CheckCollisionReq.common_str)
+  return _internal_mutable_common_str();
+}
+inline const std::string& CheckCollisionReq::_internal_common_str() const {
+  return common_str_.Get();
+}
+inline void CheckCollisionReq::_internal_set_common_str(const std::string& value) {
+  
+  common_str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArena());
+}
+inline void CheckCollisionReq::set_common_str(std::string&& value) {
+  
+  common_str_.Set(
+    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::move(value), GetArena());
+  // @@protoc_insertion_point(field_set_rvalue:galbot.aphropm_proto.CheckCollisionReq.common_str)
+}
+inline void CheckCollisionReq::set_common_str(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  common_str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(value), GetArena());
+  // @@protoc_insertion_point(field_set_char:galbot.aphropm_proto.CheckCollisionReq.common_str)
+}
+inline void CheckCollisionReq::set_common_str(const char* value,
+    size_t size) {
+  
+  common_str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(
+      reinterpret_cast<const char*>(value), size), GetArena());
+  // @@protoc_insertion_point(field_set_pointer:galbot.aphropm_proto.CheckCollisionReq.common_str)
+}
+inline std::string* CheckCollisionReq::_internal_mutable_common_str() {
+  
+  return common_str_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArena());
+}
+inline std::string* CheckCollisionReq::release_common_str() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.CheckCollisionReq.common_str)
+  return common_str_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline void CheckCollisionReq::set_allocated_common_str(std::string* common_str) {
+  if (common_str != nullptr) {
+    
+  } else {
+    
+  }
+  common_str_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), common_str,
+      GetArena());
+  // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.CheckCollisionReq.common_str)
 }
 
 // -------------------------------------------------------------------
@@ -12174,6 +18293,749 @@ inline ::galbot::aphropm_proto::JacobianRequest* KinematicRequest::mutable_jacob
   return _internal_mutable_jacobian_req();
 }
 
+// .galbot.aphropm_proto.InverseKinematicReq inverse_kinematic_general_req = 5;
+inline bool KinematicRequest::_internal_has_inverse_kinematic_general_req() const {
+  return kinematic_req_case() == kInverseKinematicGeneralReq;
+}
+inline bool KinematicRequest::has_inverse_kinematic_general_req() const {
+  return _internal_has_inverse_kinematic_general_req();
+}
+inline void KinematicRequest::set_has_inverse_kinematic_general_req() {
+  _oneof_case_[0] = kInverseKinematicGeneralReq;
+}
+inline void KinematicRequest::clear_inverse_kinematic_general_req() {
+  if (_internal_has_inverse_kinematic_general_req()) {
+    if (GetArena() == nullptr) {
+      delete kinematic_req_.inverse_kinematic_general_req_;
+    }
+    clear_has_kinematic_req();
+  }
+}
+inline ::galbot::aphropm_proto::InverseKinematicReq* KinematicRequest::release_inverse_kinematic_general_req() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.KinematicRequest.inverse_kinematic_general_req)
+  if (_internal_has_inverse_kinematic_general_req()) {
+    clear_has_kinematic_req();
+      ::galbot::aphropm_proto::InverseKinematicReq* temp = kinematic_req_.inverse_kinematic_general_req_;
+    if (GetArena() != nullptr) {
+      temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+    }
+    kinematic_req_.inverse_kinematic_general_req_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::galbot::aphropm_proto::InverseKinematicReq& KinematicRequest::_internal_inverse_kinematic_general_req() const {
+  return _internal_has_inverse_kinematic_general_req()
+      ? *kinematic_req_.inverse_kinematic_general_req_
+      : reinterpret_cast< ::galbot::aphropm_proto::InverseKinematicReq&>(::galbot::aphropm_proto::_InverseKinematicReq_default_instance_);
+}
+inline const ::galbot::aphropm_proto::InverseKinematicReq& KinematicRequest::inverse_kinematic_general_req() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.KinematicRequest.inverse_kinematic_general_req)
+  return _internal_inverse_kinematic_general_req();
+}
+inline ::galbot::aphropm_proto::InverseKinematicReq* KinematicRequest::unsafe_arena_release_inverse_kinematic_general_req() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:galbot.aphropm_proto.KinematicRequest.inverse_kinematic_general_req)
+  if (_internal_has_inverse_kinematic_general_req()) {
+    clear_has_kinematic_req();
+    ::galbot::aphropm_proto::InverseKinematicReq* temp = kinematic_req_.inverse_kinematic_general_req_;
+    kinematic_req_.inverse_kinematic_general_req_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void KinematicRequest::unsafe_arena_set_allocated_inverse_kinematic_general_req(::galbot::aphropm_proto::InverseKinematicReq* inverse_kinematic_general_req) {
+  clear_kinematic_req();
+  if (inverse_kinematic_general_req) {
+    set_has_inverse_kinematic_general_req();
+    kinematic_req_.inverse_kinematic_general_req_ = inverse_kinematic_general_req;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:galbot.aphropm_proto.KinematicRequest.inverse_kinematic_general_req)
+}
+inline ::galbot::aphropm_proto::InverseKinematicReq* KinematicRequest::_internal_mutable_inverse_kinematic_general_req() {
+  if (!_internal_has_inverse_kinematic_general_req()) {
+    clear_kinematic_req();
+    set_has_inverse_kinematic_general_req();
+    kinematic_req_.inverse_kinematic_general_req_ = CreateMaybeMessage< ::galbot::aphropm_proto::InverseKinematicReq >(GetArena());
+  }
+  return kinematic_req_.inverse_kinematic_general_req_;
+}
+inline ::galbot::aphropm_proto::InverseKinematicReq* KinematicRequest::mutable_inverse_kinematic_general_req() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.KinematicRequest.inverse_kinematic_general_req)
+  return _internal_mutable_inverse_kinematic_general_req();
+}
+
+// .galbot.aphropm_proto.ForwardKinematicReq forward_kinematic_general_req = 6;
+inline bool KinematicRequest::_internal_has_forward_kinematic_general_req() const {
+  return kinematic_req_case() == kForwardKinematicGeneralReq;
+}
+inline bool KinematicRequest::has_forward_kinematic_general_req() const {
+  return _internal_has_forward_kinematic_general_req();
+}
+inline void KinematicRequest::set_has_forward_kinematic_general_req() {
+  _oneof_case_[0] = kForwardKinematicGeneralReq;
+}
+inline void KinematicRequest::clear_forward_kinematic_general_req() {
+  if (_internal_has_forward_kinematic_general_req()) {
+    if (GetArena() == nullptr) {
+      delete kinematic_req_.forward_kinematic_general_req_;
+    }
+    clear_has_kinematic_req();
+  }
+}
+inline ::galbot::aphropm_proto::ForwardKinematicReq* KinematicRequest::release_forward_kinematic_general_req() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.KinematicRequest.forward_kinematic_general_req)
+  if (_internal_has_forward_kinematic_general_req()) {
+    clear_has_kinematic_req();
+      ::galbot::aphropm_proto::ForwardKinematicReq* temp = kinematic_req_.forward_kinematic_general_req_;
+    if (GetArena() != nullptr) {
+      temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+    }
+    kinematic_req_.forward_kinematic_general_req_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::galbot::aphropm_proto::ForwardKinematicReq& KinematicRequest::_internal_forward_kinematic_general_req() const {
+  return _internal_has_forward_kinematic_general_req()
+      ? *kinematic_req_.forward_kinematic_general_req_
+      : reinterpret_cast< ::galbot::aphropm_proto::ForwardKinematicReq&>(::galbot::aphropm_proto::_ForwardKinematicReq_default_instance_);
+}
+inline const ::galbot::aphropm_proto::ForwardKinematicReq& KinematicRequest::forward_kinematic_general_req() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.KinematicRequest.forward_kinematic_general_req)
+  return _internal_forward_kinematic_general_req();
+}
+inline ::galbot::aphropm_proto::ForwardKinematicReq* KinematicRequest::unsafe_arena_release_forward_kinematic_general_req() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:galbot.aphropm_proto.KinematicRequest.forward_kinematic_general_req)
+  if (_internal_has_forward_kinematic_general_req()) {
+    clear_has_kinematic_req();
+    ::galbot::aphropm_proto::ForwardKinematicReq* temp = kinematic_req_.forward_kinematic_general_req_;
+    kinematic_req_.forward_kinematic_general_req_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void KinematicRequest::unsafe_arena_set_allocated_forward_kinematic_general_req(::galbot::aphropm_proto::ForwardKinematicReq* forward_kinematic_general_req) {
+  clear_kinematic_req();
+  if (forward_kinematic_general_req) {
+    set_has_forward_kinematic_general_req();
+    kinematic_req_.forward_kinematic_general_req_ = forward_kinematic_general_req;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:galbot.aphropm_proto.KinematicRequest.forward_kinematic_general_req)
+}
+inline ::galbot::aphropm_proto::ForwardKinematicReq* KinematicRequest::_internal_mutable_forward_kinematic_general_req() {
+  if (!_internal_has_forward_kinematic_general_req()) {
+    clear_kinematic_req();
+    set_has_forward_kinematic_general_req();
+    kinematic_req_.forward_kinematic_general_req_ = CreateMaybeMessage< ::galbot::aphropm_proto::ForwardKinematicReq >(GetArena());
+  }
+  return kinematic_req_.forward_kinematic_general_req_;
+}
+inline ::galbot::aphropm_proto::ForwardKinematicReq* KinematicRequest::mutable_forward_kinematic_general_req() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.KinematicRequest.forward_kinematic_general_req)
+  return _internal_mutable_forward_kinematic_general_req();
+}
+
+// .galbot.aphropm_proto.JacobianReqMsg jacobian_general_req = 7;
+inline bool KinematicRequest::_internal_has_jacobian_general_req() const {
+  return kinematic_req_case() == kJacobianGeneralReq;
+}
+inline bool KinematicRequest::has_jacobian_general_req() const {
+  return _internal_has_jacobian_general_req();
+}
+inline void KinematicRequest::set_has_jacobian_general_req() {
+  _oneof_case_[0] = kJacobianGeneralReq;
+}
+inline void KinematicRequest::clear_jacobian_general_req() {
+  if (_internal_has_jacobian_general_req()) {
+    if (GetArena() == nullptr) {
+      delete kinematic_req_.jacobian_general_req_;
+    }
+    clear_has_kinematic_req();
+  }
+}
+inline ::galbot::aphropm_proto::JacobianReqMsg* KinematicRequest::release_jacobian_general_req() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.KinematicRequest.jacobian_general_req)
+  if (_internal_has_jacobian_general_req()) {
+    clear_has_kinematic_req();
+      ::galbot::aphropm_proto::JacobianReqMsg* temp = kinematic_req_.jacobian_general_req_;
+    if (GetArena() != nullptr) {
+      temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+    }
+    kinematic_req_.jacobian_general_req_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::galbot::aphropm_proto::JacobianReqMsg& KinematicRequest::_internal_jacobian_general_req() const {
+  return _internal_has_jacobian_general_req()
+      ? *kinematic_req_.jacobian_general_req_
+      : reinterpret_cast< ::galbot::aphropm_proto::JacobianReqMsg&>(::galbot::aphropm_proto::_JacobianReqMsg_default_instance_);
+}
+inline const ::galbot::aphropm_proto::JacobianReqMsg& KinematicRequest::jacobian_general_req() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.KinematicRequest.jacobian_general_req)
+  return _internal_jacobian_general_req();
+}
+inline ::galbot::aphropm_proto::JacobianReqMsg* KinematicRequest::unsafe_arena_release_jacobian_general_req() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:galbot.aphropm_proto.KinematicRequest.jacobian_general_req)
+  if (_internal_has_jacobian_general_req()) {
+    clear_has_kinematic_req();
+    ::galbot::aphropm_proto::JacobianReqMsg* temp = kinematic_req_.jacobian_general_req_;
+    kinematic_req_.jacobian_general_req_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void KinematicRequest::unsafe_arena_set_allocated_jacobian_general_req(::galbot::aphropm_proto::JacobianReqMsg* jacobian_general_req) {
+  clear_kinematic_req();
+  if (jacobian_general_req) {
+    set_has_jacobian_general_req();
+    kinematic_req_.jacobian_general_req_ = jacobian_general_req;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:galbot.aphropm_proto.KinematicRequest.jacobian_general_req)
+}
+inline ::galbot::aphropm_proto::JacobianReqMsg* KinematicRequest::_internal_mutable_jacobian_general_req() {
+  if (!_internal_has_jacobian_general_req()) {
+    clear_kinematic_req();
+    set_has_jacobian_general_req();
+    kinematic_req_.jacobian_general_req_ = CreateMaybeMessage< ::galbot::aphropm_proto::JacobianReqMsg >(GetArena());
+  }
+  return kinematic_req_.jacobian_general_req_;
+}
+inline ::galbot::aphropm_proto::JacobianReqMsg* KinematicRequest::mutable_jacobian_general_req() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.KinematicRequest.jacobian_general_req)
+  return _internal_mutable_jacobian_general_req();
+}
+
+// .galbot.aphropm_proto.IKSolverConfig set_ik_config = 8;
+inline bool KinematicRequest::_internal_has_set_ik_config() const {
+  return kinematic_req_case() == kSetIkConfig;
+}
+inline bool KinematicRequest::has_set_ik_config() const {
+  return _internal_has_set_ik_config();
+}
+inline void KinematicRequest::set_has_set_ik_config() {
+  _oneof_case_[0] = kSetIkConfig;
+}
+inline ::galbot::aphropm_proto::IKSolverConfig* KinematicRequest::release_set_ik_config() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.KinematicRequest.set_ik_config)
+  if (_internal_has_set_ik_config()) {
+    clear_has_kinematic_req();
+      ::galbot::aphropm_proto::IKSolverConfig* temp = kinematic_req_.set_ik_config_;
+    if (GetArena() != nullptr) {
+      temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+    }
+    kinematic_req_.set_ik_config_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::galbot::aphropm_proto::IKSolverConfig& KinematicRequest::_internal_set_ik_config() const {
+  return _internal_has_set_ik_config()
+      ? *kinematic_req_.set_ik_config_
+      : reinterpret_cast< ::galbot::aphropm_proto::IKSolverConfig&>(::galbot::aphropm_proto::_IKSolverConfig_default_instance_);
+}
+inline const ::galbot::aphropm_proto::IKSolverConfig& KinematicRequest::set_ik_config() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.KinematicRequest.set_ik_config)
+  return _internal_set_ik_config();
+}
+inline ::galbot::aphropm_proto::IKSolverConfig* KinematicRequest::unsafe_arena_release_set_ik_config() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:galbot.aphropm_proto.KinematicRequest.set_ik_config)
+  if (_internal_has_set_ik_config()) {
+    clear_has_kinematic_req();
+    ::galbot::aphropm_proto::IKSolverConfig* temp = kinematic_req_.set_ik_config_;
+    kinematic_req_.set_ik_config_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void KinematicRequest::unsafe_arena_set_allocated_set_ik_config(::galbot::aphropm_proto::IKSolverConfig* set_ik_config) {
+  clear_kinematic_req();
+  if (set_ik_config) {
+    set_has_set_ik_config();
+    kinematic_req_.set_ik_config_ = set_ik_config;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:galbot.aphropm_proto.KinematicRequest.set_ik_config)
+}
+inline ::galbot::aphropm_proto::IKSolverConfig* KinematicRequest::_internal_mutable_set_ik_config() {
+  if (!_internal_has_set_ik_config()) {
+    clear_kinematic_req();
+    set_has_set_ik_config();
+    kinematic_req_.set_ik_config_ = CreateMaybeMessage< ::galbot::aphropm_proto::IKSolverConfig >(GetArena());
+  }
+  return kinematic_req_.set_ik_config_;
+}
+inline ::galbot::aphropm_proto::IKSolverConfig* KinematicRequest::mutable_set_ik_config() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.KinematicRequest.set_ik_config)
+  return _internal_mutable_set_ik_config();
+}
+
+// .galbot.aphropm_proto.IKSolverLocalConfig set_ik_local_config = 9;
+inline bool KinematicRequest::_internal_has_set_ik_local_config() const {
+  return kinematic_req_case() == kSetIkLocalConfig;
+}
+inline bool KinematicRequest::has_set_ik_local_config() const {
+  return _internal_has_set_ik_local_config();
+}
+inline void KinematicRequest::set_has_set_ik_local_config() {
+  _oneof_case_[0] = kSetIkLocalConfig;
+}
+inline ::galbot::aphropm_proto::IKSolverLocalConfig* KinematicRequest::release_set_ik_local_config() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.KinematicRequest.set_ik_local_config)
+  if (_internal_has_set_ik_local_config()) {
+    clear_has_kinematic_req();
+      ::galbot::aphropm_proto::IKSolverLocalConfig* temp = kinematic_req_.set_ik_local_config_;
+    if (GetArena() != nullptr) {
+      temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+    }
+    kinematic_req_.set_ik_local_config_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::galbot::aphropm_proto::IKSolverLocalConfig& KinematicRequest::_internal_set_ik_local_config() const {
+  return _internal_has_set_ik_local_config()
+      ? *kinematic_req_.set_ik_local_config_
+      : reinterpret_cast< ::galbot::aphropm_proto::IKSolverLocalConfig&>(::galbot::aphropm_proto::_IKSolverLocalConfig_default_instance_);
+}
+inline const ::galbot::aphropm_proto::IKSolverLocalConfig& KinematicRequest::set_ik_local_config() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.KinematicRequest.set_ik_local_config)
+  return _internal_set_ik_local_config();
+}
+inline ::galbot::aphropm_proto::IKSolverLocalConfig* KinematicRequest::unsafe_arena_release_set_ik_local_config() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:galbot.aphropm_proto.KinematicRequest.set_ik_local_config)
+  if (_internal_has_set_ik_local_config()) {
+    clear_has_kinematic_req();
+    ::galbot::aphropm_proto::IKSolverLocalConfig* temp = kinematic_req_.set_ik_local_config_;
+    kinematic_req_.set_ik_local_config_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void KinematicRequest::unsafe_arena_set_allocated_set_ik_local_config(::galbot::aphropm_proto::IKSolverLocalConfig* set_ik_local_config) {
+  clear_kinematic_req();
+  if (set_ik_local_config) {
+    set_has_set_ik_local_config();
+    kinematic_req_.set_ik_local_config_ = set_ik_local_config;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:galbot.aphropm_proto.KinematicRequest.set_ik_local_config)
+}
+inline ::galbot::aphropm_proto::IKSolverLocalConfig* KinematicRequest::_internal_mutable_set_ik_local_config() {
+  if (!_internal_has_set_ik_local_config()) {
+    clear_kinematic_req();
+    set_has_set_ik_local_config();
+    kinematic_req_.set_ik_local_config_ = CreateMaybeMessage< ::galbot::aphropm_proto::IKSolverLocalConfig >(GetArena());
+  }
+  return kinematic_req_.set_ik_local_config_;
+}
+inline ::galbot::aphropm_proto::IKSolverLocalConfig* KinematicRequest::mutable_set_ik_local_config() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.KinematicRequest.set_ik_local_config)
+  return _internal_mutable_set_ik_local_config();
+}
+
+// .galbot.aphropm_proto.IKCalculateOption set_ik_calculate_option = 10;
+inline bool KinematicRequest::_internal_has_set_ik_calculate_option() const {
+  return kinematic_req_case() == kSetIkCalculateOption;
+}
+inline bool KinematicRequest::has_set_ik_calculate_option() const {
+  return _internal_has_set_ik_calculate_option();
+}
+inline void KinematicRequest::set_has_set_ik_calculate_option() {
+  _oneof_case_[0] = kSetIkCalculateOption;
+}
+inline ::galbot::aphropm_proto::IKCalculateOption* KinematicRequest::release_set_ik_calculate_option() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.KinematicRequest.set_ik_calculate_option)
+  if (_internal_has_set_ik_calculate_option()) {
+    clear_has_kinematic_req();
+      ::galbot::aphropm_proto::IKCalculateOption* temp = kinematic_req_.set_ik_calculate_option_;
+    if (GetArena() != nullptr) {
+      temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+    }
+    kinematic_req_.set_ik_calculate_option_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::galbot::aphropm_proto::IKCalculateOption& KinematicRequest::_internal_set_ik_calculate_option() const {
+  return _internal_has_set_ik_calculate_option()
+      ? *kinematic_req_.set_ik_calculate_option_
+      : reinterpret_cast< ::galbot::aphropm_proto::IKCalculateOption&>(::galbot::aphropm_proto::_IKCalculateOption_default_instance_);
+}
+inline const ::galbot::aphropm_proto::IKCalculateOption& KinematicRequest::set_ik_calculate_option() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.KinematicRequest.set_ik_calculate_option)
+  return _internal_set_ik_calculate_option();
+}
+inline ::galbot::aphropm_proto::IKCalculateOption* KinematicRequest::unsafe_arena_release_set_ik_calculate_option() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:galbot.aphropm_proto.KinematicRequest.set_ik_calculate_option)
+  if (_internal_has_set_ik_calculate_option()) {
+    clear_has_kinematic_req();
+    ::galbot::aphropm_proto::IKCalculateOption* temp = kinematic_req_.set_ik_calculate_option_;
+    kinematic_req_.set_ik_calculate_option_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void KinematicRequest::unsafe_arena_set_allocated_set_ik_calculate_option(::galbot::aphropm_proto::IKCalculateOption* set_ik_calculate_option) {
+  clear_kinematic_req();
+  if (set_ik_calculate_option) {
+    set_has_set_ik_calculate_option();
+    kinematic_req_.set_ik_calculate_option_ = set_ik_calculate_option;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:galbot.aphropm_proto.KinematicRequest.set_ik_calculate_option)
+}
+inline ::galbot::aphropm_proto::IKCalculateOption* KinematicRequest::_internal_mutable_set_ik_calculate_option() {
+  if (!_internal_has_set_ik_calculate_option()) {
+    clear_kinematic_req();
+    set_has_set_ik_calculate_option();
+    kinematic_req_.set_ik_calculate_option_ = CreateMaybeMessage< ::galbot::aphropm_proto::IKCalculateOption >(GetArena());
+  }
+  return kinematic_req_.set_ik_calculate_option_;
+}
+inline ::galbot::aphropm_proto::IKCalculateOption* KinematicRequest::mutable_set_ik_calculate_option() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.KinematicRequest.set_ik_calculate_option)
+  return _internal_mutable_set_ik_calculate_option();
+}
+
+// .galbot.aphropm_proto.KinematicsBoundary set_ik_soft_limit = 11;
+inline bool KinematicRequest::_internal_has_set_ik_soft_limit() const {
+  return kinematic_req_case() == kSetIkSoftLimit;
+}
+inline bool KinematicRequest::has_set_ik_soft_limit() const {
+  return _internal_has_set_ik_soft_limit();
+}
+inline void KinematicRequest::set_has_set_ik_soft_limit() {
+  _oneof_case_[0] = kSetIkSoftLimit;
+}
+inline ::galbot::aphropm_proto::KinematicsBoundary* KinematicRequest::release_set_ik_soft_limit() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.KinematicRequest.set_ik_soft_limit)
+  if (_internal_has_set_ik_soft_limit()) {
+    clear_has_kinematic_req();
+      ::galbot::aphropm_proto::KinematicsBoundary* temp = kinematic_req_.set_ik_soft_limit_;
+    if (GetArena() != nullptr) {
+      temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+    }
+    kinematic_req_.set_ik_soft_limit_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::galbot::aphropm_proto::KinematicsBoundary& KinematicRequest::_internal_set_ik_soft_limit() const {
+  return _internal_has_set_ik_soft_limit()
+      ? *kinematic_req_.set_ik_soft_limit_
+      : reinterpret_cast< ::galbot::aphropm_proto::KinematicsBoundary&>(::galbot::aphropm_proto::_KinematicsBoundary_default_instance_);
+}
+inline const ::galbot::aphropm_proto::KinematicsBoundary& KinematicRequest::set_ik_soft_limit() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.KinematicRequest.set_ik_soft_limit)
+  return _internal_set_ik_soft_limit();
+}
+inline ::galbot::aphropm_proto::KinematicsBoundary* KinematicRequest::unsafe_arena_release_set_ik_soft_limit() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:galbot.aphropm_proto.KinematicRequest.set_ik_soft_limit)
+  if (_internal_has_set_ik_soft_limit()) {
+    clear_has_kinematic_req();
+    ::galbot::aphropm_proto::KinematicsBoundary* temp = kinematic_req_.set_ik_soft_limit_;
+    kinematic_req_.set_ik_soft_limit_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void KinematicRequest::unsafe_arena_set_allocated_set_ik_soft_limit(::galbot::aphropm_proto::KinematicsBoundary* set_ik_soft_limit) {
+  clear_kinematic_req();
+  if (set_ik_soft_limit) {
+    set_has_set_ik_soft_limit();
+    kinematic_req_.set_ik_soft_limit_ = set_ik_soft_limit;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:galbot.aphropm_proto.KinematicRequest.set_ik_soft_limit)
+}
+inline ::galbot::aphropm_proto::KinematicsBoundary* KinematicRequest::_internal_mutable_set_ik_soft_limit() {
+  if (!_internal_has_set_ik_soft_limit()) {
+    clear_kinematic_req();
+    set_has_set_ik_soft_limit();
+    kinematic_req_.set_ik_soft_limit_ = CreateMaybeMessage< ::galbot::aphropm_proto::KinematicsBoundary >(GetArena());
+  }
+  return kinematic_req_.set_ik_soft_limit_;
+}
+inline ::galbot::aphropm_proto::KinematicsBoundary* KinematicRequest::mutable_set_ik_soft_limit() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.KinematicRequest.set_ik_soft_limit)
+  return _internal_mutable_set_ik_soft_limit();
+}
+
+// .google.protobuf.BoolValue refresh_ik_soft_limit = 12;
+inline bool KinematicRequest::_internal_has_refresh_ik_soft_limit() const {
+  return kinematic_req_case() == kRefreshIkSoftLimit;
+}
+inline bool KinematicRequest::has_refresh_ik_soft_limit() const {
+  return _internal_has_refresh_ik_soft_limit();
+}
+inline void KinematicRequest::set_has_refresh_ik_soft_limit() {
+  _oneof_case_[0] = kRefreshIkSoftLimit;
+}
+inline PROTOBUF_NAMESPACE_ID::BoolValue* KinematicRequest::release_refresh_ik_soft_limit() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.KinematicRequest.refresh_ik_soft_limit)
+  if (_internal_has_refresh_ik_soft_limit()) {
+    clear_has_kinematic_req();
+      PROTOBUF_NAMESPACE_ID::BoolValue* temp = kinematic_req_.refresh_ik_soft_limit_;
+    if (GetArena() != nullptr) {
+      temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+    }
+    kinematic_req_.refresh_ik_soft_limit_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const PROTOBUF_NAMESPACE_ID::BoolValue& KinematicRequest::_internal_refresh_ik_soft_limit() const {
+  return _internal_has_refresh_ik_soft_limit()
+      ? *kinematic_req_.refresh_ik_soft_limit_
+      : reinterpret_cast< PROTOBUF_NAMESPACE_ID::BoolValue&>(PROTOBUF_NAMESPACE_ID::_BoolValue_default_instance_);
+}
+inline const PROTOBUF_NAMESPACE_ID::BoolValue& KinematicRequest::refresh_ik_soft_limit() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.KinematicRequest.refresh_ik_soft_limit)
+  return _internal_refresh_ik_soft_limit();
+}
+inline PROTOBUF_NAMESPACE_ID::BoolValue* KinematicRequest::unsafe_arena_release_refresh_ik_soft_limit() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:galbot.aphropm_proto.KinematicRequest.refresh_ik_soft_limit)
+  if (_internal_has_refresh_ik_soft_limit()) {
+    clear_has_kinematic_req();
+    PROTOBUF_NAMESPACE_ID::BoolValue* temp = kinematic_req_.refresh_ik_soft_limit_;
+    kinematic_req_.refresh_ik_soft_limit_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void KinematicRequest::unsafe_arena_set_allocated_refresh_ik_soft_limit(PROTOBUF_NAMESPACE_ID::BoolValue* refresh_ik_soft_limit) {
+  clear_kinematic_req();
+  if (refresh_ik_soft_limit) {
+    set_has_refresh_ik_soft_limit();
+    kinematic_req_.refresh_ik_soft_limit_ = refresh_ik_soft_limit;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:galbot.aphropm_proto.KinematicRequest.refresh_ik_soft_limit)
+}
+inline PROTOBUF_NAMESPACE_ID::BoolValue* KinematicRequest::_internal_mutable_refresh_ik_soft_limit() {
+  if (!_internal_has_refresh_ik_soft_limit()) {
+    clear_kinematic_req();
+    set_has_refresh_ik_soft_limit();
+    kinematic_req_.refresh_ik_soft_limit_ = CreateMaybeMessage< PROTOBUF_NAMESPACE_ID::BoolValue >(GetArena());
+  }
+  return kinematic_req_.refresh_ik_soft_limit_;
+}
+inline PROTOBUF_NAMESPACE_ID::BoolValue* KinematicRequest::mutable_refresh_ik_soft_limit() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.KinematicRequest.refresh_ik_soft_limit)
+  return _internal_mutable_refresh_ik_soft_limit();
+}
+
+// .galbot.aphropm_proto.IKSoftLimitSetting solver_unique_limit_setting = 13;
+inline bool KinematicRequest::_internal_has_solver_unique_limit_setting() const {
+  return kinematic_req_case() == kSolverUniqueLimitSetting;
+}
+inline bool KinematicRequest::has_solver_unique_limit_setting() const {
+  return _internal_has_solver_unique_limit_setting();
+}
+inline void KinematicRequest::set_has_solver_unique_limit_setting() {
+  _oneof_case_[0] = kSolverUniqueLimitSetting;
+}
+inline ::galbot::aphropm_proto::IKSoftLimitSetting* KinematicRequest::release_solver_unique_limit_setting() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.KinematicRequest.solver_unique_limit_setting)
+  if (_internal_has_solver_unique_limit_setting()) {
+    clear_has_kinematic_req();
+      ::galbot::aphropm_proto::IKSoftLimitSetting* temp = kinematic_req_.solver_unique_limit_setting_;
+    if (GetArena() != nullptr) {
+      temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+    }
+    kinematic_req_.solver_unique_limit_setting_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::galbot::aphropm_proto::IKSoftLimitSetting& KinematicRequest::_internal_solver_unique_limit_setting() const {
+  return _internal_has_solver_unique_limit_setting()
+      ? *kinematic_req_.solver_unique_limit_setting_
+      : reinterpret_cast< ::galbot::aphropm_proto::IKSoftLimitSetting&>(::galbot::aphropm_proto::_IKSoftLimitSetting_default_instance_);
+}
+inline const ::galbot::aphropm_proto::IKSoftLimitSetting& KinematicRequest::solver_unique_limit_setting() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.KinematicRequest.solver_unique_limit_setting)
+  return _internal_solver_unique_limit_setting();
+}
+inline ::galbot::aphropm_proto::IKSoftLimitSetting* KinematicRequest::unsafe_arena_release_solver_unique_limit_setting() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:galbot.aphropm_proto.KinematicRequest.solver_unique_limit_setting)
+  if (_internal_has_solver_unique_limit_setting()) {
+    clear_has_kinematic_req();
+    ::galbot::aphropm_proto::IKSoftLimitSetting* temp = kinematic_req_.solver_unique_limit_setting_;
+    kinematic_req_.solver_unique_limit_setting_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void KinematicRequest::unsafe_arena_set_allocated_solver_unique_limit_setting(::galbot::aphropm_proto::IKSoftLimitSetting* solver_unique_limit_setting) {
+  clear_kinematic_req();
+  if (solver_unique_limit_setting) {
+    set_has_solver_unique_limit_setting();
+    kinematic_req_.solver_unique_limit_setting_ = solver_unique_limit_setting;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:galbot.aphropm_proto.KinematicRequest.solver_unique_limit_setting)
+}
+inline ::galbot::aphropm_proto::IKSoftLimitSetting* KinematicRequest::_internal_mutable_solver_unique_limit_setting() {
+  if (!_internal_has_solver_unique_limit_setting()) {
+    clear_kinematic_req();
+    set_has_solver_unique_limit_setting();
+    kinematic_req_.solver_unique_limit_setting_ = CreateMaybeMessage< ::galbot::aphropm_proto::IKSoftLimitSetting >(GetArena());
+  }
+  return kinematic_req_.solver_unique_limit_setting_;
+}
+inline ::galbot::aphropm_proto::IKSoftLimitSetting* KinematicRequest::mutable_solver_unique_limit_setting() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.KinematicRequest.solver_unique_limit_setting)
+  return _internal_mutable_solver_unique_limit_setting();
+}
+
+// .galbot.aphropm_proto.CheckCollisionReq check_collision_req = 14;
+inline bool KinematicRequest::_internal_has_check_collision_req() const {
+  return kinematic_req_case() == kCheckCollisionReq;
+}
+inline bool KinematicRequest::has_check_collision_req() const {
+  return _internal_has_check_collision_req();
+}
+inline void KinematicRequest::set_has_check_collision_req() {
+  _oneof_case_[0] = kCheckCollisionReq;
+}
+inline void KinematicRequest::clear_check_collision_req() {
+  if (_internal_has_check_collision_req()) {
+    if (GetArena() == nullptr) {
+      delete kinematic_req_.check_collision_req_;
+    }
+    clear_has_kinematic_req();
+  }
+}
+inline ::galbot::aphropm_proto::CheckCollisionReq* KinematicRequest::release_check_collision_req() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.KinematicRequest.check_collision_req)
+  if (_internal_has_check_collision_req()) {
+    clear_has_kinematic_req();
+      ::galbot::aphropm_proto::CheckCollisionReq* temp = kinematic_req_.check_collision_req_;
+    if (GetArena() != nullptr) {
+      temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+    }
+    kinematic_req_.check_collision_req_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::galbot::aphropm_proto::CheckCollisionReq& KinematicRequest::_internal_check_collision_req() const {
+  return _internal_has_check_collision_req()
+      ? *kinematic_req_.check_collision_req_
+      : reinterpret_cast< ::galbot::aphropm_proto::CheckCollisionReq&>(::galbot::aphropm_proto::_CheckCollisionReq_default_instance_);
+}
+inline const ::galbot::aphropm_proto::CheckCollisionReq& KinematicRequest::check_collision_req() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.KinematicRequest.check_collision_req)
+  return _internal_check_collision_req();
+}
+inline ::galbot::aphropm_proto::CheckCollisionReq* KinematicRequest::unsafe_arena_release_check_collision_req() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:galbot.aphropm_proto.KinematicRequest.check_collision_req)
+  if (_internal_has_check_collision_req()) {
+    clear_has_kinematic_req();
+    ::galbot::aphropm_proto::CheckCollisionReq* temp = kinematic_req_.check_collision_req_;
+    kinematic_req_.check_collision_req_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void KinematicRequest::unsafe_arena_set_allocated_check_collision_req(::galbot::aphropm_proto::CheckCollisionReq* check_collision_req) {
+  clear_kinematic_req();
+  if (check_collision_req) {
+    set_has_check_collision_req();
+    kinematic_req_.check_collision_req_ = check_collision_req;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:galbot.aphropm_proto.KinematicRequest.check_collision_req)
+}
+inline ::galbot::aphropm_proto::CheckCollisionReq* KinematicRequest::_internal_mutable_check_collision_req() {
+  if (!_internal_has_check_collision_req()) {
+    clear_kinematic_req();
+    set_has_check_collision_req();
+    kinematic_req_.check_collision_req_ = CreateMaybeMessage< ::galbot::aphropm_proto::CheckCollisionReq >(GetArena());
+  }
+  return kinematic_req_.check_collision_req_;
+}
+inline ::galbot::aphropm_proto::CheckCollisionReq* KinematicRequest::mutable_check_collision_req() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.KinematicRequest.check_collision_req)
+  return _internal_mutable_check_collision_req();
+}
+
+// string common_str = 300;
+inline void KinematicRequest::clear_common_str() {
+  common_str_.ClearToEmpty();
+}
+inline const std::string& KinematicRequest::common_str() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.KinematicRequest.common_str)
+  return _internal_common_str();
+}
+inline void KinematicRequest::set_common_str(const std::string& value) {
+  _internal_set_common_str(value);
+  // @@protoc_insertion_point(field_set:galbot.aphropm_proto.KinematicRequest.common_str)
+}
+inline std::string* KinematicRequest::mutable_common_str() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.KinematicRequest.common_str)
+  return _internal_mutable_common_str();
+}
+inline const std::string& KinematicRequest::_internal_common_str() const {
+  return common_str_.Get();
+}
+inline void KinematicRequest::_internal_set_common_str(const std::string& value) {
+  
+  common_str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArena());
+}
+inline void KinematicRequest::set_common_str(std::string&& value) {
+  
+  common_str_.Set(
+    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::move(value), GetArena());
+  // @@protoc_insertion_point(field_set_rvalue:galbot.aphropm_proto.KinematicRequest.common_str)
+}
+inline void KinematicRequest::set_common_str(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  common_str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(value), GetArena());
+  // @@protoc_insertion_point(field_set_char:galbot.aphropm_proto.KinematicRequest.common_str)
+}
+inline void KinematicRequest::set_common_str(const char* value,
+    size_t size) {
+  
+  common_str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(
+      reinterpret_cast<const char*>(value), size), GetArena());
+  // @@protoc_insertion_point(field_set_pointer:galbot.aphropm_proto.KinematicRequest.common_str)
+}
+inline std::string* KinematicRequest::_internal_mutable_common_str() {
+  
+  return common_str_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArena());
+}
+inline std::string* KinematicRequest::release_common_str() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.KinematicRequest.common_str)
+  return common_str_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline void KinematicRequest::set_allocated_common_str(std::string* common_str) {
+  if (common_str != nullptr) {
+    
+  } else {
+    
+  }
+  common_str_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), common_str,
+      GetArena());
+  // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.KinematicRequest.common_str)
+}
+
 inline bool KinematicRequest::has_kinematic_req() const {
   return kinematic_req_case() != KINEMATIC_REQ_NOT_SET;
 }
@@ -12183,6 +19045,237 @@ inline void KinematicRequest::clear_has_kinematic_req() {
 inline KinematicRequest::KinematicReqCase KinematicRequest::kinematic_req_case() const {
   return KinematicRequest::KinematicReqCase(_oneof_case_[0]);
 }
+// -------------------------------------------------------------------
+
+// CheckCollisionRes
+
+// bool is_collision = 1;
+inline void CheckCollisionRes::clear_is_collision() {
+  is_collision_ = false;
+}
+inline bool CheckCollisionRes::_internal_is_collision() const {
+  return is_collision_;
+}
+inline bool CheckCollisionRes::is_collision() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.CheckCollisionRes.is_collision)
+  return _internal_is_collision();
+}
+inline void CheckCollisionRes::_internal_set_is_collision(bool value) {
+  
+  is_collision_ = value;
+}
+inline void CheckCollisionRes::set_is_collision(bool value) {
+  _internal_set_is_collision(value);
+  // @@protoc_insertion_point(field_set:galbot.aphropm_proto.CheckCollisionRes.is_collision)
+}
+
+// string link1 = 2;
+inline void CheckCollisionRes::clear_link1() {
+  link1_.ClearToEmpty();
+}
+inline const std::string& CheckCollisionRes::link1() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.CheckCollisionRes.link1)
+  return _internal_link1();
+}
+inline void CheckCollisionRes::set_link1(const std::string& value) {
+  _internal_set_link1(value);
+  // @@protoc_insertion_point(field_set:galbot.aphropm_proto.CheckCollisionRes.link1)
+}
+inline std::string* CheckCollisionRes::mutable_link1() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.CheckCollisionRes.link1)
+  return _internal_mutable_link1();
+}
+inline const std::string& CheckCollisionRes::_internal_link1() const {
+  return link1_.Get();
+}
+inline void CheckCollisionRes::_internal_set_link1(const std::string& value) {
+  
+  link1_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArena());
+}
+inline void CheckCollisionRes::set_link1(std::string&& value) {
+  
+  link1_.Set(
+    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::move(value), GetArena());
+  // @@protoc_insertion_point(field_set_rvalue:galbot.aphropm_proto.CheckCollisionRes.link1)
+}
+inline void CheckCollisionRes::set_link1(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  link1_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(value), GetArena());
+  // @@protoc_insertion_point(field_set_char:galbot.aphropm_proto.CheckCollisionRes.link1)
+}
+inline void CheckCollisionRes::set_link1(const char* value,
+    size_t size) {
+  
+  link1_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(
+      reinterpret_cast<const char*>(value), size), GetArena());
+  // @@protoc_insertion_point(field_set_pointer:galbot.aphropm_proto.CheckCollisionRes.link1)
+}
+inline std::string* CheckCollisionRes::_internal_mutable_link1() {
+  
+  return link1_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArena());
+}
+inline std::string* CheckCollisionRes::release_link1() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.CheckCollisionRes.link1)
+  return link1_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline void CheckCollisionRes::set_allocated_link1(std::string* link1) {
+  if (link1 != nullptr) {
+    
+  } else {
+    
+  }
+  link1_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), link1,
+      GetArena());
+  // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.CheckCollisionRes.link1)
+}
+
+// string link2 = 3;
+inline void CheckCollisionRes::clear_link2() {
+  link2_.ClearToEmpty();
+}
+inline const std::string& CheckCollisionRes::link2() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.CheckCollisionRes.link2)
+  return _internal_link2();
+}
+inline void CheckCollisionRes::set_link2(const std::string& value) {
+  _internal_set_link2(value);
+  // @@protoc_insertion_point(field_set:galbot.aphropm_proto.CheckCollisionRes.link2)
+}
+inline std::string* CheckCollisionRes::mutable_link2() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.CheckCollisionRes.link2)
+  return _internal_mutable_link2();
+}
+inline const std::string& CheckCollisionRes::_internal_link2() const {
+  return link2_.Get();
+}
+inline void CheckCollisionRes::_internal_set_link2(const std::string& value) {
+  
+  link2_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArena());
+}
+inline void CheckCollisionRes::set_link2(std::string&& value) {
+  
+  link2_.Set(
+    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::move(value), GetArena());
+  // @@protoc_insertion_point(field_set_rvalue:galbot.aphropm_proto.CheckCollisionRes.link2)
+}
+inline void CheckCollisionRes::set_link2(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  link2_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(value), GetArena());
+  // @@protoc_insertion_point(field_set_char:galbot.aphropm_proto.CheckCollisionRes.link2)
+}
+inline void CheckCollisionRes::set_link2(const char* value,
+    size_t size) {
+  
+  link2_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(
+      reinterpret_cast<const char*>(value), size), GetArena());
+  // @@protoc_insertion_point(field_set_pointer:galbot.aphropm_proto.CheckCollisionRes.link2)
+}
+inline std::string* CheckCollisionRes::_internal_mutable_link2() {
+  
+  return link2_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArena());
+}
+inline std::string* CheckCollisionRes::release_link2() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.CheckCollisionRes.link2)
+  return link2_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline void CheckCollisionRes::set_allocated_link2(std::string* link2) {
+  if (link2 != nullptr) {
+    
+  } else {
+    
+  }
+  link2_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), link2,
+      GetArena());
+  // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.CheckCollisionRes.link2)
+}
+
+// double distance = 4;
+inline void CheckCollisionRes::clear_distance() {
+  distance_ = 0;
+}
+inline double CheckCollisionRes::_internal_distance() const {
+  return distance_;
+}
+inline double CheckCollisionRes::distance() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.CheckCollisionRes.distance)
+  return _internal_distance();
+}
+inline void CheckCollisionRes::_internal_set_distance(double value) {
+  
+  distance_ = value;
+}
+inline void CheckCollisionRes::set_distance(double value) {
+  _internal_set_distance(value);
+  // @@protoc_insertion_point(field_set:galbot.aphropm_proto.CheckCollisionRes.distance)
+}
+
+// string common_str = 300;
+inline void CheckCollisionRes::clear_common_str() {
+  common_str_.ClearToEmpty();
+}
+inline const std::string& CheckCollisionRes::common_str() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.CheckCollisionRes.common_str)
+  return _internal_common_str();
+}
+inline void CheckCollisionRes::set_common_str(const std::string& value) {
+  _internal_set_common_str(value);
+  // @@protoc_insertion_point(field_set:galbot.aphropm_proto.CheckCollisionRes.common_str)
+}
+inline std::string* CheckCollisionRes::mutable_common_str() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.CheckCollisionRes.common_str)
+  return _internal_mutable_common_str();
+}
+inline const std::string& CheckCollisionRes::_internal_common_str() const {
+  return common_str_.Get();
+}
+inline void CheckCollisionRes::_internal_set_common_str(const std::string& value) {
+  
+  common_str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArena());
+}
+inline void CheckCollisionRes::set_common_str(std::string&& value) {
+  
+  common_str_.Set(
+    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::move(value), GetArena());
+  // @@protoc_insertion_point(field_set_rvalue:galbot.aphropm_proto.CheckCollisionRes.common_str)
+}
+inline void CheckCollisionRes::set_common_str(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  common_str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(value), GetArena());
+  // @@protoc_insertion_point(field_set_char:galbot.aphropm_proto.CheckCollisionRes.common_str)
+}
+inline void CheckCollisionRes::set_common_str(const char* value,
+    size_t size) {
+  
+  common_str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(
+      reinterpret_cast<const char*>(value), size), GetArena());
+  // @@protoc_insertion_point(field_set_pointer:galbot.aphropm_proto.CheckCollisionRes.common_str)
+}
+inline std::string* CheckCollisionRes::_internal_mutable_common_str() {
+  
+  return common_str_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArena());
+}
+inline std::string* CheckCollisionRes::release_common_str() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.CheckCollisionRes.common_str)
+  return common_str_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline void CheckCollisionRes::set_allocated_common_str(std::string* common_str) {
+  if (common_str != nullptr) {
+    
+  } else {
+    
+  }
+  common_str_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), common_str,
+      GetArena());
+  // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.CheckCollisionRes.common_str)
+}
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // KinematicResponse
@@ -12548,6 +19641,158 @@ inline ::galbot::aphropm_proto::JacobianResult* KinematicResponse::mutable_jacob
   return _internal_mutable_jacobian_result();
 }
 
+// map<string, .galbot.aphropm_proto.JointStatesMsg> ik_result = 7;
+inline int KinematicResponse::_internal_ik_result_size() const {
+  return ik_result_.size();
+}
+inline int KinematicResponse::ik_result_size() const {
+  return _internal_ik_result_size();
+}
+inline const ::PROTOBUF_NAMESPACE_ID::Map< std::string, ::galbot::aphropm_proto::JointStatesMsg >&
+KinematicResponse::_internal_ik_result() const {
+  return ik_result_.GetMap();
+}
+inline const ::PROTOBUF_NAMESPACE_ID::Map< std::string, ::galbot::aphropm_proto::JointStatesMsg >&
+KinematicResponse::ik_result() const {
+  // @@protoc_insertion_point(field_map:galbot.aphropm_proto.KinematicResponse.ik_result)
+  return _internal_ik_result();
+}
+inline ::PROTOBUF_NAMESPACE_ID::Map< std::string, ::galbot::aphropm_proto::JointStatesMsg >*
+KinematicResponse::_internal_mutable_ik_result() {
+  return ik_result_.MutableMap();
+}
+inline ::PROTOBUF_NAMESPACE_ID::Map< std::string, ::galbot::aphropm_proto::JointStatesMsg >*
+KinematicResponse::mutable_ik_result() {
+  // @@protoc_insertion_point(field_mutable_map:galbot.aphropm_proto.KinematicResponse.ik_result)
+  return _internal_mutable_ik_result();
+}
+
+// map<string, .galbot.spatial_proto.FrameTriad> fk_result = 8;
+inline int KinematicResponse::_internal_fk_result_size() const {
+  return fk_result_.size();
+}
+inline int KinematicResponse::fk_result_size() const {
+  return _internal_fk_result_size();
+}
+inline const ::PROTOBUF_NAMESPACE_ID::Map< std::string, ::galbot::spatial_proto::FrameTriad >&
+KinematicResponse::_internal_fk_result() const {
+  return fk_result_.GetMap();
+}
+inline const ::PROTOBUF_NAMESPACE_ID::Map< std::string, ::galbot::spatial_proto::FrameTriad >&
+KinematicResponse::fk_result() const {
+  // @@protoc_insertion_point(field_map:galbot.aphropm_proto.KinematicResponse.fk_result)
+  return _internal_fk_result();
+}
+inline ::PROTOBUF_NAMESPACE_ID::Map< std::string, ::galbot::spatial_proto::FrameTriad >*
+KinematicResponse::_internal_mutable_fk_result() {
+  return fk_result_.MutableMap();
+}
+inline ::PROTOBUF_NAMESPACE_ID::Map< std::string, ::galbot::spatial_proto::FrameTriad >*
+KinematicResponse::mutable_fk_result() {
+  // @@protoc_insertion_point(field_mutable_map:galbot.aphropm_proto.KinematicResponse.fk_result)
+  return _internal_mutable_fk_result();
+}
+
+// repeated .galbot.aphropm_proto.CheckCollisionRes check_collision_result = 9;
+inline int KinematicResponse::_internal_check_collision_result_size() const {
+  return check_collision_result_.size();
+}
+inline int KinematicResponse::check_collision_result_size() const {
+  return _internal_check_collision_result_size();
+}
+inline void KinematicResponse::clear_check_collision_result() {
+  check_collision_result_.Clear();
+}
+inline ::galbot::aphropm_proto::CheckCollisionRes* KinematicResponse::mutable_check_collision_result(int index) {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.KinematicResponse.check_collision_result)
+  return check_collision_result_.Mutable(index);
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::galbot::aphropm_proto::CheckCollisionRes >*
+KinematicResponse::mutable_check_collision_result() {
+  // @@protoc_insertion_point(field_mutable_list:galbot.aphropm_proto.KinematicResponse.check_collision_result)
+  return &check_collision_result_;
+}
+inline const ::galbot::aphropm_proto::CheckCollisionRes& KinematicResponse::_internal_check_collision_result(int index) const {
+  return check_collision_result_.Get(index);
+}
+inline const ::galbot::aphropm_proto::CheckCollisionRes& KinematicResponse::check_collision_result(int index) const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.KinematicResponse.check_collision_result)
+  return _internal_check_collision_result(index);
+}
+inline ::galbot::aphropm_proto::CheckCollisionRes* KinematicResponse::_internal_add_check_collision_result() {
+  return check_collision_result_.Add();
+}
+inline ::galbot::aphropm_proto::CheckCollisionRes* KinematicResponse::add_check_collision_result() {
+  // @@protoc_insertion_point(field_add:galbot.aphropm_proto.KinematicResponse.check_collision_result)
+  return _internal_add_check_collision_result();
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::galbot::aphropm_proto::CheckCollisionRes >&
+KinematicResponse::check_collision_result() const {
+  // @@protoc_insertion_point(field_list:galbot.aphropm_proto.KinematicResponse.check_collision_result)
+  return check_collision_result_;
+}
+
+// string common_str = 300;
+inline void KinematicResponse::clear_common_str() {
+  common_str_.ClearToEmpty();
+}
+inline const std::string& KinematicResponse::common_str() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.KinematicResponse.common_str)
+  return _internal_common_str();
+}
+inline void KinematicResponse::set_common_str(const std::string& value) {
+  _internal_set_common_str(value);
+  // @@protoc_insertion_point(field_set:galbot.aphropm_proto.KinematicResponse.common_str)
+}
+inline std::string* KinematicResponse::mutable_common_str() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.KinematicResponse.common_str)
+  return _internal_mutable_common_str();
+}
+inline const std::string& KinematicResponse::_internal_common_str() const {
+  return common_str_.Get();
+}
+inline void KinematicResponse::_internal_set_common_str(const std::string& value) {
+  
+  common_str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArena());
+}
+inline void KinematicResponse::set_common_str(std::string&& value) {
+  
+  common_str_.Set(
+    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::move(value), GetArena());
+  // @@protoc_insertion_point(field_set_rvalue:galbot.aphropm_proto.KinematicResponse.common_str)
+}
+inline void KinematicResponse::set_common_str(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  common_str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(value), GetArena());
+  // @@protoc_insertion_point(field_set_char:galbot.aphropm_proto.KinematicResponse.common_str)
+}
+inline void KinematicResponse::set_common_str(const char* value,
+    size_t size) {
+  
+  common_str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(
+      reinterpret_cast<const char*>(value), size), GetArena());
+  // @@protoc_insertion_point(field_set_pointer:galbot.aphropm_proto.KinematicResponse.common_str)
+}
+inline std::string* KinematicResponse::_internal_mutable_common_str() {
+  
+  return common_str_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArena());
+}
+inline std::string* KinematicResponse::release_common_str() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.KinematicResponse.common_str)
+  return common_str_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline void KinematicResponse::set_allocated_common_str(std::string* common_str) {
+  if (common_str != nullptr) {
+    
+  } else {
+    
+  }
+  common_str_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), common_str,
+      GetArena());
+  // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.KinematicResponse.common_str)
+}
+
 inline bool KinematicResponse::has_kinematic_result() const {
   return kinematic_result_case() != KINEMATIC_RESULT_NOT_SET;
 }
@@ -12560,6 +19805,34 @@ inline KinematicResponse::KinematicResultCase KinematicResponse::kinematic_resul
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------
@@ -12637,6 +19910,11 @@ template <> struct is_proto_enum< ::galbot::aphropm_proto::SingleChainPlanGoal_P
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::galbot::aphropm_proto::SingleChainPlanGoal_PlanType>() {
   return ::galbot::aphropm_proto::SingleChainPlanGoal_PlanType_descriptor();
+}
+template <> struct is_proto_enum< ::galbot::aphropm_proto::SigPlanReq_PlanType> : ::std::true_type {};
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::galbot::aphropm_proto::SigPlanReq_PlanType>() {
+  return ::galbot::aphropm_proto::SigPlanReq_PlanType_descriptor();
 }
 
 PROTOBUF_NAMESPACE_CLOSE

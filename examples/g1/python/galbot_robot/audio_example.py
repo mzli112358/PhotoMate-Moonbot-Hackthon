@@ -205,9 +205,7 @@ def audio_callback(audio_data: dict):
         return
 
     header = audio_data.get("header", {})
-    timestamp = header.get("timestamp", {})
-    sec = timestamp.get("sec", 0)
-    nanosec = timestamp.get("nanosec", 0)
+    timestamp_ns = header.get("timestamp_ns", 0)
 
     audio_type = audio_data.get("type", "unknown")
     audio_format = audio_data.get("format", "unknown")
@@ -224,11 +222,11 @@ def audio_callback(audio_data: dict):
         print(f"[VAD_END] Voice activity detection ended")
         pass
     elif audio_type == "vad_chunk":
-        # print(f"[AUDIO_CHUNK] Received {data_size} bytes of {audio_format} audio data (timestamp: {sec}.{nanosec:09d})")
+        # print(f"[AUDIO_CHUNK] Received {data_size} bytes of {audio_format} audio data (timestamp_ns: {timestamp_ns})")
         save_audio_to_file("mic_vad.pcm", audio_data.get("data", b""))
         pass
     elif audio_type == "denoise_chunk":
-        # print(f"[DENOISE_AUDIO] Received {data_size} bytes of denoised audio (timestamp: {sec}.{nanosec:09d})")
+        # print(f"[DENOISE_AUDIO] Received {data_size} bytes of denoised audio (timestamp_ns: {timestamp_ns})")
         save_audio_to_file("mic_denoise.pcm", audio_data.get("data", b""))
         pass
     elif audio_type == "waken_up":
@@ -247,6 +245,9 @@ def main():
     if not ok:
         print("Initialization failed")
         return -1
+
+    # Waiting for init done
+    time.sleep(5)
 
     print("\n========================================")
     print("     Galbot audio test tool started")

@@ -23,8 +23,8 @@ constexpr double kHeadSwayYawNegRad = -0.22;
 
 const std::vector<double> kPresetTorso = {0.58};
 const std::vector<double> kPresetHead = {0.0, 0.0};
-const std::vector<double> kPresetLeftArm = {2.0, -1.5, -0.6, -1.7, 0.0, -0.8, 0.0};
-const std::vector<double> kPresetRightArm = {-2.0, 1.5, 0.6, 1.7, 0.0, 0.8, 0.0};
+const std::vector<double> kPresetLeftArm = {2.0, -1.5, -0.6, -1.7, 0.0, -0.7, 0.0};
+const std::vector<double> kPresetRightArm = {-2.0, 1.5, 0.6, 1.7, 0.0, 0.7, 0.0};
 
 const std::vector<std::string> kHeadArmsDemoGroups = {"head", "left_arm", "right_arm"};
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# install.sh - GALBOT_G1_SDK 增量安装脚本
+# install.sh - GALBOT_SDK 增量安装脚本
 #
 # 功能：
 # 1. 读取 deps/*.json 获取依赖声明
@@ -53,7 +53,20 @@ fi
 
 # 默认值
 DEFAULT_INSTALL_DIR="/opt/galbot"
-SDK_VERSION="1.8.1"
+read_sdk_version() {
+    local version_file="${SCRIPT_DIR}/VERSION"
+    if [ ! -f "$version_file" ] && [ -n "${SDK_SOURCE_DIR:-}" ]; then
+        version_file="${SDK_SOURCE_DIR}/VERSION"
+    fi
+    if [ ! -f "$version_file" ]; then
+        echo "unknown"
+        return
+    fi
+
+    sed -n '1{s/[[:space:]]//g;p;q;}' "$version_file"
+}
+
+SDK_VERSION="$(read_sdk_version)"
 EMBOSA_LOG_DIR="/userdata/log/embosa"
 
 # 参数
@@ -111,7 +124,7 @@ cached_file_sha256() {
 
 show_help() {
     cat << EOF
-GALBOT_G1_SDK 安装程序 v${SDK_VERSION}
+GALBOT_SDK 安装程序 v${SDK_VERSION}
 
 用法: ./install.sh [选项]
 
@@ -255,10 +268,13 @@ download_file() {
         return 1
     else
         log_info "  下载: $url"
+        # 避免被当前 shell 中的 SDK 环境变量污染（例如 LD_LIBRARY_PATH 指向 SDK 自带 libcurl）
+        # 导致系统 curl/wget 运行时出现符号版本不匹配。
+        local -a clean_env_cmd=(env -u LD_LIBRARY_PATH -u PYTHONPATH)
         if command -v curl &> /dev/null; then
-            curl -L -o "$output_file" "$url" --progress-bar
+            "${clean_env_cmd[@]}" curl -L -o "$output_file" "$url" --progress-bar
         elif command -v wget &> /dev/null; then
-            wget -O "$output_file" "$url"
+            "${clean_env_cmd[@]}" wget -O "$output_file" "$url"
         else
             log_error "  未找到 curl 或 wget"
             return 1
@@ -1068,8 +1084,8 @@ post_install_optional_steps() {
 
 main() {
     echo "=========================================="
-    echo " GALBOT_G1_SDK 安装程序 v${SDK_VERSION}"
-echo "=========================================="
+    echo " GALBOT_SDK 安装程序 v${SDK_VERSION}"
+    echo "=========================================="
     echo
     
     # 解析参数

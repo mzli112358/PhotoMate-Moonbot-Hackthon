@@ -24,8 +24,8 @@ _K_TIMEOUT_S = 20.0
 
 _K_PRESET_TORSO: List[float] = [0.58]
 _K_PRESET_HEAD: List[float] = [0.0, 0.0]
-_K_PRESET_LEFT_ARM: List[float] = [2.0, -1.5, -0.6, -1.7, 0.0, -0.8, 0.0]
-_K_PRESET_RIGHT_ARM: List[float] = [-2.0, 1.5, 0.6, 1.7, 0.0, 0.8, 0.0]
+_K_PRESET_LEFT_ARM: List[float] = [2.0, -1.5, -0.6, -1.7, 0.0, -0.7, 0.0]
+_K_PRESET_RIGHT_ARM: List[float] = [-2.0, 1.5, 0.6, 1.7, 0.0, 0.7, 0.0]
 
 _K_HEAD_ARMS_DEMO_GROUPS: List[str] = ["head", "left_arm", "right_arm"]
 _K_HEAD_ARMS_DEMO_DT_S = 0.06

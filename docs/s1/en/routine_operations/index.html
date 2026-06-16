@@ -1295,6 +1295,7 @@
 <hr />
 <h2 id="map-engine-mapping-localization">Map Engine - Mapping &amp; Localization</h2>
 <p>The map engine is the core foundation of the navigation function. It is not an optional add-on, <strong>but a mandatory prerequisite for navigation</strong>. Before using the navigation function, you must complete mapping and ensure localization is running properly. Failure to complete mapping and localization correctly will result in the navigation function not working.</p>
+<p>When localization and navigation services are enabled (the robot working mode may start navigation services by default), mapping must be completed first. A new robot must be mapped before first use; otherwise, localization cannot start correctly and the robot may enter abnormal mode.</p>
 <hr />
 <h3 id="mapping-process">Mapping Process</h3>
 <p>Mapping is a prerequisite for navigation. You must complete the construction of an environment map before using the navigation function.</p>
@@ -1338,6 +1339,13 @@
 </span></code></pre></div>
 <p>After launching the tool, enter <code>1</code> and press Enter to select the save map function. The default save path is <code>/var/maps/room1102</code>, as shown below:</p>
 <p><img alt="Save Map" src="/image/savepic.jpg" /></p>
+<p>After saving the map, the map directory must contain <code>global_cloud_cleaned.pcd</code> for subsequent localization.</p>
+<ul>
+<li>If point cloud post-processing has been completed, make sure the cleaned map file is named <code>global_cloud_cleaned.pcd</code></li>
+<li>If map noise removal is not performed for now, run the following command in the map directory:</li>
+</ul>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>cp<span class="w"> </span>global_cloud.pcd<span class="w"> </span>global_cloud_cleaned.pcd
+</span></code></pre></div>
 <h4 id="4-edit-map-optional">4. Edit Map (Optional)</h4>
 <p>This step is used to optimize map quality, improving navigation accuracy and safety.</p>
 <div class="admonition info">
@@ -1348,6 +1356,7 @@
 </ul>
 </div>
 <h5 id="41-remove-map-noise-optional">4.1 Remove Map Noise (Optional)</h5>
+<p>This step is recommended. The map may usually contain some noise points, and removing them can improve the navigation success rate. In particular, rooms with mirrors, frosted glass, or similar materials are more likely to produce noise points in the point cloud map, so CloudCompare post-processing is recommended.</p>
 <p>You need to check for noise points within the robot's operating area (from ground level up to 2.5 meters in height). Ground points do not affect navigation; the main focus is on checking and removing airborne floating noise points.</p>
 <p><strong>Preparation</strong>: Download CloudCompare software</p>
 <p>Download link: <a href="https://www.cloudcompare.org/release/index.html">https://www.cloudcompare.org/release/index.html</a></p>
@@ -1390,8 +1399,8 @@
 <li>Save the cleaned map:</li>
 <li>Select Edit → Merge to merge the two point clouds</li>
 <li>Select File → Save to save the point cloud</li>
-<li>Name it <code>global_cloud_cleand</code></li>
-<li>Move the cleaned map <code>global_cloud_cleand.pcd</code> to the map folder <code>/var/maps/room1102/</code></li>
+<li>It must be named <code>global_cloud_cleaned.pcd</code></li>
+<li>Move the cleaned map <code>global_cloud_cleaned.pcd</code> to the map folder <code>/var/maps/room1102/</code></li>
 </ol>
 <p><img alt="opensource4" src="/image/opensource4.jpg" /></p>
 <h5 id="42-edit-osm-file-optional">4.2 Edit OSM File (Optional)</h5>
@@ -1414,7 +1423,7 @@
 </ol>
 <p><img alt="osm2" src="/image/osm2.jpg" /></p>
 <p><strong>Install JOSM</strong> (if not installed):</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>josm
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>josm
 </span></code></pre></div>
 <p>After installation, enter <code>josm</code> in the terminal to open the software.</p>
 <p><strong>Steps to draw geofences</strong>:</p>
@@ -1439,7 +1448,7 @@
 </div>
 <p>To save computing resources, the map update feature is disabled by default. You can manually enable the update switch and save the updated map:</p>
 <p><strong>Step 1</strong>: When localization is stable (current score &gt; 0.9), enable the map update switch</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>vim<span class="w"> </span>/data/galbot/config/mes/manager.config
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>vim<span class="w"> </span>/data/galbot/config/mes/manager.config
 </span></code></pre></div>
 <p>Change <code>manager_update_map=0</code> to <code>manager_update_map=1</code></p>
 <p><strong>Step 2</strong>: Restart localization in place. Once the score returns to normal (current score &gt; 0.9), run <code>engine_tools</code> and choose Start Map Update</p>
@@ -1462,11 +1471,11 @@
 <p><img alt="cur" src="/image/cur.jpg" /></p>
 <h4 id="2-start-localization-required">2. Start Localization (Required)</h4>
 <p>Start the localization service:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>/data/galbot/bin/localization_server
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>/data/galbot/bin/localization_server
 </span></code></pre></div>
 <h4 id="3-check-localization-status-required">3. Check Localization Status (Required)</h4>
 <p>Check localization status:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>tail<span class="w"> </span>-f<span class="w"> </span>/userdata/log/localization_server/localization_server.INFO
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>tail<span class="w"> </span>-f<span class="w"> </span>/userdata/log/localization_server/localization_server.INFO
 </span></code></pre></div>
 <p><img alt="state" src="/image/state.jpg" /></p>
 <p>If the score is below 0.75 or no score/pose is published, use the <a href="#s1-remote-control">Remote Controller</a> to move the robot to the mapping start pose and send an initial pose once (use <code>engine_tools</code>, enter <code>2</code>, and press Enter), as shown below:</p>
@@ -1498,7 +1507,7 @@
 <ul>
 <li>The remote controller has the highest priority. When in remote control mode, developers and testers should close singorix to avoid unexpected lift or chassis movement after disconnecting the controller. Re-enable it after finishing remote control. Use the following command:</li>
 </ul>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>systemctl<span class="w"> </span>stop<span class="w"> </span>launcher
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>systemctl<span class="w"> </span>stop<span class="w"> </span>launcher
 </span></code></pre></div>
 <ul>
 <li>After using the remote controller, turn off its power. If the receiver is online, check the screen prompt (varies by controller firmware version), select an option using the dial, and confirm to shut down.</li>

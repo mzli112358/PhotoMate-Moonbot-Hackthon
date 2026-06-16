@@ -117,7 +117,7 @@ VERSION_COMPATIBILITY_MAP = [
 ]
 
 # 构建时注入的默认 SDK 版本（兼容旧版本 SDK）
-_BUILTIN_SDK_VERSION = "1.8.1"
+_BUILTIN_SDK_VERSION = "1.9.0"
 
 
 def parse_args():

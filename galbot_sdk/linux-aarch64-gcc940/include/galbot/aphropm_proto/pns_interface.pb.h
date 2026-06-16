@@ -33,6 +33,7 @@
 #include <google/protobuf/generated_enum_reflection.h>
 #include <google/protobuf/unknown_field_set.h>
 #include "galbot/core_proto/header.pb.h"
+#include "galbot/core_proto/time.pb.h"
 #include "galbot/aphropm_proto/common_def.pb.h"
 #include "galbot/aphropm_proto/common_interface.pb.h"
 #include "galbot/aphropm_proto/collision_object_def.pb.h"
@@ -53,7 +54,7 @@ struct TableStruct_galbot_2faphropm_5fproto_2fpns_5finterface_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxiliaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[11]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[12]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -80,6 +81,9 @@ extern NavigationExceptionDefaultTypeInternal _NavigationException_default_insta
 class NavigationMotionPlanReq;
 class NavigationMotionPlanReqDefaultTypeInternal;
 extern NavigationMotionPlanReqDefaultTypeInternal _NavigationMotionPlanReq_default_instance_;
+class NavigationProcessInfo;
+class NavigationProcessInfoDefaultTypeInternal;
+extern NavigationProcessInfoDefaultTypeInternal _NavigationProcessInfo_default_instance_;
 class NavigationRequest;
 class NavigationRequestDefaultTypeInternal;
 extern NavigationRequestDefaultTypeInternal _NavigationRequest_default_instance_;
@@ -104,6 +108,7 @@ template<> ::galbot::aphropm_proto::LoadEnvReq* Arena::CreateMaybeMessage<::galb
 template<> ::galbot::aphropm_proto::MoveTrajectoryReq* Arena::CreateMaybeMessage<::galbot::aphropm_proto::MoveTrajectoryReq>(Arena*);
 template<> ::galbot::aphropm_proto::NavigationException* Arena::CreateMaybeMessage<::galbot::aphropm_proto::NavigationException>(Arena*);
 template<> ::galbot::aphropm_proto::NavigationMotionPlanReq* Arena::CreateMaybeMessage<::galbot::aphropm_proto::NavigationMotionPlanReq>(Arena*);
+template<> ::galbot::aphropm_proto::NavigationProcessInfo* Arena::CreateMaybeMessage<::galbot::aphropm_proto::NavigationProcessInfo>(Arena*);
 template<> ::galbot::aphropm_proto::NavigationRequest* Arena::CreateMaybeMessage<::galbot::aphropm_proto::NavigationRequest>(Arena*);
 template<> ::galbot::aphropm_proto::NavigationResponse* Arena::CreateMaybeMessage<::galbot::aphropm_proto::NavigationResponse>(Arena*);
 template<> ::galbot::aphropm_proto::NavigationResult* Arena::CreateMaybeMessage<::galbot::aphropm_proto::NavigationResult>(Arena*);
@@ -195,12 +200,16 @@ enum NavigationResult_TaskStatus : int {
   NavigationResult_TaskStatus_RUNNING = 1,
   NavigationResult_TaskStatus_SUCCESS = 2,
   NavigationResult_TaskStatus_FAILED = 3,
+  NavigationResult_TaskStatus_INTERRUPTED = 4,
+  NavigationResult_TaskStatus_OCCUPIED = 5,
+  NavigationResult_TaskStatus_COLLISION = 6,
+  NavigationResult_TaskStatus_CLOSE_TO_OBSTACLE = 7,
   NavigationResult_TaskStatus_NavigationResult_TaskStatus_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::min(),
   NavigationResult_TaskStatus_NavigationResult_TaskStatus_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::max()
 };
 bool NavigationResult_TaskStatus_IsValid(int value);
 constexpr NavigationResult_TaskStatus NavigationResult_TaskStatus_TaskStatus_MIN = NavigationResult_TaskStatus_UNKNOWN;
-constexpr NavigationResult_TaskStatus NavigationResult_TaskStatus_TaskStatus_MAX = NavigationResult_TaskStatus_FAILED;
+constexpr NavigationResult_TaskStatus NavigationResult_TaskStatus_TaskStatus_MAX = NavigationResult_TaskStatus_CLOSE_TO_OBSTACLE;
 constexpr int NavigationResult_TaskStatus_TaskStatus_ARRAYSIZE = NavigationResult_TaskStatus_TaskStatus_MAX + 1;
 
 const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* NavigationResult_TaskStatus_descriptor();
@@ -1738,6 +1747,207 @@ class NavigationResponse PROTOBUF_FINAL :
 };
 // -------------------------------------------------------------------
 
+class NavigationProcessInfo PROTOBUF_FINAL :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:galbot.aphropm_proto.NavigationProcessInfo) */ {
+ public:
+  inline NavigationProcessInfo() : NavigationProcessInfo(nullptr) {}
+  virtual ~NavigationProcessInfo();
+
+  NavigationProcessInfo(const NavigationProcessInfo& from);
+  NavigationProcessInfo(NavigationProcessInfo&& from) noexcept
+    : NavigationProcessInfo() {
+    *this = ::std::move(from);
+  }
+
+  inline NavigationProcessInfo& operator=(const NavigationProcessInfo& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline NavigationProcessInfo& operator=(NavigationProcessInfo&& from) noexcept {
+    if (GetArena() == from.GetArena()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const NavigationProcessInfo& default_instance();
+
+  static inline const NavigationProcessInfo* internal_default_instance() {
+    return reinterpret_cast<const NavigationProcessInfo*>(
+               &_NavigationProcessInfo_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    7;
+
+  friend void swap(NavigationProcessInfo& a, NavigationProcessInfo& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(NavigationProcessInfo* other) {
+    if (other == this) return;
+    if (GetArena() == other->GetArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(NavigationProcessInfo* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline NavigationProcessInfo* New() const final {
+    return CreateMaybeMessage<NavigationProcessInfo>(nullptr);
+  }
+
+  NavigationProcessInfo* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<NavigationProcessInfo>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const NavigationProcessInfo& from);
+  void MergeFrom(const NavigationProcessInfo& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(NavigationProcessInfo* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "galbot.aphropm_proto.NavigationProcessInfo";
+  }
+  protected:
+  explicit NavigationProcessInfo(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_galbot_2faphropm_5fproto_2fpns_5finterface_2eproto);
+    return ::descriptor_table_galbot_2faphropm_5fproto_2fpns_5finterface_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kMsgFieldNumber = 3,
+    kCommonStrFieldNumber = 100,
+    kTimestampFieldNumber = 1,
+    kCollisionStateFieldNumber = 2,
+  };
+  // string msg = 3;
+  void clear_msg();
+  const std::string& msg() const;
+  void set_msg(const std::string& value);
+  void set_msg(std::string&& value);
+  void set_msg(const char* value);
+  void set_msg(const char* value, size_t size);
+  std::string* mutable_msg();
+  std::string* release_msg();
+  void set_allocated_msg(std::string* msg);
+  private:
+  const std::string& _internal_msg() const;
+  void _internal_set_msg(const std::string& value);
+  std::string* _internal_mutable_msg();
+  public:
+
+  // string common_str = 100;
+  void clear_common_str();
+  const std::string& common_str() const;
+  void set_common_str(const std::string& value);
+  void set_common_str(std::string&& value);
+  void set_common_str(const char* value);
+  void set_common_str(const char* value, size_t size);
+  std::string* mutable_common_str();
+  std::string* release_common_str();
+  void set_allocated_common_str(std::string* common_str);
+  private:
+  const std::string& _internal_common_str() const;
+  void _internal_set_common_str(const std::string& value);
+  std::string* _internal_mutable_common_str();
+  public:
+
+  // .galbot.core_proto.Timestamp timestamp = 1;
+  bool has_timestamp() const;
+  private:
+  bool _internal_has_timestamp() const;
+  public:
+  void clear_timestamp();
+  const ::galbot::core_proto::Timestamp& timestamp() const;
+  ::galbot::core_proto::Timestamp* release_timestamp();
+  ::galbot::core_proto::Timestamp* mutable_timestamp();
+  void set_allocated_timestamp(::galbot::core_proto::Timestamp* timestamp);
+  private:
+  const ::galbot::core_proto::Timestamp& _internal_timestamp() const;
+  ::galbot::core_proto::Timestamp* _internal_mutable_timestamp();
+  public:
+  void unsafe_arena_set_allocated_timestamp(
+      ::galbot::core_proto::Timestamp* timestamp);
+  ::galbot::core_proto::Timestamp* unsafe_arena_release_timestamp();
+
+  // .galbot.aphropm_proto.RobotStates collision_state = 2;
+  bool has_collision_state() const;
+  private:
+  bool _internal_has_collision_state() const;
+  public:
+  void clear_collision_state();
+  const ::galbot::aphropm_proto::RobotStates& collision_state() const;
+  ::galbot::aphropm_proto::RobotStates* release_collision_state();
+  ::galbot::aphropm_proto::RobotStates* mutable_collision_state();
+  void set_allocated_collision_state(::galbot::aphropm_proto::RobotStates* collision_state);
+  private:
+  const ::galbot::aphropm_proto::RobotStates& _internal_collision_state() const;
+  ::galbot::aphropm_proto::RobotStates* _internal_mutable_collision_state();
+  public:
+  void unsafe_arena_set_allocated_collision_state(
+      ::galbot::aphropm_proto::RobotStates* collision_state);
+  ::galbot::aphropm_proto::RobotStates* unsafe_arena_release_collision_state();
+
+  // @@protoc_insertion_point(class_scope:galbot.aphropm_proto.NavigationProcessInfo)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr msg_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr common_str_;
+  ::galbot::core_proto::Timestamp* timestamp_;
+  ::galbot::aphropm_proto::RobotStates* collision_state_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_galbot_2faphropm_5fproto_2fpns_5finterface_2eproto;
+};
+// -------------------------------------------------------------------
+
 class NavigationResult PROTOBUF_FINAL :
     public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:galbot.aphropm_proto.NavigationResult) */ {
  public:
@@ -1779,7 +1989,7 @@ class NavigationResult PROTOBUF_FINAL :
                &_NavigationResult_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    7;
+    8;
 
   friend void swap(NavigationResult& a, NavigationResult& b) {
     a.Swap(&b);
@@ -1856,6 +2066,14 @@ class NavigationResult PROTOBUF_FINAL :
     NavigationResult_TaskStatus_SUCCESS;
   static constexpr TaskStatus FAILED =
     NavigationResult_TaskStatus_FAILED;
+  static constexpr TaskStatus INTERRUPTED =
+    NavigationResult_TaskStatus_INTERRUPTED;
+  static constexpr TaskStatus OCCUPIED =
+    NavigationResult_TaskStatus_OCCUPIED;
+  static constexpr TaskStatus COLLISION =
+    NavigationResult_TaskStatus_COLLISION;
+  static constexpr TaskStatus CLOSE_TO_OBSTACLE =
+    NavigationResult_TaskStatus_CLOSE_TO_OBSTACLE;
   static inline bool TaskStatus_IsValid(int value) {
     return NavigationResult_TaskStatus_IsValid(value);
   }
@@ -1885,11 +2103,11 @@ class NavigationResult PROTOBUF_FINAL :
 
   enum : int {
     kTaskIdFieldNumber = 2,
-    kErrMsgFieldNumber = 5,
+    kMsgFieldNumber = 4,
     kCommonStrFieldNumber = 501,
     kHeaderFieldNumber = 1,
+    kProcessInfoFieldNumber = 5,
     kStatusFieldNumber = 3,
-    kErrCodeFieldNumber = 4,
   };
   // string task_id = 2;
   void clear_task_id();
@@ -1907,20 +2125,20 @@ class NavigationResult PROTOBUF_FINAL :
   std::string* _internal_mutable_task_id();
   public:
 
-  // string err_msg = 5;
-  void clear_err_msg();
-  const std::string& err_msg() const;
-  void set_err_msg(const std::string& value);
-  void set_err_msg(std::string&& value);
-  void set_err_msg(const char* value);
-  void set_err_msg(const char* value, size_t size);
-  std::string* mutable_err_msg();
-  std::string* release_err_msg();
-  void set_allocated_err_msg(std::string* err_msg);
+  // string msg = 4;
+  void clear_msg();
+  const std::string& msg() const;
+  void set_msg(const std::string& value);
+  void set_msg(std::string&& value);
+  void set_msg(const char* value);
+  void set_msg(const char* value, size_t size);
+  std::string* mutable_msg();
+  std::string* release_msg();
+  void set_allocated_msg(std::string* msg);
   private:
-  const std::string& _internal_err_msg() const;
-  void _internal_set_err_msg(const std::string& value);
-  std::string* _internal_mutable_err_msg();
+  const std::string& _internal_msg() const;
+  void _internal_set_msg(const std::string& value);
+  std::string* _internal_mutable_msg();
   public:
 
   // string common_str = 501;
@@ -1957,6 +2175,24 @@ class NavigationResult PROTOBUF_FINAL :
       ::galbot::core_proto::Header* header);
   ::galbot::core_proto::Header* unsafe_arena_release_header();
 
+  // .galbot.aphropm_proto.NavigationProcessInfo process_info = 5;
+  bool has_process_info() const;
+  private:
+  bool _internal_has_process_info() const;
+  public:
+  void clear_process_info();
+  const ::galbot::aphropm_proto::NavigationProcessInfo& process_info() const;
+  ::galbot::aphropm_proto::NavigationProcessInfo* release_process_info();
+  ::galbot::aphropm_proto::NavigationProcessInfo* mutable_process_info();
+  void set_allocated_process_info(::galbot::aphropm_proto::NavigationProcessInfo* process_info);
+  private:
+  const ::galbot::aphropm_proto::NavigationProcessInfo& _internal_process_info() const;
+  ::galbot::aphropm_proto::NavigationProcessInfo* _internal_mutable_process_info();
+  public:
+  void unsafe_arena_set_allocated_process_info(
+      ::galbot::aphropm_proto::NavigationProcessInfo* process_info);
+  ::galbot::aphropm_proto::NavigationProcessInfo* unsafe_arena_release_process_info();
+
   // .galbot.aphropm_proto.NavigationResult.TaskStatus status = 3;
   void clear_status();
   ::galbot::aphropm_proto::NavigationResult_TaskStatus status() const;
@@ -1964,15 +2200,6 @@ class NavigationResult PROTOBUF_FINAL :
   private:
   ::galbot::aphropm_proto::NavigationResult_TaskStatus _internal_status() const;
   void _internal_set_status(::galbot::aphropm_proto::NavigationResult_TaskStatus value);
-  public:
-
-  // int32 err_code = 4;
-  void clear_err_code();
-  ::PROTOBUF_NAMESPACE_ID::int32 err_code() const;
-  void set_err_code(::PROTOBUF_NAMESPACE_ID::int32 value);
-  private:
-  ::PROTOBUF_NAMESPACE_ID::int32 _internal_err_code() const;
-  void _internal_set_err_code(::PROTOBUF_NAMESPACE_ID::int32 value);
   public:
 
   // @@protoc_insertion_point(class_scope:galbot.aphropm_proto.NavigationResult)
@@ -1983,11 +2210,11 @@ class NavigationResult PROTOBUF_FINAL :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr task_id_;
-  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr err_msg_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr msg_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr common_str_;
   ::galbot::core_proto::Header* header_;
+  ::galbot::aphropm_proto::NavigationProcessInfo* process_info_;
   int status_;
-  ::PROTOBUF_NAMESPACE_ID::int32 err_code_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_galbot_2faphropm_5fproto_2fpns_5finterface_2eproto;
 };
@@ -2034,7 +2261,7 @@ class NavigationException PROTOBUF_FINAL :
                &_NavigationException_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    8;
+    9;
 
   friend void swap(NavigationException& a, NavigationException& b) {
     a.Swap(&b);
@@ -2270,7 +2497,7 @@ class PoseAvailability PROTOBUF_FINAL :
                &_PoseAvailability_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    9;
+    10;
 
   friend void swap(PoseAvailability& a, PoseAvailability& b) {
     a.Swap(&b);
@@ -2442,7 +2669,7 @@ class EvaluateGoalAvailabilityResponse PROTOBUF_FINAL :
                &_EvaluateGoalAvailabilityResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    10;
+    11;
 
   friend void swap(EvaluateGoalAvailabilityResponse& a, EvaluateGoalAvailabilityResponse& b) {
     a.Swap(&b);
@@ -4180,6 +4407,286 @@ inline void NavigationResponse::set_allocated_common_str(std::string* common_str
 
 // -------------------------------------------------------------------
 
+// NavigationProcessInfo
+
+// .galbot.core_proto.Timestamp timestamp = 1;
+inline bool NavigationProcessInfo::_internal_has_timestamp() const {
+  return this != internal_default_instance() && timestamp_ != nullptr;
+}
+inline bool NavigationProcessInfo::has_timestamp() const {
+  return _internal_has_timestamp();
+}
+inline const ::galbot::core_proto::Timestamp& NavigationProcessInfo::_internal_timestamp() const {
+  const ::galbot::core_proto::Timestamp* p = timestamp_;
+  return p != nullptr ? *p : reinterpret_cast<const ::galbot::core_proto::Timestamp&>(
+      ::galbot::core_proto::_Timestamp_default_instance_);
+}
+inline const ::galbot::core_proto::Timestamp& NavigationProcessInfo::timestamp() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.NavigationProcessInfo.timestamp)
+  return _internal_timestamp();
+}
+inline void NavigationProcessInfo::unsafe_arena_set_allocated_timestamp(
+    ::galbot::core_proto::Timestamp* timestamp) {
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(timestamp_);
+  }
+  timestamp_ = timestamp;
+  if (timestamp) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:galbot.aphropm_proto.NavigationProcessInfo.timestamp)
+}
+inline ::galbot::core_proto::Timestamp* NavigationProcessInfo::release_timestamp() {
+  
+  ::galbot::core_proto::Timestamp* temp = timestamp_;
+  timestamp_ = nullptr;
+  if (GetArena() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+  return temp;
+}
+inline ::galbot::core_proto::Timestamp* NavigationProcessInfo::unsafe_arena_release_timestamp() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.NavigationProcessInfo.timestamp)
+  
+  ::galbot::core_proto::Timestamp* temp = timestamp_;
+  timestamp_ = nullptr;
+  return temp;
+}
+inline ::galbot::core_proto::Timestamp* NavigationProcessInfo::_internal_mutable_timestamp() {
+  
+  if (timestamp_ == nullptr) {
+    auto* p = CreateMaybeMessage<::galbot::core_proto::Timestamp>(GetArena());
+    timestamp_ = p;
+  }
+  return timestamp_;
+}
+inline ::galbot::core_proto::Timestamp* NavigationProcessInfo::mutable_timestamp() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.NavigationProcessInfo.timestamp)
+  return _internal_mutable_timestamp();
+}
+inline void NavigationProcessInfo::set_allocated_timestamp(::galbot::core_proto::Timestamp* timestamp) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArena();
+  if (message_arena == nullptr) {
+    delete reinterpret_cast< ::PROTOBUF_NAMESPACE_ID::MessageLite*>(timestamp_);
+  }
+  if (timestamp) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+      reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(timestamp)->GetArena();
+    if (message_arena != submessage_arena) {
+      timestamp = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, timestamp, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  timestamp_ = timestamp;
+  // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.NavigationProcessInfo.timestamp)
+}
+
+// .galbot.aphropm_proto.RobotStates collision_state = 2;
+inline bool NavigationProcessInfo::_internal_has_collision_state() const {
+  return this != internal_default_instance() && collision_state_ != nullptr;
+}
+inline bool NavigationProcessInfo::has_collision_state() const {
+  return _internal_has_collision_state();
+}
+inline const ::galbot::aphropm_proto::RobotStates& NavigationProcessInfo::_internal_collision_state() const {
+  const ::galbot::aphropm_proto::RobotStates* p = collision_state_;
+  return p != nullptr ? *p : reinterpret_cast<const ::galbot::aphropm_proto::RobotStates&>(
+      ::galbot::aphropm_proto::_RobotStates_default_instance_);
+}
+inline const ::galbot::aphropm_proto::RobotStates& NavigationProcessInfo::collision_state() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.NavigationProcessInfo.collision_state)
+  return _internal_collision_state();
+}
+inline void NavigationProcessInfo::unsafe_arena_set_allocated_collision_state(
+    ::galbot::aphropm_proto::RobotStates* collision_state) {
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(collision_state_);
+  }
+  collision_state_ = collision_state;
+  if (collision_state) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:galbot.aphropm_proto.NavigationProcessInfo.collision_state)
+}
+inline ::galbot::aphropm_proto::RobotStates* NavigationProcessInfo::release_collision_state() {
+  
+  ::galbot::aphropm_proto::RobotStates* temp = collision_state_;
+  collision_state_ = nullptr;
+  if (GetArena() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+  return temp;
+}
+inline ::galbot::aphropm_proto::RobotStates* NavigationProcessInfo::unsafe_arena_release_collision_state() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.NavigationProcessInfo.collision_state)
+  
+  ::galbot::aphropm_proto::RobotStates* temp = collision_state_;
+  collision_state_ = nullptr;
+  return temp;
+}
+inline ::galbot::aphropm_proto::RobotStates* NavigationProcessInfo::_internal_mutable_collision_state() {
+  
+  if (collision_state_ == nullptr) {
+    auto* p = CreateMaybeMessage<::galbot::aphropm_proto::RobotStates>(GetArena());
+    collision_state_ = p;
+  }
+  return collision_state_;
+}
+inline ::galbot::aphropm_proto::RobotStates* NavigationProcessInfo::mutable_collision_state() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.NavigationProcessInfo.collision_state)
+  return _internal_mutable_collision_state();
+}
+inline void NavigationProcessInfo::set_allocated_collision_state(::galbot::aphropm_proto::RobotStates* collision_state) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArena();
+  if (message_arena == nullptr) {
+    delete reinterpret_cast< ::PROTOBUF_NAMESPACE_ID::MessageLite*>(collision_state_);
+  }
+  if (collision_state) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+      reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(collision_state)->GetArena();
+    if (message_arena != submessage_arena) {
+      collision_state = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, collision_state, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  collision_state_ = collision_state;
+  // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.NavigationProcessInfo.collision_state)
+}
+
+// string msg = 3;
+inline void NavigationProcessInfo::clear_msg() {
+  msg_.ClearToEmpty();
+}
+inline const std::string& NavigationProcessInfo::msg() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.NavigationProcessInfo.msg)
+  return _internal_msg();
+}
+inline void NavigationProcessInfo::set_msg(const std::string& value) {
+  _internal_set_msg(value);
+  // @@protoc_insertion_point(field_set:galbot.aphropm_proto.NavigationProcessInfo.msg)
+}
+inline std::string* NavigationProcessInfo::mutable_msg() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.NavigationProcessInfo.msg)
+  return _internal_mutable_msg();
+}
+inline const std::string& NavigationProcessInfo::_internal_msg() const {
+  return msg_.Get();
+}
+inline void NavigationProcessInfo::_internal_set_msg(const std::string& value) {
+  
+  msg_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArena());
+}
+inline void NavigationProcessInfo::set_msg(std::string&& value) {
+  
+  msg_.Set(
+    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::move(value), GetArena());
+  // @@protoc_insertion_point(field_set_rvalue:galbot.aphropm_proto.NavigationProcessInfo.msg)
+}
+inline void NavigationProcessInfo::set_msg(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  msg_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(value), GetArena());
+  // @@protoc_insertion_point(field_set_char:galbot.aphropm_proto.NavigationProcessInfo.msg)
+}
+inline void NavigationProcessInfo::set_msg(const char* value,
+    size_t size) {
+  
+  msg_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(
+      reinterpret_cast<const char*>(value), size), GetArena());
+  // @@protoc_insertion_point(field_set_pointer:galbot.aphropm_proto.NavigationProcessInfo.msg)
+}
+inline std::string* NavigationProcessInfo::_internal_mutable_msg() {
+  
+  return msg_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArena());
+}
+inline std::string* NavigationProcessInfo::release_msg() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.NavigationProcessInfo.msg)
+  return msg_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline void NavigationProcessInfo::set_allocated_msg(std::string* msg) {
+  if (msg != nullptr) {
+    
+  } else {
+    
+  }
+  msg_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), msg,
+      GetArena());
+  // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.NavigationProcessInfo.msg)
+}
+
+// string common_str = 100;
+inline void NavigationProcessInfo::clear_common_str() {
+  common_str_.ClearToEmpty();
+}
+inline const std::string& NavigationProcessInfo::common_str() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.NavigationProcessInfo.common_str)
+  return _internal_common_str();
+}
+inline void NavigationProcessInfo::set_common_str(const std::string& value) {
+  _internal_set_common_str(value);
+  // @@protoc_insertion_point(field_set:galbot.aphropm_proto.NavigationProcessInfo.common_str)
+}
+inline std::string* NavigationProcessInfo::mutable_common_str() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.NavigationProcessInfo.common_str)
+  return _internal_mutable_common_str();
+}
+inline const std::string& NavigationProcessInfo::_internal_common_str() const {
+  return common_str_.Get();
+}
+inline void NavigationProcessInfo::_internal_set_common_str(const std::string& value) {
+  
+  common_str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArena());
+}
+inline void NavigationProcessInfo::set_common_str(std::string&& value) {
+  
+  common_str_.Set(
+    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::move(value), GetArena());
+  // @@protoc_insertion_point(field_set_rvalue:galbot.aphropm_proto.NavigationProcessInfo.common_str)
+}
+inline void NavigationProcessInfo::set_common_str(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  common_str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(value), GetArena());
+  // @@protoc_insertion_point(field_set_char:galbot.aphropm_proto.NavigationProcessInfo.common_str)
+}
+inline void NavigationProcessInfo::set_common_str(const char* value,
+    size_t size) {
+  
+  common_str_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(
+      reinterpret_cast<const char*>(value), size), GetArena());
+  // @@protoc_insertion_point(field_set_pointer:galbot.aphropm_proto.NavigationProcessInfo.common_str)
+}
+inline std::string* NavigationProcessInfo::_internal_mutable_common_str() {
+  
+  return common_str_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArena());
+}
+inline std::string* NavigationProcessInfo::release_common_str() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.NavigationProcessInfo.common_str)
+  return common_str_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline void NavigationProcessInfo::set_allocated_common_str(std::string* common_str) {
+  if (common_str != nullptr) {
+    
+  } else {
+    
+  }
+  common_str_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), common_str,
+      GetArena());
+  // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.NavigationProcessInfo.common_str)
+}
+
+// -------------------------------------------------------------------
+
 // NavigationResult
 
 // .galbot.core_proto.Header header = 1;
@@ -4340,85 +4847,148 @@ inline void NavigationResult::set_status(::galbot::aphropm_proto::NavigationResu
   // @@protoc_insertion_point(field_set:galbot.aphropm_proto.NavigationResult.status)
 }
 
-// int32 err_code = 4;
-inline void NavigationResult::clear_err_code() {
-  err_code_ = 0;
+// string msg = 4;
+inline void NavigationResult::clear_msg() {
+  msg_.ClearToEmpty();
 }
-inline ::PROTOBUF_NAMESPACE_ID::int32 NavigationResult::_internal_err_code() const {
-  return err_code_;
+inline const std::string& NavigationResult::msg() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.NavigationResult.msg)
+  return _internal_msg();
 }
-inline ::PROTOBUF_NAMESPACE_ID::int32 NavigationResult::err_code() const {
-  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.NavigationResult.err_code)
-  return _internal_err_code();
+inline void NavigationResult::set_msg(const std::string& value) {
+  _internal_set_msg(value);
+  // @@protoc_insertion_point(field_set:galbot.aphropm_proto.NavigationResult.msg)
 }
-inline void NavigationResult::_internal_set_err_code(::PROTOBUF_NAMESPACE_ID::int32 value) {
+inline std::string* NavigationResult::mutable_msg() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.NavigationResult.msg)
+  return _internal_mutable_msg();
+}
+inline const std::string& NavigationResult::_internal_msg() const {
+  return msg_.Get();
+}
+inline void NavigationResult::_internal_set_msg(const std::string& value) {
   
-  err_code_ = value;
+  msg_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArena());
 }
-inline void NavigationResult::set_err_code(::PROTOBUF_NAMESPACE_ID::int32 value) {
-  _internal_set_err_code(value);
-  // @@protoc_insertion_point(field_set:galbot.aphropm_proto.NavigationResult.err_code)
-}
-
-// string err_msg = 5;
-inline void NavigationResult::clear_err_msg() {
-  err_msg_.ClearToEmpty();
-}
-inline const std::string& NavigationResult::err_msg() const {
-  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.NavigationResult.err_msg)
-  return _internal_err_msg();
-}
-inline void NavigationResult::set_err_msg(const std::string& value) {
-  _internal_set_err_msg(value);
-  // @@protoc_insertion_point(field_set:galbot.aphropm_proto.NavigationResult.err_msg)
-}
-inline std::string* NavigationResult::mutable_err_msg() {
-  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.NavigationResult.err_msg)
-  return _internal_mutable_err_msg();
-}
-inline const std::string& NavigationResult::_internal_err_msg() const {
-  return err_msg_.Get();
-}
-inline void NavigationResult::_internal_set_err_msg(const std::string& value) {
+inline void NavigationResult::set_msg(std::string&& value) {
   
-  err_msg_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArena());
-}
-inline void NavigationResult::set_err_msg(std::string&& value) {
-  
-  err_msg_.Set(
+  msg_.Set(
     ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::move(value), GetArena());
-  // @@protoc_insertion_point(field_set_rvalue:galbot.aphropm_proto.NavigationResult.err_msg)
+  // @@protoc_insertion_point(field_set_rvalue:galbot.aphropm_proto.NavigationResult.msg)
 }
-inline void NavigationResult::set_err_msg(const char* value) {
+inline void NavigationResult::set_msg(const char* value) {
   GOOGLE_DCHECK(value != nullptr);
   
-  err_msg_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(value), GetArena());
-  // @@protoc_insertion_point(field_set_char:galbot.aphropm_proto.NavigationResult.err_msg)
+  msg_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(value), GetArena());
+  // @@protoc_insertion_point(field_set_char:galbot.aphropm_proto.NavigationResult.msg)
 }
-inline void NavigationResult::set_err_msg(const char* value,
+inline void NavigationResult::set_msg(const char* value,
     size_t size) {
   
-  err_msg_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(
+  msg_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, ::std::string(
       reinterpret_cast<const char*>(value), size), GetArena());
-  // @@protoc_insertion_point(field_set_pointer:galbot.aphropm_proto.NavigationResult.err_msg)
+  // @@protoc_insertion_point(field_set_pointer:galbot.aphropm_proto.NavigationResult.msg)
 }
-inline std::string* NavigationResult::_internal_mutable_err_msg() {
+inline std::string* NavigationResult::_internal_mutable_msg() {
   
-  return err_msg_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArena());
+  return msg_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArena());
 }
-inline std::string* NavigationResult::release_err_msg() {
-  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.NavigationResult.err_msg)
-  return err_msg_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+inline std::string* NavigationResult::release_msg() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.NavigationResult.msg)
+  return msg_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
 }
-inline void NavigationResult::set_allocated_err_msg(std::string* err_msg) {
-  if (err_msg != nullptr) {
+inline void NavigationResult::set_allocated_msg(std::string* msg) {
+  if (msg != nullptr) {
     
   } else {
     
   }
-  err_msg_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), err_msg,
+  msg_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), msg,
       GetArena());
-  // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.NavigationResult.err_msg)
+  // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.NavigationResult.msg)
+}
+
+// .galbot.aphropm_proto.NavigationProcessInfo process_info = 5;
+inline bool NavigationResult::_internal_has_process_info() const {
+  return this != internal_default_instance() && process_info_ != nullptr;
+}
+inline bool NavigationResult::has_process_info() const {
+  return _internal_has_process_info();
+}
+inline void NavigationResult::clear_process_info() {
+  if (GetArena() == nullptr && process_info_ != nullptr) {
+    delete process_info_;
+  }
+  process_info_ = nullptr;
+}
+inline const ::galbot::aphropm_proto::NavigationProcessInfo& NavigationResult::_internal_process_info() const {
+  const ::galbot::aphropm_proto::NavigationProcessInfo* p = process_info_;
+  return p != nullptr ? *p : reinterpret_cast<const ::galbot::aphropm_proto::NavigationProcessInfo&>(
+      ::galbot::aphropm_proto::_NavigationProcessInfo_default_instance_);
+}
+inline const ::galbot::aphropm_proto::NavigationProcessInfo& NavigationResult::process_info() const {
+  // @@protoc_insertion_point(field_get:galbot.aphropm_proto.NavigationResult.process_info)
+  return _internal_process_info();
+}
+inline void NavigationResult::unsafe_arena_set_allocated_process_info(
+    ::galbot::aphropm_proto::NavigationProcessInfo* process_info) {
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(process_info_);
+  }
+  process_info_ = process_info;
+  if (process_info) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:galbot.aphropm_proto.NavigationResult.process_info)
+}
+inline ::galbot::aphropm_proto::NavigationProcessInfo* NavigationResult::release_process_info() {
+  
+  ::galbot::aphropm_proto::NavigationProcessInfo* temp = process_info_;
+  process_info_ = nullptr;
+  if (GetArena() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+  return temp;
+}
+inline ::galbot::aphropm_proto::NavigationProcessInfo* NavigationResult::unsafe_arena_release_process_info() {
+  // @@protoc_insertion_point(field_release:galbot.aphropm_proto.NavigationResult.process_info)
+  
+  ::galbot::aphropm_proto::NavigationProcessInfo* temp = process_info_;
+  process_info_ = nullptr;
+  return temp;
+}
+inline ::galbot::aphropm_proto::NavigationProcessInfo* NavigationResult::_internal_mutable_process_info() {
+  
+  if (process_info_ == nullptr) {
+    auto* p = CreateMaybeMessage<::galbot::aphropm_proto::NavigationProcessInfo>(GetArena());
+    process_info_ = p;
+  }
+  return process_info_;
+}
+inline ::galbot::aphropm_proto::NavigationProcessInfo* NavigationResult::mutable_process_info() {
+  // @@protoc_insertion_point(field_mutable:galbot.aphropm_proto.NavigationResult.process_info)
+  return _internal_mutable_process_info();
+}
+inline void NavigationResult::set_allocated_process_info(::galbot::aphropm_proto::NavigationProcessInfo* process_info) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArena();
+  if (message_arena == nullptr) {
+    delete process_info_;
+  }
+  if (process_info) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+      ::PROTOBUF_NAMESPACE_ID::Arena::GetArena(process_info);
+    if (message_arena != submessage_arena) {
+      process_info = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, process_info, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  process_info_ = process_info;
+  // @@protoc_insertion_point(field_set_allocated:galbot.aphropm_proto.NavigationResult.process_info)
 }
 
 // string common_str = 501;
@@ -4992,6 +5562,8 @@ inline void EvaluateGoalAvailabilityResponse::set_available(bool value) {
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

@@ -206,13 +206,17 @@ enum class SensorType {
   /// @robot S1
   BACK_IMU,
 
-  /// @brief S1 Chassis LiDAR IMU (Inertial Measurement Unit)
-  /// @robot S1
+  /// @brief Chassis IMU (Inertial Measurement Unit)
+  /// @robot G1 S1
   CHASSIS_IMU,
 
   /// @brief G1 Torso IMU (Inertial Measurement Unit), measures acceleration and angular velocity
   /// @robot G1
   TORSO_IMU,
+
+  /// @brief G1 LiDAR IMU (Inertial Measurement Unit)
+  /// @robot G1
+  LIDAR_IMU,
 
   /// @brief Base ultrasonic sensor array, for proximity detection and collision avoidance
   /// @robot G1 S1
@@ -303,17 +307,46 @@ enum class NavigationStatus {
 };
 
 /**
- * @brief Navigation task current state enumeration
+ * @brief Navigation task state.
  *
- * Represents the current state of an active or completed navigation task,
- * as reported by the navigation system. Used for polling during non-blocking
- * navigation to detect RUNNING, SUCCESS, or FAILED and exit error logic in time.
+ * This enum describes the current state of a navigation task that has been
+ * submitted to the SDK. It is used by both legacy navigation polling and the
+ * asynchronous target status query API.
  */
 enum class NavigationTaskStatus {
-  UNKNOWN = 0, /**< Task state unknown or not yet reported */
-  RUNNING = 1, /**< Navigation task is in progress */
-  SUCCESS = 2, /**< Navigation task completed successfully */
-  FAILED = 3   /**< Navigation task failed */
+  UNKNOWN = 0,          /**< State has not been reported yet, or the task id is unknown */
+  RUNNING = 1,          /**< The task is still executing */
+  SUCCESS = 2,          /**< The task finished successfully */
+  FAILED = 3,           /**< The task finished with an error */
+  INTERRUPTED = 4,      /**< The task was interrupted by a later request or a stop command */
+  OCCUPIED = 5,         /**< The goal area or path is occupied */
+  COLLISION = 6,        /**< A collision condition was detected */
+  CLOSE_TO_OBSTACLE = 7 /**< The robot is too close to an obstacle */
+};
+
+/**
+ * @brief Snapshot of a navigation task.
+ *
+ * This object is returned by task status query APIs. It contains the task id,
+ * the latest known task state, and a short human-readable message.
+ */
+struct NavigationTaskSnapshot {
+    std::string task_id; /**< Identifier of the navigation task. */
+    NavigationTaskStatus status = NavigationTaskStatus::UNKNOWN; /**< Latest known state of the task. */
+    std::string msg; /**< Short human-readable message associated with the task state. */
+};
+
+/**
+ * @brief Handle returned when a navigation task is submitted asynchronously.
+ *
+ * The handle identifies the task and tells whether the request was accepted by
+ * the navigation service. The execution state should be queried separately
+ * using task_id.
+ */
+struct TaskHandle {
+    std::string task_id; /**< Identifier of the submitted navigation task. */
+    bool request_sent = false; /**< Whether the navigation service accepted the request. */
+    std::string msg; /**< Short human-readable message associated with the submission result. */
 };
 
 /**
@@ -621,6 +654,52 @@ struct ErrorInfo {
 };
 
 /**
+ * @brief 2D point
+ *
+ * Represents a position in two-dimensional Cartesian space.
+ */
+struct Point2d {
+  double x = 0.0; /**< X coordinate (meters) */
+  double y = 0.0; /**< Y coordinate (meters) */
+};
+
+/**
+ * @brief 2D pose (position + yaw) structure， for mobile base and navigation targets
+ *
+ * Represents a planar pose in two-dimensional Cartesian space, combining
+ * position (translation) and heading angle information.
+ * Commonly used for mobile base poses and local navigation targets.
+ */
+struct Pose2d {
+  Point2d position;  /**< Position in 2D space (x, y) in meters */
+  double theta = 0.0; /**< Yaw angle in radians */
+
+
+    /**
+   * @brief Default constructor
+   *
+   * Initializes pose2d at origin (0,0) with zero yaw angle.
+   */
+  Pose2d() = default;
+
+  /**
+   * @brief Initialize Pose2d using a single 3-dimensional vector
+   * @tparam T Container type supporting subscript access and size() method
+   * @param vec 3D vector: [x, y, theta] where first 2 elements are position (meters) and last element is yaw angle (radians)
+   * @throws std::runtime_error if vec size != 3
+   */
+  template <typename T>
+  Pose2d(const T& vec) {
+    if (vec.size() != 3) {
+      throw std::runtime_error("Pose2d size error, must be 3!");
+    }
+    position.x = vec[0];
+    position.y = vec[1];
+    theta = vec[2];
+  }
+};
+
+/**
  * @brief 3D point
  *
  * Represents a position in three-dimensional Cartesian space.
@@ -707,6 +786,32 @@ struct Pose {
 };
 
 /**
+ * @brief Axis-aligned box dimensions.
+ *
+ * Describes the physical size of a box along its local x/y/z axes. Units are meters.
+ */
+struct BoxSize {
+  float length_x; /**< Length of the box along the x-axis (meters) */
+  float length_y; /**< Length of the box along the y-axis (meters) */
+  float length_z; /**< Length of the box along the z-axis (meters) */
+};
+
+/**
+ * @brief Bounding box information for navigation obstacle filtering.
+ *
+ * Used by navigation APIs to add, remove, and query box regions that should be ignored by navigation
+ * obstacle fusion, for example carried boxes that should not be treated as obstacles.
+ * `box_pose` follows the SDK Pose convention: position plus quaternion stored as x/y/z/w.
+ * `box_tag` is the SDK-side numeric identifier and is converted internally to an SDK-marked box name.
+ */
+struct BoxInfo {
+  BoxSize box_size;             /**< Box dimensions in meters along the box local x/y/z axes */
+  Pose box_pose;                /**< Box pose relative to parent_link_name, using SDK quaternion order x/y/z/w */
+  int box_tag;                  /**< SDK-side numeric box identifier */
+  std::string parent_link_name; /**< Parent link/frame name that box_pose is expressed in */
+};
+
+/**
  * @brief Actuation type enumeration
  *
  * Specifies which kinematic chains should be actuated during motion planning and execution.
@@ -751,6 +856,9 @@ enum ReferenceFrame {
  * such as planning mode, collision checking, reference frames, and execution parameters.
  */
 struct PlannerConfig {
+
+  bool enable_env_collision_check=false;
+
   /**
    * @brief Whether to execute trajectory immediately after planning
    *
@@ -864,10 +972,13 @@ struct PlannerConfig {
  * @brief Single joint state structure
  *
  * Represents the complete real-time state of a single robot joint, including
+ * joint identity and sampling time metadata, plus
  * kinematic quantities (position, velocity, acceleration) and dynamic quantities
  * (torque/effort and motor current).
  */
 struct JointState {
+  std::string joint_name; /**< Joint name */
+  int64_t timestamp_ns; /**< Joint state timestamp (nanoseconds since epoch) */
   double position;     /**< Joint angular position (radians) */
   double velocity;     /**< Joint angular velocity (radians/second) */
   double acceleration; /**< Joint angular acceleration (radians/second²) */
@@ -877,7 +988,7 @@ struct JointState {
   /**
    * @brief Default constructor
    *
-   * Initializes all state variables to zero.
+   * Uses compiler-generated default initialization.
    */
   JointState() = default;
 
@@ -891,10 +1002,14 @@ struct JointState {
    * @param acceleration_input Joint angular acceleration (radians/second²)
    * @param effort_input Joint torque/effort (Newton-meters)
    * @param current_input Motor current (amperes)
+   * @param timestamp_ns_input Joint state timestamp (nanoseconds since epoch)
+   * @param joint_name_input Joint name for identifying this sample
    */
   JointState(double position_input, double velocity_input, double acceleration_input, double effort_input,
-             double current_input)
-      : position(position_input),
+             double current_input, int64_t timestamp_ns_input, const std::string& joint_name_input = "")
+      : joint_name(joint_name_input),
+        timestamp_ns(timestamp_ns_input),
+        position(position_input),
         velocity(velocity_input),
         acceleration(acceleration_input),
         effort(effort_input),
@@ -1328,6 +1443,18 @@ struct DepthData {
 };
 
 /**
+ * @brief Synchronized multi-sensor observation payload.
+ *
+ * Contains timestamp-aligned camera frames and optional joint state.
+ * The alignment anchor is the first camera passed to get_synced_observation().
+ */
+struct SyncedObservation {
+  std::unordered_map<SensorType, std::shared_ptr<RgbData>> rgb_data_map;
+  std::unordered_map<SensorType, std::shared_ptr<DepthData>> depth_data_map;
+  std::shared_ptr<JointStateMessage> joint_state = nullptr;
+};
+
+/**
  * @brief Point cloud field descriptor
  *
  * Describes one data field in a PointCloud2 point structure, defining its name,
@@ -1648,44 +1775,50 @@ struct CameraInfo {
   std::vector<double> T;
 };
 
-/**
- * @brief Audio data structure
- *
- * Audio data structure used to encapsulate audio data.
- */
-struct AudioData {
+ /**
+  * @brief Audio data structure
+  *
+  * Encapsulates microphone streaming events and payloads delivered through audio input
+  * callbacks (e.g. GalbotRobot::start_microphone_stream_input).
+  */
+ struct AudioData {
   /**
    * @brief Message header
+   *
+   * Timestamp and frame identifier for this audio message. See @ref Header for field details:
+   * - timestamp_ns: Timestamp of data acquisition (nanoseconds since epoch).
+   * - frame_id: Stream or source frame identifier associated with the audio message.
    */
   Header header;
 
   /**
    * @brief Audio type
    *
-   * Audio data type identifier, possible values include:
-   * - "waken_up": Wake-up event, format is json, data is json string
-   * - "denoise_chunk": Denoised audio data, format is pcm, data is pcm data
-   * - "vad_begin": Voice Activity Detection start marker (data is empty)
-   * - "vad_chunk": Audio data during voice activity detection, format is pcm, data is pcm data
-   * - "vad_end": Voice Activity Detection end marker (data is empty)
+   * Audio data type identifier. Possible values include:
+   * - "waken_up": Wake-up event; @ref AudioData::format is "json"; @ref AudioData::data is a UTF-8 JSON string.
+   * - "denoise_chunk": Denoised audio stream chunk; @ref AudioData::format is "pcm"; @ref AudioData::data is PCM binary.
+   * - "vad_begin": Voice Activity Detection (VAD) start marker; @ref AudioData::data is empty.
+   * - "vad_chunk": Audio data during voice activity detection; @ref AudioData::format is "pcm";
+   *   @ref AudioData::data is PCM binary.
+   * - "vad_end": Voice Activity Detection (VAD) end marker; @ref AudioData::data is empty.
    */
   std::string type;
 
   /**
    * @brief Audio format
    *
-   * Audio data format description, for example:
-   * - "pcm": Sample rate 16000Hz, bit depth 16bit, mono
-   * - "json": UTF-8 encoded json text
+   * Describes how to interpret @ref AudioData::data. Possible values include:
+   * - "pcm": PCM audio — sample rate 16000 Hz, 16-bit, mono.
+   * - "json": UTF-8 encoded JSON text.
    */
   std::string format;
 
   /**
    * @brief Data packet
    *
-   * Binary data packet, the specific format is specified by the [format](@ref AudioData::format) field.
-   * For pcm format, the data size for each 80ms is 2560 bytes.
-   * For json format, the data size may be the length of json text or empty.
+   * Binary payload; interpretation depends on @ref AudioData::format:
+   * - "pcm": Raw PCM samples; each 80 ms chunk is 2560 bytes.
+   * - "json": UTF-8 JSON text; length varies, or empty for marker-only messages (e.g. "vad_begin", "vad_end").
    */
   std::vector<uint8_t> data;
 };
@@ -1710,6 +1843,75 @@ struct BmsInfo {
 struct LogInfo {
   std::string level;   /**"error" "warning" */
   std::string message; /**message */
+};
+
+/**
+ * @brief Optional tuning parameters for a waypoint.
+ *
+ * These parameters control how precisely the robot reaches a waypoint and how
+ * smoothly it moves while doing so. Fields left unchanged keep their default
+ * values.
+ */
+struct WaypointParams {
+    double arrival_position_threshold_x = 0.05;  /**< Arrival tolerance along the X axis in meters.
+                                                   * Smaller values require the robot to arrive more precisely in the
+                                                   * forward/backward direction.
+                                                   */
+
+    double arrival_position_threshold_y = 0.05;  /**< Arrival tolerance along the Y axis in meters.
+                                                   * Smaller values require the robot to arrive more precisely in the
+                                                   * lateral direction.
+                                                   */
+
+    double arrival_orientation_threshold = 0.05; /**< Orientation tolerance in radians.
+                                                   * Smaller values require the robot to align its heading more accurately
+                                                   * before considering the waypoint reached.
+                                                   */
+
+    double velocity_scale = 1.0;                 /**< Speed scaling factor for waypoint execution.
+                                                  * Lower values make the robot move more slowly and smoothly; higher
+                                                  * values make it move faster.
+                                                  */
+
+    double acceleration_scale = 1.0;             /**< Acceleration scaling factor for waypoint execution.
+                                                  * Lower values make starts and stops gentler; higher values allow more
+                                                  * aggressive motion.
+                                                  */
+
+    double jerk_scale = 1.0;                     /**< Jerk scaling factor for waypoint execution.
+                                                  * Lower values make motion changes smoother; higher values allow sharper
+                                                  * acceleration changes.
+                                                  */
+};
+
+struct Waypoint {
+    /** @brief Target pose of this waypoint.
+     *
+     * The robot will navigate toward this pose when executing the waypoint.
+     */
+    Pose pose;
+
+    /** @brief Optional tuning parameters for this waypoint.
+     *
+     * These parameters control how strictly the robot reaches the waypoint and
+     * how smoothly it moves while doing so.
+     */
+    WaypointParams params;
+
+    /**
+     * @brief Construct a waypoint with default tuning parameters.
+     * @param pose Target pose.
+     */
+    Waypoint(const Pose& pose)
+        : pose(pose), params(WaypointParams()) {}
+
+    /**
+     * @brief Construct a waypoint with custom tuning parameters.
+     * @param pose Target pose.
+     * @param params Optional waypoint tuning parameters.
+     */
+    Waypoint(const Pose & pose, const WaypointParams & params)
+        : pose(pose), params(params) {}
 };
 
 }  // namespace sdk

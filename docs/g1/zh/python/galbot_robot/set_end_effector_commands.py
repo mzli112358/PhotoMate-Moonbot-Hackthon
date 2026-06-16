@@ -53,9 +53,10 @@ def main():
         robot.set_end_effector_command(
             poses=[target_pose],
             end_effector_frames=["right_arm_end_effector_mount_link"],
-            time_from_start_s=1.0,
         )
         print('\nPublished end-effector command (default reference_frames → world)')
+
+    time.sleep(3)
 
     robot.clear_end_effector_command()
     

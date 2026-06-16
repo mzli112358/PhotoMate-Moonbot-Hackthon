@@ -16,12 +16,15 @@ def main():
 
     time.sleep(2)
 
+    # 确保安全
     # Whole-body joints: leg(5) + head(2) + left_arm(7) + right_arm(7)
     whole_body_joint_1 = [
         0.25, 1.1, 0.85, 0.0, 0.0,       # leg
         0.5, 0.5,                        # head
-        2.0, -1.55, -0.55, -1.7, -0.0, -0.8, 0.2,   # left_arm
-        -2.0, 1.55, 0.55, 1.7, 0.0, 0.8, 0.2        # right_arm
+        # 2.0, -1.55, -0.55, -1.7, -0.0, -0.8, 0.2,   # left_arm
+        # -2.0, 1.55, 0.55, 1.7, 0.0, 0.8, 0.2        # right_arm
+        -0.47, -0.94, -0.54, -1.92, 0.2, 0.0, 0.0,   # left_arm
+        0.47, 0.94, 0.54, 1.92, -0.2, 0.0, 0.0        # right_arm
     ]
 
     # Base pose command map(x, y, yaw) Note: adjust based on the robot's actual localization in the map frame

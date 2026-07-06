@@ -1,6 +1,6 @@
 [submodule "vendor/GalbotSDK"]
 	path = vendor/GalbotSDK
-	url = https://github.com/mzli112358/moonbot-hackthon-GalbotSDK.git
+	url = https://github.com/mzli112358/PhotoMate-Moonbot-Hackthon.git
 [submodule "ros/livox_ros_driver2"]
 	path = ros/livox_ros_driver2
 	url = https://github.com/Livox-SDK/livox_ros_driver2.git

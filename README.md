@@ -1,11 +1,11 @@
-# Moonbot Hackathon
+# PhotoMate Moonbot Hackathon
 
-Moonbot 黑客松总项目仓库。
+PhotoMate 黑客松总项目仓库。
 
 ## 仓库结构
 
 ```
-moonbot-hackthon-GalbotSDK/
+PhotoMate-Moonbot-Hackthon/
 ├── vendor/                 # 平台核心依赖（机器人 SDK）
 │   └── GalbotSDK/
 ├── ros/                    # ROS2 相关包
@@ -33,7 +33,7 @@ moonbot-hackthon-GalbotSDK/
 
 | 目录 | 分类 | 来源 | 分支 | 说明 |
 |------|------|------|------|------|
-| `vendor/GalbotSDK/` | vendor | [mzli112358/moonbot-hackthon-GalbotSDK](https://github.com/mzli112358/moonbot-hackthon-GalbotSDK.git) | 固定 `5745f32` | Galbot 机器人 SDK（fork） |
+| `vendor/GalbotSDK/` | vendor | [mzli112358/PhotoMate-Moonbot-Hackthon](https://github.com/mzli112358/PhotoMate-Moonbot-Hackthon.git) | `5745f32` | Galbot SDK（历史提交，独立 SDK 布局） |
 | `ros/livox_ros_driver2/` | ros | [Livox-SDK/livox_ros_driver2](https://github.com/Livox-SDK/livox_ros_driver2.git) | `master` | Livox MID-360 官方 ROS2 驱动 |
 | `ros/FAST_LIO/` | ros | [hku-mars/FAST_LIO](https://github.com/hku-mars/FAST_LIO.git) | `ROS2` | FAST-LIO 官方 ROS2 版 |
 | `third_party/cap-x/` | third_party | [capgym/cap-x](https://github.com/capgym/cap-x.git) | `main` | CaP-X：Code-as-Policy 机器人操控 |
@@ -43,8 +43,8 @@ moonbot-hackthon-GalbotSDK/
 ## 克隆与初始化
 
 ```bash
-git clone --recurse-submodules https://github.com/mzli112358/moonbot-hackthon-GalbotSDK.git
-cd moonbot-hackthon-GalbotSDK
+git clone --recurse-submodules https://github.com/mzli112358/PhotoMate-Moonbot-Hackthon.git
+cd PhotoMate-Moonbot-Hackthon
 ```
 
 若已克隆但未拉取子模块：

@@ -1,98 +1,101 @@
-# Galbot SDK
+# Moonbot Hackathon
 
-![Version](https://img.shields.io/badge/version-1.9.0-blue.svg)
-![Robot Model](https://img.shields.io/badge/Robot-G1%2FS1-red.svg)
-![GBS Version](https://img.shields.io/badge/GBS-1.17-green.svg)
-![Ubuntu](https://img.shields.io/badge/Ubuntu-20--24-orange.svg)
-![Python](https://img.shields.io/badge/Python-3.8--3.14-yellow.svg)
+Moonbot 黑客松总项目仓库。
 
-**[中文](#中文文档) | [English](#english-docs)**
+## 仓库结构
 
----
-
-## 中文文档
-
-欢迎使用 Galbot SDK（Galbot机器人软件开发套件）！
-
-本 SDK 支持 C++ 和 Python，提供完整的 API 参考、使用教程和示例代码。
-
-### 源码下载
-
-```bash
-git clone https://github.com/GalaxyGeneralRobotics/GalbotSDK.git
+```
+moonbot-hackthon-GalbotSDK/
+├── vendor/                 # 平台核心依赖（机器人 SDK）
+│   └── GalbotSDK/
+├── ros/                    # ROS2 相关包
+│   ├── livox_ros_driver2/
+│   └── FAST_LIO/
+├── third_party/            # 其他开源第三方库
+│   ├── cap-x/
+│   └── generative_agents/
+├── models/                 # AI / 重建模型
+│   └── lingbot-map/
+├── config/                 # 项目配置文件（待添加）
+├── data/                   # 数据集、录包、地图等
+├── docs/                   # 项目文档
+├── scripts/                # 部署与自动化脚本
+├── tools/                  # 开发工具
+├── webs/                   # Web 前端 / 可视化
+├── manual/                 # 操作手册
+├── archive/                # 归档文件
+├── reserve/                # 预留目录
+├── README.md
+└── .gitmodules
 ```
 
-### 📌 版本匹配
+## 子模块一览
 
-**重要**：安装前请确认您的机器人版本！
+| 目录 | 分类 | 来源 | 分支 | 说明 |
+|------|------|------|------|------|
+| `vendor/GalbotSDK/` | vendor | [mzli112358/moonbot-hackthon-GalbotSDK](https://github.com/mzli112358/moonbot-hackthon-GalbotSDK.git) | 固定 `5745f32` | Galbot 机器人 SDK（fork） |
+| `ros/livox_ros_driver2/` | ros | [Livox-SDK/livox_ros_driver2](https://github.com/Livox-SDK/livox_ros_driver2.git) | `master` | Livox MID-360 官方 ROS2 驱动 |
+| `ros/FAST_LIO/` | ros | [hku-mars/FAST_LIO](https://github.com/hku-mars/FAST_LIO.git) | `ROS2` | FAST-LIO 官方 ROS2 版 |
+| `third_party/cap-x/` | third_party | [capgym/cap-x](https://github.com/capgym/cap-x.git) | `main` | CaP-X：Code-as-Policy 机器人操控 |
+| `third_party/generative_agents/` | third_party | [joonspk-research/generative_agents](https://github.com/joonspk-research/generative_agents.git) | `main` | 斯坦福 25 人 AI 小镇 |
+| `models/lingbot-map/` | models | [Robbyant/lingbot-map](https://github.com/Robbyant/lingbot-map.git) | `main` | LingBot-Map 流式 3D 重建 |
 
-#### 当前版本
-
-- **最新 SDK**: V1.9.0
-- **发布日期**: 2026-06-12
-- **对应机器人环境版本**: G1 V1.17
-- **维护状态**: ✅ 当前维护版本
-
-更多版本历史请参阅 [CHANGELOG.md](CHANGELOG.md)
-
-### 📚 查看完整文档
-
-#### 🌐 方法一：启动本地文档服务器（推荐）
-
-在 SDK 根目录执行：
+## 克隆与初始化
 
 ```bash
-cd docs
-python3 -m http.server 8000
+git clone --recurse-submodules https://github.com/mzli112358/moonbot-hackthon-GalbotSDK.git
+cd moonbot-hackthon-GalbotSDK
 ```
 
-然后在浏览器中打开：**http://localhost:8000/zh/**
-
-#### 📄 方法二：直接打开文件
-
-用浏览器打开文件：`docs/zh/index.html`
-
-
-
----
-
-## English Docs
-
-Welcome to Galbot SDK (Galbot Robot Software Development Kit)!
-
-This SDK supports C++ and Python, providing complete API reference, tutorials, and example code.
-
-### Source Code Download
+若已克隆但未拉取子模块：
 
 ```bash
-git clone https://github.com/GalaxyGeneralRobotics/GalbotSDK.git
+git submodule update --init --recursive
 ```
-### 📌 Version Compatibility
 
-**Important**: Please confirm your robot version before installation!
-
-#### Current Version
-
-- **Latest SDK**: V1.9.0
-- **Release Date**: 2026-06-12
-- **Compatible Robot Version**: G1 V1.17
-- **Maintenance Status**: ✅ Currently Maintained
-
-For more version history, please refer to [CHANGELOG.md](CHANGELOG.md)
-
-### 📚 View Complete Documentation
-
-#### 🌐 Method 1: Start Local Documentation Server (Recommended)
-
-Execute in the SDK root directory:
+更新所有子模块到各自跟踪分支的最新提交：
 
 ```bash
-cd docs
-python3 -m http.server 8000
+git submodule update --remote --merge
 ```
 
-Then open in your browser: **http://localhost:8000/en/**
+## 快速参考
 
-#### 📄 Method 2: Open File Directly
+### GalbotSDK
 
-Open the file in your browser: `docs/en/index.html`
+```bash
+cd vendor/GalbotSDK
+source galbot_sdk/linux-x86_64-gcc940/setup.sh
+```
+
+### Livox MID-360
+
+```bash
+cd ros/livox_ros_driver2
+# ros2 launch livox_ros_driver2 rviz_MID360_launch.py
+```
+
+### FAST-LIO (ROS2)
+
+```bash
+cd ros/FAST_LIO
+# 在 ROS2 workspace 中 colcon build
+```
+
+### CaP-X
+
+```bash
+cd third_party/cap-x
+```
+
+### Generative Agents
+
+```bash
+cd third_party/generative_agents
+```
+
+### LingBot-Map
+
+```bash
+cd models/lingbot-map
+```

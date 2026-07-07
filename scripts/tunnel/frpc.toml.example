@@ -1,0 +1,17 @@
+# frp 客户端（跑在 Jetson，与 PhotoMate 同机）
+
+serverAddr = "你的VPS公网IP"
+serverPort = 7000
+
+[auth]
+method = "token"
+token = "与 frps 相同"
+
+[[proxies]]
+name = "photomate"
+type = "tcp"
+localIP = "127.0.0.1"
+localPort = 8000
+remotePort = 18000
+
+# VPS 上 Caddy 反代 127.0.0.1:18000 → 公网 HTTPS

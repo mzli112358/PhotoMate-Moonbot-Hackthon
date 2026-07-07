@@ -1,0 +1,29 @@
+# 拍照航点（map 坐标系）
+# pose: [x, y, z, qx, qy, qz, qw]
+
+map_frame: map
+
+photo_spots:
+  - id: spot_home
+    name: 起点 / 待命
+    description: 建图原点附近，用于回充或待机
+    patrol: false
+    pose: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+
+  - id: spot_a
+    name: 合影区 A
+    description: 毕业典礼主舞台前方
+    patrol: true
+    pose: [2.5, 1.2, 0.0, 0.0, 0.0, 0.7071068, 0.7071068]
+
+  - id: spot_b
+    name: 合影区 B
+    description: 侧廊签到墙前
+    patrol: true
+    pose: [4.0, -1.5, 0.0, 0.0, 0.0, 1.0, 0.0]
+
+  - id: spot_c
+    name: 合影区 C
+    description: 出口拱门处
+    patrol: true
+    pose: [-1.0, 3.0, 0.0, 0.0, 0.0, 0.3826834, 0.9238795]

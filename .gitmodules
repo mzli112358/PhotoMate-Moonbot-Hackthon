@@ -1,14 +1,6 @@
 [submodule "vendor/GalbotSDK"]
 	path = vendor/GalbotSDK
 	url = https://github.com/mzli112358/PhotoMate-Moonbot-Hackthon.git
-[submodule "ros/livox_ros_driver2"]
-	path = ros/livox_ros_driver2
-	url = https://github.com/Livox-SDK/livox_ros_driver2.git
-	branch = master
-[submodule "ros/FAST_LIO"]
-	path = ros/FAST_LIO
-	url = https://github.com/hku-mars/FAST_LIO.git
-	branch = ROS2
 [submodule "third_party/cap-x"]
 	path = third_party/cap-x
 	url = https://github.com/capgym/cap-x.git

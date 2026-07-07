@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PhotoMate · 项目文档</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="/assets/css/main.css" />
+  <link rel="stylesheet" href="/assets/css/docs.css" />
+</head>
+<body class="docs-body">
+  <header class="top-nav">
+    <div class="top-nav-inner">
+      <span class="brand">PhotoMate</span>
+      <nav class="top-links" aria-label="主导航">
+        <a href="/">指挥台</a>
+        <a href="/docs" class="active">文档</a>
+      </nav>
+      <div class="top-status doc-badge">嘉宾资料</div>
+    </div>
+  </header>
+
+  <div class="docs-shell">
+    <aside class="docs-sidebar" aria-label="文档目录">
+      <div class="docs-sidebar-head">
+        <p class="docs-sidebar-label">目录</p>
+      </div>
+      <nav id="docCatalog" class="doc-catalog"></nav>
+      <nav id="docToc" class="doc-toc" aria-label="本章目录"></nav>
+    </aside>
+
+    <main class="docs-main">
+      <article id="docArticle" class="doc-article">
+        <p class="doc-loading">加载文档…</p>
+      </article>
+    </main>
+  </div>
+
+  <script src="/assets/js/docs.js"></script>
+</body>
+</html>

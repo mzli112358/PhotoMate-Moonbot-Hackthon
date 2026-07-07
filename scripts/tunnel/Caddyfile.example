@@ -1,0 +1,18 @@
+# 复制到 VPS，例如 /etc/caddy/Caddyfile
+# 需先：frpc 把 Jetson:8000 映射到 VPS 127.0.0.1:18000
+
+your.domain.com {
+	encode gzip
+	reverse_proxy 127.0.0.1:18000 {
+		# WebSocket（位姿 /ws/pose）必须
+		transport http {
+			read_timeout 0
+			write_timeout 0
+		}
+	}
+}
+
+# 无域名时临时用 IP + HTTP（仅演示）：
+# :80 {
+# 	reverse_proxy 127.0.0.1:18000
+# }

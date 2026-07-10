@@ -40,9 +40,7 @@
 | 执行层 | **GalbotSDK** | 导航、感知、机械臂——直接调官方 Python API |
 | 平台层 | Galbot 机载二进制服务 | 建图、定位、规划——不由 PhotoMate 实现 |
 
-**和 FastAPI 的关系**：FastAPI 非常适合做应用层——REST 管配置和任务触发，WebSocket 管位姿流和状态推送。Agent（对话引导、多轮交互）可以作为 FastAPI 里的一个 service 模块，或独立进程通过 HTTP 调用，不必和导航绑死。
-
-**和 `generative_agents` 的关系**：`third_party/generative_agents` 是可选的「话术/调度」参考实现，黑客松阶段可以先用硬编码状态机 + 简单语音，不必一上来接完整 Agent 框架。
+**和 Agent 的关系**：黑客松阶段可先用硬编码状态机 + 简单语音；对话引导、多轮交互可作为 FastAPI 里的 service 模块，或独立进程通过 HTTP 调用，不必和导航绑死。
 
 ---
 
@@ -67,7 +65,7 @@
 
 **缺点**
 
-- Jetson 算力有限，重型 AI（大图模型、lingbot-map 实时重建）需裁剪或放云端
+- Jetson 算力有限，重型 AI（大图模型、实时 3D 重建）需裁剪或放云端
 
 ### 备选：开发机台式机 + Jetson 分机
 

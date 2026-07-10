@@ -1,15 +1,3 @@
 [submodule "vendor/GalbotSDK"]
 	path = vendor/GalbotSDK
 	url = https://github.com/mzli112358/PhotoMate-Moonbot-Hackthon.git
-[submodule "third_party/cap-x"]
-	path = third_party/cap-x
-	url = https://github.com/capgym/cap-x.git
-	branch = main
-[submodule "third_party/generative_agents"]
-	path = third_party/generative_agents
-	url = https://github.com/joonspk-research/generative_agents.git
-	branch = main
-[submodule "models/lingbot-map"]
-	path = models/lingbot-map
-	url = https://github.com/Robbyant/lingbot-map.git
-	branch = main

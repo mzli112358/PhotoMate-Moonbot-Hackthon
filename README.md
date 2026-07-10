@@ -6,14 +6,12 @@ PhotoMate 黑客松总项目仓库。
 
 ```
 PhotoMate-Moonbot-Hackthon/
-├── vendor/                 # 平台核心依赖（机器人 SDK）
-│   └── GalbotSDK/
+├── vendor/                 # 平台核心依赖（机器人 / 相机 SDK）
+│   ├── GalbotSDK/
+│   └── insta360-link2-pro/ # 影石 Insta360 Link 2 Pro SDK（预留）
 ├── ros/                    # 预留（导航走 Galbot 机载服务，不用 ROS2 SLAM）
-├── third_party/            # 其他开源第三方库
-│   ├── cap-x/
-│   └── generative_agents/
-├── models/                 # AI / 重建模型
-│   └── lingbot-map/
+├── third_party/            # 其他开源第三方库（预留）
+├── models/                 # AI / 重建模型（预留）
 ├── app/                    # FastAPI 应用（导航 API + WebSocket）
 ├── webs/                   # Dashboard 静态前端
 ├── config/                 # app.yaml、waypoints.yaml
@@ -34,9 +32,6 @@ PhotoMate-Moonbot-Hackthon/
 | 目录 | 分类 | 来源 | 分支 | 说明 |
 |------|------|------|------|------|
 | `vendor/GalbotSDK/` | vendor | [mzli112358/PhotoMate-Moonbot-Hackthon](https://github.com/mzli112358/PhotoMate-Moonbot-Hackthon.git) | `5745f32` | Galbot SDK（历史提交，独立 SDK 布局） |
-| `third_party/cap-x/` | third_party | [capgym/cap-x](https://github.com/capgym/cap-x.git) | `main` | CaP-X：Code-as-Policy 机器人操控 |
-| `third_party/generative_agents/` | third_party | [joonspk-research/generative_agents](https://github.com/joonspk-research/generative_agents.git) | `main` | 斯坦福 25 人 AI 小镇 |
-| `models/lingbot-map/` | models | [Robbyant/lingbot-map](https://github.com/Robbyant/lingbot-map.git) | `main` | LingBot-Map 流式 3D 重建 |
 
 ## 克隆与初始化
 
@@ -82,20 +77,3 @@ source galbot_sdk/linux-x86_64-gcc940/setup.sh
 
 赛程与全栈执行计划见 [docs/schedule/](./docs/schedule/README.md)（计划书全部模块，7/11 傍晚前搞定）。
 
-### CaP-X
-
-```bash
-cd third_party/cap-x
-```
-
-### Generative Agents
-
-```bash
-cd third_party/generative_agents
-```
-
-### LingBot-Map
-
-```bash
-cd models/lingbot-map
-```

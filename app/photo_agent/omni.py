@@ -11,13 +11,9 @@ from urllib.parse import urlparse
 
 from app.photo_agent.camera import encode_frame
 from app.photo_agent.models import ToolCall
+from app.photo_agent.prompts import DEFAULT_PROMPTS, PromptSource, StaticPromptSource
 
-BASE_PROMPT = (
-    "你是热情、幽默、会逗人开心的活动摄影师。每轮只说一两句简短中文。"
-    "你负责自然对话、粗粒度姿态引导和工具调用；状态、计时、重试由本地编排层负责。"
-    "当当前响应指令明确要求调用工具时，必须调用指定工具，不能用口头回答代替。"
-    "未经用户同意不保存到云端，不要声称控制了未接入的机器人或 Insta360 能力。"
-)
+BASE_PROMPT = DEFAULT_PROMPTS["system.base"]
 
 
 @dataclass(frozen=True)
@@ -152,10 +148,13 @@ class DashscopeOmniClient:
         *,
         conversation_factory: Callable[..., Any] | None = None,
         audio_sink: Callable[[bytes], None] | None = None,
+        prompt_source: PromptSource | None = None,
     ) -> None:
         self.settings = settings
         self.conversation_factory = conversation_factory
         self.audio_sink = audio_sink
+        self.prompt_source = prompt_source or StaticPromptSource()
+        self._enable_vad = True
         self.session_id: str | None = None
         self._loop: asyncio.AbstractEventLoop | None = None
         self._events: asyncio.Queue[dict[str, Any]] = asyncio.Queue()
@@ -223,6 +222,7 @@ class DashscopeOmniClient:
             raise ConnectionError("Omni is not connected")
         from dashscope.audio.qwen_omni import MultiModality
 
+        self._enable_vad = enable_vad
         await asyncio.to_thread(
             self._conversation.update_session,
             output_modalities=[MultiModality.AUDIO, MultiModality.TEXT],
@@ -230,7 +230,24 @@ class DashscopeOmniClient:
             enable_turn_detection=enable_vad,
             turn_detection_type=self.settings.vad_type,
             turn_detection_silence_duration_ms=self.settings.vad_silence_ms,
-            instructions=BASE_PROMPT,
+            instructions=self.prompt_source.get("system.base"),
+            tools=omni_tools(),
+            enable_search=False,
+        )
+
+    async def update_instructions(self, instructions: str) -> None:
+        if self._conversation is None:
+            raise ConnectionError("Omni is not connected")
+        from dashscope.audio.qwen_omni import MultiModality
+
+        await self._call(
+            "update_session",
+            output_modalities=[MultiModality.AUDIO, MultiModality.TEXT],
+            voice=self.settings.voice,
+            enable_turn_detection=self._enable_vad,
+            turn_detection_type=self.settings.vad_type,
+            turn_detection_silence_duration_ms=self.settings.vad_silence_ms,
+            instructions=instructions,
             tools=omni_tools(),
             enable_search=False,
         )
@@ -286,12 +303,14 @@ class DashscopeOmniClient:
             "create_item",
             {"type": "function_call_output", "call_id": call_id, "output": json.dumps(output, ensure_ascii=False)},
         )
-        await self.create_response("根据工具执行结果，用一句简短中文继续回复用户。")
+        await self.create_response(self.prompt_source.get("action.tool.followup"))
 
     async def end_session(self, reason: str) -> None:
         if self._conversation is None:
             return
-        await self.inject_context(f"会话结束原因：{reason}")
+        await self.inject_context(
+            self.prompt_source.render("action.session.end_context", reason=reason)
+        )
 
     async def close(self) -> None:
         if self._conversation is None:

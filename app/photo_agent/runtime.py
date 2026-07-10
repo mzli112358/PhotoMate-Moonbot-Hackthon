@@ -16,6 +16,7 @@ from app.photo_agent.fsm import FSMConfig, PhotoAgentFSM
 from app.photo_agent.dispatcher import FunctionCallDispatcher
 from app.photo_agent.mocks import MockCamera, MockDelivery, MockOmni, MockQualityChecker, MockWakeDetector
 from app.photo_agent.models import CaptureResult, DeliveryResult, QualityResult, State, WakeSignal
+from app.photo_agent.prompts import PromptRegistry, PromptSource, StaticPromptSource
 
 LOGGER = logging.getLogger("photomate.photo_agent.runtime")
 
@@ -43,6 +44,7 @@ class PhotoAgentRuntime:
         resources: list[object] | None = None,
         device_info: dict[str, str] | None = None,
         fallback_notifier: object | None = None,
+        prompt_source: PromptSource | None = None,
     ) -> None:
         self.fsm = fsm
         self.omni = fsm.omni
@@ -55,6 +57,8 @@ class PhotoAgentRuntime:
             fallback_notifier = NullFallbackNotifier()
         self.fallback_notifier = fallback_notifier
         self.dispatcher = FunctionCallDispatcher(fsm)
+        self.prompt_source = prompt_source or getattr(fsm, "prompts", StaticPromptSource())
+        self.active_prompt_version = self.prompt_source.version
         self._stopped = asyncio.Event()
         self._last_guidance_at = 0.0
         self._state_seen = fsm.context.state
@@ -151,6 +155,7 @@ class PhotoAgentRuntime:
     async def _control_step(self) -> None:
         from app.photo_agent.models import State
 
+        await self.sync_prompt_version()
         state = self.fsm.context.state
         if (
             self.fsm.context.session_id
@@ -183,6 +188,16 @@ class PhotoAgentRuntime:
         elif state is State.DELIVER and time.monotonic() - self._state_since >= 2.0:
             await self.fsm.run_delivery()
         self._track_state()
+
+    async def sync_prompt_version(self) -> None:
+        if (
+            not self.fsm.context.session_id
+            or self.fsm.context.response_in_flight
+            or self.active_prompt_version == self.prompt_source.version
+        ):
+            return
+        await self.omni.update_instructions(self.prompt_source.get("system.base"))
+        self.active_prompt_version = self.prompt_source.version
 
     async def run_forever(self) -> None:
         audio_task = asyncio.create_task(self._audio_loop(), name="photo-agent-audio")
@@ -233,6 +248,7 @@ class PhotoAgentRuntime:
         self.fsm.context.session_id = session_id
         self.fsm.context.session_started_at = self._wall_clock()
         await self.omni.configure()
+        self.active_prompt_version = self.prompt_source.version
         await self.omni.prime_audio()
         await self.fsm.enter_manual_state(state)
         self._track_state()
@@ -282,7 +298,9 @@ class PhotoAgentRuntime:
             else:
                 await self._connect_manual_session(requested)
                 if requested is State.ASK_INTENT:
-                    await self.omni.create_response("嗨～需要我帮你拍张照吗？只说这一句。")
+                    await self.omni.create_response(
+                        self.prompt_source.get("action.S2.ask_initial")
+                    )
                     final_state = await self._run_until_states({State.POSE_GUIDANCE, State.IDLE}, timeout)
                 elif requested is State.POSE_GUIDANCE:
                     final_state = await self._run_until_states({State.SHOOT}, timeout)
@@ -387,6 +405,7 @@ def build_local_runtime(
     camera_factory: Callable[..., object] | None = None,
     microphone_factory: Callable[..., object] | None = None,
     speaker_factory: Callable[..., object] | None = None,
+    prompt_source: PromptSource | None = None,
 ) -> PhotoAgentRuntime:
     if config.mode != "local-real":
         raise ValueError("build_local_runtime requires mode=local-real")
@@ -398,6 +417,7 @@ def build_local_runtime(
     from app.photo_agent.delivery import FileDeliveryAdapter, GLOBAL_PHOTO_STORE
     from app.photo_agent.fallback import SystemFallbackNotifier
     from app.photo_agent.omni import DashscopeOmniClient, OmniSettings
+    from app.config import CONFIG_DIR, ROOT_DIR
 
     camera_builder = camera_factory or OpenCVCamera
     microphone_builder = microphone_factory or PyAudioMicrophone
@@ -421,6 +441,10 @@ def build_local_runtime(
             camera.close_sync()
         raise
     assert camera is not None and speaker is not None and microphone is not None
+    prompts = prompt_source or PromptRegistry(
+        CONFIG_DIR / "photo_agent_prompts.yaml",
+        ROOT_DIR / "data" / "photo_agent_prompt_history",
+    )
     omni = DashscopeOmniClient(
         OmniSettings(
             api_key=config.api_key,
@@ -429,6 +453,7 @@ def build_local_runtime(
             voice=config.voice,
         ),
         audio_sink=speaker,
+        prompt_source=prompts,
     )
     fsm = PhotoAgentFSM(
         wake_detector=FaceWakeDetector(camera),
@@ -437,6 +462,7 @@ def build_local_runtime(
         quality_checker=OpenCVQualityChecker(),
         delivery=FileDeliveryAdapter(GLOBAL_PHOTO_STORE, config.base_url),
         config=FSMConfig(guidance_interval_s=config.guidance_interval_s),
+        prompts=prompts,
     )
     return PhotoAgentRuntime(
         fsm,
@@ -448,6 +474,7 @@ def build_local_runtime(
             "speaker": str(getattr(speaker, "device_name", "default output")),
         },
         fallback_notifier=SystemFallbackNotifier(),
+        prompt_source=prompts,
     )
 
 

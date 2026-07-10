@@ -81,6 +81,17 @@ python -m pytest -q
 
 ## 分模块手动验收
 
+优先使用本机可视化测试台：
+
+```bash
+export DASHSCOPE_API_KEY='...'
+python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
+```
+
+打开 `http://127.0.0.1:8000/photo-agent`。测试台一次只运行一个模块，提供 S1–S6 切换、真实设备索引、MJPEG 预览、人脸/状态/质检叠加、脱敏事件日志和最近 50 次运行记录。Prompt 配置保存在 `config/photo_agent_prompts.yaml`，最多保留 20 个历史版本，可比较和回滚；运行中保存不会打断当前播报，下一轮对话热生效。
+
+命令行入口仍可用于快速回归：
+
 每个状态都有独立入口：
 
 ```bash

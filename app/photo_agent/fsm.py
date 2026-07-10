@@ -23,16 +23,17 @@ from app.photo_agent.models import (
     State,
     UserIntent,
 )
+from app.photo_agent.prompts import PromptSource, StaticPromptSource
 
 LOGGER = logging.getLogger("photomate.photo_agent")
 T = TypeVar("T")
 
-STATE_CONTEXT = {
-    State.ASK_INTENT: "当前进入询问拍照意愿环节。主动询问用户是否需要拍照。",
-    State.POSE_GUIDANCE: "当前进入拍照引导环节。每轮只给一句简短、亲切的姿态建议。",
-    State.SHOOT: "当前进入拍照环节。先完成三二一倒数，再执行拍照。",
-    State.REVIEW: "当前进入照片复核环节。询问用户是否满意。",
-    State.DELIVER: "当前进入照片交付环节。告知用户照片链接已准备好。",
+STATE_PROMPT_KEYS = {
+    State.ASK_INTENT: "state.S2",
+    State.POSE_GUIDANCE: "state.S3",
+    State.SHOOT: "state.S4",
+    State.REVIEW: "state.S5",
+    State.DELIVER: "state.S6",
 }
 
 
@@ -73,6 +74,7 @@ class PhotoAgentFSM:
         quality_checker: QualityChecker,
         delivery: DeliveryAdapter,
         config: FSMConfig | None = None,
+        prompts: PromptSource | None = None,
     ) -> None:
         self.wake_detector = wake_detector
         self.omni = omni
@@ -80,6 +82,7 @@ class PhotoAgentFSM:
         self.quality_checker = quality_checker
         self.delivery = delivery
         self.config = config or FSMConfig()
+        self.prompts = prompts or StaticPromptSource()
         self.context = SessionContext(
             guidance_interval_s=self.config.guidance_interval_s,
             max_guidance_turns=self.config.max_guidance_turns,
@@ -151,13 +154,13 @@ class PhotoAgentFSM:
             self._transition(State.IDLE, "omni_connect_failed")
             return
         await self._enter(State.ASK_INTENT, "wake_qualified")
-        await self.omni.create_response("嗨～需要我帮你拍张照吗？只说这一句。")
+        await self.omni.create_response(self.prompts.get("action.S2.ask_initial"))
 
     async def _enter(self, state: State, reason: str) -> None:
         self._transition(state, reason)
-        context = STATE_CONTEXT.get(state)
-        if context and self.context.session_id:
-            await self.omni.inject_context(context)
+        prompt_key = STATE_PROMPT_KEYS.get(state)
+        if prompt_key and self.context.session_id:
+            await self.omni.inject_context(self.prompts.get(prompt_key))
 
     async def enter_manual_state(self, state: State) -> None:
         if state is State.IDLE:
@@ -172,7 +175,7 @@ class PhotoAgentFSM:
                 self.guidance_limit_reached = False
                 await self._enter(State.POSE_GUIDANCE, "user_accepted")
             elif intent is UserIntent.DECLINE:
-                await self._say_and_wait("友好回应用户：没问题，需要时再叫我。只说一句。")
+                await self._say_and_wait(self.prompts.get("action.S2.decline"))
                 await self._finish_session("user_declined")
         elif state is State.POSE_GUIDANCE and intent in (UserIntent.READY, UserIntent.SATISFIED):
             await self._enter(State.SHOOT, "user_ready")
@@ -187,7 +190,7 @@ class PhotoAgentFSM:
         if self.context.state is State.ASK_INTENT:
             if self.context.ask_timeout_count == 0:
                 self.context.ask_timeout_count = 1
-                await self.omni.create_response("再轻声询问一次用户是否需要拍照。只说一句。")
+                await self.omni.create_response(self.prompts.get("action.S2.ask_retry"))
             else:
                 await self._finish_session("timeout")
         elif self.context.state is State.REVIEW:
@@ -200,13 +203,13 @@ class PhotoAgentFSM:
             if not self.guidance_limit_reached:
                 self.guidance_limit_reached = True
                 self.context.response_in_flight = True
-                await self.omni.create_response("引导已达上限，请问用户：那我先帮你拍一张？只说一句。")
+                await self.omni.create_response(self.prompts.get("action.S3.guidance_limit"))
                 return True
             return False
         frame = await self.camera.get_frame()
         await self.omni.append_image(frame)
         self.context.response_in_flight = True
-        await self.omni.create_response("观察当前画面，只给一句简短姿态引导；构图不错就让用户保持住。")
+        await self.omni.create_response(self.prompts.get("action.S3.guidance"))
         return True
 
     async def handle_speech_started(self) -> None:
@@ -225,12 +228,12 @@ class PhotoAgentFSM:
         ):
             self.guidance_limit_reached = True
             self.context.response_in_flight = True
-            await self.omni.create_response("引导已达上限，请问用户：那我先帮你拍一张？只说一句。")
+            await self.omni.create_response(self.prompts.get("action.S3.guidance_limit"))
 
     async def run_shoot(self) -> CaptureResult:
         if self.context.state is not State.SHOOT:
             raise RuntimeError(f"cannot shoot from {self.context.state.value}")
-        await self.omni.create_response("请说：看镜头，三、二、一，茄子！说完后保持安静。")
+        await self.omni.create_response(self.prompts.get("action.S4.countdown"))
         try:
             await self.omni.wait_response_done(timeout=10.0)
         except TimeoutError:
@@ -256,7 +259,7 @@ class PhotoAgentFSM:
         if not result.ok:
             if self.context.retake_count < self.context.max_retake:
                 self.context.retake_count += 1
-            await self._say_and_wait("刚才快门没有成功，抱歉，我们再试一次。只说一句。")
+            await self._say_and_wait(self.prompts.get("action.S4.capture_failed"))
             await self._enter(State.POSE_GUIDANCE, "capture_failed")
             return result
 
@@ -270,7 +273,12 @@ class PhotoAgentFSM:
         )
         if not quality.ok and self.context.retake_count < self.context.max_retake:
             self.context.retake_count += 1
-            await self.omni.create_response(f"照片质检未通过：{quality.reason or '质量不足'}，请简短提示重拍。")
+            await self.omni.create_response(
+                self.prompts.render(
+                    "action.S4.quality_failed",
+                    quality_reason=quality.reason or "质量不足",
+                )
+            )
             await self._enter(State.POSE_GUIDANCE, "quality_failed")
             return result
         await self._enter_review("quality_ok" if quality.ok else "quality_limit_reached")
@@ -286,8 +294,8 @@ class PhotoAgentFSM:
                     break
                 LOGGER.warning("show_retry", extra={"attempt": attempt + 1})
         if not shown:
-            await self._say_and_wait("屏幕暂时无法展示照片，我会继续保留取图链接。只说一句。")
-        await self.omni.create_response("请问用户：这张怎么样，满意吗？只说一句。")
+            await self._say_and_wait(self.prompts.get("action.S5.show_failed"))
+        await self.omni.create_response(self.prompts.get("action.S5.ask_review"))
 
     async def start_review(self, reason: str = "manual_review") -> None:
         if not self.context.photo_id:
@@ -317,10 +325,12 @@ class PhotoAgentFSM:
                 LOGGER.warning("delivery_retry", extra={"attempt": attempt + 1, "error": result.error})
             assert result is not None
             if result.ok:
-                await self._say_and_wait("照片链接已准备好，祝用户玩得开心。只说一句。")
+                await self._say_and_wait(self.prompts.get("action.S6.delivered"))
             else:
                 await self._say_and_wait(
-                    f"照片链接暂时生成失败，请记住取图码 {self.context.photo_id}，工作人员可协助取图。只说一句。"
+                    self.prompts.render(
+                        "action.S6.delivery_failed", photo_id=self.context.photo_id
+                    )
                 )
             return result
         finally:

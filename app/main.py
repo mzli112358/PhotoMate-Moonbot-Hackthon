@@ -8,12 +8,17 @@ from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
-from app.config import resolve_settings
+from app.config import CONFIG_DIR, DATA_DIR, resolve_settings
 from app.docs_service import catalog as docs_catalog
 from app.docs_service import load_document
 from app.map_loader import build_map_payload, clear_map_cache
 from app.photo_agent.api import create_photo_router
 from app.photo_agent.delivery import GLOBAL_PHOTO_STORE
+from app.photo_agent.config import load_runtime_config
+from app.photo_agent.prompts import PromptRegistry
+from app.photo_agent.runtime import build_local_runtime
+from app.photo_agent.test_console_api import create_test_console_router
+from app.photo_agent.test_controller import PhotoAgentTestController, TestRunStore
 from app.perception import PerceptionConfig
 from app.robot import RobotBridge
 from app.schemas import (
@@ -59,10 +64,22 @@ task_agent = PhotoMateFSM(
 
 robot_bridge.set_on_arrived(task_agent.on_navigation_arrived)
 
+photo_agent_prompts = PromptRegistry(
+    CONFIG_DIR / "photo_agent_prompts.yaml",
+    DATA_DIR / "photo_agent" / "prompt_history",
+)
+photo_agent_test_controller = PhotoAgentTestController(
+    prompt_registry=photo_agent_prompts,
+    run_store=TestRunStore(DATA_DIR / "photo_agent" / "test_runs.json"),
+    config_loader=load_runtime_config,
+    runtime_builder=build_local_runtime,
+)
+
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     yield
+    await photo_agent_test_controller.stop()
     robot_bridge.shutdown()
 
 
@@ -77,6 +94,7 @@ app = FastAPI(
     openapi_url="/api/openapi.json",
 )
 app.include_router(create_photo_router(GLOBAL_PHOTO_STORE))
+app.include_router(create_test_console_router(photo_agent_test_controller))
 
 
 @app.get("/api/health")
@@ -246,6 +264,11 @@ def docs_page() -> FileResponse:
 @app.get("/")
 def index() -> FileResponse:
     return FileResponse(WEBS_DIR / "index.html")
+
+
+@app.get("/photo-agent")
+def photo_agent_page() -> FileResponse:
+    return FileResponse(WEBS_DIR / "photo-agent.html")
 
 
 app.mount("/assets", StaticFiles(directory=WEBS_DIR), name="assets")

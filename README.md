@@ -32,6 +32,15 @@ python manual/photo_agent/run_state.py --state S1 --mode mock
 python manual/photo_agent/run_state.py --state S3 --mode local-real
 ```
 
+可视化测试台（只接受本机访问）：
+
+```bash
+export DASHSCOPE_API_KEY='从安全环境注入，勿写入仓库'
+python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
+```
+
+浏览器打开 `http://127.0.0.1:8000/photo-agent`。页面可逐个启动 S1–S6 真实测试、查看摄像头/状态/质检/日志，并编辑全部 System、State 和 Action Prompt。Prompt 保存到 `config/photo_agent_prompts.yaml`，重启保留；运行中保存会从下一轮 Omni 对话生效。
+
 详细范围、配置、API 契约、手动验收、逐项完成审计与已知限制见 [docs/photo_agent/README.md](docs/photo_agent/README.md)。真实 Insta360、Jetson、GalbotSDK 与前端二维码 UI 尚未接入；V0 使用普通电脑摄像头、麦克风、扬声器和本地文件服务。
 
 ## 仓库结构

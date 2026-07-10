@@ -140,6 +140,9 @@ class MockOmni(_Recorder):
     async def create_response(self, instructions: str) -> None:
         self.record("create_response", instructions)
 
+    async def update_instructions(self, instructions: str) -> None:
+        self.record("update_instructions", instructions)
+
     async def wait_response_done(self, timeout: float) -> None:
         self.record("wait_response_done", timeout)
 

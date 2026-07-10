@@ -7,5 +7,6 @@ venv/
 *.log
 data/photos/
 data/smoke-photos/
+data/photo_agent/
 .pytest_cache/
 .coverage

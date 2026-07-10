@@ -90,6 +90,9 @@ class OpenCVCamera:
         async with self._lock:
             return await asyncio.to_thread(self._read)
 
+    def latest_frame(self) -> np.ndarray | None:
+        return None if self._latest_frame is None else self._latest_frame.copy()
+
     async def capture(self, mode: str = "photo") -> CaptureResult:
         if mode != "photo":
             return CaptureResult("", Path(), False, error=f"unsupported mode: {mode}")

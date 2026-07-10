@@ -40,6 +40,10 @@ async def test_opencv_camera_captures_current_frame_and_releases(tmp_path: Path)
     camera.open()
     assert "FAKE" in camera.device_name
     assert await camera.get_frame() is not None
+    preview = camera.latest_frame()
+    assert preview is not None
+    preview[:] = 0
+    assert camera.latest_frame().mean() == 127
     result = await camera.capture()
     await camera.close()
 

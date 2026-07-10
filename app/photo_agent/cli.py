@@ -54,7 +54,10 @@ def parse_args() -> argparse.Namespace:
 
 
 def main() -> int:
-    return asyncio.run(async_main(parse_args()))
+    try:
+        return asyncio.run(async_main(parse_args()))
+    except KeyboardInterrupt:
+        return 130
 
 
 if __name__ == "__main__":

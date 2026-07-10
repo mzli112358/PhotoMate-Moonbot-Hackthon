@@ -52,6 +52,14 @@ python -m app.photo_agent.cli --mode hardware-real
 
 配置位于 `config/app.yaml:photo_agent`，可用环境变量覆盖。设备索引可从 `device_smoke.py` 输出选择。照片默认保存在 `data/photos/`，不会提交 Git。
 
+真实语音验收建议选择「可听清用户」的麦克风与耳机输出，避免扬声器回声被 VAD 当成新用户语音。例如：
+
+```bash
+PHOTOMATE_PHOTO_AGENT__MICROPHONE_INDEX=1 \
+PHOTOMATE_PHOTO_AGENT__SPEAKER_INDEX=4 \
+python -m app.photo_agent.cli --mode local-real
+```
+
 运行日志为逐行 JSON，包含状态转移、原因、session/response/function call、拍照、质检、photo URL、重试和资源释放；密钥字段会自动脱敏。Omni 异常断线时会安全结束当前会话，并通过本地系统语音命令提示用户。会话在 115 分钟主动回收，避免撞到云端 120 分钟上限。
 
 ## 前端最小接口契约
@@ -86,7 +94,7 @@ python manual/photo_agent/run_state.py --state S6 --mode mock
 
 将 `mock` 替换为 `local-real` 后，只启动所选状态所需的真实 adapter，不会偷偷跑完整链；到达该状态的验收终态后自动释放资源。S5/S6 会自动启动照片 HTTP 服务。建议按 S1→S6 顺序统一验收，使用耳机避免扬声器回声触发 VAD。
 
-当前逐项完成证据与唯一外部阻塞见 [completion-audit.md](completion-audit.md)。
+当前逐项证据与已暂停的最终真实整链验收见 [completion-audit.md](completion-audit.md)。
 
 ## Jetson 迁移待验证
 

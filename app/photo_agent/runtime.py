@@ -120,9 +120,13 @@ class PhotoAgentRuntime:
                 # PyAudio reads one 100 ms chunk. Keeping that bounded read in this
                 # task avoids an orphan executor thread when the session is cancelled.
                 chunk = self.microphone.read_chunk()
+                if not self.fsm.context.session_id:
+                    continue
                 await self.omni.append_audio(chunk)
                 await asyncio.sleep(0)
             except Exception as exc:  # noqa: BLE001 - live device boundary
+                if not self.fsm.context.session_id:
+                    continue
                 LOGGER.warning(
                     "audio_stream_failed",
                     extra={"session_id": self.fsm.context.session_id, "error": str(exc)},

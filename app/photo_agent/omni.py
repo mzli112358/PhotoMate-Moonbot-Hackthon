@@ -82,17 +82,23 @@ def omni_tools() -> list[dict[str, Any]]:
 
 
 class _Callback:
-    def __init__(self, owner: "DashscopeOmniClient") -> None:
+    def __init__(self, owner: "DashscopeOmniClient", generation: int) -> None:
         self.owner = owner
+        self.generation = generation
+
+    def _is_current(self) -> bool:
+        return self.owner._callback is self and self.owner._generation == self.generation
 
     def on_open(self) -> None:
         return
 
     def on_close(self, code: int | None, message: str | None) -> None:
-        if not self.owner._closing:
+        if self._is_current() and not self.owner._closing:
             self.owner._emit({"type": "disconnected", "code": code, "message": message})
 
     def on_event(self, response: dict[str, Any]) -> None:
+        if not self._is_current():
+            return
         event_type = response.get("type", "")
         if event_type == "session.created":
             self.owner.session_id = response.get("session", {}).get("id")
@@ -126,6 +132,8 @@ class _Callback:
             self.owner._emit({"type": "speech_started"})
         elif event_type == "input_audio_buffer.speech_stopped":
             self.owner._emit({"type": "speech_stopped"})
+        elif event_type == "input_audio_buffer.committed":
+            self.owner._primed = False
         elif event_type == "response.function_call_arguments.done":
             try:
                 arguments = json.loads(response.get("arguments") or "{}")
@@ -152,7 +160,8 @@ class DashscopeOmniClient:
         self._loop: asyncio.AbstractEventLoop | None = None
         self._events: asyncio.Queue[dict[str, Any]] = asyncio.Queue()
         self._conversation: Any | None = None
-        self._callback = _Callback(self)
+        self._callback: _Callback | None = None
+        self._generation = 0
         self._write_lock = asyncio.Lock()
         self._response_done = asyncio.Event()
         self._primed = False
@@ -177,6 +186,11 @@ class DashscopeOmniClient:
             from dashscope.audio.qwen_omni import OmniRealtimeConversation
 
             factory = OmniRealtimeConversation
+        self._generation += 1
+        self._events = asyncio.Queue()
+        self.session_id = None
+        self._primed = False
+        self._callback = _Callback(self, self._generation)
         self._conversation = factory(
             model=self.settings.model,
             callback=self._callback,
@@ -198,6 +212,7 @@ class DashscopeOmniClient:
                 await asyncio.to_thread(self._conversation.close)
             finally:
                 self._conversation = None
+                self._callback = None
                 self._closing = False
             raise
         self.session_id = session_id
@@ -221,10 +236,11 @@ class DashscopeOmniClient:
         )
 
     async def _call(self, method: str, *args: Any, **kwargs: Any) -> Any:
-        if self._conversation is None:
-            raise ConnectionError("Omni is not connected")
         async with self._write_lock:
-            return await asyncio.to_thread(getattr(self._conversation, method), *args, **kwargs)
+            conversation = self._conversation
+            if conversation is None:
+                raise ConnectionError("Omni is not connected")
+            return await asyncio.to_thread(getattr(conversation, method), *args, **kwargs)
 
     async def prime_audio(self) -> None:
         await self.append_audio(b"\x00\x00" * 1600)
@@ -276,7 +292,6 @@ class DashscopeOmniClient:
         if self._conversation is None:
             return
         await self.inject_context(f"会话结束原因：{reason}")
-        await self._call("end_session_async")
 
     async def close(self) -> None:
         if self._conversation is None:
@@ -286,5 +301,6 @@ class DashscopeOmniClient:
             await self._call("close")
         finally:
             self._conversation = None
+            self._callback = None
             self._primed = False
             self._closing = False

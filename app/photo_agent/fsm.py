@@ -87,6 +87,7 @@ class PhotoAgentFSM:
         )
         self.guidance_limit_reached = False
         self._qualified_wake_frames = 0
+        self._wake_rearm_required = False
         self._background_tasks: set[asyncio.Task[Any]] = set()
 
     @property
@@ -128,6 +129,11 @@ class PhotoAgentFSM:
         if self.context.state is not State.DETECT_INTENT:
             return
         signal = await self.wake_detector.poll()
+        if self._wake_rearm_required:
+            self._qualified_wake_frames = 0
+            if signal.person_present:
+                return
+            self._wake_rearm_required = False
         if signal.is_awake(self.config.dwell_threshold_s):
             self._qualified_wake_frames += 1
         else:
@@ -322,6 +328,8 @@ class PhotoAgentFSM:
 
     async def _finish_session(self, reason: str) -> None:
         if self.context.session_id:
+            # Stop audio producers before waiting on the WebSocket write lock.
+            self.context.session_id = None
             try:
                 await self.omni.end_session(reason)
             except Exception as exc:  # noqa: BLE001
@@ -335,6 +343,7 @@ class PhotoAgentFSM:
         self.context.reset()
         self.guidance_limit_reached = False
         self._qualified_wake_frames = 0
+        self._wake_rearm_required = True
         LOGGER.info("session_reset", extra={"reason": reason})
         LOGGER.info(
             "resource_release",

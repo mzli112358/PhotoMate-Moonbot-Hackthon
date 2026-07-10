@@ -8,6 +8,18 @@ from app.photo_agent import cli
 from app.photo_agent.runtime import RuntimeConfig
 
 
+def test_cli_keyboard_interrupt_exits_without_traceback(monkeypatch) -> None:
+    monkeypatch.setattr(cli, "parse_args", lambda: Namespace(mode="mock", no_photo_server=False))
+
+    def interrupted(coroutine):
+        coroutine.close()
+        raise KeyboardInterrupt
+
+    monkeypatch.setattr(cli.asyncio, "run", interrupted)
+
+    assert cli.main() == 130
+
+
 @pytest.mark.asyncio
 async def test_local_real_cli_prints_opened_device_names(monkeypatch, capsys) -> None:
     class Runtime:

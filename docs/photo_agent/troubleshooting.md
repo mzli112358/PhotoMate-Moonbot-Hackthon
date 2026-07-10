@@ -12,6 +12,7 @@
 - 约束：Realtime 以音频为时间线，发图前至少发一次音频；图像 Base64 不超过 256KB，建议约 1fps。
 - 修复：`prime_audio()` 发送静音 PCM；`encode_frame()` 逐级缩放/降质直到满足上限。
 - 回归：`test_real_client_configures_vad_tools_and_primes_audio_before_image`、`test_encode_frame_obeys_realtime_image_limit`。
+- 长会话实测发现，服务端 VAD commit 后会清空当前音频 buffer；适配器现监听 `input_audio_buffer.committed`，下一张图前重新 prime audio。
 
 ## VAD 与 interval 主动触发
 
@@ -24,6 +25,8 @@
 - 现象：指令中的带日期模型名使 WebSocket 关闭并返回 `url error`；同一端点用 `qwen3.5-omni-flash-realtime` 可建会话。
 - 修复：Realtime 默认模型改为专用别名；HTTP 兼容模型名不复用到 WebSocket。
 - 竞态：SDK `connect()` 可在 `session.created` 回调前返回；adapter 现在最多等待 5 秒，不再误报「会话未创建」。
+- 重连：每个会话使用新 callback generation 和事件队列，忽略旧 WebSocket 的延迟事件，避免污染下一次接待。
+- 关闭：该 Realtime 模型不接受 SDK `end_session_async()` 发送的 `session.finish`；现改为记录结束原因后直接关闭 WebSocket。
 
 ## OpenCV 5 与音频退出
 
@@ -33,7 +36,8 @@
 ## 当前实机边界
 
 - 真实 Qwen smoke 已全部通过；Camera 0/AVFoundation 读取 1920×1080 帧，Bose QC Headphones 麦克风与扬声器通过。
-- 当前画面只包含额头边缘，因此 S1 不唤醒、S4 返回 `face_not_found,blurred` 是正确行为；调整物理机位后再验证正向 happy path。
+- 调整机位后，真人 S1 正向唤醒已通过；真实整链已达 S4 并验证模糊重拍回环，最终 S6 URL 复验因用户要求暂停而未继续。
+- MacBook 麦克风 + MacBook 扬声器会把 Omni 输出重新收音，触发 VAD 回声自对话。现场验收应使用耳机输出，或后续在真机音频链接入 AEC；不为了压回声禁用用户打断能力。
 - Insta360 SDK、Jetson、Galbot 和前端二维码界面尚未提供，保持 adapter/接口边界。
 
 ## 运行中断线与设备异常

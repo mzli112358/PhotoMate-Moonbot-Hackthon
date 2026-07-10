@@ -297,6 +297,32 @@ async def test_audio_loop_does_not_leave_a_blocking_executor_read_on_shutdown(mo
 
 
 @pytest.mark.asyncio
+async def test_audio_loop_drops_chunk_if_session_closes_during_microphone_read() -> None:
+    omni = MockOmni()
+    fsm = PhotoAgentFSM(
+        wake_detector=MockWakeDetector([]),
+        omni=omni,
+        camera=MockCamera(captures=[]),
+        quality_checker=MockQualityChecker([QualityResult(True, True, True)]),
+        delivery=MockDelivery(results=[DeliveryResult("p", "http://local/p", True)]),
+    )
+    fsm.context.session_id = "session-1"
+    runtime: PhotoAgentRuntime
+
+    class Microphone:
+        def read_chunk(self) -> bytes:
+            fsm.context.session_id = None
+            runtime.stop()
+            return b"stale-pcm"
+
+    runtime = PhotoAgentRuntime(fsm, microphone=Microphone())
+
+    await runtime._audio_loop()
+
+    assert omni.count("append_audio") == 0
+
+
+@pytest.mark.asyncio
 async def test_cleanup_releases_all_resources_even_when_one_close_fails() -> None:
     class Microphone:
         def read_chunk(self) -> bytes:

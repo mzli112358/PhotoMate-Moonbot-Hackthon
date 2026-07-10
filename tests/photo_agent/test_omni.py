@@ -126,6 +126,18 @@ async def test_real_audio_counts_as_image_primer_without_duplicate_silence() -> 
 
 
 @pytest.mark.asyncio
+async def test_server_vad_commit_requires_audio_to_be_primed_again_before_image() -> None:
+    client, made = make_client()
+    await client.connect()
+    await client.append_audio(b"first-turn-pcm")
+    made[0].callback.on_event({"type": "input_audio_buffer.committed"})
+
+    await client.append_image(np.zeros((8, 8, 3), dtype=np.uint8))
+
+    assert [name for name, _ in made[0].calls].count("append_audio") == 2
+
+
+@pytest.mark.asyncio
 async def test_callback_surfaces_vad_function_call_output_and_errors() -> None:
     client, made = make_client()
     await client.connect()
@@ -258,3 +270,42 @@ async def test_connect_waits_for_delayed_session_created_callback() -> None:
     )
 
     assert await client.connect() == "session-delayed"
+
+
+@pytest.mark.asyncio
+async def test_reconnect_discards_events_and_callbacks_from_the_previous_session() -> None:
+    client, made = make_client()
+    await client.connect()
+    previous_callback = made[0].callback
+    await client.close()
+
+    await client.connect()
+    previous_callback.on_event({"type": "error", "error": {"code": "stale"}})
+    made[1].callback.on_event({"type": "input_audio_buffer.speech_started"})
+    await asyncio.sleep(0)
+
+    assert await client.next_event() == {"type": "speech_started"}
+
+
+@pytest.mark.asyncio
+async def test_call_rechecks_connection_after_waiting_for_write_lock() -> None:
+    client, _ = make_client()
+    await client.connect()
+    await client._write_lock.acquire()
+    append_task = asyncio.create_task(client.append_audio(b"pcm"))
+    await asyncio.sleep(0)
+    client._conversation = None
+    client._write_lock.release()
+
+    with pytest.raises(ConnectionError, match="not connected"):
+        await append_task
+
+
+@pytest.mark.asyncio
+async def test_end_session_does_not_send_unsupported_session_finish_event() -> None:
+    client, made = make_client()
+    await client.connect()
+
+    await client.end_session("timeout")
+
+    assert ("end_session_async", None) not in made[0].calls

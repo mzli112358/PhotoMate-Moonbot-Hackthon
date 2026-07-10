@@ -93,6 +93,27 @@ async def test_s1_retries_connection_once_then_returns_idle() -> None:
 
 
 @pytest.mark.asyncio
+async def test_finished_session_requires_face_absence_before_rearming_s1() -> None:
+    awake = WakeSignal(True, 3.2, True)
+    fsm, omni, _, _ = build_fsm(
+        wake_signals=[awake, awake, WakeSignal(False, 0.0, False), awake, awake]
+    )
+    fsm.context.session_id = "old-session"
+    await fsm.finish_session("timeout")
+    await fsm.start()
+
+    await fsm.poll_wake()
+    await fsm.poll_wake()
+    assert omni.count("connect") == 0
+
+    await fsm.poll_wake()
+    await fsm.poll_wake()
+    await fsm.poll_wake()
+    assert omni.count("connect") == 1
+    assert fsm.context.state is State.ASK_INTENT
+
+
+@pytest.mark.asyncio
 async def test_s2_accept_decline_and_timeout_paths() -> None:
     accept, _, _, _ = build_fsm()
     accept.context.state = State.ASK_INTENT

@@ -240,6 +240,25 @@ def docs_page() -> FileResponse:
     return FileResponse(WEBS_DIR / "docs.html")
 
 
+@app.get("/flow")
+@app.get("/flow/")
+def flow_page() -> FileResponse:
+    return FileResponse(WEBS_DIR / "flow" / "index.html")
+
+
+@app.get("/flow/favicon.ico")
+def flow_favicon() -> FileResponse:
+    return FileResponse(WEBS_DIR / "flow" / "favicon.ico")
+
+
+app.mount("/flow/assets", StaticFiles(directory=WEBS_DIR / "flow" / "assets"), name="flow-assets")
+
+
+@app.get("/flow/{path:path}")
+def flow_spa_page(path: str) -> FileResponse:
+    return FileResponse(WEBS_DIR / "flow" / "index.html")
+
+
 @app.get("/")
 def index() -> FileResponse:
     return FileResponse(WEBS_DIR / "index.html")

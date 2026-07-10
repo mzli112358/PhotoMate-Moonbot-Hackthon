@@ -1,0 +1,1 @@
+import{a as e,s as t}from"./voice-context-CO0NJ9AB.js";var n=t(e(),1),r=n.createContext(null);function i(e){return n.useContext(r)}function a(e){let t=i();return n.useCallback(n=>t.navigate({...n,from:n.from??e?.from}),[e?.from,t])}export{i as n,r,a as t};

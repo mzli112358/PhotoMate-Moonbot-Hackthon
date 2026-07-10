@@ -18,6 +18,9 @@ def test_photo_agent_runtime_modules_exist() -> None:
         "app.photo_agent.delivery",
         "app.photo_agent.omni",
         "app.photo_agent.runtime",
+        "app.photo_agent.observability",
+        "app.photo_agent.server",
+        "app.photo_agent.fallback",
     )
 
     missing = [name for name in required if importlib.util.find_spec(name) is None]

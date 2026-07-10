@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import asyncio
+import argparse
 import json
 import sys
 from pathlib import Path
@@ -13,6 +14,7 @@ if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
 from app.photo_agent.config import load_runtime_config  # noqa: E402
+from app.photo_agent.audio import PyAudioMicrophone  # noqa: E402
 from app.photo_agent.omni import DashscopeOmniClient, OmniSettings  # noqa: E402
 
 
@@ -27,7 +29,28 @@ async def wait_until(client: DashscopeOmniClient, wanted: set[str], timeout: flo
     raise TimeoutError(f"Omni smoke timed out waiting for {wanted}")
 
 
-async def run() -> int:
+async def detect_timeout(client: DashscopeOmniClient, timeout: float = 0.05) -> bool:
+    try:
+        await wait_until(client, {"intentionally_absent_event"}, timeout=timeout)
+    except TimeoutError:
+        return True
+    return False
+
+
+async def capture_microphone_chunks(
+    device_index: int | None,
+    *,
+    count: int = 3,
+    microphone_factory=PyAudioMicrophone,
+) -> list[bytes]:
+    microphone = microphone_factory(device_index)
+    try:
+        return [await asyncio.to_thread(microphone.read_chunk) for _ in range(count)]
+    finally:
+        microphone.close()
+
+
+async def run(args: argparse.Namespace) -> int:
     config = load_runtime_config(mode="local-real")
     if not config.api_key:
         print(json.dumps({"ok": False, "blocked": "DASHSCOPE_API_KEY missing"}, ensure_ascii=False))
@@ -45,19 +68,28 @@ async def run() -> int:
     report = {
         "key_present": True,
         "session": False,
+        "microphone_audio": False,
+        "input_audio_bytes": 0,
         "audio_before_image": False,
         "text_output": False,
         "audio_output": False,
         "vad_plus_manual_response": False,
         "function_call": False,
         "tool_followup": False,
-        "error_or_timeout_detectable": True,
+        "error_or_timeout_detectable": False,
     }
     try:
         session_id = await client.connect()
         report["session"] = bool(session_id)
         await client.configure()
-        await client.prime_audio()
+        if args.synthetic_audio:
+            input_chunks = [b"\x00\x00" * 1600 for _ in range(3)]
+        else:
+            input_chunks = await capture_microphone_chunks(args.microphone)
+        for chunk in input_chunks:
+            await client.append_audio(chunk)
+        report["microphone_audio"] = not args.synthetic_audio and bool(input_chunks)
+        report["input_audio_bytes"] = sum(len(chunk) for chunk in input_chunks)
         report["audio_before_image"] = True
         frame = np.full((480, 640, 3), 180, dtype=np.uint8)
         await client.append_image(frame)
@@ -82,6 +114,7 @@ async def run() -> int:
         await client.submit_tool_result(call.call_id, {"ok": True})
         followup = await wait_until(client, {"response_done", "error"})
         report["tool_followup"] = any(event.get("type") == "response_done" for event in followup)
+        report["error_or_timeout_detectable"] = await detect_timeout(client)
         report["ok"] = all(value for key, value in report.items() if key != "ok")
         print(json.dumps(report, ensure_ascii=False, indent=2))
         return 0 if report["ok"] else 3
@@ -94,5 +127,16 @@ async def run() -> int:
         await client.close()
 
 
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Qwen Omni independent realtime smoke test")
+    parser.add_argument("--microphone", type=int, default=None)
+    parser.add_argument(
+        "--synthetic-audio",
+        action="store_true",
+        help="Only for protocol debugging; real acceptance must use the microphone.",
+    )
+    return parser.parse_args()
+
+
 if __name__ == "__main__":
-    raise SystemExit(asyncio.run(run()))
+    raise SystemExit(asyncio.run(run(parse_args())))

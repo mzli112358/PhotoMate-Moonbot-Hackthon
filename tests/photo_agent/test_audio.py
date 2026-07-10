@@ -66,6 +66,8 @@ def test_microphone_and_speaker_use_selected_devices_and_release() -> None:
 
     assert module.instances[0].opens[0]["input_device_index"] == 2
     assert module.instances[1].opens[0]["output_device_index"] == 3
+    assert microphone.device_name == "fake audio"
+    assert speaker.device_name == "fake audio"
     assert module.instances[1].stream.writes == [b"pcm"]
     assert all(instance.terminated for instance in module.instances)
 

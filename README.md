@@ -21,7 +21,7 @@ python -m app.photo_agent.cli --mode mock
 # 先独立验证设备与 Omni，再跑真实本地链
 python scripts/photo_agent/device_smoke.py --camera 0
 export DASHSCOPE_API_KEY='从安全环境注入，勿写入仓库'
-python scripts/photo_agent/omni_smoke.py
+python scripts/photo_agent/omni_smoke.py --microphone 1
 python -m app.photo_agent.cli --mode local-real
 ```
 
@@ -32,7 +32,7 @@ python manual/photo_agent/run_state.py --state S1 --mode mock
 python manual/photo_agent/run_state.py --state S3 --mode local-real
 ```
 
-详细范围、配置、API 契约、手动验收与已知限制见 [docs/photo_agent/README.md](docs/photo_agent/README.md)。真实 Insta360、Jetson、GalbotSDK 与前端二维码 UI 尚未接入；V0 使用普通电脑摄像头、麦克风、扬声器和本地文件服务。
+详细范围、配置、API 契约、手动验收、逐项完成审计与已知限制见 [docs/photo_agent/README.md](docs/photo_agent/README.md)。真实 Insta360、Jetson、GalbotSDK 与前端二维码 UI 尚未接入；V0 使用普通电脑摄像头、麦克风、扬声器和本地文件服务。
 
 ## 仓库结构
 

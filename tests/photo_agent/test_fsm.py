@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections import deque
 from pathlib import Path
 
 import numpy as np
@@ -103,6 +104,8 @@ async def test_s2_accept_decline_and_timeout_paths() -> None:
     decline.context.session_id = "session-1"
     await decline.handle_user_text("不用了")
     assert decline.context.state is State.IDLE
+    assert decline_omni.count("create_response") == 1
+    assert decline_omni.count("wait_response_done") == 1
     assert decline_omni.count("end_session") == 1
 
     timeout, timeout_omni, _, _ = build_fsm()
@@ -154,6 +157,44 @@ async def test_s4_capture_retries_then_quality_success_enters_review() -> None:
     assert delivery.count("show") == 1
     assert omni.count("wait_response_done") == 1
     assert omni.count("create_response") == 2  # 倒数 + 复核询问
+
+
+@pytest.mark.asyncio
+async def test_s4_capture_exhaustion_apologizes_and_returns_to_guidance() -> None:
+    fsm, omni, camera, _ = build_fsm(captures=[BAD_CAPTURE, BAD_CAPTURE])
+    fsm.context.state = State.SHOOT
+
+    result = await fsm.run_shoot()
+
+    assert result.ok is False
+    assert fsm.context.state is State.POSE_GUIDANCE
+    assert fsm.context.retake_count == 1
+    assert camera.count("capture") == 2
+    assert omni.count("create_response") == 2  # 倒数 + 快门失败致歉
+
+
+@pytest.mark.asyncio
+async def test_s5_show_failure_retries_before_review_prompt() -> None:
+    fsm, _, _, delivery = build_fsm()
+    delivery._show_results = deque([False, True])
+    fsm.context.state = State.SHOOT
+
+    await fsm.run_shoot()
+
+    assert fsm.context.state is State.REVIEW
+    assert delivery.count("show") == 2
+
+
+@pytest.mark.asyncio
+async def test_s5_show_exhaustion_uses_voice_fallback() -> None:
+    fsm, omni, _, delivery = build_fsm()
+    delivery._show_results = deque([False, False])
+    fsm.context.state = State.SHOOT
+
+    await fsm.run_shoot()
+
+    assert delivery.count("show") == 2
+    assert omni.count("create_response") == 3  # 倒数 + 展示失败兜底 + 满意度询问
 
 
 @pytest.mark.asyncio
@@ -212,6 +253,7 @@ async def test_s6_success_returns_url_and_resets_everything() -> None:
     assert fsm.context.photo_id is None
     assert fsm.context.retake_count == 0
     assert delivery.count("deliver") == 1
+    assert omni.count("wait_response_done") == 1
     assert omni.count("end_session") == 1
     assert omni.count("close") == 1
 
@@ -227,6 +269,8 @@ async def test_s6_failure_retries_and_still_closes_and_resets() -> None:
 
     assert result.ok is False
     assert delivery.count("deliver") == 2
+    assert omni.count("create_response") == 1
+    assert omni.count("wait_response_done") == 1
     assert omni.count("end_session") == 1
     assert omni.count("close") == 1
     assert fsm.context.state is State.IDLE

@@ -31,3 +31,15 @@ photo_agent:
     assert result.camera_index == 4
     assert result.workspace_host == "yaml.example.com"
     assert result.photo_dir == tmp_path / "data/test-photos"
+
+
+def test_workspace_id_and_region_build_official_workspace_host(tmp_path: Path, monkeypatch) -> None:
+    config_file = tmp_path / "app.yaml"
+    config_file.write_text("photo_agent: {}\n", encoding="utf-8")
+    monkeypatch.delenv("DASHSCOPE_WORKSPACE_HOST", raising=False)
+    monkeypatch.setenv("DASHSCOPE_WORKSPACE_ID", "workspace-123")
+    monkeypatch.setenv("DASHSCOPE_REGION", "intl")
+
+    result = load_runtime_config(config_file=config_file, root_dir=tmp_path)
+
+    assert result.workspace_host == "workspace-123.ap-southeast-1.maas.aliyuncs.com"

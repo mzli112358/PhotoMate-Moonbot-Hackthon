@@ -52,4 +52,4 @@
 
 - 先复现并区分本地代码、SDK、网络、权限、设备或第三方服务；复杂问题优先查官方文档/SDK/错误码，再查匹配版本的公开 issue，最后做单变量实验。
 - 解决复杂问题后在 `docs/photo_agent/troubleshooting.md` 记录现象、根因、证据链接、修复、回归测试与限制。
-- 当前状态：S1–S6 新软件链、mock/本地 adapter、Omni adapter、照片 API、自动化测试、mock CLI、real smoke 和 S1–S6 手动入口已完成。当前机器的摄像头权限未授权，且环境/Keychain 无 DashScope Key，因此 local-real 与真实 Omni 仍待人工提供权限/凭证后验证。真实 Insta360、Jetson、Galbot、现场网络与前端 UI 保持待团队验证。
+- 当前状态：S1–S6 新软件链、mock/本地 adapter、Omni adapter、照片 API、自动化测试、mock CLI、独立 smoke 和 S1–S6 真实单状态入口已完成；本机摄像头/麦克风/扬声器 smoke 已通过。环境与 Keychain 仍无 DashScope Key，因此真实 Omni smoke 和 local-real 云端全链待凭证注入后验证。真实 Insta360、Jetson、Galbot、现场网络与前端 UI 保持待团队验证。

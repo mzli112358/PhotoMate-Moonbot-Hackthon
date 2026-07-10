@@ -22,5 +22,11 @@
 ## 当前待真实验证
 
 - 当前环境未设置 `DASHSCOPE_API_KEY`，所以真实云端 smoke 明确返回 blocked；未以 mock 冒充通过。
-- 2026-07-10 本机实测可枚举 MacBook Air 与 Bose 音频设备，但 OpenCV 返回 `not authorized to capture video`，Camera 0 无法打开。需在 macOS“隐私与安全性 → 摄像头”授权当前终端/Codex 后重跑 `device_smoke.py`。
+- 2026-07-10 首次运行时摄像头权限未授权；授权后复测已通过：Camera 0/AVFoundation 读取 1920×1080 帧、Bose QC Headphones 麦克风读取 3200 bytes、Bose QC Headphones 扬声器最小写入成功。
 - Insta360 SDK、Jetson、Galbot 和前端二维码界面尚未提供，保持 adapter/接口边界。
+
+## 运行中断线与设备异常
+
+- Omni `error` / unexpected close 会产生结构化事件，触发本地系统语音提示、关闭云端会话并将 FSM 复位到 S0。
+- 麦克风瞬时读写失败会记录 `audio_stream_failed` 并继续下一轮，不让后台任务静默死亡。
+- 任一资源 close 失败不会阻止其他 WebSocket、摄像头、音频或后台任务继续释放。

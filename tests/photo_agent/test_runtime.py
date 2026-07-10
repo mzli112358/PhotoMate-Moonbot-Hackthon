@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import json
 import asyncio
+import inspect
+from collections import deque
 
 import pytest
 
@@ -27,12 +29,39 @@ def test_startup_self_check_redacts_api_key() -> None:
         api_key="super-secret-value",
     )
 
-    report = build_self_check(config)
+    assert "device_info" in inspect.signature(build_self_check).parameters
+    report = build_self_check(
+        config,
+        device_info={
+            "camera": "camera:0 (AVFoundation)",
+            "microphone": "MacBook microphone",
+            "speaker": "Bose headphones",
+        },
+    )
     serialized = json.dumps(report)
 
     assert report["api_key_present"] is True
     assert "super-secret-value" not in serialized
     assert report["adapters"]["omni"] == "real"
+    assert report["camera"] == "camera:0 (AVFoundation)"
+    assert report["microphone"] == "MacBook microphone"
+    assert report["speaker"] == "Bose headphones"
+
+
+def test_mock_self_check_labels_fixture_devices() -> None:
+    report = build_self_check(RuntimeConfig(mode="mock"))
+
+    assert report["camera"] == "mock camera fixture"
+    assert report["microphone"] == "mock microphone fixture"
+    assert report["speaker"] == "mock speaker fixture"
+
+
+def test_hardware_real_self_check_is_explicitly_reserved() -> None:
+    report = build_self_check(RuntimeConfig(mode="hardware-real"))
+
+    assert set(report["adapters"].values()) == {"reserved"}
+    assert report["camera"] == "reserved Jetson/Insta360 adapter"
+    assert "Insta360 SDK" in report["missing_real_dependencies"]
 
 
 def test_local_runtime_fails_before_opening_devices_when_key_missing() -> None:
@@ -202,3 +231,165 @@ async def test_audio_loop_waits_until_omni_session_exists() -> None:
     await task
 
     assert microphone.reads == 0
+
+
+@pytest.mark.asyncio
+async def test_audio_loop_recovers_after_transient_device_error() -> None:
+    class Microphone:
+        reads = 0
+
+        def read_chunk(self) -> bytes:
+            self.reads += 1
+            if self.reads == 1:
+                raise OSError("temporary microphone error")
+            return b"pcm"
+
+    microphone = Microphone()
+    omni = MockOmni()
+    fsm = PhotoAgentFSM(
+        wake_detector=MockWakeDetector([]),
+        omni=omni,
+        camera=MockCamera(captures=[]),
+        quality_checker=MockQualityChecker([QualityResult(True, True, True)]),
+        delivery=MockDelivery(results=[DeliveryResult("p", "http://local/p", True)]),
+    )
+    fsm.context.session_id = "session-1"
+    runtime = PhotoAgentRuntime(fsm, microphone=microphone)
+
+    task = asyncio.create_task(runtime._audio_loop())
+    await asyncio.sleep(0.15)
+    runtime.stop()
+    await task
+
+    assert microphone.reads >= 2
+    assert omni.count("append_audio") >= 1
+
+
+@pytest.mark.asyncio
+async def test_cleanup_releases_all_resources_even_when_one_close_fails() -> None:
+    class Microphone:
+        def read_chunk(self) -> bytes:
+            return b"pcm"
+
+        def close(self) -> None:
+            raise OSError("microphone close failed")
+
+    class Resource:
+        closed = False
+
+        def close(self) -> None:
+            self.closed = True
+
+    camera = MockCamera(captures=[])
+    omni = MockOmni()
+    resource = Resource()
+    fsm = PhotoAgentFSM(
+        wake_detector=MockWakeDetector([]),
+        omni=omni,
+        camera=camera,
+        quality_checker=MockQualityChecker([QualityResult(True, True, True)]),
+        delivery=MockDelivery(results=[DeliveryResult("p", "http://local/p", True)]),
+    )
+    fsm.context.session_id = "session-1"
+    runtime = PhotoAgentRuntime(fsm, microphone=Microphone(), resources=[resource])
+    runtime.stop()
+
+    await runtime.run_forever()
+
+    assert camera.closed is True
+    assert omni.closed is True
+    assert resource.closed is True
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("event_type", ["error", "disconnected"])
+async def test_omni_failure_closes_session_and_returns_idle(event_type: str) -> None:
+    omni = MockOmni()
+    fsm = PhotoAgentFSM(
+        wake_detector=MockWakeDetector([]),
+        omni=omni,
+        camera=MockCamera(captures=[]),
+        quality_checker=MockQualityChecker([QualityResult(True, True, True)]),
+        delivery=MockDelivery(results=[DeliveryResult("p", "http://local/p", True)]),
+    )
+    fsm.context.state = State.POSE_GUIDANCE
+    fsm.context.session_id = "session-1"
+    assert "fallback_notifier" in inspect.signature(PhotoAgentRuntime).parameters
+
+    class Notifier:
+        messages: list[str] = []
+
+        async def notify(self, message: str) -> None:
+            self.messages.append(message)
+
+    notifier = Notifier()
+    runtime = PhotoAgentRuntime(fsm, fallback_notifier=notifier)
+
+    await runtime.handle_event({"type": event_type, "error": {"code": "network"}})
+
+    assert fsm.context.state is State.IDLE
+    assert omni.count("end_session") == 1
+    assert omni.count("close") == 1
+    assert notifier.messages == ["实时语音服务暂时不可用，本次服务已安全结束，请稍后再试。"]
+
+
+@pytest.mark.asyncio
+async def test_session_near_120_minute_limit_is_recycled() -> None:
+    omni = MockOmni()
+    fsm = PhotoAgentFSM(
+        wake_detector=MockWakeDetector([]),
+        omni=omni,
+        camera=MockCamera(captures=[]),
+        quality_checker=MockQualityChecker([QualityResult(True, True, True)]),
+        delivery=MockDelivery(results=[DeliveryResult("p", "http://local/p", True)]),
+    )
+    fsm.context.state = State.POSE_GUIDANCE
+    fsm.context.session_id = "session-1"
+    fsm.context.session_started_at = 100.0
+    runtime = PhotoAgentRuntime(fsm)
+    runtime.session_max_s = 6900.0
+    runtime._wall_clock = lambda: 7101.0
+
+    await runtime._control_step()
+
+    assert fsm.context.state is State.IDLE
+    assert omni.count("end_session") == 1
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    ("requested", "events", "expected"),
+    [
+        ("S1", [], "S2"),
+        ("S2", [{"type": "user_text", "text": "要"}], "S3"),
+        ("S3", [{"type": "user_text", "text": "拍吧"}], "S4"),
+        ("S4", [], "S5"),
+        ("S5", [{"type": "user_text", "text": "满意"}], "S6"),
+        ("S6", [], "S0"),
+    ],
+)
+async def test_real_manual_runner_isolates_each_state(
+    tmp_path, requested: str, events: list[dict], expected: str
+) -> None:
+    photo = tmp_path / "manual.jpg"
+    photo.write_bytes(b"manual")
+    omni = MockOmni()
+    omni.events = deque(events)
+    fsm = PhotoAgentFSM(
+        wake_detector=MockWakeDetector(
+            [WakeSignal(True, 3.1, True), WakeSignal(True, 3.2, True)]
+        ),
+        omni=omni,
+        camera=MockCamera(captures=[CaptureResult("manual", photo, True, frame=object())]),
+        quality_checker=MockQualityChecker([QualityResult(True, True, True)]),
+        delivery=MockDelivery(
+            results=[DeliveryResult("manual", "http://local/api/photos/manual", True)]
+        ),
+    )
+    runtime = PhotoAgentRuntime(fsm)
+
+    result = await runtime.run_manual_state(requested, timeout=0.3)
+
+    assert result["ok"] is True, result
+    assert result["tested_state"] == requested
+    assert result["result_state"] == expected

@@ -118,6 +118,18 @@ async def test_callback_surfaces_vad_function_call_output_and_errors() -> None:
 
 
 @pytest.mark.asyncio
+async def test_unexpected_websocket_close_surfaces_disconnected_event() -> None:
+    client, made = make_client()
+    await client.connect()
+
+    made[0].callback.on_close(1006, "network lost")
+    await asyncio.sleep(0)
+
+    event = await client.next_event()
+    assert event == {"type": "disconnected", "code": 1006, "message": "network lost"}
+
+
+@pytest.mark.asyncio
 async def test_tool_result_is_returned_before_followup_response() -> None:
     client, made = make_client()
     await client.connect()
@@ -144,6 +156,26 @@ async def test_audio_delta_is_decoded_to_sink() -> None:
     await asyncio.sleep(0)
 
     assert chunks == [b"pcm"]
+
+
+@pytest.mark.asyncio
+async def test_audio_output_error_is_reported_as_runtime_event() -> None:
+    client, made = make_client()
+
+    def failing_sink(pcm: bytes) -> None:
+        raise OSError("speaker unavailable")
+
+    client.audio_sink = failing_sink
+    await client.connect()
+
+    made[0].callback.on_event(
+        {"type": "response.audio.delta", "delta": base64.b64encode(b"pcm").decode()}
+    )
+    await asyncio.sleep(0)
+
+    event = await client.next_event()
+    assert event["type"] == "error"
+    assert event["error"]["code"] == "audio_output_failed"
 
 
 @pytest.mark.asyncio

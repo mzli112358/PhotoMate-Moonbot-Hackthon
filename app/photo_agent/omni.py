@@ -102,7 +102,15 @@ class _Callback:
         elif event_type == "response.audio.delta":
             delta = response.get("delta")
             if delta and self.owner.audio_sink:
-                self.owner.audio_sink(base64.b64decode(delta))
+                try:
+                    self.owner.audio_sink(base64.b64decode(delta))
+                except Exception as exc:  # noqa: BLE001 - audio output boundary
+                    self.owner._emit(
+                        {
+                            "type": "error",
+                            "error": {"code": "audio_output_failed", "message": str(exc)},
+                        }
+                    )
         elif event_type == "response.audio_transcript.done":
             self.owner._emit({"type": "assistant_text", "text": response.get("transcript", "")})
         elif event_type == "response.done":

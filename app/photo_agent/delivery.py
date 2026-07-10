@@ -25,6 +25,20 @@ class PhotoStore:
             path = self._paths.get(photo_id)
         return path if path and path.is_file() else None
 
+    def delete(self, photo_id: str, *, delete_file: bool = True) -> bool:
+        with self._lock:
+            path = self._paths.pop(photo_id, None)
+        if path is None:
+            return False
+        if delete_file:
+            try:
+                path.unlink(missing_ok=True)
+            except OSError:
+                with self._lock:
+                    self._paths[photo_id] = path
+                return False
+        return True
+
 
 class FileDeliveryAdapter:
     def __init__(self, store: PhotoStore, base_url: str) -> None:

@@ -32,16 +32,24 @@ def load_runtime_config(
     def env(name: str, default: Any = None) -> Any:
         return os.getenv(name, default)
 
+    workspace_host = env("DASHSCOPE_WORKSPACE_HOST") or env("DASHSCOPE_BASE_URL")
+    workspace_id = env("DASHSCOPE_WORKSPACE_ID")
+    if not workspace_host and workspace_id:
+        region = str(env("DASHSCOPE_REGION", "cn")).lower()
+        region_domain = "ap-southeast-1" if region in {"intl", "sg", "singapore"} else "cn-beijing"
+        workspace_host = f"{workspace_id}.{region_domain}.maas.aliyuncs.com"
+    if not workspace_host:
+        workspace_host = cfg.get(
+            "workspace_host", "llm-iscpge3ysktzaaf2.cn-beijing.maas.aliyuncs.com"
+        )
+
     photo_dir = Path(env("PHOTOMATE_PHOTO_AGENT__PHOTO_DIR", cfg.get("photo_dir", "data/photos")))
     if not photo_dir.is_absolute():
         photo_dir = root / photo_dir
     return RuntimeConfig(
         mode=mode or env("PHOTOMATE_PHOTO_AGENT__MODE", cfg.get("mode", "mock")),
         model=env("OMNI_MODEL", cfg.get("model", "qwen3.5-omni-flash-2026-03-15")),
-        workspace_host=env(
-            "DASHSCOPE_WORKSPACE_HOST",
-            cfg.get("workspace_host", "llm-iscpge3ysktzaaf2.cn-beijing.maas.aliyuncs.com"),
-        ),
+        workspace_host=workspace_host,
         api_key=env("DASHSCOPE_API_KEY", ""),
         voice=env("OMNI_VOICE", cfg.get("voice", "Tina")),
         camera_index=int(env("PHOTOMATE_PHOTO_AGENT__CAMERA_INDEX", cfg.get("camera_index", 0))),

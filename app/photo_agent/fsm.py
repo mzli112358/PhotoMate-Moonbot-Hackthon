@@ -153,6 +153,11 @@ class PhotoAgentFSM:
         if context and self.context.session_id:
             await self.omni.inject_context(context)
 
+    async def enter_manual_state(self, state: State) -> None:
+        if state is State.IDLE:
+            raise ValueError("manual state must be S1-S6")
+        await self._enter(state, "manual_acceptance")
+
     async def handle_user_text(self, text: str) -> None:
         intent = classify_user_text(text)
         state = self.context.state
@@ -161,6 +166,7 @@ class PhotoAgentFSM:
                 self.guidance_limit_reached = False
                 await self._enter(State.POSE_GUIDANCE, "user_accepted")
             elif intent is UserIntent.DECLINE:
+                await self._say_and_wait("友好回应用户：没问题，需要时再叫我。只说一句。")
                 await self._finish_session("user_declined")
         elif state is State.POSE_GUIDANCE and intent in (UserIntent.READY, UserIntent.SATISFIED):
             await self._enter(State.SHOOT, "user_ready")
@@ -228,6 +234,16 @@ class PhotoAgentFSM:
         result: CaptureResult | None = None
         for attempt in range(self.config.operation_retries + 1):
             result = await self.camera.capture("photo")
+            LOGGER.info(
+                "capture_result",
+                extra={
+                    "attempt": attempt + 1,
+                    "ok": result.ok,
+                    "photo_id": result.photo_id or None,
+                    "path": str(result.path) if result.ok else None,
+                    "error": result.error,
+                },
+            )
             if result.ok:
                 break
             LOGGER.warning("capture_retry", extra={"attempt": attempt + 1, "error": result.error})
@@ -235,6 +251,7 @@ class PhotoAgentFSM:
         if not result.ok:
             if self.context.retake_count < self.context.max_retake:
                 self.context.retake_count += 1
+            await self._say_and_wait("刚才快门没有成功，抱歉，我们再试一次。只说一句。")
             await self._enter(State.POSE_GUIDANCE, "capture_failed")
             return result
 
@@ -256,12 +273,21 @@ class PhotoAgentFSM:
 
     async def _enter_review(self, reason: str) -> None:
         await self._enter(State.REVIEW, reason)
+        shown = False
         if self.context.photo_id:
             for attempt in range(self.config.operation_retries + 1):
                 if await self.delivery.show(self.context.photo_id):
+                    shown = True
                     break
                 LOGGER.warning("show_retry", extra={"attempt": attempt + 1})
+        if not shown:
+            await self._say_and_wait("屏幕暂时无法展示照片，我会继续保留取图链接。只说一句。")
         await self.omni.create_response("请问用户：这张怎么样，满意吗？只说一句。")
+
+    async def start_review(self, reason: str = "manual_review") -> None:
+        if not self.context.photo_id:
+            raise RuntimeError("review requires photo_id")
+        await self._enter_review(reason)
 
     async def run_delivery(self) -> DeliveryResult:
         if self.context.state is not State.DELIVER or not self.context.photo_id:
@@ -270,13 +296,27 @@ class PhotoAgentFSM:
         try:
             for attempt in range(self.config.operation_retries + 1):
                 result = await self.delivery.deliver(self.context.photo_id)
+                LOGGER.info(
+                    "delivery_result",
+                    extra={
+                        "attempt": attempt + 1,
+                        "ok": result.ok,
+                        "photo_id": result.photo_id,
+                        "photo_url": result.photo_url or None,
+                        "error": result.error,
+                    },
+                )
                 if result.ok:
                     self.context.photo_url = result.photo_url
                     break
                 LOGGER.warning("delivery_retry", extra={"attempt": attempt + 1, "error": result.error})
             assert result is not None
             if result.ok:
-                await self.omni.create_response("照片链接已准备好，祝用户玩得开心。只说一句。")
+                await self._say_and_wait("照片链接已准备好，祝用户玩得开心。只说一句。")
+            else:
+                await self._say_and_wait(
+                    f"照片链接暂时生成失败，请记住取图码 {self.context.photo_id}，工作人员可协助取图。只说一句。"
+                )
             return result
         finally:
             await self._finish_session("delivered" if result and result.ok else "delivery_failed")
@@ -288,12 +328,26 @@ class PhotoAgentFSM:
             except Exception as exc:  # noqa: BLE001
                 LOGGER.warning("end_session_failed", extra={"error": str(exc)})
             finally:
-                await self.omni.close()
+                try:
+                    await self.omni.close()
+                except Exception as exc:  # noqa: BLE001
+                    LOGGER.warning("omni_close_failed", extra={"error": str(exc)})
         await self._cancel_background_tasks()
         self.context.reset()
         self.guidance_limit_reached = False
         self._qualified_wake_frames = 0
         LOGGER.info("session_reset", extra={"reason": reason})
+        LOGGER.info(
+            "resource_release",
+            extra={"reason": reason, "background_task_count": self.background_task_count},
+        )
+
+    async def _say_and_wait(self, instructions: str, timeout: float = 10.0) -> None:
+        await self.omni.create_response(instructions)
+        try:
+            await self.omni.wait_response_done(timeout=timeout)
+        except TimeoutError:
+            LOGGER.warning("response_audio_timeout", extra={"instructions_kind": "session_closing"})
 
     async def finish_session(self, reason: str) -> None:
         await self._finish_session(reason)
@@ -307,5 +361,10 @@ class PhotoAgentFSM:
         self._background_tasks.clear()
 
     async def close(self) -> None:
-        await self._finish_session("shutdown")
-        await self.camera.close()
+        try:
+            await self._finish_session("shutdown")
+        finally:
+            try:
+                await self.camera.close()
+            except Exception as exc:  # noqa: BLE001
+                LOGGER.warning("camera_close_failed", extra={"error": str(exc)})

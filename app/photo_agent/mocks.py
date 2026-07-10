@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 from collections import deque
 from pathlib import Path
 from typing import Any
@@ -76,16 +77,24 @@ class MockQualityChecker(_Recorder):
 
 
 class MockDelivery(_Recorder):
-    def __init__(self, *, results: list[DeliveryResult]) -> None:
+    def __init__(
+        self,
+        *,
+        results: list[DeliveryResult],
+        show_results: list[bool] | None = None,
+    ) -> None:
         super().__init__()
         self._results = deque(results)
+        self._show_results = deque(show_results or [True])
 
     def register_photo(self, photo_id: str, path: Path) -> None:
         self.record("register_photo", (photo_id, path))
 
     async def show(self, photo_id: str) -> bool:
         self.record("show", photo_id)
-        return True
+        if len(self._show_results) > 1:
+            return self._show_results.popleft()
+        return self._show_results[0]
 
     async def deliver(self, photo_id: str) -> DeliveryResult:
         self.record("deliver", photo_id)
@@ -100,6 +109,7 @@ class MockOmni(_Recorder):
         self.connect_failures = connect_failures
         self.closed = False
         self.session_id = "session-mock"
+        self.events: deque[dict[str, Any]] = deque()
 
     async def connect(self) -> str:
         self.record("connect")
@@ -138,6 +148,12 @@ class MockOmni(_Recorder):
 
     async def submit_tool_result(self, call_id: str, output: dict[str, Any]) -> None:
         self.record("submit_tool_result", (call_id, output))
+
+    async def next_event(self, timeout: float | None = None) -> dict[str, Any]:
+        if self.events:
+            return self.events.popleft()
+        await asyncio.sleep(timeout or 0)
+        raise TimeoutError("no mock event")
 
     async def end_session(self, reason: str) -> None:
         self.record("end_session", reason)

@@ -13,6 +13,7 @@ if str(ROOT_DIR) not in sys.path:
 
 from app.photo_agent.config import load_runtime_config  # noqa: E402
 from app.photo_agent.runtime import build_local_runtime, build_self_check, run_mock_state  # noqa: E402
+from app.photo_agent.server import PhotoApiServer  # noqa: E402
 
 
 INSTRUCTIONS = {
@@ -24,19 +25,47 @@ INSTRUCTIONS = {
     "S6": "打开输出 photo_url，确认照片正确且会话复位。",
 }
 
+EXPECTED = {
+    "S1": "满足停留与朝向条件后只建一次会话并进入 S2；不满足时保持 S1。",
+    "S2": "回答要进入 S3；回答不用或两次沉默超时回到 S0。",
+    "S3": "约五秒一句且不叠话；语音打断后说可以拍了进入 S4。",
+    "S4": "倒数结束后保存照片并质检；成功进 S5，失败按上限回 S3。",
+    "S5": "显示本次照片；满意进 S6，不满意回 S3，且沿用同一会话。",
+    "S6": "生成可访问 photo_url，结束会话并复位到 S0。",
+}
+
 
 async def run(args: argparse.Namespace) -> int:
     config = load_runtime_config(mode=args.mode)
-    print(json.dumps(build_self_check(config), ensure_ascii=False, indent=2))
-    print(f"当前验收状态={args.state}；用户动作：{INSTRUCTIONS[args.state]}")
     if args.mode == "mock":
+        print(json.dumps(build_self_check(config), ensure_ascii=False, indent=2))
+        print(f"当前验收状态={args.state}；用户动作：{INSTRUCTIONS[args.state]}")
+        print(f"正常预期现象：{EXPECTED[args.state]}")
         result = await run_mock_state(config, args.state)
         print(json.dumps(result, ensure_ascii=False))
         return 0 if result["ok"] else 2
-    print("local-real 将启动完整真实链路；请只执行上面的目标状态动作，其余步骤正常完成。Ctrl+C 结束。")
-    runtime = build_local_runtime(config)
-    await runtime.run_forever()
-    return 0
+    try:
+        runtime = build_local_runtime(config)
+    except Exception as exc:  # noqa: BLE001 - manual preflight boundary
+        report = build_self_check(config, missing_real_dependencies=[str(exc)])
+        report["preflight_error"] = str(exc)
+        print(json.dumps(report, ensure_ascii=False, indent=2))
+        print(f"当前验收状态={args.state}；用户动作：{INSTRUCTIONS[args.state]}")
+        print(f"正常预期现象：{EXPECTED[args.state]}")
+        return 4
+    print(json.dumps(build_self_check(config, device_info=runtime.device_info), ensure_ascii=False, indent=2))
+    print(f"当前验收状态={args.state}；用户动作：{INSTRUCTIONS[args.state]}")
+    print(f"正常预期现象：{EXPECTED[args.state]}")
+    server = PhotoApiServer(config.base_url) if args.state in {"S5", "S6"} else None
+    if server is not None:
+        await server.start()
+    try:
+        result = await runtime.run_manual_state(args.state)
+    finally:
+        if server is not None:
+            await server.stop()
+    print(json.dumps(result, ensure_ascii=False))
+    return 0 if result["ok"] else 3
 
 
 def main() -> int:

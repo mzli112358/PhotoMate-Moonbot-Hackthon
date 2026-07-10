@@ -11,6 +11,19 @@ def _module_or_default(module: Any | None) -> Any:
     return pyaudio
 
 
+def _device_name(instance: Any, device_index: int | None, kind: str) -> str:
+    try:
+        if device_index is not None:
+            info = instance.get_device_info_by_index(device_index)
+        elif kind == "input":
+            info = instance.get_default_input_device_info()
+        else:
+            info = instance.get_default_output_device_info()
+        return str(info.get("name", f"default {kind}"))
+    except Exception:  # noqa: BLE001 - device metadata is best effort
+        return f"default {kind}" if device_index is None else f"{kind}:{device_index}"
+
+
 class PyAudioMicrophone:
     def __init__(
         self,
@@ -23,6 +36,7 @@ class PyAudioMicrophone:
         self.module = _module_or_default(pyaudio_module)
         self.chunk_frames = chunk_frames
         self.instance = self.module.PyAudio()
+        self.device_name = _device_name(self.instance, device_index, "input")
         kwargs = {
             "format": self.module.paInt16,
             "channels": 1,
@@ -53,6 +67,7 @@ class PyAudioSpeaker:
     ) -> None:
         self.module = _module_or_default(pyaudio_module)
         self.instance = self.module.PyAudio()
+        self.device_name = _device_name(self.instance, device_index, "output")
         kwargs = {
             "format": self.module.paInt16,
             "channels": 1,

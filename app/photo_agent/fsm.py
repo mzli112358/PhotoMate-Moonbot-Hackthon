@@ -1,0 +1,311 @@
+"""Explicit asyncio S1-S6 state orchestrator."""
+
+from __future__ import annotations
+
+import asyncio
+import logging
+import time
+from dataclasses import dataclass
+from typing import Any, Awaitable, Callable, TypeVar
+
+from app.photo_agent.interfaces import (
+    CameraAdapter,
+    DeliveryAdapter,
+    OmniClient,
+    QualityChecker,
+    WakeDetector,
+)
+from app.photo_agent.models import (
+    CaptureResult,
+    DeliveryResult,
+    GuidanceTurn,
+    SessionContext,
+    State,
+    UserIntent,
+)
+
+LOGGER = logging.getLogger("photomate.photo_agent")
+T = TypeVar("T")
+
+STATE_CONTEXT = {
+    State.ASK_INTENT: "当前进入询问拍照意愿环节。主动询问用户是否需要拍照。",
+    State.POSE_GUIDANCE: "当前进入拍照引导环节。每轮只给一句简短、亲切的姿态建议。",
+    State.SHOOT: "当前进入拍照环节。先完成三二一倒数，再执行拍照。",
+    State.REVIEW: "当前进入照片复核环节。询问用户是否满意。",
+    State.DELIVER: "当前进入照片交付环节。告知用户照片链接已准备好。",
+}
+
+
+@dataclass(frozen=True)
+class FSMConfig:
+    dwell_threshold_s: float = 3.0
+    wake_consecutive_frames: int = 2
+    guidance_interval_s: float = 5.0
+    max_guidance_turns: int = 8
+    max_retake: int = 2
+    operation_retries: int = 1
+
+
+def classify_user_text(text: str) -> UserIntent:
+    normalized = text.strip().lower()
+    if any(token in normalized for token in ("不满意", "重拍", "再来一张")):
+        return UserIntent.RETAKE
+    if any(token in normalized for token in ("不用", "不要", "不了", "拒绝")):
+        return UserIntent.DECLINE
+    if any(token in normalized for token in ("满意", "可以的", "挺好", "很好")):
+        return UserIntent.SATISFIED
+    if any(token in normalized for token in ("拍吧", "可以拍", "好了", "ok", "准备好")):
+        return UserIntent.READY
+    if any(token in normalized for token in ("要", "好啊", "帮我拍", "来一张", "可以")):
+        return UserIntent.ACCEPT
+    return UserIntent.UNKNOWN
+
+
+class PhotoAgentFSM:
+    """Deterministic state owner; Omni supplies language and tool suggestions only."""
+
+    def __init__(
+        self,
+        *,
+        wake_detector: WakeDetector,
+        omni: OmniClient,
+        camera: CameraAdapter,
+        quality_checker: QualityChecker,
+        delivery: DeliveryAdapter,
+        config: FSMConfig | None = None,
+    ) -> None:
+        self.wake_detector = wake_detector
+        self.omni = omni
+        self.camera = camera
+        self.quality_checker = quality_checker
+        self.delivery = delivery
+        self.config = config or FSMConfig()
+        self.context = SessionContext(
+            guidance_interval_s=self.config.guidance_interval_s,
+            max_guidance_turns=self.config.max_guidance_turns,
+            max_retake=self.config.max_retake,
+        )
+        self.guidance_limit_reached = False
+        self._qualified_wake_frames = 0
+        self._background_tasks: set[asyncio.Task[Any]] = set()
+
+    @property
+    def background_task_count(self) -> int:
+        return sum(not task.done() for task in self._background_tasks)
+
+    def _transition(self, state: State, reason: str) -> None:
+        old = self.context.state
+        self.context.state = state
+        LOGGER.info(
+            "state_transition",
+            extra={
+                "from_state": old.value,
+                "to_state": state.value,
+                "reason": reason,
+                "session_id": self.context.session_id,
+                "photo_id": self.context.photo_id,
+            },
+        )
+
+    async def _retry(self, operation: Callable[[], Awaitable[T]]) -> T:
+        last_error: Exception | None = None
+        for attempt in range(self.config.operation_retries + 1):
+            try:
+                return await operation()
+            except Exception as exc:  # noqa: BLE001 - adapter boundary
+                last_error = exc
+                LOGGER.warning("operation_retry", extra={"attempt": attempt + 1, "error": str(exc)})
+        assert last_error is not None
+        raise last_error
+
+    async def start(self) -> None:
+        if self.context.state is not State.IDLE:
+            return
+        self._qualified_wake_frames = 0
+        self._transition(State.DETECT_INTENT, "service_started")
+
+    async def poll_wake(self) -> None:
+        if self.context.state is not State.DETECT_INTENT:
+            return
+        signal = await self.wake_detector.poll()
+        if signal.is_awake(self.config.dwell_threshold_s):
+            self._qualified_wake_frames += 1
+        else:
+            self._qualified_wake_frames = 0
+        if self._qualified_wake_frames < self.config.wake_consecutive_frames:
+            return
+        try:
+            session_id = await self._retry(self.omni.connect)
+            self.context.session_id = session_id
+            self.context.session_started_at = time.time()
+            await self.omni.configure()
+            await self.omni.prime_audio()
+        except Exception as exc:  # noqa: BLE001
+            LOGGER.error("omni_connect_failed", extra={"error": str(exc)})
+            self._transition(State.IDLE, "omni_connect_failed")
+            return
+        await self._enter(State.ASK_INTENT, "wake_qualified")
+        await self.omni.create_response("嗨～需要我帮你拍张照吗？只说这一句。")
+
+    async def _enter(self, state: State, reason: str) -> None:
+        self._transition(state, reason)
+        context = STATE_CONTEXT.get(state)
+        if context and self.context.session_id:
+            await self.omni.inject_context(context)
+
+    async def handle_user_text(self, text: str) -> None:
+        intent = classify_user_text(text)
+        state = self.context.state
+        if state is State.ASK_INTENT:
+            if intent in (UserIntent.ACCEPT, UserIntent.READY):
+                self.guidance_limit_reached = False
+                await self._enter(State.POSE_GUIDANCE, "user_accepted")
+            elif intent is UserIntent.DECLINE:
+                await self._finish_session("user_declined")
+        elif state is State.POSE_GUIDANCE and intent in (UserIntent.READY, UserIntent.SATISFIED):
+            await self._enter(State.SHOOT, "user_ready")
+        elif state is State.REVIEW:
+            if intent is UserIntent.RETAKE:
+                self.guidance_limit_reached = False
+                await self._enter(State.POSE_GUIDANCE, "user_requested_retake")
+            elif intent in (UserIntent.SATISFIED, UserIntent.ACCEPT, UserIntent.READY):
+                await self._enter(State.DELIVER, "user_satisfied")
+
+    async def handle_timeout(self) -> None:
+        if self.context.state is State.ASK_INTENT:
+            if self.context.ask_timeout_count == 0:
+                self.context.ask_timeout_count = 1
+                await self.omni.create_response("再轻声询问一次用户是否需要拍照。只说一句。")
+            else:
+                await self._finish_session("timeout")
+        elif self.context.state is State.REVIEW:
+            await self._enter(State.DELIVER, "review_timeout_default_accept")
+
+    async def guidance_tick(self) -> bool:
+        if self.context.state is not State.POSE_GUIDANCE or self.context.response_in_flight:
+            return False
+        if len(self.context.guidance_turns) >= self.context.max_guidance_turns:
+            if not self.guidance_limit_reached:
+                self.guidance_limit_reached = True
+                self.context.response_in_flight = True
+                await self.omni.create_response("引导已达上限，请问用户：那我先帮你拍一张？只说一句。")
+                return True
+            return False
+        frame = await self.camera.get_frame()
+        await self.omni.append_image(frame)
+        await self.omni.commit_input()
+        self.context.response_in_flight = True
+        await self.omni.create_response("观察当前画面，只给一句简短姿态引导；构图不错就让用户保持住。")
+        return True
+
+    async def handle_speech_started(self) -> None:
+        if self.context.response_in_flight:
+            await self.omni.cancel_response()
+            self.context.response_in_flight = False
+
+    async def handle_response_done(self, text: str = "") -> None:
+        if self.context.state is State.POSE_GUIDANCE and not self.guidance_limit_reached:
+            self.context.guidance_turns.append(GuidanceTurn(time.time(), "interval", text))
+        self.context.response_in_flight = False
+        if (
+            self.context.state is State.POSE_GUIDANCE
+            and len(self.context.guidance_turns) >= self.context.max_guidance_turns
+            and not self.guidance_limit_reached
+        ):
+            self.guidance_limit_reached = True
+            self.context.response_in_flight = True
+            await self.omni.create_response("引导已达上限，请问用户：那我先帮你拍一张？只说一句。")
+
+    async def run_shoot(self) -> CaptureResult:
+        if self.context.state is not State.SHOOT:
+            raise RuntimeError(f"cannot shoot from {self.context.state.value}")
+        await self.omni.create_response("请说：看镜头，三、二、一，茄子！说完后保持安静。")
+        try:
+            await self.omni.wait_response_done(timeout=10.0)
+        except TimeoutError:
+            LOGGER.warning("countdown_audio_timeout")
+
+        result: CaptureResult | None = None
+        for attempt in range(self.config.operation_retries + 1):
+            result = await self.camera.capture("photo")
+            if result.ok:
+                break
+            LOGGER.warning("capture_retry", extra={"attempt": attempt + 1, "error": result.error})
+        assert result is not None
+        if not result.ok:
+            if self.context.retake_count < self.context.max_retake:
+                self.context.retake_count += 1
+            await self._enter(State.POSE_GUIDANCE, "capture_failed")
+            return result
+
+        self.context.photo_id = result.photo_id
+        self.context.photo_path = result.path
+        self.delivery.register_photo(result.photo_id, result.path)
+        quality = self.quality_checker.check(result.frame)
+        LOGGER.info(
+            "quality_result",
+            extra={"photo_id": result.photo_id, "ok": quality.ok, "reason": quality.reason},
+        )
+        if not quality.ok and self.context.retake_count < self.context.max_retake:
+            self.context.retake_count += 1
+            await self.omni.create_response(f"照片质检未通过：{quality.reason or '质量不足'}，请简短提示重拍。")
+            await self._enter(State.POSE_GUIDANCE, "quality_failed")
+            return result
+        await self._enter_review("quality_ok" if quality.ok else "quality_limit_reached")
+        return result
+
+    async def _enter_review(self, reason: str) -> None:
+        await self._enter(State.REVIEW, reason)
+        if self.context.photo_id:
+            for attempt in range(self.config.operation_retries + 1):
+                if await self.delivery.show(self.context.photo_id):
+                    break
+                LOGGER.warning("show_retry", extra={"attempt": attempt + 1})
+        await self.omni.create_response("请问用户：这张怎么样，满意吗？只说一句。")
+
+    async def run_delivery(self) -> DeliveryResult:
+        if self.context.state is not State.DELIVER or not self.context.photo_id:
+            raise RuntimeError("delivery requires S6 and a photo_id")
+        result: DeliveryResult | None = None
+        try:
+            for attempt in range(self.config.operation_retries + 1):
+                result = await self.delivery.deliver(self.context.photo_id)
+                if result.ok:
+                    self.context.photo_url = result.photo_url
+                    break
+                LOGGER.warning("delivery_retry", extra={"attempt": attempt + 1, "error": result.error})
+            assert result is not None
+            if result.ok:
+                await self.omni.create_response("照片链接已准备好，祝用户玩得开心。只说一句。")
+            return result
+        finally:
+            await self._finish_session("delivered" if result and result.ok else "delivery_failed")
+
+    async def _finish_session(self, reason: str) -> None:
+        if self.context.session_id:
+            try:
+                await self.omni.end_session(reason)
+            except Exception as exc:  # noqa: BLE001
+                LOGGER.warning("end_session_failed", extra={"error": str(exc)})
+            finally:
+                await self.omni.close()
+        await self._cancel_background_tasks()
+        self.context.reset()
+        self.guidance_limit_reached = False
+        self._qualified_wake_frames = 0
+        LOGGER.info("session_reset", extra={"reason": reason})
+
+    async def finish_session(self, reason: str) -> None:
+        await self._finish_session(reason)
+
+    async def _cancel_background_tasks(self) -> None:
+        tasks = [task for task in self._background_tasks if not task.done()]
+        for task in tasks:
+            task.cancel()
+        if tasks:
+            await asyncio.gather(*tasks, return_exceptions=True)
+        self._background_tasks.clear()
+
+    async def close(self) -> None:
+        await self._finish_session("shutdown")
+        await self.camera.close()

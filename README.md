@@ -2,6 +2,38 @@
 
 PhotoMate 黑客松总项目仓库。
 
+## S1–S6 拍照 Agent（软件链）
+
+本分支新增本地电脑可运行的显式 asyncio 状态机：S1 意图检测 → S2 询问 → S3 interval 姿态引导 → S4 拍照与质检 → S5 复核 → S6 照片链接交付。Omni 负责自然交互和工具调用，本地编排层负责状态、计时、重试与资源释放。
+
+```bash
+# 开发依赖
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements-dev.txt
+
+# 全量自动化测试
+python -m pytest -q
+
+# 无硬件、无密钥的完整 mock 链
+python -m app.photo_agent.cli --mode mock
+
+# 先独立验证设备与 Omni，再跑真实本地链
+python scripts/photo_agent/device_smoke.py --camera 0
+export DASHSCOPE_API_KEY='从安全环境注入，勿写入仓库'
+python scripts/photo_agent/omni_smoke.py
+python -m app.photo_agent.cli --mode local-real
+```
+
+分模块验收：
+
+```bash
+python manual/photo_agent/run_state.py --state S1 --mode mock
+python manual/photo_agent/run_state.py --state S3 --mode local-real
+```
+
+详细范围、配置、API 契约、手动验收与已知限制见 [docs/photo_agent/README.md](docs/photo_agent/README.md)。真实 Insta360、Jetson、GalbotSDK 与前端二维码 UI 尚未接入；V0 使用普通电脑摄像头、麦克风、扬声器和本地文件服务。
+
 ## 仓库结构
 
 ```

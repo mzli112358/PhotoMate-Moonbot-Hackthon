@@ -41,3 +41,16 @@ perception:
 agent:
   default_shoot_mode: phone
   default_spot_id: spot_a
+
+photo_agent:
+  # mock | local-real | hardware-real (reserved)
+  mode: mock
+  model: qwen3.5-omni-flash-2026-03-15
+  voice: Tina
+  workspace_host: llm-iscpge3ysktzaaf2.cn-beijing.maas.aliyuncs.com
+  camera_index: 0
+  microphone_index: null
+  speaker_index: null
+  guidance_interval_s: 5.0
+  photo_dir: data/photos
+  base_url: http://127.0.0.1:8000

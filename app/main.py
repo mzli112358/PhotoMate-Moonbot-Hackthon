@@ -12,6 +12,8 @@ from app.config import resolve_settings
 from app.docs_service import catalog as docs_catalog
 from app.docs_service import load_document
 from app.map_loader import build_map_payload, clear_map_cache
+from app.photo_agent.api import create_photo_router
+from app.photo_agent.delivery import GLOBAL_PHOTO_STORE
 from app.perception import PerceptionConfig
 from app.robot import RobotBridge
 from app.schemas import (
@@ -74,6 +76,7 @@ app = FastAPI(
     redoc_url="/api/redoc",
     openapi_url="/api/openapi.json",
 )
+app.include_router(create_photo_router(GLOBAL_PHOTO_STORE))
 
 
 @app.get("/api/health")

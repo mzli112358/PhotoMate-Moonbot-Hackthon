@@ -5,3 +5,7 @@ __pycache__/
 venv/
 .env
 *.log
+data/photos/
+data/smoke-photos/
+.pytest_cache/
+.coverage

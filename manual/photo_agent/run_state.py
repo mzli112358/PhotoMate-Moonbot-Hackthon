@@ -12,6 +12,7 @@ if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
 from app.photo_agent.config import load_runtime_config  # noqa: E402
+from app.photo_agent.observability import configure_json_logging  # noqa: E402
 from app.photo_agent.runtime import build_local_runtime, build_self_check, run_mock_state  # noqa: E402
 from app.photo_agent.server import PhotoApiServer  # noqa: E402
 
@@ -69,6 +70,7 @@ async def run(args: argparse.Namespace) -> int:
 
 
 def main() -> int:
+    configure_json_logging()
     parser = argparse.ArgumentParser(description="S1-S6 manual acceptance entry")
     parser.add_argument("--state", choices=tuple(INSTRUCTIONS), required=True)
     parser.add_argument("--mode", choices=("mock", "local-real"), default="mock")

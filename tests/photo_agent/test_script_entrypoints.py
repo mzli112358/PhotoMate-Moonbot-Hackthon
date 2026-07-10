@@ -7,6 +7,7 @@ from argparse import Namespace
 
 import pytest
 
+from app.photo_agent.models import ToolCall
 from app.photo_agent.runtime import RuntimeConfig
 
 
@@ -20,6 +21,7 @@ def test_manual_script_runs_directly_from_repo_root() -> None:
 
     assert result.returncode == 0, result.stderr
     assert '"ok": true' in result.stdout
+    assert '"event": "state_transition"' in result.stdout
 
 
 def test_mock_cli_emits_structured_runtime_events() -> None:
@@ -49,6 +51,92 @@ def test_omni_smoke_reports_missing_key_without_import_error(monkeypatch) -> Non
     assert result.returncode == 2
     assert "DASHSCOPE_API_KEY missing" in result.stdout
     assert "ModuleNotFoundError" not in result.stderr
+
+
+@pytest.mark.asyncio
+async def test_omni_smoke_uses_commit_and_active_response_in_manual_mode(
+    monkeypatch, capsys
+) -> None:
+    from scripts.photo_agent import omni_smoke
+
+    class Client:
+        def __init__(self, settings, audio_sink, role):
+            self.audio_sink = audio_sink
+            self.role = role
+            self.events: list[dict] = []
+            self.commit_count = 0
+            self.response_count = 0
+            self.enable_vad = None
+
+        async def connect(self):
+            return "session-real"
+
+        async def configure(self, *, enable_vad=True):
+            self.enable_vad = enable_vad
+
+        async def append_audio(self, chunk):
+            pass
+
+        async def prime_audio(self):
+            pass
+
+        async def append_image(self, frame):
+            pass
+
+        async def commit_input(self):
+            self.commit_count += 1
+
+        async def create_response(self, instructions):
+            self.response_count += 1
+            if self.role == "media":
+                self.audio_sink(b"pcm")
+                self.events += [
+                    {"type": "assistant_text", "text": "ok"},
+                    {"type": "response_done"},
+                ]
+            else:
+                self.events.append(
+                    {
+                        "type": "tool_call",
+                        "tool_call": ToolCall("end_session", {"reason": "timeout"}, "call-1"),
+                    }
+                )
+
+        async def submit_tool_result(self, call_id, output):
+            self.events.append({"type": "response_done"})
+
+        async def next_event(self, timeout=None):
+            if self.events:
+                return self.events.pop(0)
+            raise TimeoutError
+
+        async def close(self):
+            pass
+
+    made: list[Client] = []
+
+    def factory(settings, audio_sink):
+        client = Client(settings, audio_sink, "media" if not made else "tool")
+        made.append(client)
+        return client
+
+    monkeypatch.setattr(
+        omni_smoke,
+        "load_runtime_config",
+        lambda mode: RuntimeConfig(mode=mode, api_key="in-memory-test-key"),
+    )
+    monkeypatch.setattr(omni_smoke, "DashscopeOmniClient", factory)
+    async def fake_capture(device_index):
+        return [b"pcm"]
+
+    monkeypatch.setattr(omni_smoke, "capture_microphone_chunks", fake_capture)
+
+    code = await omni_smoke.run(Namespace(microphone=None, synthetic_audio=False))
+
+    assert code == 0, capsys.readouterr().out
+    assert len(made) == 2
+    assert made[0].enable_vad is False
+    assert made[0].commit_count == 1
 
 
 @pytest.mark.asyncio

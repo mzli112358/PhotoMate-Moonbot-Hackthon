@@ -43,3 +43,13 @@ def test_workspace_id_and_region_build_official_workspace_host(tmp_path: Path, m
     result = load_runtime_config(config_file=config_file, root_dir=tmp_path)
 
     assert result.workspace_host == "workspace-123.ap-southeast-1.maas.aliyuncs.com"
+
+
+def test_default_omni_model_uses_realtime_websocket_alias(tmp_path: Path, monkeypatch) -> None:
+    config_file = tmp_path / "app.yaml"
+    config_file.write_text("photo_agent: {}\n", encoding="utf-8")
+    monkeypatch.delenv("OMNI_MODEL", raising=False)
+
+    result = load_runtime_config(config_file=config_file, root_dir=tmp_path)
+
+    assert result.model == "qwen3.5-omni-flash-realtime"

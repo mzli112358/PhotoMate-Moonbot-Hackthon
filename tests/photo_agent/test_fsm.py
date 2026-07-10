@@ -131,7 +131,8 @@ async def test_s3_interval_is_gated_and_vad_interrupts() -> None:
     assert omni.count("cancel_response") == 1
     assert camera.count("get_frame") == 1
     assert omni.count("append_image") == 1
-    assert omni.count("commit_input") == 1
+    # Server VAD owns commits; an explicit commit here races the server and is rejected.
+    assert omni.count("commit_input") == 0
 
     await fsm.handle_response_done("往中间站一点")
     assert await fsm.guidance_tick() is True

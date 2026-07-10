@@ -23,7 +23,7 @@ LOGGER = logging.getLogger("photomate.photo_agent.runtime")
 @dataclass(frozen=True)
 class RuntimeConfig:
     mode: str = "mock"
-    model: str = "qwen3.5-omni-flash-2026-03-15"
+    model: str = "qwen3.5-omni-flash-realtime"
     workspace_host: str = "llm-iscpge3ysktzaaf2.cn-beijing.maas.aliyuncs.com"
     api_key: str = ""
     voice: str = "Tina"
@@ -117,8 +117,11 @@ class PhotoAgentRuntime:
                 await asyncio.sleep(0.05)
                 continue
             try:
-                chunk = await asyncio.to_thread(self.microphone.read_chunk)
+                # PyAudio reads one 100 ms chunk. Keeping that bounded read in this
+                # task avoids an orphan executor thread when the session is cancelled.
+                chunk = self.microphone.read_chunk()
                 await self.omni.append_audio(chunk)
+                await asyncio.sleep(0)
             except Exception as exc:  # noqa: BLE001 - live device boundary
                 LOGGER.warning(
                     "audio_stream_failed",

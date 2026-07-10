@@ -18,7 +18,7 @@ pip install -r requirements-dev.txt
 
 ```bash
 export DASHSCOPE_API_KEY='...'
-export OMNI_MODEL='qwen3.5-omni-flash-2026-03-15'  # 可选
+export OMNI_MODEL='qwen3.5-omni-flash-realtime'  # 可选
 export DASHSCOPE_WORKSPACE_HOST='llm-iscpge3ysktzaaf2.cn-beijing.maas.aliyuncs.com'  # 可选
 # 也可使用 DASHSCOPE_WORKSPACE_ID + DASHSCOPE_REGION=cn|intl 自动构造 Host
 ```
@@ -35,7 +35,7 @@ python scripts/photo_agent/device_smoke.py --camera 0 --microphone 1 --speaker 2
 python scripts/photo_agent/omni_smoke.py --microphone 1
 ```
 
-Omni smoke 通过后再启动真实链。官方 Python SDK 要求 DashScope `>=1.25.17`；图像按 1fps 左右发送，Base64 不超过 256KB，并且先发送音频。VAD 模式允许主动 `commit + response.create`，因此 S3 interval 采用该顺序。
+Omni smoke 通过后再启动真实链。官方 Python SDK 要求 DashScope `>=1.25.17`；图像按 1fps 左右发送，Base64 不超过 256KB，并且先发送音频。VAD 模式由服务端自动 commit，S3 interval 只使用 `append_image + response.create`；smoke 使用独立 Manual 会话验证 `commit + response.create`。
 
 ## 运行模式
 

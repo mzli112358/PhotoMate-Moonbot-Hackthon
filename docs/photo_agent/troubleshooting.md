@@ -15,14 +15,25 @@
 
 ## VAD 与 interval 主动触发
 
-- 结论：官方 SDK 文档说明 VAD 开启时仍可主动 `commit`、`create_response` 和 `cancel_response`。
-- 实现：S3 每轮为 `append_image -> commit_input -> response.create`；用户 speech_started 时取消在途回复。
+- 实测：VAD 模式手动 commit 返回 `invalid_request_error`；服务端拥有 commit。主动 `response.create` 可用。
+- 修复：S3 每轮为 `append_image -> response.create`；用户 `speech_started` 时取消在途回复。独立 smoke 改用 Manual 模式验证 commit。
 - 官方资料：<https://help.aliyun.com/en/model-studio/omni-realtime-python-sdk>、<https://help.aliyun.com/zh/model-studio/qwen-function-calling>。
 
-## 当前待真实验证
+## Realtime 模型名称与建连竞态
 
-- 当前环境未设置 `DASHSCOPE_API_KEY`，所以真实云端 smoke 明确返回 blocked；未以 mock 冒充通过。
-- 2026-07-10 首次运行时摄像头权限未授权；授权后复测已通过：Camera 0/AVFoundation 读取 1920×1080 帧、Bose QC Headphones 麦克风读取 3200 bytes、Bose QC Headphones 扬声器最小写入成功。
+- 现象：指令中的带日期模型名使 WebSocket 关闭并返回 `url error`；同一端点用 `qwen3.5-omni-flash-realtime` 可建会话。
+- 修复：Realtime 默认模型改为专用别名；HTTP 兼容模型名不复用到 WebSocket。
+- 竞态：SDK `connect()` 可在 `session.created` 回调前返回；adapter 现在最多等待 5 秒，不再误报「会话未创建」。
+
+## OpenCV 5 与音频退出
+
+- OpenCV `5.0.0.93` 当前包不含 `CascadeClassifier`，S1/S4 无法启动；依赖已限定为 `opencv-python>=4.10,<5`。
+- 取消 `asyncio.to_thread(PyAudio.read)` 会留下阻塞 executor 线程，导致业务结束后进程不退出；现改为任务内 100ms 有界读取。
+
+## 当前实机边界
+
+- 真实 Qwen smoke 已全部通过；Camera 0/AVFoundation 读取 1920×1080 帧，Bose QC Headphones 麦克风与扬声器通过。
+- 当前画面只包含额头边缘，因此 S1 不唤醒、S4 返回 `face_not_found,blurred` 是正确行为；调整物理机位后再验证正向 happy path。
 - Insta360 SDK、Jetson、Galbot 和前端二维码界面尚未提供，保持 adapter/接口边界。
 
 ## 运行中断线与设备异常

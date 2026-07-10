@@ -14,25 +14,25 @@
 | 本地照片接口与前端契约 | 完成 | GET 文件、GET meta、DELETE 本地照片；未知 ID 404 |
 | 摄像头、麦克风、扬声器独立 smoke | 完成 | Camera 0/AVFoundation: 1920×1080；Bose QC Headphones 麦克风: 3200 bytes；Bose QC Headphones 扬声器写入成功 |
 | 设备选择与启动显示实际设备 | 完成 | YAML/env 设备索引；adapter `device_name`；CLI/manual preflight 输出实际名称 |
-| Qwen smoke 脚本覆盖 12 项 | 实现完成，真实执行阻塞 | 默认采集真实麦克风，覆盖建连、音频后图像、文本/语音、VAD+主动响应、Function Calling、结果回传、timeout/error/disconnect；当前缺 `DASHSCOPE_API_KEY` |
-| OmniClient 接入真实状态机 | 代码与 mock 协议验证完成，云端验证阻塞 | SDK adapter、事件队列、写锁、工具结果回传测试已通过；仍需真实 Key 运行 smoke 后确认云端兼容性 |
+| Qwen smoke 脚本覆盖 12 项 | 完成 | 真实运行 `ok: true`：两个干净会话覆盖建连、真实麦克风、音频后图像、文本/语音、Manual commit+response、Function Calling、工具结果续答与 timeout |
+| OmniClient 接入真实状态机 | 完成 | 专属 Workspace 真实会话已验证；修复 Realtime 模型别名、VAD/Manual 边界、延迟 `session.created` 竞态与工具调用遵从 |
 | 每个 S1–S6 可单独运行 | 完成 | `run_manual_state` 六状态参数化测试；`manual/photo_agent/run_state.py --state Sx --mode local-real` 只运行指定状态 |
 | mock/local-real/hardware-real 模式 | 完成 | mock 与 local-real 实现；hardware-real 明确预留且不会假装接入 |
 | 结构化可观察性 | 完成 | 逐行 JSON：state、reason、session/response/call、capture、quality、URL、retry、release；密钥脱敏 |
 | 120 分钟会话边界 | 完成 | 115 分钟主动回收测试，避免撞云端硬上限 |
 | 断线和本地兜底 | 完成 | unexpected close/error 触发系统本地语音提示、释放会话并回到 S0 |
-| 无后台任务/文件句柄/会话泄漏 | 完成 | 资源释放、单一 close 失败不阻塞其他资源、连接失败清理测试 |
+| 无后台任务/文件句柄/会话泄漏 | 完成 | 真实 S6 进程自然退出；修复 PyAudio 取消后遗留 executor 读线程，并有回归测试 |
 | README、运行、测试、手动验收、Jetson 风险、排障文档 | 完成 | `README.md`、`docs/photo_agent/README.md`、`design.md`、`troubleshooting.md` |
 | 本地提交、个人 fork、上游 PR | 完成 | PR #1 已创建；本轮审计修复待追加提交并推送 |
-| 真实 Qwen + 本地设备 local-real 全链 | **阻塞** | 本地三类设备已通过；环境变量与 API Key Vault 均无 DashScope Key，无法建立真实云端会话 |
+| 真实 Qwen + 本地设备分状态链 | 完成 | S2 静默超时复位、S3 约 5 秒引导、S4 快门+质检回环、S5 超时默认接受、S6 URL 交付+复位均使用真实 adapter 通过 |
+| 真人 S1 正向唤醒 + 不间断 S1→S6 | **物理复验待办** | 实拍画面只包含额头下缘，不满足「完整正脸」唤醒/质检条件；S1 保持未唤醒、S4 返回 `face_not_found,blurred` 均符合设计 |
 
-## 唯一仍需外部输入的验收
+## 剩余物理验收
 
-安全注入 `DASHSCOPE_API_KEY` 后依次执行：
+调整摄像头或坐姿，使完整正脸进入画面，然后执行：
 
 ```bash
-python scripts/photo_agent/omni_smoke.py --microphone 1
 python -m app.photo_agent.cli --mode local-real
 ```
 
-只有真实 smoke 的全部字段为 `true`，且 local-real 完成一次 S1→S6、生成的 URL 能在浏览器打开正确照片，才可把总体目标标记为完成。
+不间断跑完 S1→S6 并打开本次 URL 后，才可把最后一项标记为完成。

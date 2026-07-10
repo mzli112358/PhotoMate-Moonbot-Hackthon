@@ -24,7 +24,7 @@ from app.photo_agent.runtime import (
 def test_startup_self_check_redacts_api_key() -> None:
     config = RuntimeConfig(
         mode="local-real",
-        model="qwen3.5-omni-flash-2026-03-15",
+        model="qwen3.5-omni-flash-realtime",
         workspace_host="workspace.cn-beijing.maas.aliyuncs.com",
         api_key="super-secret-value",
     )
@@ -263,6 +263,37 @@ async def test_audio_loop_recovers_after_transient_device_error() -> None:
 
     assert microphone.reads >= 2
     assert omni.count("append_audio") >= 1
+
+
+@pytest.mark.asyncio
+async def test_audio_loop_does_not_leave_a_blocking_executor_read_on_shutdown(monkeypatch) -> None:
+    omni = MockOmni()
+    fsm = PhotoAgentFSM(
+        wake_detector=MockWakeDetector([]),
+        omni=omni,
+        camera=MockCamera(captures=[]),
+        quality_checker=MockQualityChecker([QualityResult(True, True, True)]),
+        delivery=MockDelivery(results=[DeliveryResult("p", "http://local/p", True)]),
+    )
+    fsm.context.session_id = "session-1"
+    runtime: PhotoAgentRuntime
+
+    class Microphone:
+        def read_chunk(self) -> bytes:
+            runtime.stop()
+            return b"pcm"
+
+    runtime = PhotoAgentRuntime(fsm, microphone=Microphone())
+
+    async def forbidden_to_thread(*args, **kwargs):
+        runtime.stop()
+        raise AssertionError("microphone reads must not outlive the audio task")
+
+    monkeypatch.setattr(asyncio, "to_thread", forbidden_to_thread)
+
+    await runtime._audio_loop()
+
+    assert omni.count("append_audio") == 1
 
 
 @pytest.mark.asyncio

@@ -235,7 +235,7 @@ stateDiagram-v2
 
 
 
-> 实测点（B11）：需验证 `qwen3.5-omni-realtime` 是否允许「VAD 开启的同时手动 `response.create`」。若不允许，回退为纯 Manual 模式（`turn_detection=null` + 本地轻量 VAD 检测后 `commit`+`response.create`）。
+> B11 实测结论（2026-07-10）：VAD 开启时可主动 `response.create`，但不能手动 `commit`（服务端会自动 commit）。S3 因此使用 VAD + 主动响应；独立 smoke 使用 Manual 模式验证 `commit + response.create`。
 
 
 
@@ -660,4 +660,3 @@ sequenceDiagram
 3. **[需实测]** Insta360 Link 2C 经 USB 的取流帧率、AI 追踪/云台可控性、软件快门接口（影响 `CameraAdapter` 真实实现）。
 4. **[需确认]** 倒数"321"与实际快门的时序对齐方案（B8 注）。
 5. **[需确认]** 现场网络质量与兜底（是否上本地 MiniCPM-o）。
-

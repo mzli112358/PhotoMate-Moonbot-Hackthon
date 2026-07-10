@@ -15,6 +15,7 @@ from app.photo_agent.models import ToolCall
 BASE_PROMPT = (
     "你是热情、幽默、会逗人开心的活动摄影师。每轮只说一两句简短中文。"
     "你负责自然对话、粗粒度姿态引导和工具调用；状态、计时、重试由本地编排层负责。"
+    "当当前响应指令明确要求调用工具时，必须调用指定工具，不能用口头回答代替。"
     "未经用户同意不保存到云端，不要声称控制了未接入的机器人或 Insta360 能力。"
 )
 
@@ -23,7 +24,7 @@ BASE_PROMPT = (
 class OmniSettings:
     api_key: str
     workspace_host: str
-    model: str = "qwen3.5-omni-flash-2026-03-15"
+    model: str = "qwen3.5-omni-flash-realtime"
     voice: str = "Tina"
     vad_type: str = "server_vad"
     vad_silence_ms: int = 800
@@ -184,6 +185,13 @@ class DashscopeOmniClient:
         )
         try:
             await asyncio.to_thread(self._conversation.connect)
+            deadline = self._loop.time() + 5.0
+            session_id = self.session_id or getattr(self._conversation, "session_id", None)
+            while not session_id and self._loop.time() < deadline:
+                await asyncio.sleep(0.01)
+                session_id = self.session_id or getattr(self._conversation, "session_id", None)
+            if not session_id:
+                raise RuntimeError("Omni session was not created")
         except Exception:
             self._closing = True
             try:
@@ -192,13 +200,10 @@ class DashscopeOmniClient:
                 self._conversation = None
                 self._closing = False
             raise
-        session_id = self.session_id or getattr(self._conversation, "session_id", None)
-        if not session_id:
-            raise RuntimeError("Omni session was not created")
         self.session_id = session_id
         return session_id
 
-    async def configure(self) -> None:
+    async def configure(self, *, enable_vad: bool = True) -> None:
         if self._conversation is None:
             raise ConnectionError("Omni is not connected")
         from dashscope.audio.qwen_omni import MultiModality
@@ -207,7 +212,7 @@ class DashscopeOmniClient:
             self._conversation.update_session,
             output_modalities=[MultiModality.AUDIO, MultiModality.TEXT],
             voice=self.settings.voice,
-            enable_turn_detection=True,
+            enable_turn_detection=enable_vad,
             turn_detection_type=self.settings.vad_type,
             turn_detection_silence_duration_ms=self.settings.vad_silence_ms,
             instructions=BASE_PROMPT,
@@ -227,6 +232,7 @@ class DashscopeOmniClient:
 
     async def append_audio(self, pcm: bytes) -> None:
         await self._call("append_audio", base64.b64encode(pcm).decode("ascii"))
+        self._primed = True
 
     async def append_image(self, frame: Any) -> None:
         if not self._primed:

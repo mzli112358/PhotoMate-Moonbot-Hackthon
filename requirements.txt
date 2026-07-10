@@ -8,5 +8,6 @@ Pillow>=10.0
 markdown>=3.5
 dashscope>=1.25.17
 websocket-client>=1.8.0
-opencv-python>=4.10.0
+# OpenCV 5.0.0.93 is currently a thin wrapper without CascadeClassifier.
+opencv-python>=4.10.0,<5
 PyAudio>=0.2.14

@@ -48,7 +48,7 @@ def load_runtime_config(
         photo_dir = root / photo_dir
     return RuntimeConfig(
         mode=mode or env("PHOTOMATE_PHOTO_AGENT__MODE", cfg.get("mode", "mock")),
-        model=env("OMNI_MODEL", cfg.get("model", "qwen3.5-omni-flash-2026-03-15")),
+        model=env("OMNI_MODEL", cfg.get("model", "qwen3.5-omni-flash-realtime")),
         workspace_host=workspace_host,
         api_key=env("DASHSCOPE_API_KEY", ""),
         voice=env("OMNI_VOICE", cfg.get("voice", "Tina")),

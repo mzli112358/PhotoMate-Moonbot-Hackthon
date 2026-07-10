@@ -2,12 +2,19 @@ from __future__ import annotations
 
 import asyncio
 import base64
+import threading
 
 import numpy as np
 import pytest
 
 from app.photo_agent.models import ToolCall
-from app.photo_agent.omni import DashscopeOmniClient, OmniSettings, build_workspace_url, omni_tools
+from app.photo_agent.omni import (
+    BASE_PROMPT,
+    DashscopeOmniClient,
+    OmniSettings,
+    build_workspace_url,
+    omni_tools,
+)
 
 
 class FakeConversation:
@@ -58,7 +65,7 @@ def make_client() -> tuple[DashscopeOmniClient, list[FakeConversation]]:
     settings = OmniSettings(
         api_key="test-key-not-secret",
         workspace_host="workspace.cn-beijing.maas.aliyuncs.com",
-        model="qwen3.5-omni-flash-2026-03-15",
+        model="qwen3.5-omni-flash-realtime",
         voice="Tina",
     )
     return DashscopeOmniClient(settings, conversation_factory=factory), made
@@ -73,6 +80,10 @@ def test_workspace_url_is_https_host_normalized_to_wss() -> None:
 def test_tools_match_s4_to_s6_contract() -> None:
     names = {tool["function"]["name"] for tool in omni_tools()}
     assert names == {"capture_photo", "show_on_screen", "generate_download_qr", "end_session"}
+
+
+def test_system_prompt_forbids_replacing_required_tool_calls_with_speech() -> None:
+    assert "不能用口头回答代替" in BASE_PROMPT
 
 
 @pytest.mark.asyncio
@@ -90,6 +101,28 @@ async def test_real_client_configures_vad_tools_and_primes_audio_before_image() 
     assert update["tools"] == omni_tools()
     names = [name for name, _ in made[0].calls]
     assert names.index("append_audio") < names.index("append_video")
+
+
+@pytest.mark.asyncio
+async def test_real_client_can_configure_manual_turn_detection() -> None:
+    client, made = make_client()
+    await client.connect()
+
+    await client.configure(enable_vad=False)
+
+    update = next(value for name, value in made[0].calls if name == "update_session")
+    assert update["enable_turn_detection"] is False
+
+
+@pytest.mark.asyncio
+async def test_real_audio_counts_as_image_primer_without_duplicate_silence() -> None:
+    client, made = make_client()
+    await client.connect()
+
+    await client.append_audio(b"real-pcm")
+    await client.append_image(np.zeros((8, 8, 3), dtype=np.uint8))
+
+    assert [name for name, _ in made[0].calls].count("append_audio") == 1
 
 
 @pytest.mark.asyncio
@@ -201,3 +234,27 @@ async def test_failed_connect_closes_partial_websocket() -> None:
         await client.connect()
 
     assert ("close", None) in made[0].calls
+
+
+@pytest.mark.asyncio
+async def test_connect_waits_for_delayed_session_created_callback() -> None:
+    class DelayedSessionConversation(FakeConversation):
+        def __init__(self, **kwargs) -> None:
+            super().__init__(**kwargs)
+            self.session_id = None
+
+        def connect(self) -> None:
+            self.calls.append(("connect", None))
+            threading.Timer(
+                0.05,
+                lambda: self.callback.on_event(
+                    {"type": "session.created", "session": {"id": "session-delayed"}}
+                ),
+            ).start()
+
+    client = DashscopeOmniClient(
+        OmniSettings("test-key", "workspace.cn-beijing.maas.aliyuncs.com"),
+        conversation_factory=lambda **kwargs: DelayedSessionConversation(**kwargs),
+    )
+
+    assert await client.connect() == "session-delayed"

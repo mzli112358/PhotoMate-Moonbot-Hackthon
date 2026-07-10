@@ -40,7 +40,7 @@ async def detect_timeout(client: DashscopeOmniClient, timeout: float = 0.05) -> 
 async def capture_microphone_chunks(
     device_index: int | None,
     *,
-    count: int = 3,
+    count: int = 10,
     microphone_factory=PyAudioMicrophone,
 ) -> list[bytes]:
     microphone = microphone_factory(device_index)
@@ -56,15 +56,18 @@ async def run(args: argparse.Namespace) -> int:
         print(json.dumps({"ok": False, "blocked": "DASHSCOPE_API_KEY missing"}, ensure_ascii=False))
         return 2
     audio_chunks: list[bytes] = []
-    client = DashscopeOmniClient(
-        OmniSettings(
-            api_key=config.api_key,
-            workspace_host=config.workspace_host,
-            model=config.model,
-            voice=config.voice,
-        ),
-        audio_sink=audio_chunks.append,
+    settings = OmniSettings(
+        api_key=config.api_key,
+        workspace_host=config.workspace_host,
+        model=config.model,
+        voice=config.voice,
     )
+
+    def make_client() -> DashscopeOmniClient:
+        return DashscopeOmniClient(settings, audio_sink=audio_chunks.append)
+
+    client = make_client()
+    clients = [client]
     report = {
         "key_present": True,
         "session": False,
@@ -73,7 +76,7 @@ async def run(args: argparse.Namespace) -> int:
         "audio_before_image": False,
         "text_output": False,
         "audio_output": False,
-        "vad_plus_manual_response": False,
+        "manual_commit_and_response": False,
         "function_call": False,
         "tool_followup": False,
         "error_or_timeout_detectable": False,
@@ -81,7 +84,8 @@ async def run(args: argparse.Namespace) -> int:
     try:
         session_id = await client.connect()
         report["session"] = bool(session_id)
-        await client.configure()
+        await client.configure(enable_vad=False)
+        await asyncio.sleep(0.5)
         if args.synthetic_audio:
             input_chunks = [b"\x00\x00" * 1600 for _ in range(3)]
         else:
@@ -98,23 +102,33 @@ async def run(args: argparse.Namespace) -> int:
         events = await wait_until(client, {"response_done", "error"})
         report["text_output"] = any(event.get("type") == "assistant_text" for event in events)
         report["audio_output"] = bool(audio_chunks)
-        report["vad_plus_manual_response"] = any(event.get("type") == "response_done" for event in events)
+        report["manual_commit_and_response"] = any(event.get("type") == "response_done" for event in events)
         if any(event.get("type") == "error" for event in events):
             raise RuntimeError(str(events[-1]))
 
-        await client.create_response(
+        # Isolate tool calling from the preceding assistant turn. A clean session
+        # keeps this smoke focused on protocol support instead of conversation policy.
+        await client.close()
+        tool_client = make_client()
+        clients.append(tool_client)
+        tool_session_id = await tool_client.connect()
+        report["session"] = report["session"] and bool(tool_session_id)
+        await tool_client.configure(enable_vad=False)
+        await asyncio.sleep(0.5)
+        await tool_client.prime_audio()
+        await tool_client.create_response(
             "这是协议 smoke test。必须调用 end_session 工具，参数 reason=timeout；不要直接回答。"
         )
-        tool_events = await wait_until(client, {"tool_call", "error"})
+        tool_events = await wait_until(tool_client, {"tool_call", "error", "response_done"})
         tool_event = next((event for event in tool_events if event.get("type") == "tool_call"), None)
         if tool_event is None:
             raise RuntimeError(f"function call not returned: {tool_events}")
         report["function_call"] = True
         call = tool_event["tool_call"]
-        await client.submit_tool_result(call.call_id, {"ok": True})
-        followup = await wait_until(client, {"response_done", "error"})
+        await tool_client.submit_tool_result(call.call_id, {"ok": True})
+        followup = await wait_until(tool_client, {"response_done", "error"})
         report["tool_followup"] = any(event.get("type") == "response_done" for event in followup)
-        report["error_or_timeout_detectable"] = await detect_timeout(client)
+        report["error_or_timeout_detectable"] = await detect_timeout(tool_client)
         report["ok"] = all(value for key, value in report.items() if key != "ok")
         print(json.dumps(report, ensure_ascii=False, indent=2))
         return 0 if report["ok"] else 3
@@ -124,7 +138,8 @@ async def run(args: argparse.Namespace) -> int:
         print(json.dumps(report, ensure_ascii=False, indent=2))
         return 3
     finally:
-        await client.close()
+        for opened_client in reversed(clients):
+            await opened_client.close()
 
 
 def parse_args() -> argparse.Namespace:

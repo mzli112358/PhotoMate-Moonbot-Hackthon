@@ -199,7 +199,6 @@ class PhotoAgentFSM:
             return False
         frame = await self.camera.get_frame()
         await self.omni.append_image(frame)
-        await self.omni.commit_input()
         self.context.response_in_flight = True
         await self.omni.create_response("观察当前画面，只给一句简短姿态引导；构图不错就让用户保持住。")
         return True

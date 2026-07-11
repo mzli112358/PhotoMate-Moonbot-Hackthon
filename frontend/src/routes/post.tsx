@@ -1,0 +1,267 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { OptionCard } from "../components/option-card";
+import { useVoiceScene } from "../components/voice-context";
+
+export const Route = createFileRoute("/post")({
+  head: () => ({ meta: [{ title: "分享与打印 · 陪伴机器人 R-07" }] }),
+  component: PostScreen,
+});
+
+function PostScreen() {
+  useVoiceScene({
+    state: "listening",
+    transcript: "",
+    hints: ["打印一张", "跳过"],
+  });
+
+  return (
+    <main className="flex min-h-screen items-stretch pt-24 pb-32">
+      <div className="mx-auto flex w-full max-w-[1680px] gap-6 px-8">
+        {/* Left sidebar */}
+        <aside className="flex w-[280px] shrink-0 flex-col gap-4">
+          <div className="rounded-[24px] border border-robot-hairline bg-card p-6 shadow-[0_20px_60px_-40px_rgba(20,15,10,0.4)]">
+            <div className="text-[10px] font-semibold tracking-[0.2em] text-robot-orange">
+              步骤
+            </div>
+            <h1 className="mt-3 font-display text-[40px] font-medium leading-[1.1] text-robot-ink">
+              第四步
+              <span className="text-robot-orange">。</span>
+            </h1>
+            <p className="mt-3 text-[14px] leading-relaxed text-robot-muted">
+              影像已就绪。扫码获取文件，或打印留念。
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <Stat label="文件数" value="3" unit="个" />
+            <Stat label="总大小" value="185" unit="MB" />
+            <Stat label="剩余" value="09:42" unit="" />
+            <Stat label="设备" value="影石link" unit="" />
+          </div>
+
+          <div className="rounded-[20px] border border-robot-hairline bg-card p-4">
+            <div className="text-[10px] font-semibold tracking-[0.2em] text-robot-muted">
+              会话信息
+            </div>
+            <div className="mt-2 font-mono text-[13px] text-robot-ink">R07-8F2A-24</div>
+            <div className="mt-1 text-[11px] text-robot-muted">1 段视频 · 8 秒 · 环绕</div>
+          </div>
+
+          <div className="flex items-center gap-3 rounded-[20px] border border-robot-hairline bg-card p-4">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-robot-orange-soft text-base font-semibold text-robot-ink">
+              米
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="text-[10px] font-medium tracking-[0.16em] text-robot-muted">
+                接近的对象
+              </div>
+              <div className="text-[14px] font-semibold text-robot-ink">已识别 · 米卡</div>
+            </div>
+            <div className="h-2 w-2 rounded-full bg-robot-orange" />
+          </div>
+        </aside>
+
+        {/* Right: Main content */}
+        <section className="flex flex-1 flex-col">
+          <div className="mb-5 text-center">
+            <div className="inline-flex items-center gap-2 rounded-full border border-robot-hairline bg-white/80 px-4 py-1.5 backdrop-blur-sm">
+              <span className="h-1.5 w-1.5 rounded-full bg-robot-orange" />
+              <span className="text-[11px] font-semibold tracking-[0.22em] text-robot-muted">
+                第四步·影像获取
+              </span>
+            </div>
+          </div>
+          <h1 className="mb-5 text-center font-display text-3xl font-medium tracking-[-0.02em] text-robot-ink">
+            你的作品已就绪
+          </h1>
+
+          <div className="grid grid-cols-2 gap-6">
+            {/* LEFT — QR transfer (QR fills width, files below) */}
+            <section className="flex flex-col rounded-[28px] border border-robot-hairline bg-card p-6">
+              <div className="text-[10px] font-semibold tracking-[0.22em] text-robot-muted">
+                传输到你的设备
+              </div>
+              <h2 className="mt-1 font-display text-2xl font-medium text-robot-ink">
+                扫码即可获取
+              </h2>
+              <p className="mt-1 max-w-sm text-[13px] leading-relaxed text-robot-muted">
+                用手机相机对准二维码。链接为私密链接，10 分钟后失效。
+              </p>
+
+              {/* QR — capped so full page fits on 15" */}
+              <div className="mt-4 flex w-full flex-1 justify-center">
+                <div className="w-full max-w-[280px]">
+                  <QRCode />
+                </div>
+              </div>
+
+              {/* Files below QR */}
+              <div className="mt-auto pt-4 flex items-center justify-between">
+                <div>
+                  <div className="text-[10px] font-semibold tracking-[0.2em] text-robot-muted">
+                    会话编号
+                  </div>
+                  <div className="font-mono text-base text-robot-ink">R07-8F2A-24</div>
+                </div>
+                <div className="flex items-center gap-2 text-[11px] text-robot-muted">
+                  <span className="h-1.5 w-1.5 rounded-full bg-robot-orange" />
+                  <span className="font-mono text-robot-ink">09:42</span> 后失效
+                </div>
+              </div>
+
+              <div className="mt-3 flex flex-col gap-1.5">
+                <FileRow name="orbit_take_01.mp4" size="184 MB" primary />
+                <FileRow name="thumbnail.jpg" size="1.2 MB" />
+                <FileRow name="metadata.json" size="4 KB" />
+              </div>
+            </section>
+
+            {/* RIGHT — Print */}
+            <section className="flex flex-col rounded-[28px] border border-robot-hairline bg-card p-6">
+              <div className="text-[10px] font-semibold tracking-[0.22em] text-robot-muted">
+                使用小米打印
+              </div>
+              <h2 className="mt-1 font-display text-2xl font-medium text-robot-ink">
+                打印一张留作纪念？
+              </h2>
+              <p className="mt-1 max-w-sm text-[13px] leading-relaxed text-robot-muted">
+                通过小米即时相片打印机输出 4×6 相片，约一分钟出片。
+              </p>
+
+              {/* Printer illustration — scaled to match QR height */}
+              <div className="mt-4 flex flex-1 items-center justify-center overflow-hidden">
+                <div className="relative aspect-square w-full max-w-[280px]">
+                  <div className="absolute inset-x-[6%] bottom-0 h-[61%] rounded-[5%] bg-robot-ink shadow-[0_20px_50px_-20px_rgba(20,15,10,0.5)]" />
+                  <div className="absolute inset-x-[12%] bottom-[59%] h-[1.5%] rounded-t-sm bg-robot-ink/90" />
+                  {/* Emerging print */}
+                  <div
+                    className="absolute left-1/2 bottom-[61%] h-[36%] w-[31%] -translate-x-1/2 rounded-md border border-robot-hairline bg-white shadow-[0_10px_30px_-10px_rgba(20,15,10,0.3)]"
+                    style={{
+                      background:
+                        "linear-gradient(180deg, oklch(0.55 0.11 45) 0%, oklch(0.75 0.15 55) 60%, oklch(0.9 0.06 70) 100%)",
+                    }}
+                  >
+                    <div className="absolute inset-x-[8%] bottom-[5%] h-[10%] rounded-sm bg-white/70" />
+                  </div>
+                  {/* Brand mark */}
+                  <div className="absolute bottom-[3%] left-1/2 -translate-x-1/2 text-[10px] font-semibold uppercase tracking-[0.3em] text-white/80">
+                    Xiaomi
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-4 grid grid-cols-2 gap-3">
+                <OptionCard
+                  compact
+                  title="打印一张"
+                  description="单张 4×6，约 60 秒出片。"
+                  hint="打印一张"
+                  icon={
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                      <path
+                        d="M6 9V4h12v5M6 18H4a1 1 0 0 1-1-1v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6a1 1 0 0 1-1 1h-2"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                      />
+                      <rect x="6" y="14" width="12" height="7" rx="1" stroke="currentColor" strokeWidth="1.8" />
+                    </svg>
+                  }
+                />
+                <OptionCard
+                  compact
+                  title="跳过"
+                  description="仅保留数字版本。"
+                  hint="跳过"
+                  icon={
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                      <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                    </svg>
+                  }
+                />
+              </div>
+            </section>
+          </div>
+        </section>
+      </div>
+    </main>
+  );
+}
+
+function FileRow({ name, size, primary = false }: { name: string; size: string; primary?: boolean }) {
+  return (
+    <div
+      className={`flex items-center justify-between rounded-xl border px-3 py-2 ${
+        primary ? "border-robot-orange/40 bg-robot-orange-soft/60" : "border-robot-hairline"
+      }`}
+    >
+      <div className="flex items-center gap-2">
+        <span className={`h-1.5 w-1.5 rounded-full ${primary ? "bg-robot-orange" : "bg-robot-muted/50"}`} />
+        <span className="font-mono text-[12px] text-robot-ink">{name}</span>
+      </div>
+      <span className="text-[11px] font-medium text-robot-muted">{size}</span>
+    </div>
+  );
+}
+
+function Stat({ label, value, unit }: { label: string; value: string; unit: string }) {
+  return (
+    <div className="rounded-[18px] border border-robot-hairline bg-card p-4">
+      <div className="text-[10px] font-semibold tracking-[0.16em] text-robot-muted">
+        {label}
+      </div>
+      <div className="mt-1.5 flex items-baseline gap-1.5">
+        <div className="font-display text-2xl font-medium text-robot-ink">{value}</div>
+        <div className="text-[11px] font-medium tracking-wider text-robot-muted">
+          {unit}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function QRCode() {
+  // Deterministic pseudo-QR — visual only.
+  const size = 21;
+  const cells: boolean[] = [];
+  let seed = 12345;
+  for (let i = 0; i < size * size; i++) {
+    seed = (seed * 9301 + 49297) % 233280;
+    cells.push(seed / 233280 > 0.52);
+  }
+  // Force finder patterns
+  const finder = (x: number, y: number) => {
+    for (let i = 0; i < 7; i++)
+      for (let j = 0; j < 7; j++) {
+        const on =
+          i === 0 || i === 6 || j === 0 || j === 6 || (i >= 2 && i <= 4 && j >= 2 && j <= 4);
+        cells[(y + i) * size + (x + j)] = on;
+      }
+  };
+  finder(0, 0);
+  finder(size - 7, 0);
+  finder(0, size - 7);
+
+  return (
+    <div className="relative mx-auto flex aspect-square w-full items-center justify-center rounded-3xl border border-robot-hairline bg-white p-6">
+      <svg viewBox={`0 0 ${size} ${size}`} className="h-full w-full">
+
+        {cells.map((on, i) =>
+          on ? (
+            <rect
+              key={i}
+              x={i % size}
+              y={Math.floor(i / size)}
+              width="1"
+              height="1"
+              fill="var(--robot-ink)"
+            />
+          ) : null,
+        )}
+      </svg>
+      {/* Center brand */}
+      <div className="absolute flex h-16 w-16 items-center justify-center rounded-xl border-[3px] border-white bg-robot-orange text-[12px] font-bold tracking-widest text-white">
+        R7
+      </div>
+    </div>
+  );
+}

@@ -19,6 +19,7 @@
 - **后端**：FastAPI（`app/main.py`），端口 `8000`。驱动 S1(寻人)→S2(询问/选设备模式)→S3(取景拍照)→S5(复核)→S6(交付分享) 的状态机，并通过 SSE 把状态推给前端。
 - **前端**：React + Vite（`frontend/`），dev 端口 `8080`，`base=/flow/`，把 `/api` 与 `/ws` 代理到后端 `8000`。
 - **同机部署（推荐）**：前后端跑在同一台机器（机器人本机），浏览器以 kiosk 方式打开 `http://127.0.0.1:8080/flow/`。
+- **调试台（可选）**：`http://127.0.0.1:8000/photo-agent` — 单状态隔离测试，**现场演示请用 `/flow/` 完整流程**。
 
 ---
 
@@ -42,16 +43,19 @@ sudo apt-get update && sudo apt-get install -y portaudio19-dev libgl1 libglib2.0
 brew install portaudio
 ```
 
+> **Jetson 注意**：`requirements.txt` 中的 `pywebrtc-audio`（WebRTC AEC 回声消除）在部分 Jetson 上可能没有预编译 wheel。若 `pip install` 失败，可先跳过该包——程序会自动降级为半双工 mic 门控；长期方案是从源码编译 `webrtc-audio-processing` 后再安装。详见下文「音频与回声消除」。
+
 ---
 
 ## 3. 拉取代码
 
-仓库分支：`feat/photo-agent-s1-s6`
+当前功能分支：`feat/photo-agent-s1-s6`（PR: [mzli112358/PhotoMate-Moonbot-Hackthon#1](https://github.com/mzli112358/PhotoMate-Moonbot-Hackthon/pull/1)）
 
 ```bash
 git clone https://github.com/TheNight-Watch/PhotoMate-Moonbot-Hackthon.git
 cd PhotoMate-Moonbot-Hackthon
 git checkout feat/photo-agent-s1-s6
+git pull
 ```
 
 > 若从主仓库 `mzli112358/PhotoMate-Moonbot-Hackthon` 拉取，请确认该分支已合并。
@@ -87,11 +91,35 @@ SUPABASE_SERVICE_KEY='sb_secret_xxxxxxxx'
 
 > DashScope 的 workspace host / 模型名 / voice 都有内置默认值（见 `app/photo_agent/config.py` 与 `config/app.yaml`），一般无需在 `.env` 里配置。
 >
-> 若 Supabase 未配置或密钥无写权限，系统会**自动回退**到本地链接 `/api/photos/{id}`（仅同网可访问），二维码仍能生成。
+> 若 Supabase 未配置或密钥无写权限，系统会**自动回退**到本地链接 `/api/photos/{id}`（仅同网可访问），二维码仍能生成。此时需把 `PHOTOMATE_PHOTO_AGENT__BASE_URL` 设为机器人局域网 IP（见 §8）。
 
-### 4.3 启动后端
+### 4.3 部署前自检（推荐）
+
+在启动完整服务前，先确认硬件与 API 可用：
 
 ```bash
+source .venv/bin/activate
+
+# 1) 相机 / 麦克风 / 扬声器
+python scripts/photo_agent/device_smoke.py
+# 输出 JSON 中 camera/microphone/speaker 均为 ok:true
+
+# 2) DashScope Omni 连通性（需要 .env 里的 DASHSCOPE_API_KEY）
+PHOTOMATE_PHOTO_AGENT__MODE=local-real \
+  python scripts/photo_agent/omni_smoke.py
+# 最终 ok: true
+
+# 3)（可选）AEC 回声消除效果
+python scripts/photo_agent/aec_e2e.py
+# ERLE > 15 dB 为合格；加 --disable-aec 可对比基线
+```
+
+### 4.4 启动后端
+
+```bash
+source .venv/bin/activate
+cd /path/to/PhotoMate-Moonbot-Hackthon   # 项目根目录
+
 # 关键：用 local-real 模式（默认是 mock，不会真正调用硬件/语音）
 unset PHOTOMATE_PHOTO_AGENT__MICROPHONE_INDEX PHOTOMATE_PHOTO_AGENT__SPEAKER_INDEX
 PHOTOMATE_PHOTO_AGENT__MODE=local-real \
@@ -101,6 +129,7 @@ PHOTOMATE_PHOTO_AGENT__MODE=local-real \
 - `--host 0.0.0.0`：允许局域网访问（手机扫本地回退链接时需要；用 Supabase 公链则不强制）。
 - `unset ...`：清掉可能残留的固定音频索引，让程序**自动选择**设备（输出优先耳机、输入优先内置麦克风），避免设备选错导致 500。
 - 看到 `Application startup complete` 即启动成功。
+- 启动后日志/设备信息里会显示 `aec` 模式：`aec`（WebRTC 回声消除已启用）或 `gate`（降级为半双工门控）。
 
 ---
 
@@ -118,24 +147,91 @@ npm run dev        # Vite dev server，端口 8080，代理 /api、/ws 到 8000
 http://127.0.0.1:8080/flow/
 ```
 
-> 生产可选：`npm run build` 会输出到 `../webs/flow`；当前 FastAPI 未挂载该静态目录，现场演示直接用上面的 `npm run dev` 最稳妥。
+右下角会出现 **「开始会话」** 按钮——**必须点击**才会启动 S1→S6 完整循环；后端不会自动开始。
+
+> **生产说明**：当前 FastAPI **未挂载** `webs/flow` 静态目录，现场演示请保持 `npm run dev` 运行。若需纯后端单进程部署，需先 `npm run build` 并在 `app/main.py` 增加 `/flow/` 静态挂载（尚未实现）。
 
 ---
 
-## 6. 端到端流程验收
+## 6. 快速启动（两个终端）
+
+**终端 1 — 后端：**
+
+```bash
+cd /path/to/PhotoMate-Moonbot-Hackthon
+source .venv/bin/activate
+unset PHOTOMATE_PHOTO_AGENT__MICROPHONE_INDEX PHOTOMATE_PHOTO_AGENT__SPEAKER_INDEX
+PHOTOMATE_PHOTO_AGENT__MODE=local-real \
+  python -m uvicorn app.main:app --host 0.0.0.0 --port 8000
+```
+
+**终端 2 — 前端：**
+
+```bash
+cd /path/to/PhotoMate-Moonbot-Hackthon/frontend
+npm run dev
+```
+
+**浏览器：** `http://127.0.0.1:8080/flow/` → 点「开始会话」。
+
+---
+
+## 7. 端到端流程验收
 
 后端与前端都启动后，打开 `/flow/`，点「开始会话」，按状态机走完整流程：
 
-1. **寻人页 `/search`**（S1/S2）：实时画面 + 语音「需要拍照吗」。用户拒绝 → 回到寻人循环。
+1. **寻人页 `/search`**（S1/S2）：实时画面 + 语音「欢迎来到探月黑客松…需要拍照吗」。用户拒绝 → 回到寻人循环。
 2. 用户接受 → 语音问 **手机 / Insta360** → 选 Insta → 语音问 **一键拍照 / 录像** → 选拍照。
-3. **取景页 `/preview`**（S3）：实时画面 + 姿态引导，随后自动拍照。
+3. **取景页 `/preview`**（S3）：实时画面 + 姿态引导（默认引导到打卡立牌旁），随后自动拍照。
 4. **复核页 `/review`**（S5）：显示刚拍的照片；语音说「文件获取」保存 / 「再来一张」重拍。
 5. **分享页 `/post`**（S6）：显示真实二维码 + 下载链接，手机扫码即可下载。
 6. 分享页停留约 **60 秒** 后自动重启，进入下一轮寻人循环。
 
+语音提示词可在 `config/photo_agent_prompts.yaml` 中调整（探月黑客松场景已预置）。
+
 ---
 
-## 7.（可选）Insta360 云台/追踪服务
+## 8. 机器人现场配置
+
+`config/app.yaml` 中 `photo_agent` 段可按机器人硬件覆盖（或通过环境变量）：
+
+| 配置项 | 机器人建议 | 说明 |
+| --- | --- | --- |
+| `camera_index` | `0` | USB 摄像头索引；多摄像头时用 `device_smoke.py` 确认 |
+| `camera_rotation_deg` | Linux 上通常 `0` | macOS + Insta360 Link 2 开发机用 `270`；画面方向不对时调整 |
+| `microphone_index` / `speaker_index` | `auto` | 留空自动选择；固定索引易出错 |
+| `base_url` | `http://<机器人局域网IP>:8000` | 仅 Supabase 未生效、走本地回退链接时需要 |
+| `guidance_interval_s` | `5` 或 `8` | S3 姿态评估间隔（秒） |
+| `skip_quality_check` | `true` | 演示默认跳过 OpenCV 质检 |
+
+环境变量前缀均为 `PHOTOMATE_PHOTO_AGENT__`，例如：
+
+```bash
+export PHOTOMATE_PHOTO_AGENT__CAMERA_ROTATION_DEG=0
+export PHOTOMATE_PHOTO_AGENT__BASE_URL='http://192.168.1.100:8000'
+```
+
+---
+
+## 9. 音频与回声消除（AEC）
+
+机器人现场常见问题是：**扬声器播放 Omni 语音 → 麦克风再次收音 → VAD 误判为用户说话**，导致自问自答或流程乱跳。
+
+优先级：
+
+1. **首选**：外接耳机/定向扬声器，物理隔离回声（最稳）。
+2. **次选**：启用内置 WebRTC AEC（默认开启）。启动后设备信息中 `aec: aec` 表示生效；`aec: gate` 表示 AEC 库不可用，已降级为播放时静音 mic。
+3. **Jetson 无 wheel 时**：可设 `PHOTOMATE_PHOTO_AGENT__AEC_ENABLED=0` 并配合耳机使用。
+
+| 变量 | 作用 | 默认 |
+| --- | --- | --- |
+| `PHOTOMATE_PHOTO_AGENT__AEC_ENABLED` | 是否启用 AEC | `true` |
+| `PHOTOMATE_PHOTO_AGENT__AEC_GATE_FALLBACK` | AEC 不可用时是否半双工门控 | `true` |
+| `PHOTOMATE_PHOTO_AGENT__AEC_STREAM_DELAY_MS` | 播放→收音延迟补偿（ms） | `120` |
+
+---
+
+## 10.（可选）Insta360 云台/追踪服务
 
 Insta360 Link 2 自带**固件级人脸追踪**，无需项目内的 CV 追踪。若要用云台控制：
 
@@ -147,33 +243,91 @@ INSTA_PTZ_PORT=8788 python -u ptz_server.py
 
 ---
 
-## 8. 环境变量参考
+## 11.（可选）开机自启
+
+现场 kiosk 可用 systemd 管理两个服务。示例（路径按实际修改）：
+
+`/etc/systemd/system/photomate-backend.service`：
+
+```ini
+[Unit]
+Description=PhotoMate Backend
+After=network.target
+
+[Service]
+Type=simple
+User=robot
+WorkingDirectory=/home/robot/PhotoMate-Moonbot-Hackthon
+Environment=PHOTOMATE_PHOTO_AGENT__MODE=local-real
+ExecStart=/home/robot/PhotoMate-Moonbot-Hackthon/.venv/bin/python -m uvicorn app.main:app --host 0.0.0.0 --port 8000
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+```
+
+`/etc/systemd/system/photomate-frontend.service`：
+
+```ini
+[Unit]
+Description=PhotoMate Frontend (Vite)
+After=photomate-backend.service
+
+[Service]
+Type=simple
+User=robot
+WorkingDirectory=/home/robot/PhotoMate-Moonbot-Hackthon/frontend
+ExecStart=/usr/bin/npm run dev
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+```
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable --now photomate-backend photomate-frontend
+```
+
+浏览器 kiosk 可配置为开机打开 `http://127.0.0.1:8080/flow/`（Chromium `--kiosk` 等，按机器人 OS 文档操作）。
+
+---
+
+## 12. 环境变量参考
 
 | 变量 | 作用 | 默认 |
 | --- | --- | --- |
 | `DASHSCOPE_API_KEY` | Qwen-Omni 实时语音密钥（必填） | 无 |
 | `SUPABASE_URL` / `SUPABASE_BUCKET` / `SUPABASE_SERVICE_KEY` | 照片上传对象存储 | 未配置则本地回退 |
 | `PHOTOMATE_PHOTO_AGENT__MODE` | 运行模式：`local-real` 真实 / `mock` 模拟 | `mock` |
-| `PHOTOMATE_PHOTO_AGENT__CAMERA_INDEX` | 摄像头索引（自动选择失败时手动指定） | `0` |
+| `PHOTOMATE_PHOTO_AGENT__CAMERA_INDEX` | 摄像头索引 | `0` |
 | `PHOTOMATE_PHOTO_AGENT__MICROPHONE_INDEX` | 麦克风索引（留空=自动） | 自动 |
 | `PHOTOMATE_PHOTO_AGENT__SPEAKER_INDEX` | 扬声器索引（留空=自动） | 自动 |
-| `PHOTOMATE_PHOTO_AGENT__CAMERA_ROTATION_DEG` | 画面旋转角度 | `0` |
-| `PHOTOMATE_PHOTO_AGENT__BASE_URL` | 本地回退链接使用的基址（手机扫码时改成机器人局域网 IP） | `http://127.0.0.1:8000` |
+| `PHOTOMATE_PHOTO_AGENT__CAMERA_ROTATION_DEG` | 画面旋转角度 | `0`（开发机 macOS 可能为 `270`） |
+| `PHOTOMATE_PHOTO_AGENT__BASE_URL` | 本地回退链接基址 | `http://127.0.0.1:8000` |
+| `PHOTOMATE_PHOTO_AGENT__GUIDANCE_INTERVAL_S` | S3 评估间隔（秒） | `5` |
+| `PHOTOMATE_PHOTO_AGENT__SKIP_QUALITY_CHECK` | 跳过拍后 OpenCV 质检 | `true` |
+| `PHOTOMATE_PHOTO_AGENT__AEC_ENABLED` | WebRTC 回声消除 | `true` |
+| `PHOTOMATE_PHOTO_AGENT__AEC_GATE_FALLBACK` | AEC 降级半双工 | `true` |
+| `PHOTOMATE_PHOTO_AGENT__AEC_STREAM_DELAY_MS` | AEC 延迟补偿 | `120` |
 
 ---
 
-## 9. 常见问题排查
+## 13. 常见问题排查
 
-- **`omni_recoverable_error`（日志 WARNING）**：良性、自愈。仅在「append image before append audio」这一协议顺序问题时出现，会自动 `prime_audio()` 修复，不影响会话，无需处理。
+- **`omni_recoverable_error`（日志 WARNING）**：良性、自愈。仅在「append image before append audio」协议顺序问题时出现，会自动 `prime_audio()` 修复，不影响会话，无需处理。
 - **Omni WebSocket handshake failed**：`DASHSCOPE_API_KEY` 缺失/过期/workspace 不匹配。确认 `.env` 已放到项目根目录且 key 有效；不要在 shell 里 export 一个旧的同名变量覆盖它。
-- **没有声音 / 设备不可用（500 / channel 错误）**：多为音频设备选错。用上面的 `unset ... MICROPHONE_INDEX SPEAKER_INDEX` 让其自动选择；仍不行时用 `PHOTOMATE_PHOTO_AGENT__MICROPHONE_INDEX/SPEAKER_INDEX` 手动指定正确索引。
+- **没有声音 / 设备不可用（500 / channel 错误）**：多为音频设备选错。用 `unset ... MICROPHONE_INDEX SPEAKER_INDEX` 让其自动选择；仍不行时用 `device_smoke.py` 列出设备后手动指定索引。
+- **VAD 自问自答 / 流程乱跳**：扬声器回声被 mic 再次收音。优先换耳机；或确认日志中 `aec: aec`；Jetson 上 AEC 不可用时设 `AEC_ENABLED=0` 并必须用耳机。
+- **S5 说「再来一张」没反应**：已修复（进入 S5 时会重新启用 Omni tools）。请确认部署的是最新 `feat/photo-agent-s1-s6` 分支。
+- **S3 话术重复或太长**：已优化滚动历史去重 + 短句 prompt；更新代码后重启后端即可加载新 prompt。
 - **端口被占用**：`lsof -ti :8000 :8080 | xargs kill -9` 清理后重启。
-- **前端能开但无数据/不切页**：确认后端 8000 已起、`/flow/` 是通过 8080（有 `/api` 代理）访问，而不是直接开静态文件。
-- **二维码指向 `127.0.0.1`**：说明该照片走了本地回退（Supabase 未生效）。检查 `.env` 的 Supabase 三项；用公链时二维码是 `https://<supabase>/storage/v1/object/public/media/...`，公网可扫。
+- **前端能开但无数据/不切页**：确认后端 8000 已起、已点「开始会话」、`/flow/` 是通过 8080（有 `/api` 代理）访问。
+- **二维码指向 `127.0.0.1`**：说明该照片走了本地回退（Supabase 未生效）。检查 `.env` 的 Supabase 三项；或设置 `PHOTOMATE_PHOTO_AGENT__BASE_URL` 为机器人局域网 IP。
 
 ---
 
-## 10. 安全须知
+## 14. 安全须知
 
 - `.env` 内含明文密钥（DashScope、Supabase secret key），**务必走安全渠道传递**，不要提交到仓库、不要贴到公开聊天。
 - Supabase `sb_secret_...` 拥有存储完整写权限；一旦泄露，请到 Supabase 控制台 **重置密钥**，DashScope key 同理到百炼控制台重置。

@@ -1,7 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
 import { OptionCard } from "../components/option-card";
-import { useVoiceScene } from "../components/voice-context";
+import { usePhotoAgent } from "../components/photo-agent-bridge";
 
 export const Route = createFileRoute("/device")({
   head: () => ({ meta: [{ title: "选择设备 · 陪伴机器人 R-07" }] }),
@@ -10,16 +9,13 @@ export const Route = createFileRoute("/device")({
 
 function DeviceScreen() {
   const navigate = useNavigate();
-  const [choice, setChoice] = useState<"phone" | "insta" | null>(null);
-  useVoiceScene({
-    state: "responding",
-    transcript: "我选择影石link相机",
-    hints: ["我的手机", "影石link"]
-  });
+  const { snapshot } = usePhotoAgent();
+  // During a live session the selection is voice-driven; clicks are a dev fallback.
+  const choice = snapshot.device;
 
   const pick = (v: "phone" | "insta") => {
-    setChoice(v);
-    setTimeout(() => navigate({ to: v === "phone" ? "/phone-setup" : "/mode" }), 1500);
+    if (snapshot.active) return;
+    navigate({ to: v === "phone" ? "/phone-setup" : "/mode" });
   };
 
   return (

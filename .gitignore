@@ -9,3 +9,8 @@ frontend/node_modules/
 frontend/dist/
 frontend/.tanstack/
 frontend-build-test/
+data/photos/
+data/smoke-photos/
+data/photo_agent/
+.pytest_cache/
+.coverage

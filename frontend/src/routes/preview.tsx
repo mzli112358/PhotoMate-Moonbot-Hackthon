@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useVoiceScene } from "../components/voice-context";
+import { LivePreview } from "../components/photo-agent-bridge";
 
 export const Route = createFileRoute("/preview")({
   head: () => ({ meta: [{ title: "实时取景 · 陪伴机器人 R-07" }] }),
@@ -7,12 +7,6 @@ export const Route = createFileRoute("/preview")({
 });
 
 export function PreviewScreen() {
-  useVoiceScene({
-    state: "listening",
-    transcript: "我选择影石link相机",
-    hints: ["停止", "重拍", "切换到照片"],
-  });
-
   return (
     <main className="flex min-h-screen items-stretch pt-24 pb-40">
       <div className="mx-auto flex w-full max-w-[1680px] gap-6 px-8">
@@ -75,78 +69,26 @@ export function PreviewScreen() {
         {/* Right: Main content */}
         <section className="flex flex-1 flex-col">
           <div className="relative overflow-hidden rounded-[36px] border border-robot-hairline bg-robot-ink">
-            {/* Simulated Insta360 feed — abstract gradient scene */}
+            {/* Live Insta360 sensor feed */}
             <div className="relative aspect-[16/9] w-full">
-              <div
-                className="absolute inset-0"
-                style={{
-                  background:
-                    "radial-gradient(120% 80% at 30% 40%, oklch(0.72 0.14 55) 0%, oklch(0.35 0.09 45) 45%, oklch(0.16 0.03 40) 100%)",
-                }}
-              />
-              {/* Subject silhouette */}
+              <LivePreview className="absolute inset-0 h-full w-full object-cover" />
+
+              {/* Rule-of-thirds overlay */}
               <svg
                 className="absolute inset-0 h-full w-full"
                 viewBox="0 0 160 90"
-                preserveAspectRatio="xMidYMid slice"
+                preserveAspectRatio="none"
                 aria-hidden
               >
-                <g fill="oklch(0.1 0.02 40)" opacity="0.55">
-                  <ellipse cx="80" cy="90" rx="70" ry="18" />
-                  <path d="M60 90 L60 55 Q60 42 80 42 Q100 42 100 55 L100 90 Z" />
-                  <circle cx="80" cy="32" r="10" />
-                </g>
-                {/* Rule-of-thirds overlay */}
-                <g stroke="white" strokeWidth="0.15" opacity="0.35">
+                <g stroke="white" strokeWidth="0.15" opacity="0.3">
                   <path d="M53.3 0 V90 M106.6 0 V90 M0 30 H160 M0 60 H160" />
                 </g>
-                {/* Orbit path indicator */}
-                <ellipse
-                  cx="80"
-                  cy="70"
-                  rx="55"
-                  ry="10"
-                  stroke="var(--robot-orange)"
-                  strokeWidth="0.5"
-                  strokeDasharray="1.5 2"
-                  fill="none"
-                  opacity="0.9"
-                />
-                <circle cx="30" cy="72" r="1.4" fill="var(--robot-orange)" />
               </svg>
 
               {/* Top-left chip */}
               <div className="absolute left-6 top-6 flex items-center gap-2 rounded-full bg-black/40 px-3 py-1.5 text-[11px] font-semibold tracking-[0.16em] text-white backdrop-blur-md">
                 <span className="h-1.5 w-1.5 rounded-full bg-robot-orange" />
-                视频 · 环绕 · 8 秒
-              </div>
-
-              {/* Top-right recording */}
-              <div className="absolute right-6 top-6 flex items-center gap-2 rounded-full bg-black/40 px-3 py-1.5 text-[12px] font-semibold text-white backdrop-blur-md">
-                <span className="flex h-2 w-2">
-                  <span
-                    className="absolute inline-flex h-2 w-2 rounded-full bg-red-500 opacity-75"
-                    style={{ animation: "robot-breath 1.4s ease-in-out infinite" }}
-                  />
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-red-500" />
-                </span>
-                <span className="font-mono tracking-widest">录制中 00:04</span>
-              </div>
-
-              {/* Bottom-right — voice commands */}
-              <div className="absolute bottom-6 right-6 flex flex-col items-end gap-1.5 text-right">
-                <div className="text-[10px] font-semibold tracking-[0.2em] text-white/60">
-                  语音指令
-                </div>
-                <div className="text-[12px] text-white/85">
-                  <span className="text-white">“停止”</span> · 暂停录制
-                </div>
-                <div className="text-[12px] text-white/85">
-                  <span className="text-white">“重拍”</span> · 重新录制
-                </div>
-                <div className="text-[12px] text-white/85">
-                  <span className="text-white">“切换到照片”</span> · 更换模式
-                </div>
+                取景中 · 姿态引导
               </div>
 
               {/* Corner brackets */}

@@ -45,3 +45,22 @@ perception:
 agent:
   default_shoot_mode: phone
   default_spot_id: spot_a
+
+photo_agent:
+  # mock | local-real | hardware-real (reserved)
+  mode: mock
+  model: qwen3.5-omni-flash-realtime
+  voice: Tina
+  workspace_host: llm-iscpge3ysktzaaf2.cn-beijing.maas.aliyuncs.com
+  camera_index: 0
+  # Insta360 Link 2 on macOS: raw frames are sideways; 270 = counter-clockwise
+  # correction to upright. (90 made the preview upside-down.)
+  camera_rotation_deg: 270
+  # auto: prefer Mac built-in mic (input) and headphones (output)
+  microphone_index: auto
+  speaker_index: auto
+  guidance_interval_s: 5.0
+  skip_quality_check: true
+  photo_dir: data/photos
+  base_url: http://127.0.0.1:8000
+  # 人物追踪由 Insta360 Link 2 固件级 AI 跟拍负责（相机自带），应用不再驱动云台。

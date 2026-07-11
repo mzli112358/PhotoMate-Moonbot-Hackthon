@@ -3,8 +3,8 @@ import { Link, useRouterState } from "@tanstack/react-router";
 const STEPS = [
   { to: "/", label: "导航" },
   { to: "/search", label: "寻人" },
-  { to: "/arrival", label: "就绪" },
-  { to: "/device", label: "模式", aliases: ["/mode", "/phone-setup"] },
+  { to: "/device", label: "设备", aliases: ["/phone-setup"] },
+  { to: "/mode", label: "模式" },
   { to: "/preview", label: "取景", aliases: ["/phone-countdown"] },
   { to: "/review", label: "预览", aliases: ["/phone-finish"] },
   { to: "/post", label: "分享" },
@@ -13,7 +13,9 @@ const STEPS = [
 export function TopBar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const activeIdx = STEPS.findIndex(
-    (s) => s.to === pathname || ("aliases" in s && s.aliases.includes(pathname)),
+    (s) =>
+      s.to === pathname ||
+      ("aliases" in s && (s.aliases as readonly string[]).includes(pathname)),
   );
   const isInFlow = activeIdx >= 0;
   const safeIdx = Math.max(0, activeIdx);

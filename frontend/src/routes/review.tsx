@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useVoiceScene } from "../components/voice-context";
 import { useState } from "react";
+
+import { usePhotoAgent } from "../components/photo-agent-bridge";
 
 export const Route = createFileRoute("/review")({
   head: () => ({ meta: [{ title: "拍摄预览 · PhotoMate" }] }),
@@ -9,20 +10,15 @@ export const Route = createFileRoute("/review")({
 
 function ReviewScreen() {
   const navigate = useNavigate();
+  const { snapshot } = usePhotoAgent();
   const [choice, setChoice] = useState<"retake" | "share" | null>(null);
-
-  useVoiceScene({
-    state: "listening",
-    transcript: "",
-    hints: ["再来一张", "文件获取"],
-  });
 
   const pick = (c: "retake" | "share") => {
     if (choice) return;
     setChoice(c);
-    setTimeout(() => {
-      navigate({ to: c === "retake" ? "/preview" : "/post" });
-    }, 1500);
+    // Voice drives the real transition during a live session; this is a dev fallback.
+    if (snapshot.active) return;
+    navigate({ to: c === "retake" ? "/preview" : "/post" });
   };
 
   return (
@@ -84,33 +80,27 @@ function ReviewScreen() {
               </div>
             </div>
 
-            {/* Photo preview */}
+            {/* Photo preview — the real capture from S3 */}
             <div className="relative mx-auto aspect-[16/10] w-full max-w-[820px] overflow-hidden rounded-[28px] border border-robot-hairline bg-robot-ink shadow-[0_30px_80px_-40px_rgba(20,15,10,0.5)]">
-              <div
-                className="absolute inset-0"
-                style={{
-                  background:
-                    "radial-gradient(120% 80% at 30% 40%, oklch(0.72 0.14 55) 0%, oklch(0.35 0.09 45) 45%, oklch(0.16 0.03 40) 100%)",
-                }}
-              />
-              <svg
-                className="absolute inset-0 h-full w-full"
-                viewBox="0 0 160 100"
-                preserveAspectRatio="xMidYMid slice"
-                aria-hidden
-              >
-                <g fill="oklch(0.1 0.02 40)" opacity="0.6">
-                  <ellipse cx="80" cy="100" rx="70" ry="18" />
-                  <path d="M60 100 L60 60 Q60 47 80 47 Q100 47 100 60 L100 100 Z" />
-                  <circle cx="80" cy="37" r="10" />
-                </g>
-              </svg>
+              {snapshot.photo_url ? (
+                <img
+                  src={snapshot.photo_url}
+                  alt="拍摄结果"
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center text-[13px] text-white/70">
+                  正在载入照片…
+                </div>
+              )}
               <div className="absolute left-5 top-5 rounded-full bg-black/40 px-3 py-1.5 text-[11px] font-semibold tracking-[0.16em] text-white backdrop-blur-md">
-                影石link · 5.7K · 8 秒
+                影石link · 照片复核
               </div>
-              <div className="absolute right-5 top-5 rounded-full bg-black/40 px-3 py-1.5 font-mono text-[11px] text-white backdrop-blur-md">
-                R07-8F2A-24
-              </div>
+              {snapshot.photo_id ? (
+                <div className="absolute right-5 top-5 rounded-full bg-black/40 px-3 py-1.5 font-mono text-[11px] text-white backdrop-blur-md">
+                  {snapshot.photo_id.slice(0, 12)}
+                </div>
+              ) : null}
             </div>
 
             {/* Two compact options */}

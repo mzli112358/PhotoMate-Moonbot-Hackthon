@@ -18,7 +18,6 @@ import { Route as PhoneFinishRouteImport } from './routes/phone-finish'
 import { Route as PhoneCountdownRouteImport } from './routes/phone-countdown'
 import { Route as ModeRouteImport } from './routes/mode'
 import { Route as DeviceRouteImport } from './routes/device'
-import { Route as ArrivalRouteImport } from './routes/arrival'
 import { Route as IndexRouteImport } from './routes/index'
 
 const SearchRoute = SearchRouteImport.update({
@@ -66,11 +65,6 @@ const DeviceRoute = DeviceRouteImport.update({
   path: '/device',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ArrivalRoute = ArrivalRouteImport.update({
-  id: '/arrival',
-  path: '/arrival',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -79,7 +73,6 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/arrival': typeof ArrivalRoute
   '/device': typeof DeviceRoute
   '/mode': typeof ModeRoute
   '/phone-countdown': typeof PhoneCountdownRoute
@@ -92,7 +85,6 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/arrival': typeof ArrivalRoute
   '/device': typeof DeviceRoute
   '/mode': typeof ModeRoute
   '/phone-countdown': typeof PhoneCountdownRoute
@@ -106,7 +98,6 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/arrival': typeof ArrivalRoute
   '/device': typeof DeviceRoute
   '/mode': typeof ModeRoute
   '/phone-countdown': typeof PhoneCountdownRoute
@@ -121,7 +112,6 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/arrival'
     | '/device'
     | '/mode'
     | '/phone-countdown'
@@ -134,7 +124,6 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/arrival'
     | '/device'
     | '/mode'
     | '/phone-countdown'
@@ -147,7 +136,6 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
-    | '/arrival'
     | '/device'
     | '/mode'
     | '/phone-countdown'
@@ -161,7 +149,6 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  ArrivalRoute: typeof ArrivalRoute
   DeviceRoute: typeof DeviceRoute
   ModeRoute: typeof ModeRoute
   PhoneCountdownRoute: typeof PhoneCountdownRoute
@@ -238,13 +225,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DeviceRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/arrival': {
-      id: '/arrival'
-      path: '/arrival'
-      fullPath: '/arrival'
-      preLoaderRoute: typeof ArrivalRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/': {
       id: '/'
       path: '/'
@@ -257,7 +237,6 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  ArrivalRoute: ArrivalRoute,
   DeviceRoute: DeviceRoute,
   ModeRoute: ModeRoute,
   PhoneCountdownRoute: PhoneCountdownRoute,

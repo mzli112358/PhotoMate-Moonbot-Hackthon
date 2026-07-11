@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { OptionCard } from "../components/option-card";
 import { SectionHeader } from "./device";
-import { useVoiceScene } from "../components/voice-context";
+import { usePhotoAgent } from "../components/photo-agent-bridge";
 
 export const Route = createFileRoute("/mode")({
   head: () => ({ meta: [{ title: "拍摄模式 · 陪伴机器人 R-07" }] }),
@@ -22,33 +22,28 @@ type Capture = "photo" | "video" | null;
 
 function ModeScreen() {
   const navigate = useNavigate();
-  const [capture, setCapture] = useState<Capture>(null);
+  const { snapshot } = usePhotoAgent();
+  const [localCapture, setLocalCapture] = useState<Capture>(null);
   const [preset, setPreset] = useState<string | null>(null);
-
-  useVoiceScene({
-    state: capture === null ? "listening" : "responding",
-    transcript: capture === null ? "" : capture === "photo" ? "一键拍照。" : "视频拍摄。",
-    hints:
-      capture === null
-        ? ["照片", "视频"]
-        : capture === "photo"
-        ? ["确认", "改成视频"]
-        : ["环绕", "推近", "揭示", "起吊", "跟随", "定机位"],
-  });
+  // Backend-selected mode wins; local state is a dev fallback for standalone browsing.
+  const capture: Capture = (snapshot.mode as Capture) ?? localCapture;
 
   const handlePhoto = () => {
-    setCapture("photo");
+    if (snapshot.active) return;
+    setLocalCapture("photo");
     setPreset(null);
-    setTimeout(() => navigate({ to: "/preview" }), 1500);
+    navigate({ to: "/preview" });
   };
 
   const handleVideo = () => {
-    setCapture("video");
+    if (snapshot.active) return;
+    setLocalCapture("video");
   };
 
   const handlePreset = (name: string) => {
+    if (snapshot.active) return;
     setPreset(name);
-    setTimeout(() => navigate({ to: "/preview" }), 1500);
+    navigate({ to: "/preview" });
   };
 
   return (

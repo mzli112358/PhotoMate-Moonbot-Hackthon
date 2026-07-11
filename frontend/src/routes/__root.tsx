@@ -5,6 +5,9 @@ import { useEffect, type ReactNode } from "react";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { HackthonBridgeProvider } from "../components/hackthon-bridge";
 import { HackthonSidebar } from "../components/hackthon-sidebar";
+import { PhotoAgentBridgeProvider } from "../components/photo-agent-bridge";
+import { PhotoAgentController } from "../components/photo-agent-controller";
+import { PhotoAgentStateLog } from "../components/photo-agent-log";
 import { VoiceProvider } from "../components/voice-context";
 import { VoiceIndicator } from "../components/voice-indicator";
 import { TopBar } from "../components/top-bar";
@@ -82,16 +85,20 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <VoiceProvider>
         <HackthonBridgeProvider>
-          <div className="relative min-h-screen overflow-hidden bg-background">
-            <TopBar />
-            <div className="flex min-h-screen gap-6 px-8 pb-10 pt-28">
-              <HackthonSidebar />
-              <div className="flow-main min-w-0 flex-1">
-                <Outlet />
+          <PhotoAgentBridgeProvider>
+            <div className="relative min-h-screen overflow-hidden bg-background">
+              <TopBar />
+              <div className="flex min-h-screen gap-6 px-8 pb-10 pt-28">
+                <HackthonSidebar />
+                <div className="flow-main min-w-0 flex-1">
+                  <Outlet />
+                </div>
               </div>
+              <VoiceIndicator />
+              <PhotoAgentStateLog />
+              <PhotoAgentController />
             </div>
-            <VoiceIndicator />
-          </div>
+          </PhotoAgentBridgeProvider>
         </HackthonBridgeProvider>
       </VoiceProvider>
     </QueryClientProvider>

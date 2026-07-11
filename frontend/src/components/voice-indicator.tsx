@@ -3,7 +3,7 @@ import { useVoice } from "./voice-context";
 const BAR_COUNT = 14;
 
 export function VoiceIndicator() {
-  const { state } = useVoice();
+  const { state, transcript, hints } = useVoice();
 
   const label =
     state === "idle"
@@ -15,8 +15,13 @@ export function VoiceIndicator() {
           : "正在回应";
 
   return (
-    <div className="voice-indicator pointer-events-none fixed bottom-0 z-50 flex flex-col items-center pb-8">
+    <div className="voice-indicator pointer-events-none fixed inset-x-0 bottom-0 z-50 flex flex-col items-center pb-8">
       {/* Transcript — above the orb */}
+      {transcript ? (
+        <div className="mb-3 max-w-[520px] rounded-2xl border border-robot-hairline bg-white/90 px-4 py-2 text-center text-[13px] leading-relaxed text-robot-ink shadow-[0_20px_50px_-35px_rgba(20,15,10,0.5)] backdrop-blur">
+          {transcript}
+        </div>
+      ) : null}
       {/* Orb */}
       <div className="relative flex h-[96px] w-[96px] items-center justify-center">
         {/* Outer ripple (responding) */}
@@ -112,6 +117,20 @@ export function VoiceIndicator() {
         />
         {label}
       </div>
+
+      {/* Voice command hints */}
+      {hints.length > 0 ? (
+        <div className="mt-3 flex flex-wrap items-center justify-center gap-2">
+          {hints.map((hint) => (
+            <span
+              key={hint}
+              className="rounded-full border border-robot-hairline bg-white/80 px-3 py-1 text-[11px] font-medium text-robot-muted backdrop-blur"
+            >
+              {hint}
+            </span>
+          ))}
+        </div>
+      ) : null}
     </div>
   );
 }

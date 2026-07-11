@@ -24,7 +24,7 @@ export function HackthonSidebar() {
               指挥台
             </div>
             <h2 className="mt-2 font-display text-[30px] font-medium leading-tight text-robot-ink">
-              准备
+              导航
               <span className="text-robot-orange">。</span>
             </h2>
           </div>

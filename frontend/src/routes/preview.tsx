@@ -6,7 +6,7 @@ export const Route = createFileRoute("/preview")({
   component: PreviewScreen,
 });
 
-function PreviewScreen() {
+export function PreviewScreen() {
   useVoiceScene({
     state: "listening",
     transcript: "我选择影石link相机",

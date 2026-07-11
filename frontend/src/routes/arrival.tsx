@@ -4,7 +4,7 @@ import { OptionCard } from "../components/option-card";
 import { useVoiceScene } from "../components/voice-context";
 
 export const Route = createFileRoute("/arrival")({
-  head: () => ({ meta: [{ title: "已抵达 · 陪伴机器人 R-07" }] }),
+  head: () => ({ meta: [{ title: "就绪 · 陪伴机器人 R-07" }] }),
   component: ArrivalScreen,
 });
 
@@ -39,7 +39,7 @@ function ArrivalScreen() {
               状态
             </div>
             <h1 className="mt-3 font-display text-[40px] font-medium leading-[1.1] text-robot-ink">
-              已抵达
+              就绪
               <span className="text-robot-orange">。</span>
             </h1>
             <p className="mt-3 text-[14px] leading-relaxed text-robot-muted">
@@ -74,7 +74,7 @@ function ArrivalScreen() {
             <div className="mx-auto mb-6 inline-flex items-center gap-2 rounded-full border border-robot-hairline bg-white/80 px-4 py-1.5 backdrop-blur-sm">
               <span className="h-1.5 w-1.5 rounded-full bg-robot-orange" />
               <span className="text-[11px] font-semibold tracking-[0.22em] text-robot-muted">
-                已抵达 · 等待回复
+                就绪 · 等待回复
               </span>
             </div>
 

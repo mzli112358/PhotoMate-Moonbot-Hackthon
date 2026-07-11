@@ -196,7 +196,7 @@ export function HackthonMap() {
       <div className="flex items-center justify-between gap-4 border-b border-robot-hairline bg-white/70 px-6 py-4 backdrop-blur-sm">
         <div>
           <div className="text-[10px] font-semibold tracking-[0.22em] text-robot-orange">
-            准备
+            导航
           </div>
           <h1 className="mt-1 font-display text-xl font-medium text-robot-ink">会场地图</h1>
         </div>

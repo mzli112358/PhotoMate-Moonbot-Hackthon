@@ -4,7 +4,7 @@ import { useVoiceScene } from "../components/voice-context";
 
 export const Route = createFileRoute("/")({
   head: () => ({
-    meta: [{ title: "准备 · PhotoMate 指挥台" }],
+    meta: [{ title: "导航 · PhotoMate 指挥台" }],
   }),
   component: PrepareScreen,
 });

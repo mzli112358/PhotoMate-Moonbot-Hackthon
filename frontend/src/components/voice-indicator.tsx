@@ -3,7 +3,7 @@ import { useVoice } from "./voice-context";
 const BAR_COUNT = 14;
 
 export function VoiceIndicator() {
-  const { state, transcript } = useVoice();
+  const { state } = useVoice();
 
   const label =
     state === "idle"
@@ -17,18 +17,6 @@ export function VoiceIndicator() {
   return (
     <div className="voice-indicator pointer-events-none fixed bottom-0 z-50 flex flex-col items-center pb-8">
       {/* Transcript — above the orb */}
-      {transcript ? (
-        <div className="mb-5 fade-in-up">
-          <div className="text-[18px] font-medium leading-relaxed tracking-wide text-robot-ink">
-            <span className="text-robot-muted/40">"</span>
-            {transcript}
-            <span className="text-robot-muted/40">"</span>
-          </div>
-        </div>
-      ) : (
-        <div className="mb-5 h-[23px]" />
-      )}
-
       {/* Orb */}
       <div className="relative flex h-[96px] w-[96px] items-center justify-center">
         {/* Outer ripple (responding) */}

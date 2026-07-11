@@ -19,7 +19,7 @@ function DeviceScreen() {
 
   const pick = (v: "phone" | "insta") => {
     setChoice(v);
-    setTimeout(() => navigate({ to: "/mode" }), 1500);
+    setTimeout(() => navigate({ to: v === "phone" ? "/phone-setup" : "/mode" }), 1500);
   };
 
   return (

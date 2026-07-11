@@ -9,14 +9,23 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SearchRouteImport } from './routes/search'
 import { Route as ReviewRouteImport } from './routes/review'
 import { Route as PreviewRouteImport } from './routes/preview'
 import { Route as PostRouteImport } from './routes/post'
+import { Route as PhoneSetupRouteImport } from './routes/phone-setup'
+import { Route as PhoneFinishRouteImport } from './routes/phone-finish'
+import { Route as PhoneCountdownRouteImport } from './routes/phone-countdown'
 import { Route as ModeRouteImport } from './routes/mode'
 import { Route as DeviceRouteImport } from './routes/device'
 import { Route as ArrivalRouteImport } from './routes/arrival'
 import { Route as IndexRouteImport } from './routes/index'
 
+const SearchRoute = SearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ReviewRoute = ReviewRouteImport.update({
   id: '/review',
   path: '/review',
@@ -30,6 +39,21 @@ const PreviewRoute = PreviewRouteImport.update({
 const PostRoute = PostRouteImport.update({
   id: '/post',
   path: '/post',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PhoneSetupRoute = PhoneSetupRouteImport.update({
+  id: '/phone-setup',
+  path: '/phone-setup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PhoneFinishRoute = PhoneFinishRouteImport.update({
+  id: '/phone-finish',
+  path: '/phone-finish',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PhoneCountdownRoute = PhoneCountdownRouteImport.update({
+  id: '/phone-countdown',
+  path: '/phone-countdown',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ModeRoute = ModeRouteImport.update({
@@ -58,18 +82,26 @@ export interface FileRoutesByFullPath {
   '/arrival': typeof ArrivalRoute
   '/device': typeof DeviceRoute
   '/mode': typeof ModeRoute
+  '/phone-countdown': typeof PhoneCountdownRoute
+  '/phone-finish': typeof PhoneFinishRoute
+  '/phone-setup': typeof PhoneSetupRoute
   '/post': typeof PostRoute
   '/preview': typeof PreviewRoute
   '/review': typeof ReviewRoute
+  '/search': typeof SearchRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/arrival': typeof ArrivalRoute
   '/device': typeof DeviceRoute
   '/mode': typeof ModeRoute
+  '/phone-countdown': typeof PhoneCountdownRoute
+  '/phone-finish': typeof PhoneFinishRoute
+  '/phone-setup': typeof PhoneSetupRoute
   '/post': typeof PostRoute
   '/preview': typeof PreviewRoute
   '/review': typeof ReviewRoute
+  '/search': typeof SearchRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -77,25 +109,54 @@ export interface FileRoutesById {
   '/arrival': typeof ArrivalRoute
   '/device': typeof DeviceRoute
   '/mode': typeof ModeRoute
+  '/phone-countdown': typeof PhoneCountdownRoute
+  '/phone-finish': typeof PhoneFinishRoute
+  '/phone-setup': typeof PhoneSetupRoute
   '/post': typeof PostRoute
   '/preview': typeof PreviewRoute
   '/review': typeof ReviewRoute
+  '/search': typeof SearchRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/arrival' | '/device' | '/mode' | '/post' | '/preview' | '/review'
+    | '/'
+    | '/arrival'
+    | '/device'
+    | '/mode'
+    | '/phone-countdown'
+    | '/phone-finish'
+    | '/phone-setup'
+    | '/post'
+    | '/preview'
+    | '/review'
+    | '/search'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/arrival' | '/device' | '/mode' | '/post' | '/preview' | '/review'
+  to:
+    | '/'
+    | '/arrival'
+    | '/device'
+    | '/mode'
+    | '/phone-countdown'
+    | '/phone-finish'
+    | '/phone-setup'
+    | '/post'
+    | '/preview'
+    | '/review'
+    | '/search'
   id:
     | '__root__'
     | '/'
     | '/arrival'
     | '/device'
     | '/mode'
+    | '/phone-countdown'
+    | '/phone-finish'
+    | '/phone-setup'
     | '/post'
     | '/preview'
     | '/review'
+    | '/search'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -103,13 +164,24 @@ export interface RootRouteChildren {
   ArrivalRoute: typeof ArrivalRoute
   DeviceRoute: typeof DeviceRoute
   ModeRoute: typeof ModeRoute
+  PhoneCountdownRoute: typeof PhoneCountdownRoute
+  PhoneFinishRoute: typeof PhoneFinishRoute
+  PhoneSetupRoute: typeof PhoneSetupRoute
   PostRoute: typeof PostRoute
   PreviewRoute: typeof PreviewRoute
   ReviewRoute: typeof ReviewRoute
+  SearchRoute: typeof SearchRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/search': {
+      id: '/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/review': {
       id: '/review'
       path: '/review'
@@ -129,6 +201,27 @@ declare module '@tanstack/react-router' {
       path: '/post'
       fullPath: '/post'
       preLoaderRoute: typeof PostRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/phone-setup': {
+      id: '/phone-setup'
+      path: '/phone-setup'
+      fullPath: '/phone-setup'
+      preLoaderRoute: typeof PhoneSetupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/phone-finish': {
+      id: '/phone-finish'
+      path: '/phone-finish'
+      fullPath: '/phone-finish'
+      preLoaderRoute: typeof PhoneFinishRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/phone-countdown': {
+      id: '/phone-countdown'
+      path: '/phone-countdown'
+      fullPath: '/phone-countdown'
+      preLoaderRoute: typeof PhoneCountdownRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/mode': {
@@ -167,9 +260,13 @@ const rootRouteChildren: RootRouteChildren = {
   ArrivalRoute: ArrivalRoute,
   DeviceRoute: DeviceRoute,
   ModeRoute: ModeRoute,
+  PhoneCountdownRoute: PhoneCountdownRoute,
+  PhoneFinishRoute: PhoneFinishRoute,
+  PhoneSetupRoute: PhoneSetupRoute,
   PostRoute: PostRoute,
   PreviewRoute: PreviewRoute,
   ReviewRoute: ReviewRoute,
+  SearchRoute: SearchRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

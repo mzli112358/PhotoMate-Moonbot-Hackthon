@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import asyncio
 from contextlib import asynccontextmanager
@@ -9,8 +9,6 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 from app.config import resolve_settings
-from app.docs_service import catalog as docs_catalog
-from app.docs_service import load_document
 from app.map_loader import build_map_payload, clear_map_cache
 from app.perception import PerceptionConfig
 from app.robot import RobotBridge
@@ -52,7 +50,7 @@ task_agent = PhotoMateFSM(
     on_start_patrol=lambda: robot_bridge.start_patrol(loop=True),
     on_stop_patrol=robot_bridge.stop_patrol,
     on_navigate=lambda sid: robot_bridge.navigate_to_spot(sid),
-    on_speak=lambda text: None,  # 7/9 接 TTS
+    on_speak=lambda text: None,  # 7/9 鎺?TTS
 )
 
 robot_bridge.set_on_arrived(task_agent.on_navigation_arrived)
@@ -66,10 +64,10 @@ async def lifespan(_: FastAPI):
 
 app = FastAPI(
     title="PhotoMate",
-    description="拍照机器人控制台",
+    description="鎷嶇収鏈哄櫒浜烘帶鍒跺彴",
     version="0.1.0",
     lifespan=lifespan,
-    # 嘉宾文档页占用 /docs；Swagger 改到 /api/swagger
+    # 鍢夊鏂囨。椤靛崰鐢?/docs锛汼wagger 鏀瑰埌 /api/swagger
     docs_url="/api/swagger",
     redoc_url="/api/redoc",
     openapi_url="/api/openapi.json",
@@ -125,7 +123,7 @@ def navigation_go(body: NavigateRequest) -> TaskOut:
 def navigation_stop() -> TaskOut:
     robot_bridge.stop_patrol()
     robot_bridge.stop_navigation()
-    return TaskOut(ok=True, message="已发送停止")
+    return TaskOut(ok=True, message="navigation stopped")
 
 
 @app.post("/api/navigation/patrol/start", response_model=TaskOut)
@@ -139,7 +137,7 @@ def patrol_start(body: PatrolRequest) -> TaskOut:
 @app.post("/api/navigation/patrol/stop", response_model=TaskOut)
 def patrol_stop() -> TaskOut:
     robot_bridge.stop_patrol()
-    return TaskOut(ok=True, message="巡航已停止")
+    return TaskOut(ok=True, message="patrol stopped")
 
 
 @app.post("/api/navigation/through", response_model=TaskOut)
@@ -220,38 +218,20 @@ async def ws_pose(websocket: WebSocket) -> None:
         return
 
 
-@app.get("/api/docs/catalog")
-def get_docs_catalog() -> list:
-    return docs_catalog()
-
-
-@app.get("/api/docs/{doc_id}")
-def get_doc(doc_id: str) -> dict:
-    try:
-        return load_document(doc_id)
-    except KeyError as exc:
-        raise HTTPException(status_code=404, detail="文档不存在") from exc
-    except FileNotFoundError as exc:
-        raise HTTPException(status_code=404, detail="源文件缺失") from exc
-
-
-@app.get("/docs")
-def docs_page() -> FileResponse:
-    return FileResponse(WEBS_DIR / "docs.html")
-
-
 @app.get("/flow")
 @app.get("/flow/")
 def flow_page() -> FileResponse:
     return FileResponse(WEBS_DIR / "flow" / "index.html")
 
 
+@app.get("/favicon.ico")
 @app.get("/flow/favicon.ico")
 def flow_favicon() -> FileResponse:
     return FileResponse(WEBS_DIR / "flow" / "favicon.ico")
 
 
 app.mount("/flow/assets", StaticFiles(directory=WEBS_DIR / "flow" / "assets"), name="flow-assets")
+app.mount("/assets", StaticFiles(directory=WEBS_DIR / "flow" / "assets"), name="assets")
 
 
 @app.get("/flow/{path:path}")
@@ -261,7 +241,5 @@ def flow_spa_page(path: str) -> FileResponse:
 
 @app.get("/")
 def index() -> FileResponse:
-    return FileResponse(WEBS_DIR / "index.html")
+    return FileResponse(WEBS_DIR / "flow" / "index.html")
 
-
-app.mount("/assets", StaticFiles(directory=WEBS_DIR), name="assets")

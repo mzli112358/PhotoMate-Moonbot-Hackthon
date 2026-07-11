@@ -196,7 +196,7 @@ class FunctionCallDispatcher:
         context.progress = progress
         context.last_visual_observation = str(args.get("visual_observation") or "")
         context.last_user_feedback_summary = str(args.get("user_feedback_summary") or "")
-        context.last_guidance_intent = raw_intent
+        context.note_intent(raw_intent)
         context.revision += 1
         context.processed_call_ids.add(call.call_id)
         return {

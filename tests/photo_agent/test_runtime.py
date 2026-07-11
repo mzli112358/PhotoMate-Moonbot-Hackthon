@@ -714,6 +714,73 @@ async def test_audio_loop_waits_until_omni_session_exists() -> None:
 
 
 @pytest.mark.asyncio
+async def test_audio_loop_routes_chunks_through_echo_canceller() -> None:
+    class Microphone:
+        def read_chunk(self) -> bytes:
+            return b"raw-mic"
+
+    class StubCanceller:
+        def __init__(self, ret: bytes) -> None:
+            self.ret = ret
+            self.seen: list[bytes] = []
+
+        def process_capture(self, pcm: bytes) -> bytes:
+            self.seen.append(pcm)
+            return self.ret
+
+    omni = MockOmni()
+    fsm = PhotoAgentFSM(
+        wake_detector=MockWakeDetector([]),
+        omni=omni,
+        camera=MockCamera(captures=[]),
+        quality_checker=MockQualityChecker([QualityResult(True, True, True)]),
+        delivery=MockDelivery(results=[DeliveryResult("p", "http://local/p", True)]),
+    )
+    fsm.context.session_id = "session-1"
+
+    canceller = StubCanceller(ret=b"clean-mic")
+    runtime = PhotoAgentRuntime(fsm, microphone=Microphone(), echo_canceller=canceller)
+    task = asyncio.create_task(runtime._audio_loop())
+    await asyncio.sleep(0.05)
+    runtime.stop()
+    await task
+
+    assert canceller.seen and canceller.seen[0] == b"raw-mic"
+    # MockOmni records append_audio as the byte length of the (cleaned) chunk.
+    appended = [value for name, value in omni.calls if name == "append_audio"]
+    assert appended and appended[0] == len(b"clean-mic")
+
+
+@pytest.mark.asyncio
+async def test_audio_loop_skips_append_when_echo_canceller_gates_chunk() -> None:
+    class Microphone:
+        def read_chunk(self) -> bytes:
+            return b"raw-mic"
+
+    class GatingCanceller:
+        def process_capture(self, pcm: bytes) -> bytes:
+            return b""
+
+    omni = MockOmni()
+    fsm = PhotoAgentFSM(
+        wake_detector=MockWakeDetector([]),
+        omni=omni,
+        camera=MockCamera(captures=[]),
+        quality_checker=MockQualityChecker([QualityResult(True, True, True)]),
+        delivery=MockDelivery(results=[DeliveryResult("p", "http://local/p", True)]),
+    )
+    fsm.context.session_id = "session-1"
+
+    runtime = PhotoAgentRuntime(fsm, microphone=Microphone(), echo_canceller=GatingCanceller())
+    task = asyncio.create_task(runtime._audio_loop())
+    await asyncio.sleep(0.05)
+    runtime.stop()
+    await task
+
+    assert omni.count("append_audio") == 0
+
+
+@pytest.mark.asyncio
 async def test_audio_loop_recovers_after_transient_device_error() -> None:
     class Microphone:
         reads = 0

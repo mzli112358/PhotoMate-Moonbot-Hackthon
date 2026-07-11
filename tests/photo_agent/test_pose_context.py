@@ -21,6 +21,32 @@ def build_dispatcher() -> tuple[FunctionCallDispatcher, PhotoAgentFSM]:
     return FunctionCallDispatcher(fsm), fsm
 
 
+def test_pose_context_keeps_rolling_history_for_dedup() -> None:
+    ctx = PoseContext()
+    # More than the retained window so we can prove it caps rather than growing.
+    for i in range(8):
+        ctx.note_spoken(f"说的话{i}")
+        ctx.note_intent(f"意图{i}")
+
+    assert len(ctx.recent_spoken) == PoseContext._HISTORY_KEEP
+    assert len(ctx.recent_intents) == PoseContext._HISTORY_KEEP
+    # Newest entries are retained; oldest are dropped.
+    assert ctx.recent_spoken[-1] == "说的话7"
+    assert ctx.recent_spoken[0] == "说的话2"
+    assert ctx.last_spoken_text == "说的话7"
+    assert ctx.last_guidance_intent == "意图7"
+
+    # Blank / whitespace lines are ignored so they cannot dilute the window.
+    ctx.note_spoken("   ")
+    assert ctx.recent_spoken[-1] == "说的话7"
+
+    # The prompt snapshot must expose the whole window, not just the last line.
+    snapshot = ctx.snapshot_for_prompt()
+    assert "recent_spoken" in snapshot
+    assert "recent_intents" in snapshot
+    assert "说的话2" in snapshot
+
+
 def test_s2_intent_tools_are_phase_gated() -> None:
     dispatcher, fsm = build_dispatcher()
     fsm.context.state = State.ASK_INTENT

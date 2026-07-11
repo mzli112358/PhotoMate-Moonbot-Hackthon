@@ -236,7 +236,7 @@ class PhotoAgentFSM:
             turn.tool_result_received = True
             turn.pending_capture = True
             if self.context.pose_context is not None:
-                self.context.pose_context.last_guidance_intent = "动作很好，我开拍啦！"
+                self.context.pose_context.note_intent("动作很好，我开拍啦！")
             return
         if turn is not None and turn.phase == "capturing":
             LOGGER.warning(
@@ -451,7 +451,7 @@ class PhotoAgentFSM:
         pose = self.context.pose_context
         if turn is None or turn.phase != "speaking" or pose is None:
             return
-        pose.last_spoken_text = text
+        pose.note_spoken(text)
         pose.logical_turn += 1
         if not self.guidance_limit_reached:
             self.context.guidance_turns.append(GuidanceTurn(time.time(), turn.source, text))
@@ -581,6 +581,12 @@ class PhotoAgentFSM:
 
     async def _enter_review(self, reason: str) -> None:
         await self._enter(State.REVIEW, reason)
+        # S3's post-capture speech ran with tools=[] so the model would speak
+        # instead of calling a tool. Restore the full tool set (and VAD) now, or
+        # the user's "再来一张 / 保存" reply in S5 has no report_review_intent tool
+        # to fire and the S5→S3 / S5→S6 transition silently never happens.
+        if self.context.session_id:
+            await self.omni.configure(enable_vad=True, output_audio=True)
         shown = False
         if self.context.photo_id:
             for attempt in range(self.config.operation_retries + 1):

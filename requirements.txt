@@ -13,3 +13,8 @@ opencv-python>=4.10.0,<5
 PyAudio>=0.2.14
 # Pure-Python QR generation for photo delivery links (no system deps).
 segno>=1.6.0
+# WebRTC AEC3 acoustic echo cancellation for the realtime mic->model path.
+# Ships prebuilt wheels for macOS/Linux x86_64+arm64. On NVIDIA Jetson (older
+# glibc) build webrtc-audio-processing from source instead; the runtime falls
+# back to half-duplex mic gating if this import is unavailable.
+pywebrtc-audio>=0.1.0

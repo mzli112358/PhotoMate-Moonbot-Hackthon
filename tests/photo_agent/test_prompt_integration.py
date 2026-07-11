@@ -168,7 +168,12 @@ def test_s3_prompts_manage_pose_goals_without_composition_guidance() -> None:
     assert "禁止keep" in combined
     assert "report_pose_readiness" in combined
     assert "禁止直接调用 capture_photo" in combined
-    assert "last_guidance_intent" in combined
+    # De-dup now relies on rolling history windows, not just the last line.
+    assert "recent_spoken" in combined
+    assert "recent_intents" in combined
+    # Users may drive their own pose/scene or request an immediate capture.
+    assert "goal_action=replace" in combined
+    assert "帮我拍照" in combined
     assert "我开拍啦" in combined
     assert "capture_after_speech" in combined
     assert "不要改变" in combined

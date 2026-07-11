@@ -71,4 +71,15 @@ def load_runtime_config(
             env("PHOTOMATE_PHOTO_AGENT__SKIP_QUALITY_CHECK", cfg.get("skip_quality_check", True))
         ).lower()
         in {"1", "true", "yes", "on"},
+        aec_enabled=str(
+            env("PHOTOMATE_PHOTO_AGENT__AEC_ENABLED", cfg.get("aec_enabled", True))
+        ).lower()
+        in {"1", "true", "yes", "on"},
+        aec_gate_fallback=str(
+            env("PHOTOMATE_PHOTO_AGENT__AEC_GATE_FALLBACK", cfg.get("aec_gate_fallback", True))
+        ).lower()
+        in {"1", "true", "yes", "on"},
+        aec_stream_delay_ms=int(
+            env("PHOTOMATE_PHOTO_AGENT__AEC_STREAM_DELAY_MS", cfg.get("aec_stream_delay_ms", 120))
+        ),
     )

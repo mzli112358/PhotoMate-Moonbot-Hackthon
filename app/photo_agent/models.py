@@ -5,7 +5,7 @@ import uuid
 from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
-from typing import Any
+from typing import Any, ClassVar
 
 
 class State(str, Enum):
@@ -54,8 +54,30 @@ class PoseContext:
     last_user_feedback_summary: str = ""
     last_guidance_intent: str = ""
     last_spoken_text: str = ""
+    # Rolling windows of what was actually said / intended over the last few turns,
+    # so the model can avoid repeating ANY recent line (not just the previous one).
+    recent_spoken: list[str] = field(default_factory=list)
+    recent_intents: list[str] = field(default_factory=list)
     completion_reason: str | None = None
     processed_call_ids: set[str] = field(default_factory=set, repr=False)
+
+    _HISTORY_KEEP: ClassVar[int] = 6
+
+    def note_spoken(self, text: str) -> None:
+        text = (text or "").strip()
+        if not text:
+            return
+        self.last_spoken_text = text
+        self.recent_spoken.append(text)
+        del self.recent_spoken[: -self._HISTORY_KEEP]
+
+    def note_intent(self, text: str) -> None:
+        text = (text or "").strip()
+        if not text:
+            return
+        self.last_guidance_intent = text
+        self.recent_intents.append(text)
+        del self.recent_intents[: -self._HISTORY_KEEP]
 
     def snapshot_for_prompt(self) -> str:
         payload = {
@@ -85,6 +107,8 @@ class PoseContext:
             "last_user_feedback_summary": self.last_user_feedback_summary,
             "last_guidance_intent": self.last_guidance_intent,
             "last_spoken_text": self.last_spoken_text,
+            "recent_spoken": self.recent_spoken,
+            "recent_intents": self.recent_intents,
         }
         return json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
 

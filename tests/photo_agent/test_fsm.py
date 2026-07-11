@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections import deque
 from pathlib import Path
+from typing import Any
 
 import numpy as np
 import pytest
@@ -418,6 +419,52 @@ async def test_s5_review_routes_satisfied_retake_and_timeout() -> None:
     timeout.context.state = State.REVIEW
     await timeout.handle_timeout()
     assert timeout.context.state is State.DELIVER
+
+
+def _last_configure_tools(omni: MockOmni) -> Any:
+    for name, payload in reversed(omni.calls):
+        if name == "configure":
+            return payload["tools"]
+    return None
+
+
+@pytest.mark.asyncio
+async def test_entering_review_reenables_tools_for_retake_intent() -> None:
+    # Regression: S3 post-capture speech runs with tools=[] so the model speaks
+    # "我拍好啦" instead of calling a tool. If REVIEW does not restore the tools,
+    # the user's "再来一张" reply has no report_review_intent to fire and S5 hangs.
+    fsm, omni, _, _ = build_fsm(
+        wake_signals=[WakeSignal(True, 3.1, True), WakeSignal(True, 3.2, True)]
+    )
+    await fsm.start()
+    await fsm.poll_wake()
+    await fsm.poll_wake()
+    await fsm.handle_photo_intent("accept")
+    await fsm.handle_capture_device("insta")
+    await fsm.handle_capture_mode("photo")
+    await fsm.handle_pose_readiness("ready")
+    result, quality_ok = await fsm.run_capture_from_pose()
+    await fsm.handle_pose_capture_result(
+        {
+            "ok": result.ok,
+            "quality_ok": quality_ok,
+            "photo_id": result.photo_id,
+            "error": result.error,
+        }
+    )
+    # The post-capture speech turn disabled tools so the model would speak.
+    assert _last_configure_tools(omni) == []
+
+    await fsm.handle_pose_speech_done("我拍好啦")
+
+    assert fsm.context.state is State.REVIEW
+    # Tools + VAD must be back on, or report_review_intent can never be called.
+    assert omni.vad_enabled is True
+    assert _last_configure_tools(omni) == "default"
+
+    # With tools available again, "再来一张" advances S5 -> S3.
+    await fsm.handle_review_intent("retake")
+    assert fsm.context.state is State.POSE_GUIDANCE
 
 
 @pytest.mark.asyncio

@@ -48,6 +48,9 @@ class RuntimeConfig:
     base_url: str = "http://127.0.0.1:8000"
     guidance_interval_s: float = 5.0
     skip_quality_check: bool = True
+    aec_enabled: bool = True
+    aec_gate_fallback: bool = True
+    aec_stream_delay_ms: int = 120
 
 
 class PhotoAgentRuntime:
@@ -59,10 +62,12 @@ class PhotoAgentRuntime:
         device_info: dict[str, str] | None = None,
         fallback_notifier: object | None = None,
         prompt_source: PromptSource | None = None,
+        echo_canceller: object | None = None,
     ) -> None:
         self.fsm = fsm
         self.omni = fsm.omni
         self.microphone = microphone
+        self.echo_canceller = echo_canceller
         self.resources = resources or []
         self.device_info = device_info or {}
         if fallback_notifier is None:
@@ -327,6 +332,13 @@ class PhotoAgentRuntime:
                 if hasattr(self.omni, "vad_enabled") and not self.omni.vad_enabled:
                     await asyncio.sleep(0.05)
                     continue
+                # Strip the agent's own speaker echo before the audio reaches the
+                # server VAD; an empty result means the chunk was gated out.
+                if self.echo_canceller is not None:
+                    chunk = self.echo_canceller.process_capture(chunk)
+                    if not chunk:
+                        await asyncio.sleep(0)
+                        continue
                 await self.omni.append_audio(chunk)
                 await asyncio.sleep(0)
             except Exception as exc:  # noqa: BLE001 - live device boundary
@@ -455,6 +467,7 @@ class PhotoAgentRuntime:
                 LOGGER.warning("resource_close_failed", extra={"resource": name, "error": str(exc)})
 
         await close_sync_resource("microphone", self.microphone)
+        await close_sync_resource("echo_canceller", self.echo_canceller)
         try:
             await self.fsm.close()
         except Exception as exc:  # noqa: BLE001
@@ -630,6 +643,7 @@ def build_local_runtime(
     if not config.api_key:
         raise RuntimeError("DASHSCOPE_API_KEY is required for local-real mode")
 
+    from app.photo_agent.aec import ReferenceCapturingSink, build_echo_canceller
     from app.photo_agent.audio import (
         PyAudioMicrophone,
         PyAudioSpeaker,
@@ -676,6 +690,11 @@ def build_local_runtime(
         CONFIG_DIR / "photo_agent_prompts.yaml",
         ROOT_DIR / "data" / "photo_agent_prompt_history",
     )
+    echo_canceller = build_echo_canceller(
+        enabled=config.aec_enabled,
+        gate_fallback=config.aec_gate_fallback,
+        stream_delay_ms=config.aec_stream_delay_ms,
+    )
     omni = DashscopeOmniClient(
         OmniSettings(
             api_key=config.api_key,
@@ -683,7 +702,7 @@ def build_local_runtime(
             model=config.model,
             voice=config.voice,
         ),
-        audio_sink=speaker,
+        audio_sink=ReferenceCapturingSink(speaker, echo_canceller),
         prompt_source=prompts,
     )
     fsm = PhotoAgentFSM(
@@ -707,9 +726,11 @@ def build_local_runtime(
             "camera": str(getattr(camera, "device_name", f"camera:{config.camera_index}")),
             "microphone": str(getattr(microphone, "device_name", "default input")),
             "speaker": str(getattr(speaker, "device_name", "default output")),
+            "aec": echo_canceller.mode,
         },
         fallback_notifier=SystemFallbackNotifier(),
         prompt_source=prompts,
+        echo_canceller=echo_canceller,
     )
 
 

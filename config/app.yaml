@@ -5,12 +5,16 @@ server:
   port: 8000
 
 robot:
-  # g1 | s1；无真机时设 mock: true
+  # 真机：Galbot G1 @ galbot-echo（Orin HPU）
   model: g1
-  mock: true
+  display_name: "Galbot G1"
+  hostname: galbot-echo
+  # 真机联调设 false；开发机无机器人保持 true（或 export PHOTOMATE_MOCK=false）
+  mock: false
 
 map:
-  # 3D 点云地图（优先）：Galbot 建图为 global_cloud_cleaned.pcd，也可放 MID-360 扫描结果
+  # 3D 点云地图（优先）：Galbot 建图 global_cloud_cleaned.pcd
+  # 真机源：/var/maps/room1102/（同步 scripts/sync_map_to_dashboard.sh）
   point_cloud: data/maps/global_cloud.pcd
   z_min: 0.05
   z_max: 2.5

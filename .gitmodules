@@ -1,3 +1,6 @@
 [submodule "vendor/GalbotSDK"]
 	path = vendor/GalbotSDK
 	url = https://github.com/mzli112358/PhotoMate-Moonbot-Hackthon.git
+[submodule "vendor/linkerhand-python-sdk"]
+	path = vendor/linkerhand-python-sdk
+	url = https://github.com/linker-bot/linkerhand-python-sdk.git

@@ -49,17 +49,15 @@ class RobotBridge:
                 from galbot_sdk.s1 import GalbotNavigation, GalbotRobot
                 from galbot_sdk.s1 import ControlStatus, S1ControllerName
 
-                self._switch_controller = lambda robot: robot.switch_controller(
-                    S1ControllerName.SWERVE_CHASSIS_POSE_CTRL
-                )
+                chassis_ctrl = S1ControllerName.SWERVE_CHASSIS_POSE_CTRL
+                self._switch_controller = lambda robot, c=chassis_ctrl: robot.switch_controller(c)
                 self._control_ok = ControlStatus.SUCCESS
             else:
                 from galbot_sdk.g1 import GalbotNavigation, GalbotRobot
                 from galbot_sdk.g1 import ControlStatus, G1ControllerName
 
-                self._switch_controller = lambda robot: robot.switch_controller(
-                    G1ControllerName.SWERVE_CHASSIS_POSE_CTRL
-                )
+                chassis_ctrl = G1ControllerName.CHASSIS_POSE_CTRL
+                self._switch_controller = lambda robot, c=chassis_ctrl: robot.switch_controller(c)
                 self._control_ok = ControlStatus.SUCCESS
 
             self._galbot_robot = GalbotRobot()

@@ -178,5 +178,14 @@ SDK 通过本机 IPC 连接 `/data/galbot/bin/` 里的运控、导航服务，**
 
 ## 底盘键盘遥控（补充）
 
-腿高调好后，底盘移动同样要在 **Orin** 侧调用 `set_base_velocity` 或机载 `galbot_sdk_examples`。  
-键盘控制需 `ssh -t`（分配伪终端）。详见赛场联调时的口头备忘，或后续补 `docs/leg_height/chassis-keyboard-teleop.md`。
+腿高调好后，底盘移动同样要在 **Orin** 侧调用 `set_base_velocity` 或机载 `galbot_sdk_examples`。
+
+**Xbox 手柄遥控（已验证）** 见：[docs/teleop/xbox-chassis-teleop.md](../teleop/xbox-chassis-teleop.md)
+
+```bash
+cd ~/Documents/PhotoMate-Moonbot-Hackthon
+./scripts/run_xbox_teleop.sh              # 正常速度
+./scripts/run_xbox_teleop.sh --safe       # 慢速安全
+```
+
+键盘控制需 `ssh -t`（分配伪终端）。

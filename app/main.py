@@ -3,9 +3,10 @@
 import asyncio
 from contextlib import asynccontextmanager
 from pathlib import Path
+from typing import List
 
 from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
 from app.config import resolve_settings
@@ -84,7 +85,7 @@ def robot_status() -> RobotStatusOut:
     return RobotStatusOut(**robot_bridge.status_snapshot())
 
 
-@app.get("/api/waypoints", response_model=list[WaypointOut])
+@app.get("/api/waypoints", response_model=List[WaypointOut])
 def waypoints() -> list[WaypointOut]:
     items = []
     for spot in robot_bridge.list_spots():

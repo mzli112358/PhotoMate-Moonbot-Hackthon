@@ -75,5 +75,7 @@ source galbot_sdk/linux-x86_64-gcc940/setup.sh
 
 导航说明见 [docs/navigate/](./docs/navigate/README.md)（建图 / 定位 / SDK API，不依赖 ROS2）。
 
+Xbox 手柄底盘遥控见 [docs/teleop/](./docs/teleop/README.md)（Galbot G1 @ galbot-echo，无 ROS）。
+
 赛程与全栈执行计划见 [docs/schedule/](./docs/schedule/README.md)（计划书全部模块，7/11 傍晚前搞定）。
 

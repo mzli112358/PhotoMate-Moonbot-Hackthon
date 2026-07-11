@@ -33,6 +33,8 @@ class MapConfig(BaseModel):
 
 class RobotConfig(BaseModel):
     model: str = "g1"
+    hostname: str = ""
+    display_name: str = "Galbot G1"
     mock: bool = True
 
 

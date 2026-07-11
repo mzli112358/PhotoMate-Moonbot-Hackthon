@@ -4,13 +4,13 @@
 
 - 本仓库的照片 Agent V0 目标：在本地电脑跑通 S1–S6，即意图检测、询问、姿态引导、拍照与质检、复核、照片链接交付。
 - 软件工程师负责 S1–S6；S0、机器人导航、机械臂与 GalbotSDK 不在本任务内，不修改队友的机器人代码。
-- 状态链固定为 `S0 IDLE -> S1 DETECT_INTENT -> S2 ASK_INTENT -> S3 POSE_GUIDANCE -> S4 SHOOT -> S5 REVIEW -> S6 DELIVER -> S0`，S4 质检失败与 S5 不满意可回 S3。
+- 状态链固定为 `S0 IDLE -> S1 DETECT_INTENT -> S2 ASK_INTENT -> S3 POSE_GUIDANCE -> S5 REVIEW -> S6 DELIVER -> S0`；S3 拍照质检失败与 S5 不满意可回 S3。
 
 ## 职责边界
 
 - Omni：看、听、说、理解意图、返回工具调用；不是状态机，也不承担精确计时。
 - 编排层：显式状态、SessionContext、超时、interval、重试、转移、资源释放。
-- 本地 CV：S1 人体/停留/朝向与 S4 拍后质检。
+- Demo 当前默认跳过拍后质检（`skip_quality_check: true`）；恢复 OpenCV 质检时设为 `false` 或 `PHOTOMATE_PHOTO_AGENT__SKIP_QUALITY_CHECK=0`。
 - CameraAdapter：V0 用普通电脑摄像头取流并保存当前帧；Insta360 仅预留适配器。
 - DeliveryAdapter/FastAPI：保存照片、稳定 `photo_id`、可访问 `photo_url`；二维码 UI 与下载页由前端负责。
 - V0 `mock` 使用 fixture；`local-real` 使用本机摄像头/麦克风/扬声器和真实 Omni；`hardware-real` 只保留配置与接口，不假装已接入 Jetson/Insta360/Galbot。
@@ -34,7 +34,7 @@
 
 - 新功能严格 TDD：先写一个会因缺失行为而失败的测试，确认失败原因，再做最小实现，最后重构并跑全量回归。
 - 每个 S1–S6 状态都覆盖正常、转移、超时、异常、重试、调用顺序、资源释放与结构化日志。
-- 必须覆盖完整 happy path、S4 质检回环、S5 重拍回环、S6 失败仍复位，以及无任务/句柄/会话泄漏。
+- 必须覆盖完整 happy path、S3 质检回环、S5 重拍回环、S6 失败仍复位，以及无任务/句柄/会话泄漏。
 - 自动化测试：`python -m pytest -q`。
 - mock 完整链：`python -m app.photo_agent.cli --mode mock`。
 - local-real：`python -m app.photo_agent.cli --mode local-real`；运行前先执行独立设备与 Omni smoke tests。

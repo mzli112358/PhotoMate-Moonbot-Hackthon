@@ -166,7 +166,7 @@ flowchart LR
 | ----------------- | ---------------------------------------------------------------- | ------------------- |
 | `omni_recv_loop`  | 持续读取 Omni WS 事件（audio / text / function_call / vad 事件），投递到内部事件队列 | 会话建立 → 关闭           |
 | `frame_feed_loop` | 从 `CameraAdapter` 取帧，按 ~1fps `input_image_buffer.append` 喂给 Omni | S2 起（发过开场音频后）→ 会话关闭 |
-| `guidance_timer`  | 仅在 S3 激活；每 T 秒（4~6s）在空闲时发 `response.create` 触发一句引导               | 进入 S3 → 离开 S3       |
+| `guidance_timer`  | 仅在 S3 激活；上一个完整双响应回合结束 T 秒后，触发下一次“结构化判断→语音引导”              | 进入 S3 → 离开 S3       |
 | `fsm_main`        | 消费内部事件、执行状态转移、调度 function call 分发                                | 全程                  |
 
 
@@ -197,7 +197,7 @@ flowchart LR
 - 目标：让用户放松、笑出来、拍出好照片。
 - 风格：短句、口语、有梗、不啰嗦；**每轮只说 1~2 句**。
 - 工具：`capture_photo` / `show_on_screen` / `generate_download_qr` / `end_session`。
-- 约束：构图只做**粗**引导（"往中间站一点""笑一个"），不纠结精度。
+- 约束：S3 只负责互动姿势与情绪价值，不指导站位、取景或构图；基础构图由 Insta360 AI 追踪负责。
 
 **模型选型（已核实）：**
 
@@ -218,8 +218,8 @@ flowchart LR
 
 v1 的核心交互设计，用于规避「连续流式纠正」的啰嗦/摇摆/延迟问题。
 
-- 在 **S3 拍照引导**，`guidance_timer` 每 **T 秒（建议 4~6s）** 在空闲时发一次 `response.create`：Omni 看当前帧 → 说**一句**引导 / 情绪价值话术。
-- 用户可**随时语音打断**（VAD），说"OK 这个位置就行"/"帮我拍个跳起来的" → Omni 理解意图 → 决定拍照或调整。
+- 在 **S3 拍照引导**，每个 interval 是一个双响应逻辑回合：Omni 先看当前帧并以 text-only Function Call 更新本地 PoseContext，再根据已保存的引导意图说一句话；两个 response 只计一轮。
+- Pose 目标由 Omni 自由创建并默认持续；用户说“换一个动作”或目标不可执行时才替换。用户可随时 VAD 打断，VAD 回合也通过 `report_pose_turn` 更新显式目标。
 - 并发控制见 B2（`response_in_flight` 闸门 + VAD 优先 `response.cancel`）。
 
 ```mermaid
@@ -235,7 +235,7 @@ stateDiagram-v2
 
 
 
-> B11 实测结论（2026-07-10）：VAD 开启时可主动 `response.create`，但不能手动 `commit`（服务端会自动 commit）。S3 因此使用 VAD + 主动响应；独立 smoke 使用 Manual 模式验证 `commit + response.create`。
+> B11 实测结论（2026-07-11）：VAD 开启时不能手动 `commit`；S3 interval 因此切到 Manual，提交当前帧后先运行 text-only assessment，再运行 audio speech。语音结束后恢复 text-only VAD。Realtime 工具 schema 使用扁平基础字段，动态 Context 通过每轮 instructions 注入。
 
 
 
@@ -276,19 +276,20 @@ flowchart TD
 ### S2 · 询问是否拍照 ASK_INTENT（模式：Event 首句 + VAD 听回答）
 
 - **触发/输入**：进入即由编排层 `response.create` 触发首句；随后监听用户语音（VAD）。
-- **行为**：Omni 主动开口："嗨～需要我帮你拍张照吗？"
+- **行为**：Omni 主动开口："嗨～需要我帮你拍张照吗？"；Omni 直接理解原始音频，不启用输入音频转写，也不接入独立 ASR。
 - **转移**：意向"是" → S3；意向"否" → 友好回应 → 关闭会话 → S0。
-- **涉及接口**：`OmniClient.create_response()`；VAD 事件。
+- **涉及接口**：`OmniClient.create_response()`；VAD 事件；`report_photo_intent(decision="accept"|"deny")`。
 - **异常兜底**：超时无回应 → 补一句；再无回应 → 关会话回 S0。
 
 
 
 ### S3 · 拍照引导 POSE_GUIDANCE（模式：Interval 主动 + VAD 打断）★核心
 
-- **触发/输入**：`guidance_timer` 每 T 秒空闲触发；用户可随时 VAD 打断。
-- **行为**：提供情绪价值（逗趣/鼓励）+ **粗** pose 引导（"往中间站一点""比个耶"）。基础构图由 Insta360 AI 追踪自动完成。
-- **转移（→ S4）**：满足任一——用户明确表示可以拍（"OK/好了/拍吧"）；或 Omni 粗判达标且已引导数轮。
-- **涉及接口**：`frame_feed_loop`（喂帧）；`OmniClient.create_response()` / `cancel_response()`；VAD 事件。
+- **触发/输入**：上一个完整语音回合结束 T 秒后触发；用户可在 text-only VAD 窗口打断或要求换目标。
+- **行为**：assessment response 根据当前帧和本地 PoseContext 调 `report_pose_turn(create|keep|replace|complete)`；本地保存成功后，speech response 才生成情绪价值与动作引导。下一轮显式回传目标、进度、上轮观察和实际 transcript。
+- **职责边界**：Omni 自由选择并维护可观察的静态 pose，但不指导站位、取景或构图；基础构图由 Insta360 AI 追踪自动完成。
+- **转移（→ S4）**：`report_pose_turn(complete)` 表示当前目标已达成，或用户明确要求现在拍摄；确认语音结束后进入 S4。
+- **涉及接口**：`frame_feed_loop`；Manual `commit`；text/audio `create_response()`；`report_pose_turn`；`cancel_response()`；VAD 事件。
 - **异常兜底**：引导超过上限轮次仍未达标 → 主动收敛（"那我先拍一张？"）；喂帧中断 → 降级为纯语音引导并告警。
 
 
@@ -307,9 +308,9 @@ flowchart TD
 ### S5 · 展示与满意度复核 REVIEW（模式：function call + VAD）
 
 - **触发/输入**：由 S4 转入。
-- **行为**：`function_call: show_on_screen(photo_id)` → 前端外接屏显示；Omni 语音询问"这张怎么样？满意吗？"（可把照片回喂 Omni 一起点评）。
+- **行为**：`function_call: show_on_screen(photo_id)` → 前端外接屏显示；Omni 语音询问"这张怎么样？满意吗？"，并直接根据用户原始音频判断满意或重拍（可把照片回喂 Omni 一起点评）。
 - **转移**：满意 → S6；不满意/重拍 → 回 S3。
-- **涉及接口**：`show_on_screen`（B7）；`DeliveryAdapter.show(photo_id)`；VAD 事件。
+- **涉及接口**：`show_on_screen`（B7）；`DeliveryAdapter.show(photo_id)`；VAD 事件；`report_review_intent(decision="accept"|"retake")`。
 - **异常兜底**：屏幕展示失败 → 语音兜底描述并重试；超时无回应 → 默认视为满意进入 S6（避免卡死）。
 
 
@@ -364,7 +365,7 @@ class SessionContext:
 
     # 计时/配额
     session_started_at: float = 0.0
-    guidance_interval_s: float = 5.0
+    guidance_interval_s: float = 8.0
     max_guidance_turns: int = 8
     max_retake: int = 2
 
@@ -590,8 +591,8 @@ sequenceDiagram
 ### S2 询问是否拍照
 
 - **目标**：进入即主动首句；正确解析 是/否/超时。
-- **mock**：`OmniClient`（可注入 VAD 结果与用户文本）。
-- **输入序列**：分别注入"要/好啊"、"不用了"、无回应超时。
+- **mock**：`OmniClient`（可注入 VAD 与 Function Call 事件，不注入 ASR 文本）。
+- **输入序列**：分别注入 `report_photo_intent(accept)`、`report_photo_intent(deny)`、无回应超时。
 - **期望/断言**："是"→S3；"否"→`end_session` 后回 S0；超时→补问一次后回 S0。
 
 
@@ -643,7 +644,7 @@ sequenceDiagram
 
 | 维度   | 要求                                      |
 | ---- | --------------------------------------- |
-| 延迟   | 语音回复端到端目标 < 1.5s；interval 引导间隔 4~6s     |
+| 延迟   | 语音回复端到端目标 < 1.5s；manual interval 引导间隔 8s |
 | 稳定性  | 断网兜底：切预录话术 / 本地模型；关键动作（拍照）失败要有重试与语音提示   |
 | 会话管理 | 每用户一会话，服务结束即关；监控 120 分钟上限，接近时优雅重建       |
 | 隐私   | 照片默认本地处理；用户下载后可删；不做未授权云存储/训练；话术中明示      |

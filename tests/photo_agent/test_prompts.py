@@ -90,12 +90,12 @@ def test_history_is_bounded_and_rollback_creates_a_new_version(tmp_path: Path) -
 def test_render_requires_declared_template_values(tmp_path: Path) -> None:
     registry = make_registry(tmp_path)
 
-    assert registry.render("action.S4.quality_failed", quality_reason="闭眼") == (
+    assert registry.render("action.S3.quality_failed", quality_reason="闭眼") == (
         "照片质检未通过：闭眼，请简短提示重拍。"
     )
 
     with pytest.raises(PromptValidationError, match="missing template value"):
-        registry.render("action.S4.quality_failed")
+        registry.render("action.S3.quality_failed")
 
 
 def test_diff_reports_only_changed_prompt_values(tmp_path: Path) -> None:

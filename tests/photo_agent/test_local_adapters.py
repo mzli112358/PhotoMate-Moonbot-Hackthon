@@ -6,7 +6,16 @@ import cv2
 import numpy as np
 import pytest
 
-from app.photo_agent.camera import FaceWakeDetector, OpenCVCamera, OpenCVQualityChecker, encode_frame
+from app.photo_agent.camera import (
+    FaceWakeDetector,
+    OpenCVCamera,
+    OpenCVQualityChecker,
+    detect_faces,
+    encode_frame,
+    is_face_facing,
+    merge_face_boxes,
+    rotate_frame,
+)
 from app.photo_agent.delivery import FileDeliveryAdapter, PhotoStore
 
 
@@ -29,6 +38,31 @@ class FakeCapture:
 
     def getBackendName(self) -> str:  # noqa: N802 - OpenCV API
         return "FAKE"
+
+
+def test_rotate_frame_clockwise_makes_portrait_landscape() -> None:
+    frame = np.zeros((1080, 1920, 3), dtype=np.uint8)
+    frame[100, 100] = (255, 0, 0)
+
+    rotated = rotate_frame(frame, 90)
+
+    assert rotated.shape == (1920, 1080, 3)
+    assert rotated[100, 979][0] == 255
+
+
+@pytest.mark.asyncio
+async def test_camera_applies_rotation_on_read(tmp_path: Path) -> None:
+    frame = np.zeros((1080, 1920, 3), dtype=np.uint8)
+    frame[200, 300] = (0, 255, 0)
+    fake = FakeCapture([frame])
+    camera = OpenCVCamera(0, tmp_path, capture_factory=lambda _: fake, rotation_deg=90)
+    camera.open()
+
+    loaded = await camera.get_frame()
+
+    assert loaded.shape == (1920, 1080, 3)
+    assert loaded[300, 879][1] == 255
+    await camera.close()
 
 
 @pytest.mark.asyncio
@@ -63,6 +97,55 @@ def test_encode_frame_obeys_realtime_image_limit() -> None:
 
     assert encoded is not None
     assert len(encoded) <= 256 * 1024
+
+
+def test_detect_faces_maps_downscaled_boxes_to_original_frame() -> None:
+    frame = np.zeros((1080, 1920, 3), dtype=np.uint8)
+
+    faces = detect_faces(
+        frame,
+        face_detector=lambda gray: [(160, 90, 40, 50)],
+        detect_width=640,
+    )
+
+    assert faces == [(480, 270, 120, 150)]
+
+
+def test_merge_face_boxes_collapses_duplicate_cascade_hits() -> None:
+    merged = merge_face_boxes([(100, 100, 80, 80), (110, 108, 70, 72), (400, 200, 60, 60)])
+
+    assert merged == [(100, 100, 80, 80), (400, 200, 60, 60)]
+
+
+def test_is_face_facing_accepts_large_offcenter_face() -> None:
+    assert is_face_facing(1920, 1180.0, 200.0, 220.0, 220.0) is True
+
+
+@pytest.mark.asyncio
+async def test_wake_detector_tolerates_brief_misses_without_resetting_dwell(tmp_path: Path) -> None:
+    frame = np.ones((10, 10, 3), dtype=np.uint8)
+    camera = OpenCVCamera(0, tmp_path, capture_factory=lambda _: FakeCapture([frame]))
+    now = iter([10.0, 11.0, 12.0, 12.1, 13.5])
+    face_reads = iter([[(1, 1, 4, 4)], [(1, 1, 4, 4)], [], [(1, 1, 4, 4)], [(1, 1, 4, 4)]])
+    detector = FaceWakeDetector(
+        camera,
+        face_detector=lambda gray: next(face_reads, []),
+        clock=lambda: next(now),
+        miss_reset_after=3,
+    )
+
+    first = await detector.poll()
+    second = await detector.poll()
+    third = await detector.poll()
+    fourth = await detector.poll()
+    fifth = await detector.poll()
+
+    assert first.person_present is True and first.dwell_seconds == 0
+    assert second.dwell_seconds == 1.0
+    assert third.dwell_seconds == 2.0
+    assert fourth.person_present is True and fourth.dwell_seconds == pytest.approx(2.1)
+    assert fifth.is_awake(3.0) is True
+    await camera.close()
 
 
 @pytest.mark.asyncio

@@ -20,8 +20,7 @@ from app.photo_agent.server import PhotoApiServer  # noqa: E402
 INSTRUCTIONS = {
     "S1": "面向摄像头停留约三秒；短暂停留或侧身不应唤醒。",
     "S2": "分别回答‘要’、‘不用’和保持沉默。",
-    "S3": "保持安静观察约五秒一次引导，再说‘可以拍了’打断。",
-    "S4": "分别正常睁眼、故意闭眼、快速移动，观察保存与质检回环。",
+    "S3": "保持安静观察引导；达标或说‘可以拍了’后应 capture_photo 并听到「我拍好啦」。",
     "S5": "分别回答‘满意’和‘不满意’，确认 S6/S3 分流。",
     "S6": "打开输出 photo_url，确认照片正确且会话复位。",
 }
@@ -29,8 +28,7 @@ INSTRUCTIONS = {
 EXPECTED = {
     "S1": "满足停留与朝向条件后只建一次会话并进入 S2；不满足时保持 S1。",
     "S2": "回答要进入 S3；回答不用或两次沉默超时回到 S0。",
-    "S3": "约五秒一句且不叠话；语音打断后说可以拍了进入 S4。",
-    "S4": "倒数结束后保存照片并质检；成功进 S5，失败按上限回 S3。",
+    "S3": "约十秒一次评估引导；达标或用户确认后在 S3 内拍照并播报「我拍好啦」，然后进入 S5。",
     "S5": "显示本次照片；满意进 S6，不满意回 S3，且沿用同一会话。",
     "S6": "生成可访问 photo_url，结束会话并复位到 S0。",
 }
@@ -71,7 +69,7 @@ async def run(args: argparse.Namespace) -> int:
 
 def main() -> int:
     configure_json_logging()
-    parser = argparse.ArgumentParser(description="S1-S6 manual acceptance entry")
+    parser = argparse.ArgumentParser(description="S1-S6 manual acceptance entry (S4 removed; capture in S3)")
     parser.add_argument("--state", choices=tuple(INSTRUCTIONS), required=True)
     parser.add_argument("--mode", choices=("mock", "local-real"), default="mock")
     return asyncio.run(run(parser.parse_args()))

@@ -16,6 +16,7 @@ from typing import Any, AsyncIterator, Callable
 import cv2
 import numpy as np
 
+from app.photo_agent.camera import detect_faces
 from app.photo_agent.prompts import PromptRegistry
 from app.photo_agent.observability import JsonFormatter
 from app.photo_agent.runtime import RuntimeConfig
@@ -45,6 +46,9 @@ def annotate_preview(
         0.55, (102, 225, 220), 1, cv2.LINE_AA,
     )
     return annotated
+
+
+PREVIEW_FRAME_INTERVAL_S = 1 / 15
 
 
 class TestControllerError(RuntimeError):
@@ -148,7 +152,7 @@ class _BrowserLogHandler(logging.Handler):
 
 
 class PhotoAgentTestController:
-    VALID_STATES = {f"S{index}" for index in range(1, 7)}
+    VALID_STATES = {"S1", "S2", "S3", "S5", "S6"}
 
     def __init__(
         self,
@@ -166,15 +170,6 @@ class PhotoAgentTestController:
         self.runtime_builder = runtime_builder
         self.events = event_hub or EventHub()
         if face_detector is None:
-            cascade = cv2.CascadeClassifier(
-                str(Path(cv2.data.haarcascades) / "haarcascade_frontalface_default.xml")
-            )
-
-            def detect_faces(gray: np.ndarray) -> Any:
-                return cascade.detectMultiScale(
-                    gray, scaleFactor=1.1, minNeighbors=5, minSize=(40, 40)
-                )
-
             face_detector = detect_faces
         self.face_detector = face_detector
         self._lock = asyncio.Lock()
@@ -321,7 +316,22 @@ class PhotoAgentTestController:
 
     async def preview_jpeg(self) -> bytes:
         camera = getattr(getattr(self._runtime, "fsm", None), "camera", None)
-        frame = camera.latest_frame() if camera is not None and hasattr(camera, "latest_frame") else None
+        runtime_state = self.status().get("runtime_state")
+        frame = None
+        if camera is not None and self._runtime is not None:
+            get_frame = getattr(camera, "get_frame", None)
+            latest_frame = getattr(camera, "latest_frame", None)
+            try:
+                if runtime_state != "S1" and callable(get_frame):
+                    frame = await get_frame()
+                elif callable(latest_frame):
+                    frame = latest_frame()
+                    if frame is None and callable(get_frame):
+                        frame = await get_frame()
+                elif callable(get_frame):
+                    frame = await get_frame()
+            except Exception:
+                frame = latest_frame() if callable(latest_frame) else None
         if frame is None:
             frame = np.zeros((360, 640, 3), dtype=np.uint8)
             cv2.putText(
@@ -335,9 +345,13 @@ class PhotoAgentTestController:
                 cv2.LINE_AA,
             )
         else:
-            state = self.status().get("runtime_state") or "--"
-            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-            faces = [tuple(int(value) for value in face) for face in self.face_detector(gray)]
+            state = runtime_state or "--"
+            faces: list[tuple[int, int, int, int]] = []
+            if runtime_state == "S1":
+                faces = [
+                    tuple(int(value) for value in face)
+                    for face in self.face_detector(frame)
+                ]
             frame = annotate_preview(
                 frame,
                 faces=faces,

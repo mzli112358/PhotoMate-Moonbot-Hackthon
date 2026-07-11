@@ -17,14 +17,13 @@ from app.photo_agent.prompts import (
     PromptSnapshot,
     PromptValidationError,
 )
-from app.photo_agent.test_controller import TestAlreadyRunningError
+from app.photo_agent.test_controller import TestAlreadyRunningError, PREVIEW_FRAME_INTERVAL_S
 
 
 STATE_DEFINITIONS = (
     {"id": "S1", "title": "发现用户", "role": "本地视觉检测 + 启动 Omni 会话"},
     {"id": "S2", "title": "询问意愿", "role": "Omni 询问并理解用户是否想拍照"},
-    {"id": "S3", "title": "姿态引导", "role": "Omni 看画面、说引导语并听取回应"},
-    {"id": "S4", "title": "倒数拍照", "role": "Omni 倒数，本地相机拍摄与质检"},
+    {"id": "S3", "title": "姿态引导与拍照", "role": "Omni 引导姿态，达标后 capture_photo 拍照并播报"},
     {"id": "S5", "title": "照片复核", "role": "展示照片，Omni 询问是否满意"},
     {"id": "S6", "title": "交付照片", "role": "生成本地取图链接，Omni 完成交付说明"},
 )
@@ -78,6 +77,15 @@ def create_test_console_router(controller: Any) -> APIRouter:
             raise HTTPException(status_code=409, detail=str(exc)) from exc
         except ValueError as exc:
             raise HTTPException(status_code=404, detail=str(exc)) from exc
+        except OSError as exc:
+            raise HTTPException(
+                status_code=503,
+                detail=(
+                    f"音频设备不可用: {exc}。"
+                    "请清空 MIC/SPEAKER INDEX 使用自动选择，"
+                    "或确认 index 对应正确的输入/输出设备。"
+                ),
+            ) from exc
 
     @router.post("/tests/stop")
     async def stop_test(request: Request) -> dict[str, Any]:
@@ -153,7 +161,7 @@ def create_test_console_router(controller: Any) -> APIRouter:
             while not await request.is_disconnected():
                 jpeg = await controller.preview_jpeg()
                 yield b"--frame\r\nContent-Type: image/jpeg\r\n\r\n" + jpeg + b"\r\n"
-                await asyncio.sleep(0.5)
+                await asyncio.sleep(PREVIEW_FRAME_INTERVAL_S)
 
         return StreamingResponse(
             stream(), media_type="multipart/x-mixed-replace; boundary=frame"

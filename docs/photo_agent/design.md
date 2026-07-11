@@ -21,7 +21,7 @@
 1. 采用新增 `app/photo_agent/`，不改旧 `app/task_fsm.py`。理由：旧 FSM 属导航/机器人流程，同名重写会扩大队友冲突。
 2. 采用 asyncio 显式 FSM，不引入 LangGraph。理由：状态、超时、interval、重试均为确定性控制。
 3. 使用官方 DashScope SDK 包装层，而非自写完整 WebSocket 协议。理由：SDK 已覆盖会话、音画、VAD、工具调用；包装后仍可测试事件与顺序。
-4. S3 使用 VAD + 主动 `response.create`，不手动 `commit`。理由：实测确认 VAD 模式的 commit 属于服务端；客户端强制 commit 会被拒绝，但主动响应与打断可正常并存。
+4. S3 的 interval 使用 Manual 双响应逻辑回合：静音+当前帧+`commit` 后，先以 text-only response 调用 `report_pose_turn` 保存显式 PoseContext，再以 audio response 发出引导；语音结束后恢复 text-only VAD 接收用户换目标/直接拍摄。两个 response 只计一个引导回合。
 5. V0 唤醒用正脸检测+停留计时，质检用人脸/眼睛级联和拉普拉斯清晰度。理由：无需额外模型即可本地运行；精度不足处明确留给现场标定或后续 MediaPipe。
 6. S6 只生成 `photo_url`，不实现生产二维码 UI。理由：遵守当前软件/前端职责边界。
 7. 会话在 115 分钟主动回收。理由：为云端 120 分钟硬上限预留清理窗口，避免现场突然断开。

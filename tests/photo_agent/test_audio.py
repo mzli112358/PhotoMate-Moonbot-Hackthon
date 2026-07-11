@@ -1,6 +1,12 @@
 from __future__ import annotations
 
-from app.photo_agent.audio import PyAudioMicrophone, PyAudioSpeaker, list_audio_devices
+from app.photo_agent.audio import (
+    PyAudioMicrophone,
+    PyAudioSpeaker,
+    list_audio_devices,
+    resolve_audio_device_index,
+    resolve_audio_device_indices,
+)
 
 
 class FakeStream:
@@ -81,3 +87,47 @@ def test_audio_device_enumeration_is_read_only() -> None:
         {"index": 0, "name": "fake audio", "inputs": 1, "outputs": 1}
     ]
     assert module.instances[0].terminated is True
+
+
+def test_resolve_audio_device_index_rejects_wrong_channel_explicit_index() -> None:
+    devices = [
+        {"index": 1, "name": "MacBook Air麦克风", "inputs": 1, "outputs": 0},
+        {"index": 2, "name": "MacBook Air扬声器", "inputs": 0, "outputs": 2},
+        {"index": 4, "name": "Bose QC Headphones", "inputs": 0, "outputs": 2},
+    ]
+
+    assert resolve_audio_device_index("input", explicit_index=2, devices=devices) == 1
+    assert resolve_audio_device_index("output", explicit_index=3, devices=devices) == 4
+
+
+def test_resolve_audio_device_index_prefers_mac_input_and_headphones_output() -> None:
+    devices = [
+        {"index": 0, "name": "MacBook Pro Microphone", "inputs": 1, "outputs": 0},
+        {"index": 1, "name": "Bose QC Headphones", "inputs": 1, "outputs": 2},
+        {"index": 2, "name": "MacBook Pro Speakers", "inputs": 0, "outputs": 2},
+        {"index": 3, "name": "Bose QC Headphones", "inputs": 0, "outputs": 2},
+    ]
+
+    assert resolve_audio_device_index("input", devices=devices) == 0
+    assert resolve_audio_device_index("output", devices=devices) == 3
+
+
+def test_resolve_audio_device_index_honors_explicit_override() -> None:
+    devices = [
+        {"index": 0, "name": "MacBook Pro Microphone", "inputs": 1, "outputs": 0},
+        {"index": 1, "name": "Bose QC Headphones", "inputs": 0, "outputs": 2},
+    ]
+
+    assert resolve_audio_device_index("input", explicit_index=0, devices=devices) == 0
+    assert resolve_audio_device_index("output", explicit_index=1, devices=devices) == 1
+
+
+def test_resolve_audio_device_indices_returns_pair() -> None:
+    devices = [
+        {"index": 0, "name": "MacBook Pro Microphone", "inputs": 1, "outputs": 0},
+        {"index": 1, "name": "Bose QC Headphones", "inputs": 0, "outputs": 2},
+    ]
+
+    mic, speaker = resolve_audio_device_indices(devices=devices)
+    assert mic == 0
+    assert speaker == 1

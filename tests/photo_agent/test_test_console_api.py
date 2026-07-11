@@ -58,7 +58,7 @@ def test_schema_status_start_stop_and_runs(tmp_path: Path) -> None:
     stopped = client.post("/api/photo-agent/tests/stop")
 
     assert schema.status_code == 200
-    assert [item["id"] for item in schema.json()["states"]] == [f"S{i}" for i in range(1, 7)]
+    assert [item["id"] for item in schema.json()["states"]] == ["S1", "S2", "S3", "S5", "S6"]
     assert started.status_code == 200
     assert controller.started == [
         ("S2", {"camera_index": 1, "microphone_index": 2, "speaker_index": 3})

@@ -17,6 +17,19 @@ from app.photo_agent.models import CaptureResult, QualityResult, WakeSignal
 MAX_IMAGE_B64_BYTES = 256 * 1024
 
 
+def rotate_frame(frame: np.ndarray, rotation_deg: int) -> np.ndarray:
+    """Rotate a BGR frame to the configured upright orientation."""
+    if rotation_deg == 0:
+        return frame
+    if rotation_deg == 90:
+        return cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
+    if rotation_deg == 180:
+        return cv2.rotate(frame, cv2.ROTATE_180)
+    if rotation_deg == 270:
+        return cv2.rotate(frame, cv2.ROTATE_90_COUNTERCLOCKWISE)
+    raise ValueError(f"unsupported camera rotation: {rotation_deg}")
+
+
 def encode_frame(frame: np.ndarray, max_bytes: int = MAX_IMAGE_B64_BYTES) -> str | None:
     """Encode a frame for Omni while enforcing the documented Base64 limit."""
     if frame is None or not getattr(frame, "size", 0):
@@ -46,10 +59,12 @@ class OpenCVCamera:
         photo_dir: Path,
         *,
         capture_factory: Callable[[int], Any] = cv2.VideoCapture,
+        rotation_deg: int = 0,
     ) -> None:
         self.device_index = device_index
         self.photo_dir = photo_dir
         self.capture_factory = capture_factory
+        self.rotation_deg = rotation_deg
         self._capture: Any | None = None
         self._lock = asyncio.Lock()
         self._latest_frame: np.ndarray | None = None
@@ -83,6 +98,7 @@ class OpenCVCamera:
         ok, frame = self._capture.read()
         if not ok or frame is None:
             raise RuntimeError(f"camera {self.device_index} failed to read a frame")
+        frame = rotate_frame(frame, self.rotation_deg)
         self._latest_frame = frame.copy()
         return frame
 
@@ -119,8 +135,104 @@ class OpenCVCamera:
 
 
 def _default_face_detector() -> Callable[[np.ndarray], Any]:
-    cascade = cv2.CascadeClassifier(str(Path(cv2.data.haarcascades) / "haarcascade_frontalface_default.xml"))
-    return lambda gray: cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(40, 40))
+    cascade_dir = Path(cv2.data.haarcascades)
+    cascades = [
+        cv2.CascadeClassifier(str(cascade_dir / name))
+        for name in (
+            "haarcascade_frontalface_default.xml",
+            "haarcascade_frontalface_alt2.xml",
+            "haarcascade_profileface.xml",
+        )
+    ]
+
+    def detect(gray: np.ndarray) -> list[tuple[int, int, int, int]]:
+        boxes: list[tuple[int, int, int, int]] = []
+        for cascade in cascades:
+            if cascade.empty():
+                continue
+            boxes.extend(
+                tuple(int(value) for value in box)
+                for box in cascade.detectMultiScale(
+                    gray, scaleFactor=1.1, minNeighbors=3, minSize=(32, 32)
+                )
+            )
+        return boxes
+
+    return detect
+
+
+def _box_overlap(
+    left: tuple[int, int, int, int], right: tuple[int, int, int, int]
+) -> float:
+    lx, ly, lw, lh = left
+    rx, ry, rw, rh = right
+    overlap_x = max(0, min(lx + lw, rx + rw) - max(lx, rx))
+    overlap_y = max(0, min(ly + lh, ry + rh) - max(ly, ry))
+    overlap_area = overlap_x * overlap_y
+    if overlap_area == 0:
+        return 0.0
+    smaller = min(lw * lh, rw * rh)
+    return overlap_area / smaller if smaller else 0.0
+
+
+def merge_face_boxes(
+    faces: list[tuple[int, int, int, int]], *, overlap_threshold: float = 0.35
+) -> list[tuple[int, int, int, int]]:
+    """Collapse duplicate cascade hits into one stable box per guest."""
+    if not faces:
+        return []
+    ordered = sorted(faces, key=lambda face: face[2] * face[3], reverse=True)
+    merged: list[tuple[int, int, int, int]] = []
+    for candidate in ordered:
+        if any(_box_overlap(candidate, kept) >= overlap_threshold for kept in merged):
+            continue
+        merged.append(candidate)
+    return merged
+
+
+def is_face_facing(frame_width: int, x: float, y: float, width: float, height: float) -> bool:
+    """Treat a centered or large-enough face as facing the robot."""
+    if height <= 0 or width <= 0:
+        return False
+    center_x = x + width / 2
+    centered = abs(center_x - frame_width / 2) <= frame_width * 0.40
+    close_enough = (width / frame_width) >= 0.07
+    return centered or close_enough
+
+
+def _prepare_face_gray(frame: np.ndarray, detect_width: int) -> tuple[np.ndarray, float, float]:
+    """Prepare a working image for Haar detection and expose box scale factors."""
+    gray = frame if frame.ndim == 2 else cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    height, width = gray.shape[:2]
+    work = gray
+    if width > detect_width:
+        scale = detect_width / width
+        work = cv2.resize(work, (detect_width, max(1, int(height * scale))))
+    work = cv2.equalizeHist(work)
+    work_height, work_width = work.shape[:2]
+    return work, width / work_width, height / work_height
+
+
+def detect_faces(
+    frame: np.ndarray,
+    *,
+    face_detector: Callable[[np.ndarray], Any] | None = None,
+    detect_width: int = 640,
+) -> list[tuple[int, int, int, int]]:
+    """Detect faces on a stabilized working image and map boxes to original pixels."""
+    detector = face_detector or _default_face_detector()
+    gray, scale_x, scale_y = _prepare_face_gray(frame, detect_width)
+    faces: list[tuple[int, int, int, int]] = []
+    for x, y, width, height in detector(gray):
+        faces.append(
+            (
+                int(round(float(x) * scale_x)),
+                int(round(float(y) * scale_y)),
+                int(round(float(width) * scale_x)),
+                int(round(float(height) * scale_y)),
+            )
+        )
+    return merge_face_boxes(faces)
 
 
 def _default_eye_detector() -> Callable[[np.ndarray], Any]:
@@ -137,24 +249,44 @@ class FaceWakeDetector:
         *,
         face_detector: Callable[[np.ndarray], Any] | None = None,
         clock: Callable[[], float] = time.monotonic,
+        detect_width: int = 640,
+        miss_reset_after: int = 3,
     ) -> None:
         self.camera = camera
         self.face_detector = face_detector or _default_face_detector()
         self.clock = clock
+        self.detect_width = detect_width
+        self.miss_reset_after = miss_reset_after
         self._first_seen_at: float | None = None
+        self._miss_streak = 0
+        self._last_facing = False
 
     async def poll(self) -> WakeSignal:
         frame = await self.camera.get_frame()
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        faces = list(self.face_detector(gray))
+        faces = detect_faces(
+            frame,
+            face_detector=self.face_detector,
+            detect_width=self.detect_width,
+        )
         now = self.clock()
         if not faces:
-            self._first_seen_at = None
-            return WakeSignal(False, 0.0, False)
+            self._miss_streak += 1
+            if self._miss_streak >= self.miss_reset_after:
+                self._first_seen_at = None
+                self._last_facing = False
+                return WakeSignal(False, 0.0, False)
+            if self._first_seen_at is None:
+                return WakeSignal(False, 0.0, False)
+            return WakeSignal(
+                True,
+                max(0.0, now - self._first_seen_at),
+                self._last_facing,
+            )
+        self._miss_streak = 0
         largest = max(faces, key=lambda face: face[2] * face[3])
         x, y, width, height = (float(value) for value in largest)
-        center_x = x + width / 2
-        facing = abs(center_x - frame.shape[1] / 2) <= frame.shape[1] * 0.35 and height > 0
+        facing = is_face_facing(frame.shape[1], x, y, width, height)
+        self._last_facing = facing
         if not facing:
             self._first_seen_at = None
             return WakeSignal(True, 0.0, False)

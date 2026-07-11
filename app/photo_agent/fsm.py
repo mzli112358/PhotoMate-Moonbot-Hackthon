@@ -19,19 +19,20 @@ from app.photo_agent.models import (
     CaptureResult,
     DeliveryResult,
     GuidanceTurn,
+    PoseContext,
+    PoseTurnState,
     SessionContext,
     State,
-    UserIntent,
 )
 from app.photo_agent.prompts import PromptSource, StaticPromptSource
 
 LOGGER = logging.getLogger("photomate.photo_agent")
 T = TypeVar("T")
+_COACH_SILENCE_PCM = b"\x00\x00" * 1600
 
 STATE_PROMPT_KEYS = {
     State.ASK_INTENT: "state.S2",
     State.POSE_GUIDANCE: "state.S3",
-    State.SHOOT: "state.S4",
     State.REVIEW: "state.S5",
     State.DELIVER: "state.S6",
 }
@@ -45,21 +46,7 @@ class FSMConfig:
     max_guidance_turns: int = 8
     max_retake: int = 2
     operation_retries: int = 1
-
-
-def classify_user_text(text: str) -> UserIntent:
-    normalized = text.strip().lower()
-    if any(token in normalized for token in ("不满意", "重拍", "再来一张")):
-        return UserIntent.RETAKE
-    if any(token in normalized for token in ("不用", "不要", "不了", "拒绝")):
-        return UserIntent.DECLINE
-    if any(token in normalized for token in ("满意", "可以的", "挺好", "很好")):
-        return UserIntent.SATISFIED
-    if any(token in normalized for token in ("拍吧", "可以拍", "好了", "ok", "准备好")):
-        return UserIntent.READY
-    if any(token in normalized for token in ("要", "好啊", "帮我拍", "来一张", "可以")):
-        return UserIntent.ACCEPT
-    return UserIntent.UNKNOWN
+    skip_quality_check: bool = True
 
 
 class PhotoAgentFSM:
@@ -132,6 +119,18 @@ class PhotoAgentFSM:
         if self.context.state is not State.DETECT_INTENT:
             return
         signal = await self.wake_detector.poll()
+        if self.context.state is State.DETECT_INTENT and (
+            signal.person_present or self._qualified_wake_frames
+        ):
+            LOGGER.info(
+                "wake_poll",
+                extra={
+                    "person_present": signal.person_present,
+                    "facing_robot": signal.facing_robot,
+                    "dwell_seconds": round(signal.dwell_seconds, 2),
+                    "qualified_frames": self._qualified_wake_frames,
+                },
+            )
         if self._wake_rearm_required:
             self._qualified_wake_frames = 0
             if signal.person_present:
@@ -158,6 +157,9 @@ class PhotoAgentFSM:
 
     async def _enter(self, state: State, reason: str) -> None:
         self._transition(state, reason)
+        if state is State.POSE_GUIDANCE:
+            self.context.pose_context = PoseContext()
+            self.context.pose_turn = None
         prompt_key = STATE_PROMPT_KEYS.get(state)
         if prompt_key and self.context.session_id:
             await self.omni.inject_context(self.prompts.get(prompt_key))
@@ -167,24 +169,107 @@ class PhotoAgentFSM:
             raise ValueError("manual state must be S1-S6")
         await self._enter(state, "manual_acceptance")
 
-    async def handle_user_text(self, text: str) -> None:
-        intent = classify_user_text(text)
-        state = self.context.state
-        if state is State.ASK_INTENT:
-            if intent in (UserIntent.ACCEPT, UserIntent.READY):
-                self.guidance_limit_reached = False
-                await self._enter(State.POSE_GUIDANCE, "user_accepted")
-            elif intent is UserIntent.DECLINE:
-                await self._say_and_wait(self.prompts.get("action.S2.decline"))
-                await self._finish_session("user_declined")
-        elif state is State.POSE_GUIDANCE and intent in (UserIntent.READY, UserIntent.SATISFIED):
-            await self._enter(State.SHOOT, "user_ready")
-        elif state is State.REVIEW:
-            if intent is UserIntent.RETAKE:
-                self.guidance_limit_reached = False
-                await self._enter(State.POSE_GUIDANCE, "user_requested_retake")
-            elif intent in (UserIntent.SATISFIED, UserIntent.ACCEPT, UserIntent.READY):
-                await self._enter(State.DELIVER, "user_satisfied")
+    async def handle_photo_intent(self, decision: str) -> None:
+        if self.context.state is not State.ASK_INTENT:
+            raise ValueError(f"photo intent is invalid in state {self.context.state.value}")
+        if decision == "accept":
+            self.guidance_limit_reached = False
+            await self._enter(State.POSE_GUIDANCE, "user_accepted")
+            return
+        if decision == "deny":
+            await self._say_and_wait(self.prompts.get("action.S2.decline"))
+            await self._finish_session("user_declined")
+            return
+        raise ValueError(f"unsupported photo intent: {decision}")
+
+    async def handle_pose_readiness(self, decision: str) -> None:
+        if self.context.state is not State.POSE_GUIDANCE:
+            raise ValueError(f"pose readiness is invalid in state {self.context.state.value}")
+        if decision != "ready":
+            raise ValueError(f"unsupported pose readiness: {decision}")
+        turn = self.context.pose_turn
+        if turn is not None and turn.phase == "speaking":
+            LOGGER.warning(
+                "pose_readiness_ignored_during_active_turn",
+                extra={"phase": turn.phase, "session_id": self.context.session_id},
+            )
+            return
+        if turn is not None and turn.phase == "assessing":
+            # A user-VAD response reports readiness instead of report_pose_turn.
+            # Mark the assessment complete so response.done advances to capture.
+            turn.tool_result_received = True
+            turn.pending_capture = True
+            if self.context.pose_context is not None:
+                self.context.pose_context.last_guidance_intent = "动作很好，我开拍啦！"
+            return
+        if turn is not None and turn.phase == "capturing":
+            LOGGER.warning(
+                "pose_readiness_ignored_during_capture",
+                extra={"session_id": self.context.session_id},
+            )
+            return
+        await self.start_pose_capture("user_ready")
+
+    async def _configure_listening(self) -> None:
+        """S3 idle: server VAD on for barge-in, tools enabled for user-driven reports."""
+        await self.omni.configure(enable_vad=True, output_audio=True)
+
+    async def _configure_tool_turn(self) -> None:
+        """Internally-driven S3 turn (assessment/capture): VAD off so the local
+        silence+frame buffer is not polluted, tools enabled for model reports."""
+        await self.omni.configure(enable_vad=False, output_audio=True)
+
+    async def _configure_pose_speech(self) -> None:
+        """Audible S3 speech: keep session audio on but disable tools so the model speaks."""
+        await self.omni.configure(enable_vad=True, output_audio=True, tools=[])
+
+    async def retry_pose_speech(self, guidance_intent: str) -> None:
+        turn = self.context.pose_turn
+        if turn is None or turn.phase != "speaking":
+            return
+        await self._configure_pose_speech()
+        instructions = (
+            self.prompts.get("action.S3.captured")
+            if turn.post_capture_speech
+            else self.prompts.render("action.S3.speak_retry", guidance_intent=guidance_intent)
+        )
+        LOGGER.warning(
+            "s3_speech_retry",
+            extra={
+                "guidance_intent": guidance_intent,
+                "post_capture_speech": turn.post_capture_speech,
+                "session_id": self.context.session_id,
+            },
+        )
+        await self.omni.create_response(instructions, output_audio=True)
+
+    async def start_pose_capture(self, source: str) -> None:
+        """Begin in-S3 capture: model calls capture_photo, then speaks 我拍好啦."""
+        if self.context.pose_context is None:
+            self.context.pose_context = PoseContext()
+        self.context.pose_turn = PoseTurnState(
+            source=source,
+            phase="capturing",
+            pending_capture=True,
+        )
+        self.context.response_in_flight = True
+        await self._configure_tool_turn()
+        await self.omni.create_response(
+            self.prompts.get("action.S3.capture"),
+            output_audio=False,
+        )
+
+    async def handle_review_intent(self, decision: str) -> None:
+        if self.context.state is not State.REVIEW:
+            raise ValueError(f"review intent is invalid in state {self.context.state.value}")
+        if decision == "retake":
+            self.guidance_limit_reached = False
+            await self._enter(State.POSE_GUIDANCE, "user_requested_retake")
+            return
+        if decision == "accept":
+            await self._enter(State.DELIVER, "user_satisfied")
+            return
+        raise ValueError(f"unsupported review intent: {decision}")
 
     async def handle_timeout(self) -> None:
         if self.context.state is State.ASK_INTENT:
@@ -196,49 +281,183 @@ class PhotoAgentFSM:
         elif self.context.state is State.REVIEW:
             await self._enter(State.DELIVER, "review_timeout_default_accept")
 
+    async def _coach_guidance_response(self) -> None:
+        """Start a text-only assessment bound to the current camera frame."""
+        if self.context.pose_context is None:
+            self.context.pose_context = PoseContext()
+        self.context.pose_turn = PoseTurnState(source="interval")
+        await self._configure_tool_turn()
+        await self.omni.append_audio(_COACH_SILENCE_PCM)
+        frame = await self.camera.get_frame()
+        await self.omni.append_image(frame)
+        await self.omni.commit_input()
+        self.context.response_in_flight = True
+        pose = self.context.pose_context
+        guidance_phase = "intro" if pose.active_goal is None else "coach"
+        instructions = self.prompts.render(
+            "action.S3.assess",
+            pose_context=pose.snapshot_for_prompt(),
+            guidance_phase=guidance_phase,
+        )
+        await self.omni.create_response(instructions, output_audio=False)
+        LOGGER.info(
+            "s3_coach_turn_started",
+            extra={
+                "guidance_phase": guidance_phase,
+                "episode_id": self.context.pose_context.episode_id,
+                "frame_shape": getattr(frame, "shape", None),
+            },
+        )
+
     async def guidance_tick(self) -> bool:
         if self.context.state is not State.POSE_GUIDANCE or self.context.response_in_flight:
             return False
         if len(self.context.guidance_turns) >= self.context.max_guidance_turns:
             if not self.guidance_limit_reached:
                 self.guidance_limit_reached = True
-                self.context.response_in_flight = True
-                await self.omni.create_response(self.prompts.get("action.S3.guidance_limit"))
+                await self._start_pose_speech(self.prompts.get("action.S3.guidance_limit"))
                 return True
             return False
-        frame = await self.camera.get_frame()
-        await self.omni.append_image(frame)
-        self.context.response_in_flight = True
-        await self.omni.create_response(self.prompts.get("action.S3.guidance"))
+        await self._coach_guidance_response()
         return True
 
+    async def _start_pose_speech(self, instructions: str) -> None:
+        if self.context.pose_context is None:
+            self.context.pose_context = PoseContext()
+        self.context.pose_turn = PoseTurnState(source="interval", phase="speaking")
+        self.context.response_in_flight = True
+        await self._configure_pose_speech()
+        await self.omni.create_response(instructions, output_audio=True)
+
     async def handle_speech_started(self) -> None:
+        # S2/S5 ask a question first; only S3 allows the user to barge in mid-utterance.
+        if self.context.state in (State.ASK_INTENT, State.REVIEW):
+            return
         if self.context.response_in_flight:
             await self.omni.cancel_response()
             self.context.response_in_flight = False
+            if self.context.state is State.POSE_GUIDANCE:
+                turn = self.context.pose_turn
+                # Keep the turn when a pre-capture confirmation was pending so a
+                # late response.done can still advance to capturing.
+                if turn is None or not turn.capture_after_speech:
+                    self.context.pose_turn = None
+                await self._configure_listening()
 
-    async def handle_response_done(self, text: str = "") -> None:
-        if self.context.state is State.POSE_GUIDANCE and not self.guidance_limit_reached:
-            self.context.guidance_turns.append(GuidanceTurn(time.time(), "interval", text))
+    def mark_pose_tool_result(self, *, complete: bool) -> None:
+        turn = self.context.pose_turn
+        if turn is None or turn.phase != "assessing":
+            return
+        turn.tool_result_received = True
+        turn.pending_capture = turn.pending_capture or complete
+
+    async def handle_pose_assessment_done(self) -> bool:
+        turn = self.context.pose_turn
+        pose = self.context.pose_context
+        if turn is None or turn.phase != "assessing":
+            return False
+        if not turn.tool_result_received or pose is None:
+            if turn.pending_tool_submit is not None:
+                call_id, output = turn.pending_tool_submit
+                turn.pending_tool_submit = None
+                await self.omni.submit_tool_result(call_id, output, create_followup=False)
+            self.context.pose_turn = None
+            self.context.response_in_flight = False
+            await self._configure_listening()
+            return False
+        if turn.pending_capture:
+            turn.capture_after_speech = True
+            turn.pending_capture = False
+        turn.phase = "speaking"
+        instructions = self.prompts.render(
+            "action.S3.speak",
+            guidance_intent=pose.last_guidance_intent,
+            last_spoken_text=pose.last_spoken_text or "（尚无）",
+            pose_context=pose.snapshot_for_prompt(),
+            capture_after_speech="true" if turn.capture_after_speech else "false",
+        )
+        # Audible S3 responses keep server VAD enabled so user speech can barge in.
+        await self._configure_pose_speech()
+        if turn.pending_tool_submit is not None:
+            call_id, output = turn.pending_tool_submit
+            turn.pending_tool_submit = None
+            await self.omni.submit_tool_result(call_id, output, create_followup=False)
+        LOGGER.info(
+            "s3_speech_turn_started",
+            extra={
+                "output_audio_enabled": self.omni.output_audio_enabled,
+                "guidance_intent": pose.last_guidance_intent,
+                "capture_after_speech": turn.capture_after_speech,
+                "session_id": self.context.session_id,
+            },
+        )
+        await self.omni.create_response(instructions, output_audio=True)
+        return True
+
+    async def handle_pose_speech_done(self, text: str = "") -> None:
+        turn = self.context.pose_turn
+        pose = self.context.pose_context
+        if turn is None or turn.phase != "speaking" or pose is None:
+            return
+        pose.last_spoken_text = text
+        pose.logical_turn += 1
+        if not self.guidance_limit_reached:
+            self.context.guidance_turns.append(GuidanceTurn(time.time(), turn.source, text))
+        post_capture = turn.post_capture_speech
+        capture_after_speech = turn.capture_after_speech
+        self.context.pose_turn = None
         self.context.response_in_flight = False
-        if (
-            self.context.state is State.POSE_GUIDANCE
-            and len(self.context.guidance_turns) >= self.context.max_guidance_turns
-            and not self.guidance_limit_reached
-        ):
-            self.guidance_limit_reached = True
-            self.context.response_in_flight = True
-            await self.omni.create_response(self.prompts.get("action.S3.guidance_limit"))
+        if post_capture and self.context.photo_id:
+            await self._enter_review("pose_capture_complete")
+            return
+        if capture_after_speech:
+            await self.start_pose_capture("goal_complete")
+            return
+        await self._configure_listening()
 
-    async def run_shoot(self) -> CaptureResult:
-        if self.context.state is not State.SHOOT:
-            raise RuntimeError(f"cannot shoot from {self.context.state.value}")
-        await self.omni.create_response(self.prompts.get("action.S4.countdown"))
-        try:
-            await self.omni.wait_response_done(timeout=10.0)
-        except TimeoutError:
-            LOGGER.warning("countdown_audio_timeout")
+    async def handle_pose_capture_result(self, output: dict[str, Any]) -> bool:
+        turn = self.context.pose_turn
+        if turn is None or turn.phase != "capturing":
+            return False
+        if not output.get("ok"):
+            turn.pending_capture = False
+            self.context.pose_turn = None
+            self.context.response_in_flight = False
+            await self._say_and_wait(self.prompts.get("action.S3.capture_failed"))
+            await self._configure_listening()
+            return False
+        if not output.get("quality_ok"):
+            # Speak the retry hint as a tracked speech turn so its response.done
+            # restores listening; resetting response_in_flight here would let the
+            # guidance interval race a new assessment over the unfinished audio.
+            turn.phase = "speaking"
+            turn.pending_capture = False
+            await self._configure_pose_speech()
+            await self.omni.create_response(
+                self.prompts.render(
+                    "action.S3.quality_failed",
+                    quality_reason="质量不足",
+                ),
+                output_audio=True,
+            )
+            return True
+        turn.phase = "speaking"
+        turn.pending_capture = False
+        turn.post_capture_speech = True
+        await self._configure_pose_speech()
+        await self.omni.create_response(self.prompts.get("action.S3.captured"), output_audio=True)
+        return True
 
+    async def handle_response_done(self) -> None:
+        """Finalize a non-S3 response (S2/S5/S6).
+
+        S3 response completion is phase-aware and routed by the runtime to
+        handle_pose_assessment_done / handle_pose_speech_done / capture handling.
+        """
+        self.context.response_in_flight = False
+
+    async def run_capture_from_pose(self) -> tuple[CaptureResult, bool]:
+        """Capture during S3 complete flow without a separate shoot state."""
         result: CaptureResult | None = None
         for attempt in range(self.config.operation_retries + 1):
             result = await self.camera.capture("photo")
@@ -250,6 +469,7 @@ class PhotoAgentFSM:
                     "photo_id": result.photo_id or None,
                     "path": str(result.path) if result.ok else None,
                     "error": result.error,
+                    "source": "s3_complete",
                 },
             )
             if result.ok:
@@ -259,13 +479,17 @@ class PhotoAgentFSM:
         if not result.ok:
             if self.context.retake_count < self.context.max_retake:
                 self.context.retake_count += 1
-            await self._say_and_wait(self.prompts.get("action.S4.capture_failed"))
-            await self._enter(State.POSE_GUIDANCE, "capture_failed")
-            return result
+            return result, False
 
         self.context.photo_id = result.photo_id
         self.context.photo_path = result.path
         self.delivery.register_photo(result.photo_id, result.path)
+        if self.config.skip_quality_check:
+            LOGGER.info(
+                "quality_result",
+                extra={"photo_id": result.photo_id, "ok": True, "reason": "skipped_for_demo"},
+            )
+            return result, True
         quality = self.quality_checker.check(result.frame)
         LOGGER.info(
             "quality_result",
@@ -273,16 +497,8 @@ class PhotoAgentFSM:
         )
         if not quality.ok and self.context.retake_count < self.context.max_retake:
             self.context.retake_count += 1
-            await self.omni.create_response(
-                self.prompts.render(
-                    "action.S4.quality_failed",
-                    quality_reason=quality.reason or "质量不足",
-                )
-            )
-            await self._enter(State.POSE_GUIDANCE, "quality_failed")
-            return result
-        await self._enter_review("quality_ok" if quality.ok else "quality_limit_reached")
-        return result
+            return result, False
+        return result, True
 
     async def _enter_review(self, reason: str) -> None:
         await self._enter(State.REVIEW, reason)
@@ -361,7 +577,9 @@ class PhotoAgentFSM:
         )
 
     async def _say_and_wait(self, instructions: str, timeout: float = 10.0) -> None:
-        await self.omni.create_response(instructions)
+        vad = getattr(self.omni, "vad_enabled", True)
+        await self.omni.configure(enable_vad=vad, output_audio=True, tools=[])
+        await self.omni.create_response(instructions, output_audio=True)
         try:
             await self.omni.wait_response_done(timeout=timeout)
         except TimeoutError:

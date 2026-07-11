@@ -6,6 +6,7 @@ import logging
 from pathlib import Path
 from types import SimpleNamespace
 
+import cv2
 import numpy as np
 import pytest
 
@@ -21,7 +22,13 @@ from app.photo_agent.test_controller import (
 
 
 class FakeCamera:
+    reads = 0
+
     def latest_frame(self):
+        return np.full((120, 160, 3), 80, dtype=np.uint8)
+
+    async def get_frame(self):
+        self.reads += 1
         return np.full((120, 160, 3), 80, dtype=np.uint8)
 
 
@@ -150,6 +157,37 @@ async def test_preview_jpeg_uses_active_runtime_camera(tmp_path: Path) -> None:
 
     assert jpeg.startswith(b"\xff\xd8")
     assert jpeg.endswith(b"\xff\xd9")
+    assert runtime.fsm.camera.reads == 1
+
+
+@pytest.mark.asyncio
+async def test_preview_jpeg_s1_uses_cached_frame_without_live_read(tmp_path: Path) -> None:
+    runtime = FakeRuntime(asyncio.Event())
+    runtime.fsm.context.state = SimpleNamespace(value="S1")
+    controller = make_controller(tmp_path, runtime)
+    await controller.start("S1")
+
+    await controller.preview_jpeg()
+    await controller.stop()
+
+    assert runtime.fsm.camera.reads == 0
+
+
+@pytest.mark.asyncio
+async def test_preview_jpeg_s1_uses_same_stabilized_face_detection(tmp_path: Path) -> None:
+    runtime = FakeRuntime(asyncio.Event())
+    runtime.fsm.context.state = SimpleNamespace(value="S1")
+    controller = make_controller(tmp_path, runtime)
+    controller.face_detector = lambda frame: [(20, 25, 50, 60)]
+    await controller.start("S1")
+
+    jpeg = await controller.preview_jpeg()
+    await controller.stop()
+    decoded = cv2.imdecode(np.frombuffer(jpeg, np.uint8), cv2.IMREAD_COLOR)
+
+    assert decoded is not None
+    # The face rectangle uses a bright cyan border.
+    assert decoded[25, 20].sum() > 250
 
 
 @pytest.mark.asyncio
@@ -173,7 +211,7 @@ async def test_controller_reports_saved_and_active_prompt_versions(tmp_path: Pat
 async def test_controller_streams_runtime_logs_and_tracks_quality(tmp_path: Path) -> None:
     runtime = FakeRuntime(asyncio.Event())
     controller = make_controller(tmp_path, runtime)
-    await controller.start("S4")
+    await controller.start("S5")
 
     logging.getLogger("photomate.photo_agent").warning(
         "quality_result",

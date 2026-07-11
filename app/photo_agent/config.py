@@ -11,7 +11,7 @@ from app.photo_agent.runtime import RuntimeConfig
 
 
 def _int_or_none(value: Any) -> int | None:
-    if value in (None, "", "default"):
+    if value in (None, "", "default", "auto"):
         return None
     return int(value)
 
@@ -53,6 +53,9 @@ def load_runtime_config(
         api_key=env("DASHSCOPE_API_KEY", ""),
         voice=env("OMNI_VOICE", cfg.get("voice", "Tina")),
         camera_index=int(env("PHOTOMATE_PHOTO_AGENT__CAMERA_INDEX", cfg.get("camera_index", 0))),
+        camera_rotation_deg=int(
+            env("PHOTOMATE_PHOTO_AGENT__CAMERA_ROTATION_DEG", cfg.get("camera_rotation_deg", 0))
+        ),
         microphone_index=_int_or_none(
             env("PHOTOMATE_PHOTO_AGENT__MICROPHONE_INDEX", cfg.get("microphone_index"))
         ),
@@ -64,4 +67,8 @@ def load_runtime_config(
         guidance_interval_s=float(
             env("PHOTOMATE_PHOTO_AGENT__GUIDANCE_INTERVAL_S", cfg.get("guidance_interval_s", 5.0))
         ),
+        skip_quality_check=str(
+            env("PHOTOMATE_PHOTO_AGENT__SKIP_QUALITY_CHECK", cfg.get("skip_quality_check", True))
+        ).lower()
+        in {"1", "true", "yes", "on"},
     )

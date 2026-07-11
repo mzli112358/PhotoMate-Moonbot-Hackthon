@@ -5,6 +5,7 @@ from __future__ import annotations
 import asyncio
 import base64
 import json
+import logging
 from dataclasses import dataclass
 from typing import Any, Callable
 from urllib.parse import urlparse
@@ -14,6 +15,7 @@ from app.photo_agent.models import ToolCall
 from app.photo_agent.prompts import DEFAULT_PROMPTS, PromptSource, StaticPromptSource
 
 BASE_PROMPT = DEFAULT_PROMPTS["system.base"]
+LOGGER = logging.getLogger("photomate.photo_agent.omni")
 
 
 @dataclass(frozen=True)
@@ -51,8 +53,104 @@ def omni_tools() -> list[dict[str, Any]]:
 
     return [
         tool(
+            "report_photo_intent",
+            "仅在S2询问拍照意愿环节使用。直接根据用户原始语音判断是否愿意拍照；意图明确后必须调用此工具，不要用口头回答代替。",
+            {
+                "decision": {
+                    "type": "string",
+                    "enum": ["accept", "deny"],
+                    "description": "accept表示愿意拍照，deny表示拒绝拍照。",
+                }
+            },
+            ["decision"],
+        ),
+        tool(
+            "report_pose_turn",
+            (
+                "仅在S3使用。观察当前画面并结合已提供的PoseContext，创建、维持、替换或完成"
+                "一个姿态目标。评估响应中必须且只能调用一次本工具。"
+            ),
+            {
+                "goal_action": {
+                    "type": "string",
+                    "enum": ["create", "keep", "replace", "complete"],
+                    "description": (
+                        "只能取create、keep、replace、complete之一。"
+                        "progress=achieved时必须填complete，禁止填keep。"
+                    ),
+                },
+                "goal_description": {"type": "string"},
+                "success_criteria": {
+                    "type": "string",
+                    "description": "用分号分隔多个可观察的完成条件。",
+                },
+                "progress": {
+                    "type": "string",
+                    "enum": ["not_started", "partial", "achieved"],
+                    "description": (
+                        "只能取not_started、partial、achieved之一。"
+                        "填achieved时goal_action必须=complete。"
+                    ),
+                },
+                "visual_observation": {"type": "string"},
+                "user_feedback_summary": {"type": "string"},
+                "replace_reason": {"type": "string"},
+                "guidance_intent": {
+                    "type": "string",
+                    "description": (
+                        "下一轮要对用户说的中文要点。"
+                        "intro示例：您可以站在这块牌子前，双手比一个心，这样会更生动。"
+                        "coach示例：黑色T恤很上镜，手再靠近一点就完美啦。禁止填none。"
+                    ),
+                },
+                "completion_reason": {
+                    "type": "string",
+                    "enum": ["none", "visual_goal_achieved", "user_requested_capture"],
+                },
+            },
+            [
+                "goal_action",
+                "progress",
+                "visual_observation",
+                "user_feedback_summary",
+                "guidance_intent",
+                "completion_reason",
+            ],
+        ),
+        tool(
+            "report_pose_readiness",
+            (
+                "仅在S3姿态引导环节使用。用户明确表示直接拍照、现在拍、可以拍了或已经准备好时"
+                "必须调用；此时不要直接调用capture_photo。"
+            ),
+            {
+                "decision": {
+                    "type": "string",
+                    "enum": ["ready"],
+                    "description": "ready表示用户明确要求现在拍照。",
+                }
+            },
+            ["decision"],
+        ),
+        tool(
+            "report_review_intent",
+            "仅在S5照片复核环节使用。直接根据用户原始语音判断接受照片还是要求重拍；意图明确后必须调用此工具。",
+            {
+                "decision": {
+                    "type": "string",
+                    "enum": ["accept", "retake"],
+                    "description": "accept表示满意并交付，retake表示不满意并重拍。",
+                }
+            },
+            ["decision"],
+        ),
+        tool(
             "capture_photo",
-            "在倒数结束后拍照。",
+            (
+                "仅当当前response的instructions明确要求执行action.S3.capture时调用，"
+                "触发相机/Insta360快门；用户口头要求直接拍照时不要直接调用本工具，"
+                "应先调用report_pose_readiness。"
+            ),
             {"mode": {"type": "string", "enum": ["photo"]}},
             ["mode"],
         ),
@@ -99,10 +197,12 @@ class _Callback:
         if event_type == "session.created":
             self.owner.session_id = response.get("session", {}).get("id")
         elif event_type == "response.created":
+            self.owner._active_response_audio_deltas = 0
             self.owner._emit(
                 {"type": "response_created", "response_id": response.get("response", {}).get("id")}
             )
         elif event_type == "response.audio.delta":
+            self.owner._active_response_audio_deltas += 1
             delta = response.get("delta")
             if delta and self.owner.audio_sink:
                 try:
@@ -115,15 +215,42 @@ class _Callback:
                         }
                     )
         elif event_type == "response.audio_transcript.done":
-            self.owner._emit({"type": "assistant_text", "text": response.get("transcript", "")})
+            self.owner._emit(
+                {
+                    "type": "assistant_text",
+                    "response_id": response.get("response_id"),
+                    "text": response.get("transcript", ""),
+                }
+            )
+        elif event_type == "response.text.done":
+            self.owner._emit(
+                {
+                    "type": "assistant_text",
+                    "response_id": response.get("response_id"),
+                    "text": response.get("text", ""),
+                    "source": "text",
+                }
+            )
         elif event_type == "response.done":
             if self.owner._loop is not None:
                 self.owner._loop.call_soon_threadsafe(self.owner._response_done.set)
-            self.owner._emit({"type": "response_done"})
-        elif event_type == "conversation.item.input_audio_transcription.completed":
-            text = response.get("transcript", "").strip()
-            if text:
-                self.owner._emit({"type": "user_text", "text": text})
+            response_id = response.get("response_id") or response.get("response", {}).get("id")
+            LOGGER.info(
+                "response_audio_summary",
+                extra={
+                    "response_id": response_id,
+                    "audio_delta_count": self.owner._active_response_audio_deltas,
+                    "session_output_audio": self.owner.output_audio_enabled,
+                    "has_audio_sink": self.owner.audio_sink is not None,
+                },
+            )
+            self.owner._emit(
+                {
+                    "type": "response_done",
+                    "response_id": response_id,
+                    "audio_delta_count": self.owner._active_response_audio_deltas,
+                }
+            )
         elif event_type == "input_audio_buffer.speech_started":
             self.owner._emit({"type": "speech_started"})
         elif event_type == "input_audio_buffer.speech_stopped":
@@ -134,7 +261,10 @@ class _Callback:
             try:
                 arguments = json.loads(response.get("arguments") or "{}")
                 call = ToolCall(response["name"], arguments, response["call_id"])
-                self.owner._emit({"type": "tool_call", "tool_call": call})
+                event = {"type": "tool_call", "tool_call": call}
+                if response.get("response_id"):
+                    event["response_id"] = response["response_id"]
+                self.owner._emit(event)
             except (KeyError, json.JSONDecodeError) as exc:
                 self.owner._emit({"type": "error", "error": {"code": "invalid_tool_call", "message": str(exc)}})
         elif event_type == "error":
@@ -155,6 +285,7 @@ class DashscopeOmniClient:
         self.audio_sink = audio_sink
         self.prompt_source = prompt_source or StaticPromptSource()
         self._enable_vad = True
+        self._output_audio_enabled = True
         self.session_id: str | None = None
         self._loop: asyncio.AbstractEventLoop | None = None
         self._events: asyncio.Queue[dict[str, Any]] = asyncio.Queue()
@@ -165,6 +296,30 @@ class DashscopeOmniClient:
         self._response_done = asyncio.Event()
         self._primed = False
         self._closing = False
+        self._active_response_audio_deltas = 0
+
+    @property
+    def vad_enabled(self) -> bool:
+        return self._enable_vad
+
+    @property
+    def output_audio_enabled(self) -> bool:
+        return self._output_audio_enabled
+
+    def _raise_connect_failure(self, exc: Exception) -> None:
+        message = str(exc)
+        if isinstance(exc, TimeoutError) and "websocket connection could not established" in message:
+            ws = getattr(self._conversation, "ws", None)
+            thread = getattr(self._conversation, "thread", None)
+            thread_alive = bool(thread and thread.is_alive())
+            if ws is None or not thread_alive:
+                raise ConnectionError(
+                    "Omni WebSocket handshake failed before session creation. "
+                    "This is usually caused by a missing, expired, or workspace-mismatched "
+                    "DASHSCOPE_API_KEY, not a network timeout. "
+                    "Re-export the key in the same shell that starts uvicorn, then retry."
+                ) from exc
+        raise exc
 
     def _emit(self, event: dict[str, Any]) -> None:
         if self._loop is None:
@@ -205,7 +360,7 @@ class DashscopeOmniClient:
                 session_id = self.session_id or getattr(self._conversation, "session_id", None)
             if not session_id:
                 raise RuntimeError("Omni session was not created")
-        except Exception:
+        except Exception as exc:
             self._closing = True
             try:
                 await asyncio.to_thread(self._conversation.close)
@@ -213,25 +368,37 @@ class DashscopeOmniClient:
                 self._conversation = None
                 self._callback = None
                 self._closing = False
-            raise
+            self._raise_connect_failure(exc)
         self.session_id = session_id
         return session_id
 
-    async def configure(self, *, enable_vad: bool = True) -> None:
+    async def configure(
+        self,
+        *,
+        enable_vad: bool = True,
+        output_audio: bool = True,
+        tools: list[dict[str, Any]] | None = None,
+    ) -> None:
         if self._conversation is None:
             raise ConnectionError("Omni is not connected")
         from dashscope.audio.qwen_omni import MultiModality
 
         self._enable_vad = enable_vad
+        self._output_audio_enabled = output_audio
+        modalities = [MultiModality.TEXT]
+        if output_audio:
+            modalities.append(MultiModality.AUDIO)
+        session_tools = omni_tools() if tools is None else tools
         await asyncio.to_thread(
             self._conversation.update_session,
-            output_modalities=[MultiModality.AUDIO, MultiModality.TEXT],
+            output_modalities=modalities,
             voice=self.settings.voice,
+            enable_input_audio_transcription=False,
             enable_turn_detection=enable_vad,
             turn_detection_type=self.settings.vad_type,
             turn_detection_silence_duration_ms=self.settings.vad_silence_ms,
             instructions=self.prompt_source.get("system.base"),
-            tools=omni_tools(),
+            tools=session_tools,
             enable_search=False,
         )
 
@@ -240,10 +407,14 @@ class DashscopeOmniClient:
             raise ConnectionError("Omni is not connected")
         from dashscope.audio.qwen_omni import MultiModality
 
+        modalities = [MultiModality.TEXT]
+        if self._output_audio_enabled:
+            modalities.append(MultiModality.AUDIO)
         await self._call(
             "update_session",
-            output_modalities=[MultiModality.AUDIO, MultiModality.TEXT],
+            output_modalities=modalities,
             voice=self.settings.voice,
+            enable_input_audio_transcription=False,
             enable_turn_detection=self._enable_vad,
             turn_detection_type=self.settings.vad_type,
             turn_detection_silence_duration_ms=self.settings.vad_silence_ms,
@@ -268,8 +439,9 @@ class DashscopeOmniClient:
         self._primed = True
 
     async def append_image(self, frame: Any) -> None:
-        if not self._primed:
-            await self.prime_audio()
+        # Server VAD commits clear the audio buffer; always prime immediately before
+        # each image so we never race committed events with a stale _primed flag.
+        await self.prime_audio()
         encoded = encode_frame(frame)
         if encoded is None:
             raise ValueError("frame cannot be encoded within Omni image limit")
@@ -288,9 +460,19 @@ class DashscopeOmniClient:
             },
         )
 
-    async def create_response(self, instructions: str) -> None:
+    async def create_response(self, instructions: str, *, output_audio: bool = True) -> None:
+        from dashscope.audio.qwen_omni import MultiModality
+
         self._response_done.clear()
-        await self._call("create_response", instructions=instructions)
+        self._active_response_audio_deltas = 0
+        modalities = [MultiModality.TEXT]
+        if output_audio:
+            modalities.append(MultiModality.AUDIO)
+        await self._call(
+            "create_response",
+            instructions=instructions,
+            output_modalities=modalities,
+        )
 
     async def wait_response_done(self, timeout: float) -> None:
         await asyncio.wait_for(self._response_done.wait(), timeout)
@@ -298,12 +480,19 @@ class DashscopeOmniClient:
     async def cancel_response(self) -> None:
         await self._call("cancel_response")
 
-    async def submit_tool_result(self, call_id: str, output: dict[str, Any]) -> None:
+    async def submit_tool_result(
+        self,
+        call_id: str,
+        output: dict[str, Any],
+        *,
+        create_followup: bool = True,
+    ) -> None:
         await self._call(
             "create_item",
             {"type": "function_call_output", "call_id": call_id, "output": json.dumps(output, ensure_ascii=False)},
         )
-        await self.create_response(self.prompt_source.get("action.tool.followup"))
+        if create_followup:
+            await self.create_response(self.prompt_source.get("action.tool.followup"))
 
     async def end_session(self, reason: str) -> None:
         if self._conversation is None:

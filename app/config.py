@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
@@ -11,6 +12,34 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 ROOT_DIR = Path(__file__).resolve().parents[1]
 CONFIG_DIR = ROOT_DIR / "config"
 DATA_DIR = ROOT_DIR / "data"
+
+
+def load_dotenv(path: Path | None = None) -> None:
+    """Populate os.environ from a repo-root .env (secrets never live in git).
+
+    Real shell exports always win: keys already present in the environment are
+    left untouched, so this only fills in what the operator has not set.
+    """
+    if os.getenv("PHOTOMATE_DISABLE_DOTENV", "").lower() in {"1", "true", "yes", "on"}:
+        return
+    env_path = path or ROOT_DIR / ".env"
+    if not env_path.is_file():
+        return
+    for raw_line in env_path.read_text(encoding="utf-8").splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, _, value = line.partition("=")
+        key = key.strip()
+        if key.startswith("export "):
+            key = key[len("export ") :].strip()
+        value = value.strip().strip("'").strip('"')
+        if key and key not in os.environ:
+            os.environ[key] = value
+
+
+# Load once at import so os.getenv-based config (e.g. DASHSCOPE_API_KEY) sees it.
+load_dotenv()
 
 
 class MapBounds(BaseModel):

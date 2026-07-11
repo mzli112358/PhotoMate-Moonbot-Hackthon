@@ -41,6 +41,8 @@ def test_mock_cli_emits_structured_runtime_events() -> None:
 
 def test_omni_smoke_reports_missing_key_without_import_error(monkeypatch) -> None:
     monkeypatch.delenv("DASHSCOPE_API_KEY", raising=False)
+    # Keep the repo .env from re-populating the key so the missing-key branch runs.
+    monkeypatch.setenv("PHOTOMATE_DISABLE_DOTENV", "1")
     result = subprocess.run(
         [sys.executable, "scripts/photo_agent/omni_smoke.py"],
         text=True,
@@ -215,7 +217,7 @@ async def test_local_real_manual_entry_runs_only_requested_state(monkeypatch, ca
 
         async def run_manual_state(self, state: str):
             self.requested = state
-            return {"ok": True, "tested_state": state, "result_state": "S4"}
+            return {"ok": True, "tested_state": state, "result_state": "S5"}
 
     runtime = Runtime()
     monkeypatch.setattr(run_state, "build_local_runtime", lambda config: runtime)

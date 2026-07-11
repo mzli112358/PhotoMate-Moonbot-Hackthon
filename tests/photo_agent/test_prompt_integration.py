@@ -52,8 +52,14 @@ async def test_fsm_reads_state_and_action_prompts_from_registry() -> None:
     await fsm.handle_timeout()
 
     assert ("inject_context", "CUSTOM S2 CONTEXT") in omni.calls
-    assert ("create_response", "CUSTOM INITIAL QUESTION") in omni.calls
-    assert ("create_response", "CUSTOM RETRY QUESTION") in omni.calls
+    assert (
+        "create_response",
+        {"instructions": "CUSTOM INITIAL QUESTION", "output_audio": True},
+    ) in omni.calls
+    assert (
+        "create_response",
+        {"instructions": "CUSTOM RETRY QUESTION", "output_audio": True},
+    ) in omni.calls
 
 
 class FakeConversation:
@@ -71,8 +77,13 @@ class FakeConversation:
     def create_item(self, item) -> None:
         self.calls.append(("create_item", item))
 
-    def create_response(self, instructions=None) -> None:
-        self.calls.append(("create_response", instructions))
+    def create_response(self, instructions=None, output_modalities=None) -> None:
+        self.calls.append(
+            (
+                "create_response",
+                {"instructions": instructions, "output_modalities": output_modalities},
+            )
+        )
 
     def close(self) -> None:
         pass
@@ -106,7 +117,8 @@ async def test_omni_reads_system_and_tool_prompts_from_registry() -> None:
 
     update = next(value for name, value in made[0].calls if name == "update_session")
     assert update["instructions"] == "CUSTOM SYSTEM"
-    assert ("create_response", "CUSTOM TOOL FOLLOWUP") in made[0].calls
+    followup = next(value for name, value in made[0].calls if name == "create_response")
+    assert followup["instructions"] == "CUSTOM TOOL FOLLOWUP"
     end_item = [value for name, value in made[0].calls if name == "create_item"][-1]
     assert end_item["content"][0]["text"] == "CUSTOM END timeout"
 
@@ -140,3 +152,25 @@ async def test_runtime_defers_hot_switch_while_response_is_in_flight() -> None:
 
     assert omni.count("update_instructions") == 0
     assert runtime.active_prompt_version == "prompt-v1"
+
+
+def test_s3_prompts_manage_pose_goals_without_composition_guidance() -> None:
+    combined = " ".join(
+        DEFAULT_PROMPTS[key]
+        for key in ("state.S3", "action.S3.assess", "action.S3.speak")
+    )
+
+    assert "report_pose_turn" in combined
+    assert "场景" in combined
+    assert "guidance_intent" in combined
+    assert "progress=achieved" in combined
+    assert "goal_action必须=complete" in combined
+    assert "禁止keep" in combined
+    assert "report_pose_readiness" in combined
+    assert "禁止直接调用 capture_photo" in combined
+    assert "last_guidance_intent" in combined
+    assert "我开拍啦" in combined
+    assert "capture_after_speech" in combined
+    assert "不要改变" in combined
+    assert "往中间站" not in combined
+    assert "调整取景" not in combined

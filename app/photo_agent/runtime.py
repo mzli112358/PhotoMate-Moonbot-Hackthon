@@ -15,10 +15,22 @@ import numpy as np
 from app.photo_agent.fsm import FSMConfig, PhotoAgentFSM
 from app.photo_agent.dispatcher import FunctionCallDispatcher
 from app.photo_agent.mocks import MockCamera, MockDelivery, MockOmni, MockQualityChecker, MockWakeDetector
-from app.photo_agent.models import CaptureResult, DeliveryResult, QualityResult, State, WakeSignal
+from app.photo_agent.models import (
+    CaptureResult,
+    DeliveryResult,
+    PoseTurnState,
+    QualityResult,
+    State,
+    WakeSignal,
+)
 from app.photo_agent.prompts import PromptRegistry, PromptSource, StaticPromptSource
 
 LOGGER = logging.getLogger("photomate.photo_agent.runtime")
+
+
+def _is_recoverable_omni_error(error: dict) -> bool:
+    message = str(error.get("message", "")).lower()
+    return "append image before append audio" in message
 
 
 @dataclass(frozen=True)
@@ -29,11 +41,13 @@ class RuntimeConfig:
     api_key: str = ""
     voice: str = "Tina"
     camera_index: int = 0
+    camera_rotation_deg: int = 0
     microphone_index: int | None = None
     speaker_index: int | None = None
     photo_dir: Path = Path("data/photos")
     base_url: str = "http://127.0.0.1:8000"
     guidance_interval_s: float = 5.0
+    skip_quality_check: bool = True
 
 
 class PhotoAgentRuntime:
@@ -65,13 +79,35 @@ class PhotoAgentRuntime:
         self._state_since = time.monotonic()
         self._wall_clock = time.time
         self.session_max_s = 115 * 60.0
+        self._pending_assistant_text = ""
 
     async def handle_event(self, event: dict) -> None:
         event_type = event.get("type")
         if event_type == "speech_started":
+            LOGGER.info(
+                "speech_started",
+                extra={
+                    "state": self.fsm.context.state.value,
+                    "response_in_flight": self.fsm.context.response_in_flight,
+                    "session_id": self.fsm.context.session_id,
+                },
+            )
             await self.fsm.handle_speech_started()
+            if self.fsm.context.state is State.POSE_GUIDANCE:
+                self._pending_assistant_text = ""
         elif event_type == "response_created":
             self.fsm.context.response_in_flight = True
+            turn = self.fsm.context.pose_turn
+            if self.fsm.context.state is State.POSE_GUIDANCE and turn is None:
+                turn = PoseTurnState(source="user_vad")
+                self.fsm.context.pose_turn = turn
+            if self.fsm.context.state is State.POSE_GUIDANCE and turn is not None:
+                if turn.phase == "assessing":
+                    turn.assessment_response_id = event.get("response_id")
+                elif turn.phase == "capturing":
+                    turn.capture_response_id = event.get("response_id")
+                elif turn.phase == "speaking":
+                    turn.speech_response_id = event.get("response_id")
             LOGGER.info(
                 "response_created",
                 extra={
@@ -79,11 +115,94 @@ class PhotoAgentRuntime:
                     "session_id": self.fsm.context.session_id,
                 },
             )
+        elif event_type == "assistant_text":
+            turn = self.fsm.context.pose_turn
+            expected_id = turn.speech_response_id if turn and turn.phase == "speaking" else None
+            response_id = event.get("response_id")
+            if (
+                event.get("source") != "text"
+                and (not expected_id or not response_id or response_id == expected_id)
+            ):
+                self._pending_assistant_text += str(event.get("text") or "")
         elif event_type == "response_done":
-            await self.fsm.handle_response_done()
-        elif event_type == "user_text":
-            await self.fsm.handle_user_text(str(event.get("text") or ""))
-            self._track_state()
+            turn = self.fsm.context.pose_turn
+            LOGGER.info(
+                "response_done",
+                extra={
+                    "state": self.fsm.context.state.value,
+                    "session_id": self.fsm.context.session_id,
+                    "response_id": event.get("response_id"),
+                    "pose_phase": turn.phase if turn else None,
+                },
+            )
+            response_id = event.get("response_id")
+            if self.fsm.context.state is State.POSE_GUIDANCE and turn is not None:
+                known_ids = {
+                    turn.assessment_response_id,
+                    turn.capture_response_id,
+                    turn.speech_response_id,
+                } - {None}
+                is_assessment = response_id == turn.assessment_response_id or (
+                    not known_ids and turn.phase == "assessing"
+                )
+                is_capture = response_id == turn.capture_response_id or (
+                    not known_ids and turn.phase == "capturing"
+                )
+                is_speech = response_id == turn.speech_response_id or (
+                    not known_ids and turn.phase == "speaking"
+                )
+                if is_assessment:
+                    self._pending_assistant_text = ""
+                    started_speech = await self.fsm.handle_pose_assessment_done()
+                    if not started_speech:
+                        self._last_guidance_at = time.monotonic()
+                elif is_capture:
+                    # A capture response.done can arrive after capture_photo has
+                    # already started the post-capture speech. In that case it
+                    # belongs to the old response and must not finish speech.
+                    if turn.phase == "capturing":
+                        self._pending_assistant_text = ""
+                        self.fsm.context.response_in_flight = False
+                        LOGGER.warning(
+                            "capture_tool_missing",
+                            extra={"session_id": self.fsm.context.session_id},
+                        )
+                        self.fsm.context.pose_turn = None
+                        await self.fsm.omni.configure(enable_vad=True, output_audio=True)
+                        self._last_guidance_at = time.monotonic()
+                elif is_speech:
+                    if (
+                        event.get("audio_delta_count") == 0
+                        and turn.phase == "speaking"
+                        and not turn.speech_retry_used
+                        and (pose := self.fsm.context.pose_context) is not None
+                        and (turn.post_capture_speech or pose.last_guidance_intent)
+                    ):
+                        turn.speech_retry_used = True
+                        self._pending_assistant_text = ""
+                        await self.fsm.retry_pose_speech(
+                            pose.last_guidance_intent or "我拍好啦"
+                        )
+                        self._track_state()
+                        return
+                    text = self._pending_assistant_text
+                    self._pending_assistant_text = ""
+                    await self.fsm.handle_pose_speech_done(text)
+                    self._last_guidance_at = time.monotonic()
+                    self._track_state()
+                elif known_ids:
+                    LOGGER.warning(
+                        "stale_response_done",
+                        extra={
+                            "response_id": response_id,
+                            "assessment_response_id": turn.assessment_response_id,
+                            "capture_response_id": turn.capture_response_id,
+                            "speech_response_id": turn.speech_response_id,
+                            "pose_phase": turn.phase,
+                        },
+                    )
+            elif self.fsm.context.state is not State.POSE_GUIDANCE:
+                await self.fsm.handle_response_done()
         elif event_type == "tool_call":
             call = event["tool_call"]
             LOGGER.info(
@@ -95,14 +214,84 @@ class PhotoAgentRuntime:
                     "session_id": self.fsm.context.session_id,
                 },
             )
-            output = await self.dispatcher.dispatch(call)
+            intent_call = self.dispatcher.is_intent_call(call)
+            pose_call = call.name == "report_pose_turn"
+            capture_call = call.name == "capture_photo"
+            turn = self.fsm.context.pose_turn
+            event_response_id = event.get("response_id")
+            user_vad_capture_request = bool(
+                capture_call
+                and turn is not None
+                and turn.source == "user_vad"
+                and turn.phase == "assessing"
+            )
+            pose_response_mismatch = bool(
+                pose_call
+                and turn
+                and turn.assessment_response_id
+                and event_response_id
+                and turn.assessment_response_id != event_response_id
+            )
+            if pose_call and (turn is None or turn.phase != "assessing"):
+                output = {"ok": False, "error": "no_active_pose_assessment"}
+            elif (
+                capture_call
+                and self.fsm.context.state is State.POSE_GUIDANCE
+                and (turn is None or turn.phase != "capturing")
+                and not user_vad_capture_request
+            ):
+                output = {"ok": False, "error": "no_active_pose_capture"}
+            elif pose_response_mismatch:
+                output = {"ok": False, "error": "stale_pose_response"}
+            else:
+                output = (
+                    self.dispatcher.validate_intent(call)
+                    if intent_call
+                    else await self.dispatcher.dispatch(call)
+                )
             LOGGER.info(
                 "function_call_result",
                 extra={"function_name": call.name, "call_id": call.call_id, "output": output},
             )
-            await self.omni.submit_tool_result(call.call_id, output)
+            if capture_call and self.fsm.context.state is State.POSE_GUIDANCE and turn is not None:
+                await self.omni.submit_tool_result(call.call_id, output, create_followup=False)
+                if not output.get("deferred"):
+                    await self.fsm.handle_pose_capture_result(output)
+            elif pose_call and turn is not None:
+                if turn.pending_tool_submit is not None:
+                    old_call_id, old_output = turn.pending_tool_submit
+                    await self.omni.submit_tool_result(
+                        old_call_id, old_output, create_followup=False
+                    )
+                turn.pending_tool_submit = (call.call_id, output)
+                if output["ok"]:
+                    self.fsm.mark_pose_tool_result(complete=bool(output["complete"]))
+            else:
+                await self.omni.submit_tool_result(
+                    call.call_id,
+                    output,
+                    create_followup=not intent_call or not output["ok"],
+                )
+            if intent_call and output["ok"]:
+                await self.dispatcher.apply_intent(call)
             self._track_state()
-        elif event_type in ("error", "disconnected"):
+        elif event_type == "error":
+            error = event.get("error", {})
+            if _is_recoverable_omni_error(error):
+                LOGGER.warning("omni_recoverable_error", extra={"event": event})
+                if "append image before append audio" in str(error.get("message", "")).lower():
+                    await self.omni.prime_audio()
+            else:
+                LOGGER.error("omni_event", extra={"event": event})
+                try:
+                    await self.fallback_notifier.notify(
+                        "实时语音服务暂时不可用，本次服务已安全结束，请稍后再试。"
+                    )
+                except Exception as exc:  # noqa: BLE001
+                    LOGGER.warning("fallback_notification_failed", extra={"error": str(exc)})
+                await self.fsm.finish_session("omni_error")
+                self._track_state()
+        elif event_type == "disconnected":
             LOGGER.error("omni_event", extra={"event": event})
             try:
                 await self.fallback_notifier.notify(
@@ -110,7 +299,7 @@ class PhotoAgentRuntime:
                 )
             except Exception as exc:  # noqa: BLE001
                 LOGGER.warning("fallback_notification_failed", extra={"error": str(exc)})
-            await self.fsm.finish_session(f"omni_{event_type}")
+            await self.fsm.finish_session("omni_disconnected")
             self._track_state()
 
     async def _audio_loop(self) -> None:
@@ -126,6 +315,14 @@ class PhotoAgentRuntime:
                 chunk = self.microphone.read_chunk()
                 if not self.fsm.context.session_id:
                     continue
+                # Coach turns buffer silence+frame locally; mic would pollute that buffer.
+                if (
+                    self.fsm.context.state.value == "S3"
+                    and hasattr(self.omni, "vad_enabled")
+                    and not self.omni.vad_enabled
+                ):
+                    await asyncio.sleep(0.05)
+                    continue
                 await self.omni.append_audio(chunk)
                 await asyncio.sleep(0)
             except Exception as exc:  # noqa: BLE001 - live device boundary
@@ -139,7 +336,16 @@ class PhotoAgentRuntime:
 
     async def _frame_loop(self) -> None:
         while not self._stopped.is_set():
-            if self.fsm.context.session_id and self.fsm.context.state.value in ("S2", "S3", "S5"):
+            state_val = self.fsm.context.state.value
+            vad_on = getattr(self.omni, "vad_enabled", True)
+            should_feed = (
+                self.fsm.context.session_id
+                and (
+                    state_val in ("S2", "S5")
+                    or (state_val == "S3" and vad_on)
+                )
+            )
+            if should_feed:
                 try:
                     frame = await self.fsm.camera.get_frame()
                     await self.omni.append_image(frame)
@@ -151,6 +357,8 @@ class PhotoAgentRuntime:
         if self.fsm.context.state is not self._state_seen:
             self._state_seen = self.fsm.context.state
             self._state_since = time.monotonic()
+            if self._state_seen is State.POSE_GUIDANCE:
+                self._last_guidance_at = 0.0
 
     async def _control_step(self) -> None:
         from app.photo_agent.models import State
@@ -176,15 +384,12 @@ class PhotoAgentRuntime:
         elif state is State.POSE_GUIDANCE:
             now = time.monotonic()
             if now - self._last_guidance_at >= self.fsm.context.guidance_interval_s:
-                if await self.fsm.guidance_tick():
-                    self._last_guidance_at = now
+                await self.fsm.guidance_tick()
         elif state is State.ASK_INTENT and time.monotonic() - self._state_since >= 12.0:
             await self.fsm.handle_timeout()
             self._state_since = time.monotonic()
         elif state is State.REVIEW and time.monotonic() - self._state_since >= 15.0:
             await self.fsm.handle_timeout()
-        elif state is State.SHOOT and time.monotonic() - self._state_since >= 2.0:
-            await self.fsm.run_shoot()
         elif state is State.DELIVER and time.monotonic() - self._state_since >= 2.0:
             await self.fsm.run_delivery()
         self._track_state()
@@ -262,12 +467,14 @@ class PhotoAgentRuntime:
         self.fsm.context.photo_path = capture.path
         return await self.fsm.delivery.deliver(capture.photo_id)
 
-    async def _run_until_states(self, stop_states: set[State], timeout: float) -> State:
+    async def _run_until_states(
+        self, stop_states: set[State], timeout: float | None = None
+    ) -> State:
         audio_task = asyncio.create_task(self._audio_loop(), name="manual-photo-agent-audio")
         frame_task = asyncio.create_task(self._frame_loop(), name="manual-photo-agent-frames")
-        deadline = time.monotonic() + timeout
+        deadline = None if timeout is None else time.monotonic() + timeout
         try:
-            while time.monotonic() < deadline:
+            while deadline is None or time.monotonic() < deadline:
                 await self._control_step()
                 if self.fsm.context.state in stop_states:
                     return self.fsm.context.state
@@ -288,7 +495,7 @@ class PhotoAgentRuntime:
                 task.cancel()
             await asyncio.gather(audio_task, frame_task, return_exceptions=True)
 
-    async def run_manual_state(self, state: str, timeout: float = 60.0) -> dict[str, object]:
+    async def run_manual_state(self, state: str, timeout: float | None = None) -> dict[str, object]:
         requested = State(state)
         result: dict[str, object] = {"ok": False, "tested_state": state}
         try:
@@ -303,10 +510,7 @@ class PhotoAgentRuntime:
                     )
                     final_state = await self._run_until_states({State.POSE_GUIDANCE, State.IDLE}, timeout)
                 elif requested is State.POSE_GUIDANCE:
-                    final_state = await self._run_until_states({State.SHOOT}, timeout)
-                elif requested is State.SHOOT:
-                    await self.fsm.run_shoot()
-                    final_state = self.fsm.context.state
+                    final_state = await self._run_until_states({State.REVIEW}, timeout)
                 elif requested is State.REVIEW:
                     preview = await self._prepare_manual_photo()
                     if not preview.ok:
@@ -412,7 +616,11 @@ def build_local_runtime(
     if not config.api_key:
         raise RuntimeError("DASHSCOPE_API_KEY is required for local-real mode")
 
-    from app.photo_agent.audio import PyAudioMicrophone, PyAudioSpeaker
+    from app.photo_agent.audio import (
+        PyAudioMicrophone,
+        PyAudioSpeaker,
+        resolve_audio_device_indices,
+    )
     from app.photo_agent.camera import FaceWakeDetector, OpenCVCamera, OpenCVQualityChecker
     from app.photo_agent.delivery import FileDeliveryAdapter, GLOBAL_PHOTO_STORE
     from app.photo_agent.fallback import SystemFallbackNotifier
@@ -426,12 +634,20 @@ def build_local_runtime(
     speaker = None
     microphone = None
     try:
-        camera = camera_builder(config.camera_index, config.photo_dir)
+        camera = camera_builder(
+            config.camera_index,
+            config.photo_dir,
+            rotation_deg=config.camera_rotation_deg,
+        )
         open_camera = getattr(camera, "open", None)
         if open_camera:
             open_camera()
-        speaker = speaker_builder(device_index=config.speaker_index)
-        microphone = microphone_builder(device_index=config.microphone_index)
+        microphone_index, speaker_index = resolve_audio_device_indices(
+            microphone_index=config.microphone_index,
+            speaker_index=config.speaker_index,
+        )
+        speaker = speaker_builder(device_index=speaker_index)
+        microphone = microphone_builder(device_index=microphone_index)
     except Exception:
         if microphone is not None and getattr(microphone, "close", None):
             microphone.close()
@@ -461,7 +677,10 @@ def build_local_runtime(
         camera=camera,
         quality_checker=OpenCVQualityChecker(),
         delivery=FileDeliveryAdapter(GLOBAL_PHOTO_STORE, config.base_url),
-        config=FSMConfig(guidance_interval_s=config.guidance_interval_s),
+        config=FSMConfig(
+            guidance_interval_s=config.guidance_interval_s,
+            skip_quality_check=config.skip_quality_check,
+        ),
         prompts=prompts,
     )
     return PhotoAgentRuntime(
@@ -478,15 +697,29 @@ def build_local_runtime(
     )
 
 
+async def _finish_mock_s3_capture(fsm: PhotoAgentFSM) -> None:
+    await fsm.start_pose_capture("mock")
+    result, quality_ok = await fsm.run_capture_from_pose()
+    await fsm.handle_pose_capture_result(
+        {
+            "ok": result.ok,
+            "quality_ok": quality_ok,
+            "photo_id": result.photo_id,
+            "error": result.error,
+        }
+    )
+    if result.ok and quality_ok:
+        await fsm.handle_pose_speech_done("我拍好啦")
+
+
 async def run_mock_demo(config: RuntimeConfig) -> DeliveryResult:
     fsm, _ = _build_mock_fsm(config)
     await fsm.start()
     await fsm.poll_wake()
     await fsm.poll_wake()
-    await fsm.handle_user_text("要")
-    await fsm.handle_user_text("拍吧")
-    await fsm.run_shoot()
-    await fsm.handle_user_text("满意")
+    await fsm.handle_photo_intent("accept")
+    await _finish_mock_s3_capture(fsm)
+    await fsm.handle_review_intent("accept")
     return await fsm.run_delivery()
 
 
@@ -525,22 +758,17 @@ async def run_mock_state(config: RuntimeConfig, state: str) -> dict[str, object]
     elif state == "S2":
         fsm.context.state = State.ASK_INTENT
         fsm.context.session_id = "session-mock"
-        await fsm.handle_user_text("要")
+        await fsm.handle_photo_intent("accept")
     elif state == "S3":
         fsm.context.state = State.POSE_GUIDANCE
         fsm.context.session_id = "session-mock"
         await fsm.guidance_tick()
-        await fsm.handle_response_done("往中间站一点")
-        await fsm.handle_user_text("拍吧")
-    elif state == "S4":
-        fsm.context.state = State.SHOOT
-        fsm.context.session_id = "session-mock"
-        await fsm.run_shoot()
+        await _finish_mock_s3_capture(fsm)
     elif state == "S5":
         fsm.context.state = State.REVIEW
         fsm.context.session_id = "session-mock"
         fsm.context.photo_id = "mock-photo"
-        await fsm.handle_user_text("满意")
+        await fsm.handle_review_intent("accept")
     elif state == "S6":
         fsm.context.state = State.DELIVER
         fsm.context.session_id = "session-mock"

@@ -110,6 +110,34 @@ class MockOmni(_Recorder):
         self.closed = False
         self.session_id = "session-mock"
         self.events: deque[dict[str, Any]] = deque()
+        self._enable_vad = True
+        self._output_audio_enabled = True
+
+    @property
+    def vad_enabled(self) -> bool:
+        return self._enable_vad
+
+    @property
+    def output_audio_enabled(self) -> bool:
+        return self._output_audio_enabled
+
+    async def configure(
+        self,
+        *,
+        enable_vad: bool = True,
+        output_audio: bool = True,
+        tools: list[dict[str, Any]] | None = None,
+    ) -> None:
+        self._enable_vad = enable_vad
+        self._output_audio_enabled = output_audio
+        self.record(
+            "configure",
+            {
+                "enable_vad": enable_vad,
+                "output_audio": output_audio,
+                "tools": [] if tools is not None and len(tools) == 0 else "default",
+            },
+        )
 
     async def connect(self) -> str:
         self.record("connect")
@@ -118,9 +146,6 @@ class MockOmni(_Recorder):
             raise ConnectionError("mock connect failure")
         self.closed = False
         return self.session_id
-
-    async def configure(self) -> None:
-        self.record("configure")
 
     async def prime_audio(self) -> None:
         self.record("prime_audio")
@@ -137,8 +162,11 @@ class MockOmni(_Recorder):
     async def inject_context(self, text: str) -> None:
         self.record("inject_context", text)
 
-    async def create_response(self, instructions: str) -> None:
-        self.record("create_response", instructions)
+    async def create_response(self, instructions: str, *, output_audio: bool = True) -> None:
+        self.record(
+            "create_response",
+            {"instructions": instructions, "output_audio": output_audio},
+        )
 
     async def update_instructions(self, instructions: str) -> None:
         self.record("update_instructions", instructions)
@@ -149,8 +177,14 @@ class MockOmni(_Recorder):
     async def cancel_response(self) -> None:
         self.record("cancel_response")
 
-    async def submit_tool_result(self, call_id: str, output: dict[str, Any]) -> None:
-        self.record("submit_tool_result", (call_id, output))
+    async def submit_tool_result(
+        self,
+        call_id: str,
+        output: dict[str, Any],
+        *,
+        create_followup: bool = True,
+    ) -> None:
+        self.record("submit_tool_result", (call_id, output, create_followup))
 
     async def next_event(self, timeout: float | None = None) -> dict[str, Any]:
         if self.events:

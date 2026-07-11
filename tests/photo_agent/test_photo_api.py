@@ -10,7 +10,7 @@ from app.photo_agent.api import create_photo_router
 from app.photo_agent.delivery import FileDeliveryAdapter, GLOBAL_PHOTO_STORE, PhotoStore
 from app.photo_agent.fsm import PhotoAgentFSM
 from app.photo_agent.mocks import MockCamera, MockOmni, MockQualityChecker, MockWakeDetector
-from app.photo_agent.models import CaptureResult, DeliveryResult, QualityResult, State
+from app.photo_agent.models import CaptureResult, DeliveryResult, PoseContext, PoseTurnState, QualityResult, State
 
 
 @pytest.mark.asyncio
@@ -75,11 +75,26 @@ async def test_full_chain_photo_url_fetches_the_captured_file(tmp_path: Path) ->
         quality_checker=MockQualityChecker([QualityResult(True, True, True)]),
         delivery=delivery,
     )
-    fsm.context.state = State.SHOOT
+    fsm.context.state = State.POSE_GUIDANCE
     fsm.context.session_id = "session-1"
+    fsm.context.pose_context = PoseContext()
+    fsm.context.pose_turn = PoseTurnState(
+        source="test",
+        phase="capturing",
+        pending_capture=True,
+    )
 
-    await fsm.run_shoot()
-    await fsm.handle_user_text("满意")
+    result, quality_ok = await fsm.run_capture_from_pose()
+    await fsm.handle_pose_capture_result(
+        {
+            "ok": result.ok,
+            "quality_ok": quality_ok,
+            "photo_id": result.photo_id,
+            "error": result.error,
+        }
+    )
+    await fsm.handle_pose_speech_done("我拍好啦")
+    await fsm.handle_review_intent("accept")
     result: DeliveryResult = await fsm.run_delivery()
 
     app = FastAPI()

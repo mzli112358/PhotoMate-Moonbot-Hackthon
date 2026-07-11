@@ -149,7 +149,101 @@ http://127.0.0.1:8080/flow/
 
 右下角会出现 **「开始会话」** 按钮——**必须点击**才会启动 S1→S6 完整循环；后端不会自动开始。
 
+> **无屏幕 / 纯 SSH 部署（Jetson）**：见下文 **§5.1 远程操作**——可用命令行启动会话，或用笔记本 SSH 端口转发/局域网访问前端。
+
 > **生产说明**：当前 FastAPI **未挂载** `webs/flow` 静态目录，现场演示请保持 `npm run dev` 运行。若需纯后端单进程部署，需先 `npm run build` 并在 `app/main.py` 增加 `/flow/` 静态挂载（尚未实现）。
+
+### 5.1 远程操作（SSH + 笔记本）
+
+Jetson 无本地屏幕时，有两种常用方式：
+
+#### 方式 A：命令行启动（不需要看前端）
+
+后端 `uvicorn` 跑起来后，**「开始会话」等价于一条 HTTP 请求**：
+
+```bash
+# 在 Jetson 上（或 SSH 远程执行）
+chmod +x scripts/photo_agent/session_cli.sh
+./scripts/photo_agent/session_cli.sh start
+
+# 查看当前状态（state=S1/S2/...，active=true 表示会话在跑）
+./scripts/photo_agent/session_cli.sh status
+
+# 结束会话
+./scripts/photo_agent/session_cli.sh stop
+```
+
+从**笔记本**一条命令启动（把 `jetson` 换成你的 SSH 主机名/IP）：
+
+```bash
+ssh jetson 'cd PhotoMate-Moonbot-Hackthon && ./scripts/photo_agent/session_cli.sh start'
+```
+
+等价的 raw curl：
+
+```bash
+curl -X POST http://127.0.0.1:8000/api/photo-agent/session/start \
+  -H "Content-Type: application/json" -d '{}'
+```
+
+可选指定设备索引：
+
+```bash
+curl -X POST http://127.0.0.1:8000/api/photo-agent/session/start \
+  -H "Content-Type: application/json" \
+  -d '{"camera_index":0,"microphone_index":1,"speaker_index":2}'
+```
+
+#### 方式 B：在笔记本浏览器看实时前端
+
+前后端都在 Jetson 上跑，笔记本和 Jetson 在同一局域网（或 SSH 可达）。
+
+**B1 — SSH 端口转发（推荐，不改配置）**
+
+在**笔记本**上开一条 SSH，把 Jetson 的前端端口转过来（Vite 会把 `/api` 代理到 Jetson 本机 8000，所以**只转发 8080 即可**）：
+
+```bash
+ssh -L 8080:127.0.0.1:8080 user@<Jetson局域网IP>
+```
+
+保持该终端不关，笔记本浏览器打开：
+
+```
+http://127.0.0.1:8080/flow/
+```
+
+即可看到与 Jetson 上相同的实时界面（寻人画面、状态切页、复核照片、二维码等）。可以点「开始会话」，也可以用上面的 CLI 启动。
+
+**B2 — 局域网直连（Jetson 监听所有网卡）**
+
+Jetson 上前端用 LAN 模式启动：
+
+```bash
+cd frontend
+npm run dev:lan    # 等价于 vite dev --host 0.0.0.0
+```
+
+笔记本浏览器打开（把 IP 换成 Jetson 的实际地址）：
+
+```
+http://<Jetson局域网IP>:8080/flow/
+```
+
+> 若笔记本访问不了 8080，检查 Jetson 防火墙：`sudo ufw allow 8080/tcp`（如启用了 ufw）。
+
+**实时预览（仅画面，无 UI）**
+
+即使不看前端，也可在笔记本上看相机 MJPEG 流（需能访问 Jetson 8000 端口，或再转发 `-L 8000:127.0.0.1:8000`）：
+
+```
+http://127.0.0.1:8000/api/photo-agent/session/preview.mjpg
+```
+
+会话状态 JSON：
+
+```
+http://127.0.0.1:8000/api/photo-agent/session/state
+```
 
 ---
 

@@ -11,3 +11,5 @@ websocket-client>=1.8.0
 # OpenCV 5.0.0.93 is currently a thin wrapper without CascadeClassifier.
 opencv-python>=4.10.0,<5
 PyAudio>=0.2.14
+# Pure-Python QR generation for photo delivery links (no system deps).
+segno>=1.6.0

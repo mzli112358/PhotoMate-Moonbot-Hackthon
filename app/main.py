@@ -17,6 +17,8 @@ from app.photo_agent.delivery import GLOBAL_PHOTO_STORE
 from app.photo_agent.config import load_runtime_config
 from app.photo_agent.prompts import PromptRegistry
 from app.photo_agent.runtime import build_local_runtime
+from app.photo_agent.session_api import create_qr_router, create_session_router
+from app.photo_agent.session_service import LiveSessionService
 from app.photo_agent.test_console_api import create_test_console_router
 from app.photo_agent.test_controller import PhotoAgentTestController, TestRunStore
 from app.perception import PerceptionConfig
@@ -74,11 +76,17 @@ photo_agent_test_controller = PhotoAgentTestController(
     config_loader=load_runtime_config,
     runtime_builder=build_local_runtime,
 )
+photo_agent_session = LiveSessionService(
+    prompt_source=photo_agent_prompts,
+    config_loader=load_runtime_config,
+    runtime_builder=build_local_runtime,
+)
 
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     yield
+    await photo_agent_session.stop()
     await photo_agent_test_controller.stop()
     robot_bridge.shutdown()
 
@@ -95,6 +103,8 @@ app = FastAPI(
 )
 app.include_router(create_photo_router(GLOBAL_PHOTO_STORE))
 app.include_router(create_test_console_router(photo_agent_test_controller))
+app.include_router(create_session_router(photo_agent_session))
+app.include_router(create_qr_router(photo_agent_session))
 
 
 @app.get("/api/health")

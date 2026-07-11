@@ -936,7 +936,19 @@ async def test_session_near_120_minute_limit_is_recycled() -> None:
                     "tool_call": ToolCall(
                         "report_photo_intent", {"decision": "accept"}, "intent-1"
                     ),
-                }
+                },
+                {
+                    "type": "tool_call",
+                    "tool_call": ToolCall(
+                        "report_capture_device", {"device": "insta"}, "device-1"
+                    ),
+                },
+                {
+                    "type": "tool_call",
+                    "tool_call": ToolCall(
+                        "report_capture_mode", {"mode": "photo"}, "mode-1"
+                    ),
+                },
             ],
             "S3",
         ),

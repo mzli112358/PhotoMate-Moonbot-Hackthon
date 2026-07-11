@@ -40,10 +40,34 @@ class PhotoStore:
         return True
 
 
+class DownloadUrlRegistry:
+    """Maps photo_id -> public download URL produced by object storage."""
+
+    def __init__(self) -> None:
+        self._urls: dict[str, str] = {}
+        self._lock = threading.RLock()
+
+    def set(self, photo_id: str, url: str) -> None:
+        if not photo_id or not url:
+            return
+        with self._lock:
+            self._urls[photo_id] = url
+
+    def get(self, photo_id: str) -> str | None:
+        with self._lock:
+            return self._urls.get(photo_id)
+
+
 class FileDeliveryAdapter:
-    def __init__(self, store: PhotoStore, base_url: str) -> None:
+    def __init__(
+        self,
+        store: PhotoStore,
+        base_url: str,
+        download_registry: "DownloadUrlRegistry | None" = None,
+    ) -> None:
         self.store = store
         self.base_url = base_url.rstrip("/")
+        self.download_registry = download_registry or GLOBAL_DOWNLOAD_REGISTRY
 
     def register_photo(self, photo_id: str, path: Path) -> None:
         self.store.register(photo_id, path)
@@ -54,7 +78,12 @@ class FileDeliveryAdapter:
     async def deliver(self, photo_id: str) -> DeliveryResult:
         if self.store.resolve(photo_id) is None:
             return DeliveryResult(photo_id, "", False, "photo_not_found")
-        return DeliveryResult(photo_id, f"{self.base_url}/api/photos/{photo_id}", True)
+        # Prefer the public object-storage URL (scannable from a phone); fall back
+        # to the LAN-only local endpoint when storage is not configured.
+        public_url = self.download_registry.get(photo_id)
+        url = public_url or f"{self.base_url}/api/photos/{photo_id}"
+        return DeliveryResult(photo_id, url, True)
 
 
 GLOBAL_PHOTO_STORE = PhotoStore()
+GLOBAL_DOWNLOAD_REGISTRY = DownloadUrlRegistry()

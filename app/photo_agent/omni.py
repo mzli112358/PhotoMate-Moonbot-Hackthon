@@ -65,6 +65,36 @@ def omni_tools() -> list[dict[str, Any]]:
             ["decision"],
         ),
         tool(
+            "report_capture_device",
+            (
+                "仅在S2用户已接受拍照、系统询问用手机还是Insta360相机之后使用。"
+                "根据用户原始语音判断所选设备；意图明确后必须调用此工具，不要用口头回答代替。"
+            ),
+            {
+                "device": {
+                    "type": "string",
+                    "enum": ["phone", "insta"],
+                    "description": "phone表示用户自己的手机，insta表示Insta360机器人相机。",
+                }
+            },
+            ["device"],
+        ),
+        tool(
+            "report_capture_mode",
+            (
+                "仅在S2用户已选好Insta360相机、系统询问一键拍照还是录像之后使用。"
+                "根据用户原始语音判断所选模式；意图明确后必须调用此工具，不要用口头回答代替。"
+            ),
+            {
+                "mode": {
+                    "type": "string",
+                    "enum": ["photo", "video"],
+                    "description": "photo表示一键拍照，video表示录像。",
+                }
+            },
+            ["mode"],
+        ),
+        tool(
             "report_pose_turn",
             (
                 "仅在S3使用。观察当前画面并结合已提供的PoseContext，创建、维持、替换或完成"

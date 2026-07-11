@@ -12,10 +12,13 @@ LOGGER = logging.getLogger("photomate.photo_agent.dispatcher")
 class FunctionCallDispatcher:
     """Validates Omni tool calls and executes deterministic local actions."""
 
+    # name -> (expected_state, argument_key, allowed_values, required_s2_phase|None)
     INTENT_TOOLS = {
-        "report_photo_intent": (State.ASK_INTENT, {"accept", "deny"}),
-        "report_pose_readiness": (State.POSE_GUIDANCE, {"ready"}),
-        "report_review_intent": (State.REVIEW, {"accept", "retake"}),
+        "report_photo_intent": (State.ASK_INTENT, "decision", {"accept", "deny"}, "ask_intent"),
+        "report_capture_device": (State.ASK_INTENT, "device", {"phone", "insta"}, "ask_device"),
+        "report_capture_mode": (State.ASK_INTENT, "mode", {"photo", "video"}, "ask_mode"),
+        "report_pose_readiness": (State.POSE_GUIDANCE, "decision", {"ready"}, None),
+        "report_review_intent": (State.REVIEW, "decision", {"accept", "retake"}, None),
     }
 
     def __init__(self, fsm: PhotoAgentFSM) -> None:
@@ -28,22 +31,29 @@ class FunctionCallDispatcher:
         contract = self.INTENT_TOOLS.get(call.name)
         if contract is None:
             return {"ok": False, "error": f"unsupported_intent_tool:{call.name}"}
-        expected_state, decisions = contract
+        expected_state, arg_key, allowed, required_phase = contract
         if self.fsm.context.state is not expected_state:
             return {"ok": False, "error": f"invalid_state:{self.fsm.context.state.value}"}
-        decision = call.arguments.get("decision")
-        if decision not in decisions:
-            return {"ok": False, "error": f"invalid_decision:{decision}"}
-        return {"ok": True, "decision": decision}
+        if required_phase is not None and self.fsm.context.s2_phase != required_phase:
+            return {"ok": False, "error": f"invalid_phase:{self.fsm.context.s2_phase}"}
+        value = call.arguments.get(arg_key)
+        if value not in allowed:
+            return {"ok": False, "error": f"invalid_{arg_key}:{value}"}
+        return {"ok": True, arg_key: value}
 
     async def apply_intent(self, call: ToolCall) -> None:
-        decision = str(call.arguments["decision"])
+        arg_key = self.INTENT_TOOLS[call.name][1]
+        value = str(call.arguments[arg_key])
         if call.name == "report_photo_intent":
-            await self.fsm.handle_photo_intent(decision)
+            await self.fsm.handle_photo_intent(value)
+        elif call.name == "report_capture_device":
+            await self.fsm.handle_capture_device(value)
+        elif call.name == "report_capture_mode":
+            await self.fsm.handle_capture_mode(value)
         elif call.name == "report_pose_readiness":
-            await self.fsm.handle_pose_readiness(decision)
+            await self.fsm.handle_pose_readiness(value)
         elif call.name == "report_review_intent":
-            await self.fsm.handle_review_intent(decision)
+            await self.fsm.handle_review_intent(value)
 
     async def dispatch(self, call: ToolCall) -> dict[str, Any]:
         if self.is_intent_call(call):

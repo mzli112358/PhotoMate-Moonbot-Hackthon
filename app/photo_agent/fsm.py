@@ -25,6 +25,7 @@ from app.photo_agent.models import (
     State,
 )
 from app.photo_agent.prompts import PromptSource, StaticPromptSource
+from app.photo_agent.storage import NullStorageUploader, StorageUploader
 
 LOGGER = logging.getLogger("photomate.photo_agent")
 T = TypeVar("T")
@@ -62,6 +63,7 @@ class PhotoAgentFSM:
         delivery: DeliveryAdapter,
         config: FSMConfig | None = None,
         prompts: PromptSource | None = None,
+        storage: StorageUploader | None = None,
     ) -> None:
         self.wake_detector = wake_detector
         self.omni = omni
@@ -70,6 +72,7 @@ class PhotoAgentFSM:
         self.delivery = delivery
         self.config = config or FSMConfig()
         self.prompts = prompts or StaticPromptSource()
+        self.storage = storage or NullStorageUploader()
         self.context = SessionContext(
             guidance_interval_s=self.config.guidance_interval_s,
             max_guidance_turns=self.config.max_guidance_turns,
@@ -157,6 +160,12 @@ class PhotoAgentFSM:
 
     async def _enter(self, state: State, reason: str) -> None:
         self._transition(state, reason)
+        if state is State.ASK_INTENT:
+            self.context.s2_phase = "ask_intent"
+            self.context.capture_device = None
+            self.context.capture_mode = None
+            self.context.ask_timeout_count = 0
+            self.context.user_responded = False
         if state is State.POSE_GUIDANCE:
             self.context.pose_context = PoseContext()
             self.context.pose_turn = None
@@ -174,13 +183,40 @@ class PhotoAgentFSM:
             raise ValueError(f"photo intent is invalid in state {self.context.state.value}")
         if decision == "accept":
             self.guidance_limit_reached = False
-            await self._enter(State.POSE_GUIDANCE, "user_accepted")
+            # Instead of jumping straight to S3, run the in-S2 device/mode picker.
+            self.context.s2_phase = "ask_device"
+            await self._ask_s2(self.prompts.get("action.S2.ask_device"))
             return
         if decision == "deny":
             await self._say_and_wait(self.prompts.get("action.S2.decline"))
             await self._finish_session("user_declined")
             return
         raise ValueError(f"unsupported photo intent: {decision}")
+
+    async def _ask_s2(self, instructions: str) -> None:
+        """Speak an S2 sub-question while keeping tools + VAD on for the reply."""
+        await self.omni.configure(enable_vad=True, output_audio=True)
+        self.context.response_in_flight = True
+        await self.omni.create_response(instructions, output_audio=True)
+
+    async def handle_capture_device(self, device: str) -> None:
+        if self.context.state is not State.ASK_INTENT or self.context.s2_phase != "ask_device":
+            raise ValueError(f"capture device is invalid in phase {self.context.s2_phase}")
+        self.context.capture_device = device
+        # Both device paths use the Insta360 pipeline for this build; the phone
+        # branch is a UI placeholder that still routes through the same capture.
+        self.context.s2_phase = "ask_mode"
+        await self._ask_s2(self.prompts.get("action.S2.ask_mode"))
+
+    async def handle_capture_mode(self, mode: str) -> None:
+        if self.context.state is not State.ASK_INTENT or self.context.s2_phase != "ask_mode":
+            raise ValueError(f"capture mode is invalid in phase {self.context.s2_phase}")
+        # Video is accepted but treated as a photo capture placeholder for now.
+        self.context.capture_mode = mode
+        self.context.s2_phase = "done"
+        self.guidance_limit_reached = False
+        self.context.response_in_flight = False
+        await self._enter(State.POSE_GUIDANCE, "device_mode_selected")
 
     async def handle_pose_readiness(self, decision: str) -> None:
         if self.context.state is not State.POSE_GUIDANCE:
@@ -273,6 +309,18 @@ class PhotoAgentFSM:
 
     async def handle_timeout(self) -> None:
         if self.context.state is State.ASK_INTENT:
+            # Do not re-prompt while the user is mid device/mode selection.
+            if self.context.s2_phase != "ask_intent":
+                return
+            if self.context.user_responded:
+                # User already engaged: never nag with the "要不要拍照" fallback.
+                # If they then stay silent through another full window, end the
+                # session gracefully so the kiosk resets instead of hanging.
+                if self.context.ask_timeout_count == 0:
+                    self.context.ask_timeout_count = 1
+                    return
+                await self._finish_session("timeout_after_response")
+                return
             if self.context.ask_timeout_count == 0:
                 self.context.ask_timeout_count = 1
                 await self.omni.create_response(self.prompts.get("action.S2.ask_retry"))
@@ -332,6 +380,10 @@ class PhotoAgentFSM:
     async def handle_speech_started(self) -> None:
         # S2/S5 ask a question first; only S3 allows the user to barge in mid-utterance.
         if self.context.state in (State.ASK_INTENT, State.REVIEW):
+            # The user is answering the "要不要拍照" question; remember it so the
+            # 12s fallback never nags someone who already responded.
+            if self.context.state is State.ASK_INTENT and self.context.s2_phase == "ask_intent":
+                self.context.user_responded = True
             return
         if self.context.response_in_flight:
             await self.omni.cancel_response()
@@ -483,7 +535,9 @@ class PhotoAgentFSM:
 
         self.context.photo_id = result.photo_id
         self.context.photo_path = result.path
+        self.context.download_url = None
         self.delivery.register_photo(result.photo_id, result.path)
+        self._schedule_upload(result.photo_id, result.path)
         if self.config.skip_quality_check:
             LOGGER.info(
                 "quality_result",
@@ -499,6 +553,31 @@ class PhotoAgentFSM:
             self.context.retake_count += 1
             return result, False
         return result, True
+
+    def _schedule_upload(self, photo_id: str, path: Any) -> None:
+        """Upload the capture to object storage without blocking the pipeline."""
+        if not getattr(self.storage, "enabled", False):
+            return
+        registry = getattr(self.delivery, "download_registry", None)
+
+        async def _run() -> None:
+            try:
+                url = await self.storage.upload(photo_id, path)
+            except Exception as exc:  # noqa: BLE001 - upload boundary
+                LOGGER.warning(
+                    "storage_upload_error", extra={"photo_id": photo_id, "error": str(exc)}
+                )
+                return
+            if not url:
+                return
+            if registry is not None:
+                registry.set(photo_id, url)
+            if self.context.photo_id == photo_id:
+                self.context.download_url = url
+
+        task = asyncio.create_task(_run(), name=f"photo-upload-{photo_id}")
+        self._background_tasks.add(task)
+        task.add_done_callback(self._background_tasks.discard)
 
     async def _enter_review(self, reason: str) -> None:
         await self._enter(State.REVIEW, reason)
@@ -522,35 +601,38 @@ class PhotoAgentFSM:
         if self.context.state is not State.DELIVER or not self.context.photo_id:
             raise RuntimeError("delivery requires S6 and a photo_id")
         result: DeliveryResult | None = None
-        try:
-            for attempt in range(self.config.operation_retries + 1):
-                result = await self.delivery.deliver(self.context.photo_id)
-                LOGGER.info(
-                    "delivery_result",
-                    extra={
-                        "attempt": attempt + 1,
-                        "ok": result.ok,
-                        "photo_id": result.photo_id,
-                        "photo_url": result.photo_url or None,
-                        "error": result.error,
-                    },
-                )
-                if result.ok:
-                    self.context.photo_url = result.photo_url
-                    break
-                LOGGER.warning("delivery_retry", extra={"attempt": attempt + 1, "error": result.error})
-            assert result is not None
+        for attempt in range(self.config.operation_retries + 1):
+            result = await self.delivery.deliver(self.context.photo_id)
+            LOGGER.info(
+                "delivery_result",
+                extra={
+                    "attempt": attempt + 1,
+                    "ok": result.ok,
+                    "photo_id": result.photo_id,
+                    "photo_url": result.photo_url or None,
+                    "error": result.error,
+                },
+            )
             if result.ok:
-                await self._say_and_wait(self.prompts.get("action.S6.delivered"))
-            else:
-                await self._say_and_wait(
-                    self.prompts.render(
-                        "action.S6.delivery_failed", photo_id=self.context.photo_id
-                    )
-                )
+                self.context.photo_url = result.photo_url
+                break
+            LOGGER.warning("delivery_retry", extra={"attempt": attempt + 1, "error": result.error})
+        assert result is not None
+        if result.ok:
+            await self._say_and_wait(self.prompts.get("action.S6.delivered"))
+            # Stay quiet while lingering on the share page: server VAD off so ambient
+            # speech cannot spawn a stray response before the loop restarts.
+            await self.omni.configure(enable_vad=False, output_audio=False)
+            # Linger on the share page so the guest can scan the QR; the runtime
+            # restarts the next loop after `delivered_at` ages past the linger window.
+            self.context.delivered_at = time.monotonic()
             return result
-        finally:
-            await self._finish_session("delivered" if result and result.ok else "delivery_failed")
+        # A failed delivery has nothing to scan, so reset immediately and loop.
+        await self._say_and_wait(
+            self.prompts.render("action.S6.delivery_failed", photo_id=self.context.photo_id)
+        )
+        await self._finish_session("delivery_failed")
+        return result
 
     async def _finish_session(self, reason: str) -> None:
         if self.context.session_id:

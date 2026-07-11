@@ -158,8 +158,16 @@ async def test_s2_uses_omni_intent_decisions_instead_of_asr_text() -> None:
     accept, _, _, _ = build_fsm()
     accept.context.state = State.ASK_INTENT
 
+    # Accepting now opens the in-S2 device/mode picker before S3.
     await accept.handle_photo_intent("accept")
+    assert accept.context.state is State.ASK_INTENT
+    assert accept.context.s2_phase == "ask_device"
+    await accept.handle_capture_device("insta")
+    assert accept.context.s2_phase == "ask_mode"
+    await accept.handle_capture_mode("photo")
     assert accept.context.state is State.POSE_GUIDANCE
+    assert accept.context.capture_device == "insta"
+    assert accept.context.capture_mode == "photo"
 
     decline, decline_omni, _, _ = build_fsm()
     decline.context.state = State.ASK_INTENT
@@ -181,6 +189,28 @@ async def test_s2_timeout_still_retries_once_then_returns_idle() -> None:
     await timeout.handle_timeout()
     assert timeout.context.state is State.IDLE
     assert timeout_omni.count("create_response") == 1
+
+
+@pytest.mark.asyncio
+async def test_s2_timeout_does_not_renag_after_user_responds() -> None:
+    fsm, omni, _, _ = build_fsm()
+    fsm.context.state = State.ASK_INTENT
+    fsm.context.s2_phase = "ask_intent"
+    fsm.context.session_id = "session-1"
+
+    # User speaks in response to the initial "要不要拍照" question.
+    await fsm.handle_speech_started()
+    assert fsm.context.user_responded is True
+
+    # First silence window must NOT emit the re-ask fallback...
+    await fsm.handle_timeout()
+    assert omni.count("create_response") == 0
+    assert fsm.context.state is State.ASK_INTENT
+
+    # ...and a second full window ends the session gracefully instead of nagging.
+    await fsm.handle_timeout()
+    assert omni.count("create_response") == 0
+    assert fsm.context.state is State.IDLE
 
 
 @pytest.mark.asyncio
@@ -250,6 +280,8 @@ async def test_entering_s3_starts_a_fresh_pose_episode() -> None:
     fsm.context.state = State.ASK_INTENT
 
     await fsm.handle_photo_intent("accept")
+    await fsm.handle_capture_device("insta")
+    await fsm.handle_capture_mode("photo")
     first_episode = fsm.context.pose_context.episode_id
     fsm.context.state = State.REVIEW
     await fsm.handle_review_intent("retake")
@@ -389,22 +421,33 @@ async def test_s5_review_routes_satisfied_retake_and_timeout() -> None:
 
 
 @pytest.mark.asyncio
-async def test_s6_success_returns_url_and_resets_everything() -> None:
+async def test_s6_success_delivers_then_lingers_on_share_page() -> None:
     fsm, omni, _, delivery = build_fsm()
     fsm.context.state = State.DELIVER
     fsm.context.session_id = "session-1"
     fsm.context.photo_id = "photo-1"
-    fsm.context.retake_count = 2
 
     result = await fsm.run_delivery()
 
     assert result == GOOD_DELIVERY
+    # Delivery announces then lingers on /post; the loop is NOT reset yet so the
+    # guest keeps seeing the QR until the runtime's share window elapses.
+    assert fsm.context.state is State.DELIVER
+    assert fsm.context.session_id == "session-1"
+    assert fsm.context.photo_id == "photo-1"
+    assert fsm.context.photo_url == GOOD_DELIVERY.photo_url
+    assert fsm.context.delivered_at > 0.0
+    assert delivery.count("deliver") == 1
+    assert omni.count("wait_response_done") == 1
+    assert omni.count("end_session") == 0
+    assert omni.count("close") == 0
+
+    # When the runtime later ends the share window everything resets for the next loop.
+    await fsm.finish_session("share_linger_timeout")
     assert fsm.context.state is State.IDLE
     assert fsm.context.session_id is None
     assert fsm.context.photo_id is None
-    assert fsm.context.retake_count == 0
-    assert delivery.count("deliver") == 1
-    assert omni.count("wait_response_done") == 1
+    assert fsm.context.delivered_at == 0.0
     assert omni.count("end_session") == 1
     assert omni.count("close") == 1
 
@@ -449,6 +492,8 @@ async def test_mock_happy_path_s1_to_s6_has_no_session_leak() -> None:
     await fsm.poll_wake()
     await fsm.poll_wake()
     await fsm.handle_photo_intent("accept")
+    await fsm.handle_capture_device("insta")
+    await fsm.handle_capture_mode("photo")
     await fsm.handle_pose_readiness("ready")
     result, quality_ok = await fsm.run_capture_from_pose()
     await fsm.handle_pose_capture_result(
@@ -462,6 +507,8 @@ async def test_mock_happy_path_s1_to_s6_has_no_session_leak() -> None:
     await fsm.handle_pose_speech_done("我拍好啦")
     await fsm.handle_review_intent("accept")
     delivery = await fsm.run_delivery()
+    # Share page lingers after delivery; the runtime ends it to restart the loop.
+    await fsm.finish_session("share_linger_timeout")
 
     assert delivery.ok is True
     assert fsm.context.state is State.IDLE

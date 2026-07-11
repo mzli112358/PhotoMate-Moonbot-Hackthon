@@ -91,6 +91,8 @@ def test_tools_include_all_omni_voice_intent_contracts() -> None:
 
     assert set(tools) == {
         "report_photo_intent",
+        "report_capture_device",
+        "report_capture_mode",
         "report_pose_turn",
         "report_pose_readiness",
         "report_review_intent",
@@ -102,6 +104,14 @@ def test_tools_include_all_omni_voice_intent_contracts() -> None:
     assert tools["report_photo_intent"]["parameters"]["properties"]["decision"]["enum"] == [
         "accept",
         "deny",
+    ]
+    assert tools["report_capture_device"]["parameters"]["properties"]["device"]["enum"] == [
+        "phone",
+        "insta",
+    ]
+    assert tools["report_capture_mode"]["parameters"]["properties"]["mode"]["enum"] == [
+        "photo",
+        "video",
     ]
     assert tools["report_pose_readiness"]["parameters"]["properties"]["decision"]["enum"] == [
         "ready"

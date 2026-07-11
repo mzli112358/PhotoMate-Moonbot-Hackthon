@@ -21,6 +21,38 @@ def build_dispatcher() -> tuple[FunctionCallDispatcher, PhotoAgentFSM]:
     return FunctionCallDispatcher(fsm), fsm
 
 
+def test_s2_intent_tools_are_phase_gated() -> None:
+    dispatcher, fsm = build_dispatcher()
+    fsm.context.state = State.ASK_INTENT
+
+    # In the initial ask phase only report_photo_intent is valid.
+    fsm.context.s2_phase = "ask_intent"
+    assert dispatcher.validate_intent(
+        ToolCall("report_photo_intent", {"decision": "accept"}, "c0")
+    )["ok"] is True
+    assert dispatcher.validate_intent(
+        ToolCall("report_capture_device", {"device": "insta"}, "c1")
+    )["ok"] is False
+
+    # Device selection only accepted while in ask_device.
+    fsm.context.s2_phase = "ask_device"
+    assert dispatcher.validate_intent(
+        ToolCall("report_capture_device", {"device": "insta"}, "c2")
+    )["ok"] is True
+    assert dispatcher.validate_intent(
+        ToolCall("report_capture_mode", {"mode": "photo"}, "c3")
+    )["ok"] is False
+
+    # Mode selection only accepted while in ask_mode.
+    fsm.context.s2_phase = "ask_mode"
+    assert dispatcher.validate_intent(
+        ToolCall("report_capture_mode", {"mode": "photo"}, "c4")
+    )["ok"] is True
+    assert dispatcher.validate_intent(
+        ToolCall("report_capture_mode", {"mode": "unknown"}, "c5")
+    )["ok"] is False
+
+
 @pytest.mark.asyncio
 async def test_pose_context_create_keep_replace_and_complete() -> None:
     dispatcher, fsm = build_dispatcher()

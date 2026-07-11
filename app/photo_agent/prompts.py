@@ -25,8 +25,13 @@ DEFAULT_PROMPTS: dict[str, str] = {
         "未经用户同意不保存到云端，不要声称控制了未接入的机器人或 Insta360 能力。"
     ),
     "state.S2": (
-        "当前进入询问拍照意愿环节。主动询问用户是否需要拍照；"
-        "用户明确接受或拒绝后调用 report_photo_intent。"
+        "当前进入询问拍照意愿与拍摄设置环节，分三步："
+        "①主动询问用户是否需要拍照；用户明确接受或拒绝后调用 report_photo_intent。"
+        "②用户接受后，系统会让你询问用手机还是用Insta360机器人相机；"
+        "用户明确选择后调用 report_capture_device。"
+        "③选择Insta360相机后，系统会让你询问一键拍照还是录像；"
+        "用户明确选择后调用 report_capture_mode。"
+        "每一步都直接理解用户原始语音，意图明确后必须调用对应工具，不要用口头回答代替。"
     ),
     "state.S3": (
         "当前进入拍照姿态引导环节。结合画面中的场景元素（如背景招牌、装饰、道具）构思简单、安全、可验证的静态动作目标。"
@@ -50,6 +55,14 @@ DEFAULT_PROMPTS: dict[str, str] = {
     "action.S2.ask_initial": "嗨～需要我帮你拍张照吗？只说这一句。",
     "action.S2.ask_retry": "再轻声询问一次用户是否需要拍照。只说一句。",
     "action.S2.decline": "友好回应用户：没问题，需要时再叫我。只说一句。",
+    "action.S2.ask_device": (
+        "用户想拍照啦。热情地问一句：你想用自己的手机，还是用我的Insta360机器人相机来拍？"
+        "只说这一句；等用户回答后再调用 report_capture_device。"
+    ),
+    "action.S2.ask_mode": (
+        "用户选择了Insta360相机。热情地问一句：你想一键拍照，还是录一小段视频？"
+        "只说这一句；等用户回答后再调用 report_capture_mode。"
+    ),
     "action.S3.guidance": "观察当前画面并持续当前姿态目标。",
     "action.S3.assess": (
         "这是S3内部评估回合，当前阶段={guidance_phase}，PoseContext(JSON)：{pose_context}\n"

@@ -147,12 +147,23 @@ class SessionContext:
     photo_id: str | None = None
     photo_path: Path | None = None
     photo_url: str | None = None
+    download_url: str | None = None
+    capture_device: str | None = None
+    capture_mode: str | None = None
+    # Sub-phase inside S2 (ASK_INTENT): ask_intent -> ask_device -> ask_mode -> done.
+    s2_phase: str = "ask_intent"
     guidance_turns: list[GuidanceTurn] = field(default_factory=list)
     pose_context: PoseContext | None = None
     pose_turn: PoseTurnState | None = None
     response_in_flight: bool = False
     retake_count: int = 0
     ask_timeout_count: int = 0
+    # True once the user has spoken during the S2 ask_intent step; suppresses the
+    # "要不要我帮你拍张照" re-ask so we never nag a user who already responded.
+    user_responded: bool = False
+    # monotonic() time when S6 delivery finished and the share page began lingering;
+    # 0.0 means delivery has not completed yet. Drives the 60s auto-restart.
+    delivered_at: float = 0.0
     session_started_at: float = 0.0
     guidance_interval_s: float = 5.0
     max_guidance_turns: int = 8

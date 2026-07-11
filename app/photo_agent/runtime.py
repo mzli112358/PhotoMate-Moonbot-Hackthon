@@ -79,6 +79,8 @@ class PhotoAgentRuntime:
         self._state_since = time.monotonic()
         self._wall_clock = time.time
         self.session_max_s = 115 * 60.0
+        # How long the finished share page stays up before the next loop starts.
+        self.share_linger_s = 60.0
         self._pending_assistant_text = ""
 
     async def handle_event(self, event: dict) -> None:
@@ -95,6 +97,10 @@ class PhotoAgentRuntime:
             await self.fsm.handle_speech_started()
             if self.fsm.context.state is State.POSE_GUIDANCE:
                 self._pending_assistant_text = ""
+            elif self.fsm.context.state is State.ASK_INTENT:
+                # Restart the ask fallback window whenever the user speaks, so a
+                # responsive user is never interrupted by the re-ask prompt.
+                self._state_since = time.monotonic()
         elif event_type == "response_created":
             self.fsm.context.response_in_flight = True
             turn = self.fsm.context.pose_turn
@@ -315,12 +321,10 @@ class PhotoAgentRuntime:
                 chunk = self.microphone.read_chunk()
                 if not self.fsm.context.session_id:
                     continue
-                # Coach turns buffer silence+frame locally; mic would pollute that buffer.
-                if (
-                    self.fsm.context.state.value == "S3"
-                    and hasattr(self.omni, "vad_enabled")
-                    and not self.omni.vad_enabled
-                ):
+                # When server VAD is off we are not expecting mic-driven turns (S3
+                # coach frames, or the S6 share-page linger); streaming mic audio
+                # would only pollute the buffer, so skip it.
+                if hasattr(self.omni, "vad_enabled") and not self.omni.vad_enabled:
                     await asyncio.sleep(0.05)
                     continue
                 await self.omni.append_audio(chunk)
@@ -385,13 +389,23 @@ class PhotoAgentRuntime:
             now = time.monotonic()
             if now - self._last_guidance_at >= self.fsm.context.guidance_interval_s:
                 await self.fsm.guidance_tick()
-        elif state is State.ASK_INTENT and time.monotonic() - self._state_since >= 12.0:
+        elif (
+            state is State.ASK_INTENT
+            and not self.fsm.context.response_in_flight
+            and time.monotonic() - self._state_since >= 12.0
+        ):
             await self.fsm.handle_timeout()
             self._state_since = time.monotonic()
         elif state is State.REVIEW and time.monotonic() - self._state_since >= 15.0:
             await self.fsm.handle_timeout()
-        elif state is State.DELIVER and time.monotonic() - self._state_since >= 2.0:
-            await self.fsm.run_delivery()
+        elif state is State.DELIVER:
+            now = time.monotonic()
+            if self.fsm.context.delivered_at <= 0.0:
+                if now - self._state_since >= 2.0:
+                    await self.fsm.run_delivery()
+            elif now - self.fsm.context.delivered_at >= self.share_linger_s:
+                # Share window elapsed: reset and start the next patrol loop.
+                await self.fsm.finish_session("share_linger_timeout")
         self._track_state()
 
     async def sync_prompt_version(self) -> None:
@@ -625,6 +639,7 @@ def build_local_runtime(
     from app.photo_agent.delivery import FileDeliveryAdapter, GLOBAL_PHOTO_STORE
     from app.photo_agent.fallback import SystemFallbackNotifier
     from app.photo_agent.omni import DashscopeOmniClient, OmniSettings
+    from app.photo_agent.storage import build_storage_uploader
     from app.config import CONFIG_DIR, ROOT_DIR
 
     camera_builder = camera_factory or OpenCVCamera
@@ -682,6 +697,7 @@ def build_local_runtime(
             skip_quality_check=config.skip_quality_check,
         ),
         prompts=prompts,
+        storage=build_storage_uploader(),
     )
     return PhotoAgentRuntime(
         fsm,
@@ -718,9 +734,15 @@ async def run_mock_demo(config: RuntimeConfig) -> DeliveryResult:
     await fsm.poll_wake()
     await fsm.poll_wake()
     await fsm.handle_photo_intent("accept")
+    await fsm.handle_capture_device("insta")
+    await fsm.handle_capture_mode("photo")
     await _finish_mock_s3_capture(fsm)
     await fsm.handle_review_intent("accept")
-    return await fsm.run_delivery()
+    result = await fsm.run_delivery()
+    # The real runtime lingers on the share page for share_linger_s before looping;
+    # the synchronous mock collapses that to an immediate reset.
+    await fsm.finish_session("mock_demo_complete")
+    return result
 
 
 def _build_mock_fsm(config: RuntimeConfig) -> tuple[PhotoAgentFSM, DeliveryResult]:
@@ -759,6 +781,8 @@ async def run_mock_state(config: RuntimeConfig, state: str) -> dict[str, object]
         fsm.context.state = State.ASK_INTENT
         fsm.context.session_id = "session-mock"
         await fsm.handle_photo_intent("accept")
+        await fsm.handle_capture_device("insta")
+        await fsm.handle_capture_mode("photo")
     elif state == "S3":
         fsm.context.state = State.POSE_GUIDANCE
         fsm.context.session_id = "session-mock"
@@ -774,6 +798,9 @@ async def run_mock_state(config: RuntimeConfig, state: str) -> dict[str, object]
         fsm.context.session_id = "session-mock"
         fsm.context.photo_id = "mock-photo"
         delivery_result = await fsm.run_delivery()
+        # Collapse the real share-page linger to an immediate loop reset for the
+        # synchronous acceptance harness (S6 -> S0).
+        await fsm.finish_session("mock_share_linger")
     else:
         raise ValueError(f"unknown state: {state}")
     return {

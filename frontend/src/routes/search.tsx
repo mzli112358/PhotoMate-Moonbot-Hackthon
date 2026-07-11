@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { LivePreview, usePhotoAgent } from "../components/photo-agent-bridge";
+import { searchPageCopy } from "../components/photo-agent-s2";
 
 export const Route = createFileRoute("/search")({
   head: () => ({ meta: [{ title: "寻人 · 陪伴机器人 R-07" }] }),
@@ -9,12 +10,7 @@ export const Route = createFileRoute("/search")({
 
 function SearchScreen() {
   const { snapshot } = usePhotoAgent();
-  const asking = snapshot.state === "S2";
-
-  const heading = asking ? "邀请中" : "寻人中";
-  const blurb = asking
-    ? "我发现了你！要不要我帮你拍一张？"
-    : "正在通过传感器寻找想拍照的人。";
+  const { heading, blurb, phaseLabel } = searchPageCopy(snapshot);
 
   return (
     <main className="flex min-h-screen items-stretch pt-24 pb-40">
@@ -29,6 +25,12 @@ function SearchScreen() {
               <span className="text-robot-orange">。</span>
             </h1>
             <p className="mt-3 text-[14px] leading-relaxed text-robot-muted">{blurb}</p>
+            {phaseLabel ? (
+              <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-robot-orange/30 bg-robot-orange-soft/60 px-3 py-1 text-[11px] font-semibold text-robot-ink">
+                <span className="h-1.5 w-1.5 rounded-full bg-robot-orange" />
+                S2 · {phaseLabel}
+              </div>
+            ) : null}
           </div>
 
           <div className="grid grid-cols-2 gap-3">
@@ -49,7 +51,11 @@ function SearchScreen() {
                 }`}
               />
               <span className="text-[13px] font-medium text-robot-ink">
-                {snapshot.active ? `运行中 · ${snapshot.state}` : "待机"}
+                {snapshot.active
+                  ? snapshot.state === "S2"
+                    ? `运行中 · ${snapshot.state} · ${snapshot.s2_phase}`
+                    : `运行中 · ${snapshot.state}`
+                  : "待机"}
               </span>
             </div>
           </div>

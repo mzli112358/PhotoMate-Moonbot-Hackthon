@@ -1,7 +1,9 @@
 import { useNavigate, useRouterState } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 import { usePhotoAgent, type AgentSnapshot } from "./photo-agent-bridge";
+import { createLogEntry } from "./photo-agent-log";
+import { s2PhaseLabel } from "./photo-agent-s2";
 import { useVoice } from "./voice-context";
 
 /** Maps the backend FSM state to the flow page the kiosk should show. */
@@ -32,17 +34,25 @@ function routeForSnapshot(snap: AgentSnapshot): string | null {
  * kiosk can begin a session without the test console.
  */
 export function PhotoAgentController() {
-  const { snapshot, connected, start, stop } = usePhotoAgent();
+  const { snapshot, connected, start, stop, appendLog } = usePhotoAgent();
   const navigate = useNavigate();
   const { set } = useVoice();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const lastPathRef = useRef(pathname);
 
   useEffect(() => {
     const target = routeForSnapshot(snapshot);
     if (target && target !== pathname) {
+      appendLog(
+        createLogEntry(
+          "nav",
+          `路由 ${pathname} → ${target}`,
+          `state=${snapshot.state} s2_phase=${snapshot.s2_phase}`,
+        ),
+      );
       navigate({ to: target });
     }
-  }, [snapshot, pathname, navigate]);
+  }, [snapshot, pathname, navigate, appendLog]);
 
   useEffect(() => {
     if (!snapshot.active) return;
@@ -53,6 +63,13 @@ export function PhotoAgentController() {
     });
   }, [snapshot, set]);
 
+  useEffect(() => {
+    if (pathname !== lastPathRef.current) {
+      lastPathRef.current = pathname;
+      appendLog(createLogEntry("nav", `当前页面 ${pathname}`));
+    }
+  }, [pathname, appendLog]);
+
   return (
     <div className="pointer-events-auto fixed bottom-8 right-8 z-50 flex items-center gap-3 rounded-full border border-robot-hairline bg-white/90 px-4 py-2 shadow-[0_20px_60px_-30px_rgba(20,15,10,0.5)] backdrop-blur">
       <span
@@ -61,7 +78,13 @@ export function PhotoAgentController() {
         }`}
       />
       <span className="text-[11px] font-semibold tracking-[0.14em] text-robot-muted">
-        {snapshot.active ? `会话 · ${snapshot.state}` : connected ? "空闲" : "未连接"}
+        {snapshot.active
+          ? snapshot.state === "S2"
+            ? `会话 · ${snapshot.state} · ${s2PhaseLabel(snapshot.s2_phase)}`
+            : `会话 · ${snapshot.state}`
+          : connected
+            ? "空闲"
+            : "未连接"}
       </span>
       {snapshot.active ? (
         <button

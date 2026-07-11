@@ -9,6 +9,12 @@ import {
   type ReactNode,
 } from "react";
 
+import {
+  createLogEntry,
+  describeSnapshotChange,
+  type AgentLogEntry,
+} from "./photo-agent-log";
+
 export type AgentState = "S0" | "S1" | "S2" | "S3" | "S5" | "S6";
 export type VoiceState = "idle" | "listening" | "processing" | "responding";
 
@@ -48,9 +54,14 @@ const IDLE_SNAPSHOT: AgentSnapshot = {
   devices: {},
 };
 
+const MAX_LOG_ENTRIES = 300;
+
 type PhotoAgentContextValue = {
   connected: boolean;
   snapshot: AgentSnapshot;
+  logs: AgentLogEntry[];
+  appendLog: (entry: AgentLogEntry) => void;
+  clearLogs: () => void;
   start: () => Promise<void>;
   stop: () => Promise<void>;
 };
@@ -62,20 +73,52 @@ const PREVIEW_URL = "/api/photo-agent/session/preview.mjpg";
 export function PhotoAgentBridgeProvider({ children }: { children: ReactNode }) {
   const [connected, setConnected] = useState(false);
   const [snapshot, setSnapshot] = useState<AgentSnapshot>(IDLE_SNAPSHOT);
+  const [logs, setLogs] = useState<AgentLogEntry[]>([]);
   const esRef = useRef<EventSource | null>(null);
+  const snapshotRef = useRef<AgentSnapshot>(IDLE_SNAPSHOT);
+
+  const appendLog = useCallback((entry: AgentLogEntry) => {
+    setLogs((prev) => [...prev.slice(-(MAX_LOG_ENTRIES - 1)), entry]);
+  }, []);
+
+  const clearLogs = useCallback(() => {
+    setLogs([]);
+    appendLog(createLogEntry("action", "日志已清空"));
+  }, [appendLog]);
+
+  const applySnapshot = useCallback(
+    (next: AgentSnapshot, source: string) => {
+      const prev = snapshotRef.current;
+      const merged = { ...prev, ...next };
+      const change = describeSnapshotChange(prev, merged);
+      if (change) {
+        appendLog(
+          createLogEntry("transition", change, `source=${source}`),
+        );
+      }
+      snapshotRef.current = merged;
+      setSnapshot(merged);
+    },
+    [appendLog],
+  );
 
   useEffect(() => {
     let alive = true;
     fetch("/api/photo-agent/session/state")
       .then((res) => (res.ok ? res.json() : null))
       .then((snap: AgentSnapshot | null) => {
-        if (alive && snap) setSnapshot((prev) => ({ ...prev, ...snap }));
+        if (alive && snap) {
+          applySnapshot(snap, "initial_fetch");
+          appendLog(createLogEntry("sse", "已加载初始会话状态"));
+        }
       })
-      .catch(() => undefined);
+      .catch(() => {
+        appendLog(createLogEntry("error", "初始状态拉取失败"));
+      });
     return () => {
       alive = false;
     };
-  }, []);
+  }, [applySnapshot, appendLog]);
 
   useEffect(() => {
     let retryTimer: number | undefined;
@@ -85,21 +128,64 @@ export function PhotoAgentBridgeProvider({ children }: { children: ReactNode }) 
       const es = new EventSource("/api/photo-agent/session/stream");
       esRef.current = es;
 
-      es.onopen = () => setConnected(true);
+      es.onopen = () => {
+        setConnected(true);
+        appendLog(createLogEntry("sse", "SSE 已连接"));
+      };
 
       es.onmessage = (ev) => {
         try {
-          const payload = JSON.parse(ev.data);
-          if (payload?.type === "state" && payload.snapshot) {
-            setSnapshot((prev) => ({ ...prev, ...payload.snapshot }));
+          const payload = JSON.parse(ev.data) as Record<string, unknown>;
+          const type = String(payload?.type ?? "unknown");
+
+          if (type === "state" && payload.snapshot) {
+            applySnapshot(payload.snapshot as AgentSnapshot, "sse_state");
+            return;
           }
+
+          if (type === "session_started") {
+            const devices = payload.devices as Record<string, string> | undefined;
+            appendLog(
+              createLogEntry(
+                "session",
+                "会话已启动",
+                devices ? JSON.stringify(devices, null, 2) : undefined,
+              ),
+            );
+            return;
+          }
+
+          if (type === "session_stopped") {
+            appendLog(createLogEntry("session", "会话已停止"));
+            return;
+          }
+
+          if (type === "session_error") {
+            appendLog(
+              createLogEntry(
+                "error",
+                "会话运行错误",
+                String(payload.error ?? "unknown"),
+              ),
+            );
+            return;
+          }
+
+          appendLog(
+            createLogEntry(
+              "sse",
+              `事件 ${type}`,
+              JSON.stringify(payload, null, 2),
+            ),
+          );
         } catch {
-          // Ignore malformed frames during dev restarts.
+          appendLog(createLogEntry("error", "SSE 消息解析失败", ev.data));
         }
       };
 
       es.onerror = () => {
         setConnected(false);
+        appendLog(createLogEntry("sse", "SSE 断开，3s 后重连"));
         es.close();
         if (!closedByCleanup) {
           retryTimer = window.setTimeout(connect, 3000);
@@ -114,23 +200,62 @@ export function PhotoAgentBridgeProvider({ children }: { children: ReactNode }) 
       if (retryTimer) window.clearTimeout(retryTimer);
       esRef.current?.close();
     };
-  }, []);
+  }, [appendLog, applySnapshot]);
 
   const start = useCallback(async () => {
-    await fetch("/api/photo-agent/session/start", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({}),
-    });
-  }, []);
+    appendLog(createLogEntry("action", "请求启动会话"));
+    try {
+      const res = await fetch("/api/photo-agent/session/start", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({}),
+      });
+      if (!res.ok) {
+        const text = await res.text();
+        appendLog(
+          createLogEntry("error", `启动失败 HTTP ${res.status}`, text),
+        );
+        return;
+      }
+      const snap = (await res.json()) as AgentSnapshot;
+      applySnapshot(snap, "start_response");
+      appendLog(createLogEntry("action", "启动请求成功"));
+    } catch (err) {
+      appendLog(
+        createLogEntry(
+          "error",
+          "启动请求异常",
+          err instanceof Error ? err.message : String(err),
+        ),
+      );
+    }
+  }, [appendLog, applySnapshot]);
 
   const stop = useCallback(async () => {
-    await fetch("/api/photo-agent/session/stop", { method: "POST" });
-  }, []);
+    appendLog(createLogEntry("action", "请求结束会话"));
+    try {
+      const res = await fetch("/api/photo-agent/session/stop", { method: "POST" });
+      if (!res.ok) {
+        appendLog(createLogEntry("error", `结束失败 HTTP ${res.status}`));
+        return;
+      }
+      const snap = (await res.json()) as AgentSnapshot;
+      applySnapshot(snap, "stop_response");
+      appendLog(createLogEntry("action", "结束请求成功"));
+    } catch (err) {
+      appendLog(
+        createLogEntry(
+          "error",
+          "结束请求异常",
+          err instanceof Error ? err.message : String(err),
+        ),
+      );
+    }
+  }, [appendLog, applySnapshot]);
 
   const value = useMemo(
-    () => ({ connected, snapshot, start, stop }),
-    [connected, snapshot, start, stop],
+    () => ({ connected, snapshot, logs, appendLog, clearLogs, start, stop }),
+    [connected, snapshot, logs, appendLog, clearLogs, start, stop],
   );
 
   return (

@@ -54,7 +54,10 @@ def omni_tools() -> list[dict[str, Any]]:
     return [
         tool(
             "report_photo_intent",
-            "仅在S2询问拍照意愿环节使用。直接根据用户原始语音判断是否愿意拍照；意图明确后必须调用此工具，不要用口头回答代替。",
+            (
+                "仅在S2第①步（ask_intent）使用。用户明确愿意或拒绝拍照后必须调用；"
+                "禁止在调用前口头替用户选设备或提及 Insta360/手机。"
+            ),
             {
                 "decision": {
                     "type": "string",
@@ -67,8 +70,8 @@ def omni_tools() -> list[dict[str, Any]]:
         tool(
             "report_capture_device",
             (
-                "仅在S2用户已接受拍照、系统询问用手机还是Insta360相机之后使用。"
-                "根据用户原始语音判断所选设备；意图明确后必须调用此工具，不要用口头回答代替。"
+                "仅在S2第②步（ask_device）使用：用户已 accept 且系统已问过手机/Insta360 二选一之后。"
+                "根据用户原话判断设备；禁止在用户未选择前默认 insta。"
             ),
             {
                 "device": {

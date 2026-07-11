@@ -7,6 +7,7 @@ import { HackthonBridgeProvider } from "../components/hackthon-bridge";
 import { HackthonSidebar } from "../components/hackthon-sidebar";
 import { PhotoAgentBridgeProvider } from "../components/photo-agent-bridge";
 import { PhotoAgentController } from "../components/photo-agent-controller";
+import { PhotoAgentStateLog } from "../components/photo-agent-log";
 import { VoiceProvider } from "../components/voice-context";
 import { VoiceIndicator } from "../components/voice-indicator";
 import { TopBar } from "../components/top-bar";
@@ -94,6 +95,7 @@ function RootComponent() {
                 </div>
               </div>
               <VoiceIndicator />
+              <PhotoAgentStateLog />
               <PhotoAgentController />
             </div>
           </PhotoAgentBridgeProvider>
